@@ -6,7 +6,7 @@
 Getting up and running with IOLabWeb should be straightforward. 
 
 __Use Chrome:__ Make sure you are running Chrome 78 or later and that you have enabled the
-      <code>#enable-experimental-web-platform-features</code> flag in
+      <br/> <code>#enable-experimental-web-platform-features</code> flag in
       <code>chrome://flags</code>.
 
 ---
