@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>IOLab Web v0.1.0</title>
+  <meta charset="utf-8">
+  <meta name="iolab" content="testing-w-web-serial">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="icon" href="favicon.ico">
+  <link rel="stylesheet" href="style.css">
+
+  <script src="canvasStack1v06.js"></script>
+  <script src="globalVariables.js"></script>
+  <script src="plot_config.js"></script>
+  <script src="plot_data.js"></script>
+  <script src="plot_handlers.js"></script>
+  <script src="process_data.js"></script>
+  <script src="iolab_options.js"></script>
+  <script src="config.js"></script>
+  <script src="main.js" defer></script>
+
+</head>
+
+<!-- <img src="iolab128.png" width="40" /> -->
+
+<body>
+  <header class="header">
+    <h1>
+      <label> Dongle: <span id="dongleStatusDisplay">None</span> </label> &nbsp;&nbsp;
+      <label> Remote: <span id="remoteStatusDisplay">None</span> </label>
+    </h1>
+  </header>
+
+  <main class="main">
+
+    <div id="notSupported" class="hidden">
+      Sorry, <b>Web Serial</b> is not supported on this device, make sure you're
+      running Chrome 78 or later and have enabled the
+      <code>#enable-experimental-web-platform-features</code> flag in
+      <code>chrome://flags</code>
+    </div>
+
+
+    <p><button id="butConnect" type="button">Connect</button></p>
+
+    <label>Command: <select id="cmd-picker"></select></label>
+    <label><select id="config-picker"></select></label>
+
+    <button id="butSend" type="button">Configure</button>
+    <button id="butStartStop" type="button">Start</button>
+
+    <p>
+      <input id="sens_acc_ck" type="checkbox" checked="true">:Accelerometer Plot &nbsp;&nbsp;
+      <input id="text_area_ck" type="checkbox" checked="true">:Tx/Rx Control Records
+    </p>
+
+    <div id="accPlotContainer">
+      Accelerometer &nbsp;&nbsp;
+      Ax:<input id="trace_acc_x_ck" type="checkbox" checked="true">
+      Ay:<input id="trace_acc_y_ck" type="checkbox" checked="true">
+      Az:<input id="trace_acc_z_ck" type="checkbox" checked="true">
+      <br />
+      <canvas id="chartAccCanvas" width="700" height="150" style="border:1px solid #4d4545; background: white;">
+        Your browser does not support the HTML5 canvas tag.</canvas>
+    </div>
+
+    <div id="textAreaContainer">
+      <table>
+        <tr>
+          <td>Tx:</td>
+          <td>Rx:</td>
+        </tr>
+        <tr>
+          <td><textarea id="dataBoxTx" rows="10" cols="30"
+              style="overflow:scroll; resize:horizontal; min-width:200px;"></textarea></td>
+          <td><textarea id="dataBoxRx" rows="10" cols="60"
+              style="overflow:scroll; resize:horizontal; min-width:200px;"></textarea></td>
+        </tr>
+      </table>
+    </div>
+    <!-- </div> -->
+    <p> <button id="butDebug" type="button">Debug</button></p>
+
+  </main>
+</body>
+
+</html>
