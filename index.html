@@ -18,6 +18,7 @@
   <script src="process_data.js"></script>
   <script src="iolab_options.js"></script>
   <script src="config.js"></script>
+  <script src="test.js"></script>
   <script src="main.js" defer></script>
 
 </head>
@@ -78,7 +79,15 @@
       </table>
     </div>
 
-    <p> <button id="butDebug" type="button">Debug</button></p>
+    <!-- For Debugging -->
+    <div id="debugStuff">
+      <p> <button id="butDebug" type="button">Debug</button></p>
+
+      <a href="" id="downloadData" onclick="saveToFile()" title="Download and save the data"
+        style="cursor: pointer;"><img src="dload.png" alt="[Save]" valign="bottom" width="24" height="24"></a>
+
+      <input type="file" size="20" name="inputfile" id="inputfile">
+    </div>
 
   </main>
 </body>

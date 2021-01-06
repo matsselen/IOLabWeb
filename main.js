@@ -14,21 +14,22 @@ const butDebug = document.getElementById('butDebug');
 const dongleStatusDisplay = document.getElementById('dongleStatusDisplay');
 const remoteStatusDisplay = document.getElementById('remoteStatusDisplay');
 
-
 const dataBoxTx = document.getElementById("dataBoxTx");
 const dataBoxRx = document.getElementById("dataBoxRx");
 
+const debugStuff = document.getElementById("debugStuff");
+const inputFile = document.getElementById("inputfile");
+
 // do this when the DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-
-  // hide the control buttong and plots until a serial connection has been established
-  //controlContainer.style.display = "none";
 
   // attach event listeners to the buttons
   butConnect.addEventListener('click', clickConnect);
   butSend.addEventListener('click', clickSend);
   butStartStop.addEventListener('click', clickStartStop);
   butDebug.addEventListener('click', clickDebug);
+
+  inputFile.addEventListener("change", readInputFile);
 
   buildConfigPicker();
   buildCmdPicker();
@@ -99,8 +100,8 @@ async function clickStartStop() {
 
 //============================================
 // when the Debug button is clicked 
-// (set showDebugButton in globalVariables is you want
-// this button to show up at the bottom of the page)
+// (set showDebugStuff in globalVariables is you want this button to 
+// show up at the bottom of the page along with some other debug stuff)
 async function clickDebug() {
   console.log("Debug button clicked (put breakpoint here)");
 }
@@ -305,7 +306,11 @@ function updateSystemState() {
   }
 
   // the debug button is just a handy place to put a breakpoint
-  butDebug.hidden = !showDebugButton;
+  if(showDebugStuff) {
+    debugStuff.style.display = "block";
+  } else {
+    debugStuff.style.display = "none";
+  }
 
   // if we just turned on the remote, fetch info about it
   if (justTurnedOnRemote) {

@@ -6,7 +6,7 @@ var justTurnedOnRemote = false;
 var runningDAQ = false;
 var daqConfigured = false;
 var serialConnected = false;
-var showDebugButton = false;
+var showDebugStuff = true;
 
 // event timers
 var rawRecordTimerID;
