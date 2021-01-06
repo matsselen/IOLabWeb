@@ -4,14 +4,11 @@ function pad2(e) {
 }
 
 function saveToFile() {
-    var e = new Blob([document.getElementById("dataBoxTx").value], {
-        type: "text/plain;charset=utf-8"
-    }),
-        a = window.URL.createObjectURL(e),
-        t = document.getElementById("downloadData"),
-        r = new Date;
-    t.download = ["ioLab-", r.getFullYear(), pad2(r.getMonth() + 1), pad2(r.getDate()), pad2(r.getHours()), pad2(r.getMinutes()), ".txt"].join(""), 
-    t.href = a
+    var dataBlob = new Blob([document.getElementById("dataBoxTx").value], {type: "text/plain;charset=utf-8"});
+    downloadData.href = window.URL.createObjectURL(dataBlob);
+    var r = new Date;
+    //downloadData.download = ["IOLabWeb-", r.getFullYear(), pad2(r.getMonth() + 1), pad2(r.getDate()), pad2(r.getHours()), pad2(r.getMinutes()), ".txt"].join(""); 
+    downloadData.download = "IOLab-data-test.txt";
 }
 
 function parseFromFile(fileContents) {
@@ -20,9 +17,9 @@ function parseFromFile(fileContents) {
 
 async function readInputFile() {
     var frd = new FileReader;
+    frd.readAsText(this.files[0]);
     frd.onload = function() {
-      //document.getElementById("dataBoxTx").value = frd.result;
       parseFromFile(frd.result);
-    }, frd.readAsText(this.files[0])
+    }
   }
   

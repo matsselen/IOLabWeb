@@ -13,23 +13,21 @@ const butStartStop = document.getElementById('butStartStop');
 const butDebug = document.getElementById('butDebug');
 const dongleStatusDisplay = document.getElementById('dongleStatusDisplay');
 const remoteStatusDisplay = document.getElementById('remoteStatusDisplay');
-const inputFile = document.getElementById("inputfile");
-
 
 const dataBoxTx = document.getElementById("dataBoxTx");
 const dataBoxRx = document.getElementById("dataBoxRx");
 
+const inputFile = document.getElementById("inputfile");
+
 // do this when the DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-
-  // hide the control buttong and plots until a serial connection has been established
-  //controlContainer.style.display = "none";
 
   // attach event listeners to the buttons
   butConnect.addEventListener('click', clickConnect);
   butSend.addEventListener('click', clickSend);
   butStartStop.addEventListener('click', clickStartStop);
   butDebug.addEventListener('click', clickDebug);
+
   inputFile.addEventListener("change", readInputFile);
 
   buildConfigPicker();
