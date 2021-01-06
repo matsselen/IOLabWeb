@@ -17,6 +17,7 @@ const remoteStatusDisplay = document.getElementById('remoteStatusDisplay');
 const dataBoxTx = document.getElementById("dataBoxTx");
 const dataBoxRx = document.getElementById("dataBoxRx");
 
+const debugStuff = document.getElementById("debugStuff");
 const inputFile = document.getElementById("inputfile");
 
 // do this when the DOM is loaded
@@ -99,8 +100,8 @@ async function clickStartStop() {
 
 //============================================
 // when the Debug button is clicked 
-// (set showDebugButton in globalVariables is you want
-// this button to show up at the bottom of the page)
+// (set showDebugStuff in globalVariables is you want this button to 
+// show up at the bottom of the page along with some other debug stuff)
 async function clickDebug() {
   console.log("Debug button clicked (put breakpoint here)");
 }
@@ -305,7 +306,11 @@ function updateSystemState() {
   }
 
   // the debug button is just a handy place to put a breakpoint
-  butDebug.hidden = !showDebugButton;
+  if(showDebugStuff) {
+    debugStuff.style.display = "block";
+  } else {
+    debugStuff.style.display = "none";
+  }
 
   // if we just turned on the remote, fetch info about it
   if (justTurnedOnRemote) {

@@ -1,13 +1,8 @@
 
-function pad2(e) {
-    return e < 10 ? "0" + e : e
-}
-
 function saveToFile() {
     var dataBlob = new Blob([document.getElementById("dataBoxTx").value], {type: "text/plain;charset=utf-8"});
+    //var dataBlob = new Blob(rawData);
     downloadData.href = window.URL.createObjectURL(dataBlob);
-    var r = new Date;
-    //downloadData.download = ["IOLabWeb-", r.getFullYear(), pad2(r.getMonth() + 1), pad2(r.getDate()), pad2(r.getHours()), pad2(r.getMinutes()), ".txt"].join(""); 
     downloadData.download = "IOLab-data-test.txt";
 }
 
