@@ -13,6 +13,7 @@ const butStartStop = document.getElementById('butStartStop');
 const butDebug = document.getElementById('butDebug');
 const dongleStatusDisplay = document.getElementById('dongleStatusDisplay');
 const remoteStatusDisplay = document.getElementById('remoteStatusDisplay');
+const inputFile = document.getElementById("inputfile");
 
 
 const dataBoxTx = document.getElementById("dataBoxTx");
@@ -29,6 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
   butSend.addEventListener('click', clickSend);
   butStartStop.addEventListener('click', clickStartStop);
   butDebug.addEventListener('click', clickDebug);
+  inputFile.addEventListener("change", readInputFile);
 
   buildConfigPicker();
   buildCmdPicker();
