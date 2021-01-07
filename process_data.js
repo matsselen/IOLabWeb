@@ -1,4 +1,4 @@
-
+'use strict';
 //====================================================================
 // Call this to clear and reset the acquisition 
 function resetAcquisition() {
@@ -148,7 +148,7 @@ function processGetPacketConfig(recStart, recLength) {
   if (remote == 0 || remote == 1) {
     nSensor[remote] = rxdata[recStart + 1];
     var j = 0;
-    for (i = recStart + 2; i < recStart + recLength; i += 2) {
+    for (var i = recStart + 2; i < recStart + recLength; i += 2) {
       sensorArray[remote][j] = rxdata[i];
       lengthArray[remote][j] = rxdata[i + 1];
       lengthBySensor[remote][rxdata[i]] = rxdata[i + 1];

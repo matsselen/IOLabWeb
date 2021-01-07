@@ -1,4 +1,4 @@
-
+'use strict';
 // plots new data
 function plotNewData() {
 
@@ -23,9 +23,9 @@ function plotNewAccelerometerData() {
   var ctz = canvz.getContext("2d");
 
   // line colors
-  ctx.strokeStyle = "#FF0000";
-  cty.strokeStyle = "#0000FF";
-  ctz.strokeStyle = "#00AA00";
+  ctx.strokeStyle = "#FF0000", ctx.lineWidth = 2;
+  cty.strokeStyle = "#0000FF", cty.lineWidth = 2;
+  ctz.strokeStyle = "#00AA00", ctz.lineWidth = 2;
 
   // the size of all layers should be the same
   var cWidth = canvx.width;

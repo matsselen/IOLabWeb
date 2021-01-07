@@ -1,4 +1,4 @@
-
+'use strict';
 // Associate event handlers with the checkboxes that control charts & traces
 function setupChartControls() {
   // accelerometer
