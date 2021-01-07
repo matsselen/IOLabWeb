@@ -7,7 +7,7 @@ var accLast = [-1, 0, 0, 0];  // holds (t,x,y,z) of last accelerometer point plo
 // accelerometer plot stack
 var accCanvasStack;
 var accCsIDx, accCsIDy, accCsIDz;
-var accCsCtl, ctlLayer, drawLayer, drawContext;
+var accCsCtl, ctlLayer, drawLayer, accCsDraw, drawContext;
 
 //var baseCanvas;
 
@@ -19,10 +19,11 @@ function createPlotLayers() {
   accCsIDx = accCanvasStack.createLayer();
   accCsIDy = accCanvasStack.createLayer();
   accCsIDz = accCanvasStack.createLayer();
+  accCsDraw = accCanvasStack.createLayer();
   accCsCtl = accCanvasStack.createLayer();
 
   ctlLayer = document.getElementById(accCsCtl);
-  drawLayer = document.getElementById("chartAccCanvas");
+  drawLayer = document.getElementById(accCsDraw);
   drawContext = drawLayer.getContext('2d');
 
   ctlLayer.addEventListener("mousedown",mouseDown)

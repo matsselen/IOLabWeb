@@ -5,6 +5,7 @@ function setupChartControls() {
   document.getElementById("trace_acc_x_ck").addEventListener("click", traceSelect);
   document.getElementById("trace_acc_y_ck").addEventListener("click", traceSelect);
   document.getElementById("trace_acc_z_ck").addEventListener("click", traceSelect);
+  document.getElementById("draw_acc_ck").addEventListener("click", traceSelect);
 
   // show or hide charts & text-areas based on checkbox selections
   document.getElementById("sens_acc_ck").addEventListener("click", sensorSelect);
@@ -19,6 +20,7 @@ function traceSelect() {
     case "trace_acc_x_ck": trace = accCsIDx; break;
     case "trace_acc_y_ck": trace = accCsIDy; break;
     case "trace_acc_z_ck": trace = accCsIDz; break;
+    case "draw_acc_ck": trace = accCsDraw; break;
   }
 
   if (this.checked) {
