@@ -23,15 +23,41 @@ class ViewPort {
         this.cHeight = canvasElement.height;    // canvas height in pixels
     };
 
-    // this method shifts the x values by one range to the right
-    xShiftViewRight = function () {
-        this.xMin += this.xSpan;
-        this.xMax += this.xSpan;
+    // alight the viewport with time tTest and report back how many shifts were needed
+    alignWith = function (tTest) {
+
+        let nShift = 0;
+
+        if (tTest >= this.xMax) {
+            nShift = 1 + (tTest - this.xMax) / this.xSpan;
+        } else if (tTest < this.xMin) {
+            nShift = (tTest - this.xMin) / this.xSpan - 1;
+        }
+
+        // make into an integer
+        nShift = parseInt(nShift);
+
+        // shift the viewport left or right
+        this.xMin = this.xMin + nShift * this.xSpan;
+        this.xMax = this.xMax + nShift * this.xSpan;
+
+        return nShift;
+    }
+
+    // see if the viewport contain time tTest
+    containsTime = function (tTest) {
+        return ((tTest >= this.xMin) && (tTest < this.xMax));
+    }
+
+    // this method shifts the viewport by nShift*xSpan
+    xShiftView = function (nShift) {
+        this.xMin = this.xMin + nShift * this.xSpan;
+        this.xMax = this.xMax + nShift * this.xSpan;
     }
 
     // this method returns pixel coordinates when passed data coordinates
     dataToPixel(tDat, yDat) {
-        let xPix = (tDat / this.xSpan) * this.cWidth;
+        let xPix = ((tDat - this.xMin) / this.xSpan) * this.cWidth;
         let yPix = this.cHeight - ((yDat - this.yMin) / this.ySpan) * this.cHeight;
         return [xPix, yPix];
     }
@@ -119,7 +145,6 @@ class PlotIOLab {
 
         // save the base canvas element info.
         this.baseElement = document.getElementById(this.baseID);
-
 
         // create the canvas stack that will be used for displaying chart traces 
         // as well as the background grid and zoom controls
@@ -214,18 +239,17 @@ class PlotIOLab {
         }
 
         function drawRect(x1, y1, x2, y2) {
-           
+
             ctlDrawContext.strokeStyle = 'black';
             ctlDrawContext.lineWidth = 1;
 
-            ctlDrawContext.clearRect(0, 0, plotThis.baseElement.width+2, plotThis.baseElement.height+2);
+            ctlDrawContext.clearRect(0, 0, plotThis.baseElement.width + 2, plotThis.baseElement.height + 2);
 
             if (x1 != x2 && y1 != y2) {
                 ctlDrawContext.beginPath();
                 ctlDrawContext.rect(x1, y1, (x2 - x1), (y2 - y1));
                 ctlDrawContext.stroke();
             }
-            
         }
 
     } // constructor
@@ -251,58 +275,75 @@ class PlotIOLab {
 
         let sensorID = this.sensorNum;
 
+        // see if we have unread calibrated data
         if (calReadPtr[sensorID] < calData[sensorID].length) {
-            //console.log("In plotRunningData ",calReadPtr[sensorID], calData[sensorID].length)
 
-            let pix = [];
+            let pix = []; // holds an [x,y] pixel coordinate
+
+            // find the time coordinate of the data at the current read pointer
+            let td = calData[sensorID][calReadPtr[sensorID]][0];
+
+            // make sure the viewport contains this time
+            let nShift = this.runningDataView.alignWith(td);
+            if (nShift != 0) {
+                console.log("In plotRunningData(1) - shifted viewport by ", nShift);
+
+            }
+
+            // for each trace, find the starting point
             for (let tr = 1; tr < this.nTraces + 1; tr++) { //traces start numbering at 1
 
                 contextList[tr].beginPath();
 
-                // figure out where to start
-                if (this.datLast[0] < 0) { // if we just started
-                    let td = calData[sensorID][calReadPtr[sensorID]][0];
+                // if this is the first call after instantiating the class, 
+                // start with the data at calReadPtr (presumably 0)
+                if (this.datLast[0] < 0) {
+
                     let xd = calData[sensorID][calReadPtr[sensorID]][tr];
-                    //pix = this.datToPix(td, xd, cWidth, cHeight);
                     pix = this.runningDataView.dataToPixel(td, xd);
-                } else {
-                    let tstart = this.datLast[0] % this.runningDataView.xSpan;
-                    //pix = this.datToPix(tstart, this.datLast[tr], cWidth, cHeight);
+
+                } else { // if this is not the first call start with the last datapoint we plotted
+
+                    let tstart = this.datLast[0];
                     pix = this.runningDataView.dataToPixel(tstart, this.datLast[tr]);
                 }
                 contextList[tr].moveTo(pix[0], pix[1]);
             }
 
-            let tpLast = -1;
+            let shiftView = false; // use this to indicate we are shifting the viewport
             for (let ind = calReadPtr[sensorID]; ind < calData[sensorID].length; ind++) {
 
-                let tplot = calData[sensorID][ind][0] % this.runningDataView.xSpan;
+                let tplot = calData[sensorID][ind][0];
+                // make sure the viewport contains this time
+                let nShift = this.runningDataView.alignWith(tplot);
+                if (nShift != 0) {
+                    shiftView = true;
+                    console.log("In plotRunningData(2) - shifted viewport by ", nShift);
+                }
+
+
                 for (let tr = 1; tr < this.nTraces + 1; tr++) {
 
                     // see if we need to wrap
-                    if (tplot < tpLast) {
+                    if (shiftView) {
 
                         // draw the current line before wrapping
                         contextList[tr].stroke();
 
                         // clear canvas before wrapping
                         contextList[tr].clearRect(0, 0, cWidth, cHeight);
-
-                        //pix = this.datToPix(tplot, calData[sensorID][ind][tr], cWidth, cHeight);
                         pix = this.runningDataView.dataToPixel(tplot, calData[sensorID][ind][tr]);
-
                         contextList[tr].beginPath();
                         contextList[tr].moveTo(pix[0], pix[1]);
 
                     } else {
 
-                        //pix = this.datToPix(tplot, calData[sensorID][ind][tr], cWidth, cHeight);
                         pix = this.runningDataView.dataToPixel(tplot, calData[sensorID][ind][tr]);
                         contextList[tr].lineTo(pix[0], pix[1]);
 
                     }
                 }
-                tpLast = tplot;
+                shiftView = false;
             }
 
             // set pointers to their new values and finish the line
