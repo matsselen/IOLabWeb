@@ -59,6 +59,7 @@ class ViewPort {
     dataToPixel(tDat, yDat) {
         let xPix = ((tDat - this.xMin) / this.xSpan) * this.cWidth;
         let yPix = this.cHeight - ((yDat - this.yMin) / this.ySpan) * this.cHeight;
+        //return [parseInt(xPix), parseInt(yPix)];
         return [xPix, yPix];
     }
 
@@ -256,6 +257,24 @@ class PlotIOLab {
 
     //==========================================================================================
 
+    // draw plot axes on the layer below the chart traces of ViewPort vp
+    drawPlotAxes(vp) {
+
+        // get the bottom drawing layer context
+        let ctx = this.layerElementList[0].getContext("2d");
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = .5;
+        ctx.beginPath();
+
+        let pix1 = vp.dataToPixel(vp.xMin,(vp.yMax+vp.yMin)/2);
+        let pix2 = vp.dataToPixel(vp.xMax,(vp.yMax+vp.yMin)/2);
+
+        ctx.moveTo(pix1[0], pix1[1]);
+        ctx.lineTo(pix2[0], pix2[1]);
+        ctx.stroke();
+
+
+    }
 
     // Plots any new avaiable data. Called on a timer during data acquisition.
     plotRunningData() {
@@ -287,7 +306,6 @@ class PlotIOLab {
             let nShift = this.runningDataView.alignWith(td);
             if (nShift != 0) {
                 console.log("In plotRunningData(1) - shifted viewport by ", nShift);
-
             }
 
             // for each trace, find the starting point
@@ -298,6 +316,8 @@ class PlotIOLab {
                 // if this is the first call after instantiating the class, 
                 // start with the data at calReadPtr (presumably 0)
                 if (this.datLast[0] < 0) {
+
+                    this.drawPlotAxes(this.runningDataView);
 
                     let xd = calData[sensorID][calReadPtr[sensorID]][tr];
                     pix = this.runningDataView.dataToPixel(td, xd);
@@ -313,14 +333,14 @@ class PlotIOLab {
             let shiftView = false; // use this to indicate we are shifting the viewport
             for (let ind = calReadPtr[sensorID]; ind < calData[sensorID].length; ind++) {
 
-                let tplot = calData[sensorID][ind][0];
-                // make sure the viewport contains this time
+                let tplot = calData[sensorID][ind][0]; // the current time coordinate
+
+                // shift the viewport if necessary
                 let nShift = this.runningDataView.alignWith(tplot);
                 if (nShift != 0) {
                     shiftView = true;
                     console.log("In plotRunningData(2) - shifted viewport by ", nShift);
                 }
-
 
                 for (let tr = 1; tr < this.nTraces + 1; tr++) {
 
@@ -332,6 +352,7 @@ class PlotIOLab {
 
                         // clear canvas before wrapping
                         contextList[tr].clearRect(0, 0, cWidth, cHeight);
+                        this.drawPlotAxes(this.runningDataView);
                         pix = this.runningDataView.dataToPixel(tplot, calData[sensorID][ind][tr]);
                         contextList[tr].beginPath();
                         contextList[tr].moveTo(pix[0], pix[1]);
