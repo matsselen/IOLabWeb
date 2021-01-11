@@ -1,7 +1,7 @@
 var iolabConfig =
 {
   "version": "1.1.0",
-  "powerOffDelay": "300",
+  "powerOffDelay": 300,
   "chartMeanParameters": {
     "duration": 0.5,
     "numberOfDigits": 2
@@ -272,6 +272,16 @@ var iolabConfig =
   ],
   "sensors": [
     {
+      "code": 0,
+      "desc": 'RSSI',
+      "shortDesc": 'RSSI',
+      "label": 'Sig Str',
+      "legends": ['Signal strength'],
+      "pathColors": ["#0000BB"],
+      "scales": [0, 100],
+      "autoScaleY": false,
+    },    
+    {
       "code": 1,
       "desc": "Accelerometer",
       "shortDesc": "Accel",
@@ -314,6 +324,7 @@ var iolabConfig =
       "label": "P",
       "unit": "kPa",
       "legends": ["Pressure"],
+      "pathColors": ["#0000BB"],
       "scales": [0, 120],
       "autoScaleY": false
     },
@@ -324,6 +335,7 @@ var iolabConfig =
       "label": "Intensity",
       "unit": "",
       "legends": ["Intensity"],
+      "pathColors": ["#0000BB"],
       "scales": [0, 10],
       "fftThreshold": 25,
       "autoScaleY": false
@@ -335,6 +347,7 @@ var iolabConfig =
       "label": "Intensity",
       "unit": "",
       "legends": ["Intensity"],
+      "pathColors": ["#0000BB"],
       "scales": [0, 10],
       "autoScaleY": false
     },
@@ -403,6 +416,7 @@ var iolabConfig =
       "label": "T",
       "unit": "V",
       "legends": ["Battery"],
+      "pathColors": ["#0000BB"],
       "scales": [0, 4],
       "autoScaleY": false
     },
@@ -413,6 +427,7 @@ var iolabConfig =
       "label": "A",
       "unit": "mV",
       "legends": ["Voltage"],
+      "pathColors": ["#0000BB"],
       "scales": [-1, 1],
       "autoScaleY": false
     },
@@ -430,6 +445,7 @@ var iolabConfig =
       "label": "A",
       "unit": "V",
       "legends": ["Voltage"],
+      "pathColors": ["#0000BB"],
       "scales": [-0.5, 3.7],
       "autoScaleY": false
     },
@@ -440,6 +456,7 @@ var iolabConfig =
       "label": "A",
       "unit": "V",
       "legends": ["Voltage"],
+      "pathColors": ["#0000BB"],
       "scales": [-0.5, 3.7],
       "autoScaleY": false
     },
@@ -450,6 +467,7 @@ var iolabConfig =
       "label": "A",
       "unit": "V",
       "legends": ["Voltage"],
+      "pathColors": ["#0000BB"],
       "scales": [-0.5, 3.7],
       "autoScaleY": false
     },

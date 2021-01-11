@@ -1,4 +1,4 @@
-
+'use strict';
 //====================================================================
 // returns the appropriate byte array for the requested command record
 function getCommandRecord(command, remoteID, payload) {

@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-  <title>IOLab Web v0.1.0</title>
+  <title>IOLab Web v0.2.0</title>
   <meta charset="utf-8">
   <meta name="iolab" content="testing-w-web-serial">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -12,13 +12,12 @@
 
   <script src="CanvasStack-2v01.js"></script>
   <script src="globalVariables.js"></script>
-  <script src="plot_config.js"></script>
-  <script src="plot_data.js"></script>
-  <script src="plot_handlers.js"></script>
+  <script src="box_handlers.js"></script>
   <script src="process_data.js"></script>
   <script src="iolab_options.js"></script>
   <script src="config.js"></script>
-  <script src="test.js"></script>
+  <script src="files.js"></script>
+  <script src="PlotClass.js"></script>
   <script src="main.js" defer></script>
 
 </head>
@@ -50,22 +49,15 @@
     <button id="butStartStop" type="button">Start</button>
 
     <p>
-      <input id="sens_acc_ck" type="checkbox" checked="true">:Accelerometer Plot &nbsp;&nbsp;
-      <input id="text_area_ck" type="checkbox" checked="true">:Tx/Rx Control Records
+      <input id="text_area_ck" type="checkbox" checked="true">:Tx/Rx Control Records &nbsp;&nbsp;
+      <input id="debug_ck" type="checkbox" checked="true">:Debug Stuff
     </p>
 
-    <div id="accPlotContainer">
-      Accelerometer &nbsp;&nbsp;
-      Ax:<input id="trace_acc_x_ck" type="checkbox" checked="true">&nbsp;
-      Ay:<input id="trace_acc_y_ck" type="checkbox" checked="true">&nbsp;
-      Az:<input id="trace_acc_z_ck" type="checkbox" checked="true">&nbsp;
-      Drawing:<input id="draw_acc_ck" type="checkbox" checked="true">&nbsp;
-      <br />
-      <canvas id="chartAccCanvas" width="700" height="150" style="border:1px solid #4d4545; background: white;">
-        Your browser does not support the HTML5 canvas tag.</canvas>
+    <div id="testContainer" style="position:relative"  >
+
     </div>
 
-    <div id="textAreaContainer">
+    <div id="textAreaContainer"  >
       <table>
         <tr>
           <td>Tx:</td>

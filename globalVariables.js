@@ -1,12 +1,11 @@
 // Global variables for data acquisition
-
+'use strict';
 // run control
 var justRestarted = false;
 var justTurnedOnRemote = false;
 var runningDAQ = false;
 var daqConfigured = false;
 var serialConnected = false;
-var showDebugStuff = true;
 
 // event timers
 var rawRecordTimerID;

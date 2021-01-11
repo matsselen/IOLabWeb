@@ -1,5 +1,6 @@
 'use strict';
-// some test code
+
+// some test code for saving to a file
 function saveToFile() {
     var dataBlob = new Blob([document.getElementById("dataBoxRx").value], { type: "text/plain;charset=utf-8" });
     //var dataBlob = new Blob(rawData);
@@ -7,12 +8,7 @@ function saveToFile() {
     downloadData.download = "IOLab-data-test.txt";
 }
 
-//
-function parseFromFile(fileContents) {
-    document.getElementById("dataBoxRx").value = fileContents;
-}
-
-//
+// some test code for reading from a file
 async function readInputFile() {
     var frd = new FileReader;
     frd.readAsText(this.files[0]);
@@ -21,3 +17,7 @@ async function readInputFile() {
     }
 }
 
+// called by readInputFile
+function parseFromFile(fileContents) {
+    document.getElementById("dataBoxRx").value = fileContents;
+}

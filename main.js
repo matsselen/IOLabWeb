@@ -3,6 +3,8 @@
 //
 'use strict';
 
+var accPlotClass = null;
+
 let port = null;
 let reader = null;
 let writer = null;
@@ -39,10 +41,13 @@ document.addEventListener('DOMContentLoaded', () => {
   notSupported.classList.toggle('hidden', 'serial' in navigator);
 
   // create canvas stacks and layers for charts and set these up
-  createPlotLayers();
   setupChartControls();
   initialChartSelect();
   resetAcquisition();
+
+  // test IOLabPlot class
+  accPlotClass = new PlotIOLab(1,"testContainer");
+  //accPlotClass.drawAxes();
 
   // update the UI
   updateSystemState();
@@ -86,25 +91,59 @@ async function clickSend() {
 // when the Start/Stop button is clicked 
 async function clickStartStop() {
 
+  // start DAQ if we are not already running
   if (!runningDAQ) {
-    await sendRecord(getCommandRecord("startData"));
+    console.log("Start runnung");
+
+    // set the runningDAQ flag send a startData record to the system
     runningDAQ = true;
+    await sendRecord(getCommandRecord("startData"));
+
+    // update the data plots every plotTimerMS ms
+    plotTimerID = setInterval(plotNewData, plotTimerMS);
+
+    // keep track whether this is a restart or a first time start
     if (lastFrame > 0) justRestarted = true;
+
+
+  // stop DAQ and plotting if we are running
   } else {
-    await sendRecord(getCommandRecord("stopData"));
+    console.log("Stop runnung");
+
+    // clear the runningDAQ flag send a startData record to the system
     runningDAQ = false;
+    await sendRecord(getCommandRecord("stopData"));
+    
+    // stop updating the data plots
+    clearInterval(plotTimerID);
+
   }
+  
   updateSystemState();
+
+}
+
+// plots new data (called above)
+function plotNewData() {
+  // plot data from whatever sensors are selected (just accelerometer for now)
+  accPlotClass.plotRunningData();
 
 }
 
 //============================================
 // when the Debug button is clicked 
-// (set showDebugStuff in globalVariables is you want this button to 
-// show up at the bottom of the page along with some other debug stuff)
 async function clickDebug() {
   console.log("Debug button clicked (put breakpoint here)");
+  //window.dispatchEvent(new Event('resize'));
+  //xxx = new PlotIOLab(1,"testContainer");
+  //xxx.testFunc();
+  //accPlotClass = new PlotIOLab(1,"testContainer");
+  accPlotClass.testClass();
+  accPlotClass.testCanvas();
 }
+
+
+
 
 //============================================
 // send a byte array to the serial port
@@ -148,9 +187,6 @@ async function connectAndStart() {
 
   // Analyze new data
   calRecordTimerID = setInterval(buildAndCalibrate, calRecordTimerMS);
-
-  // Plot new data
-  plotTimerID = setInterval(plotNewData, plotTimerMS);
 
   // see if there is a dongle plugged in 
   // (the 100 ms delay will do this after read-loop starts)
@@ -303,13 +339,6 @@ function updateSystemState() {
     butStartStop.textContent = "Stop";
   } else {
     butStartStop.textContent = "Start";
-  }
-
-  // the debug button is just a handy place to put a breakpoint
-  if(showDebugStuff) {
-    debugStuff.style.display = "block";
-  } else {
-    debugStuff.style.display = "none";
   }
 
   // if we just turned on the remote, fetch info about it
