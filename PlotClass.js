@@ -53,6 +53,8 @@ class PlotIOLab {
         this.sensorNum = sensorNum;     // the number of the sensor being plotted
         this.parentName = parentName;   // the ID of the parent <div> block
 
+        let plotThis = this;                // save "this" to used in callback routines
+
         this.layerColorList = [];           // holds the canvas layer colors
         this.layerIDlist = [];              // a list of all canvas layer ID's
         this.layerElementList = [];         // save the element handles to save "getElementById" calls
@@ -133,6 +135,13 @@ class PlotIOLab {
             this.layerElementList.push(document.getElementById(layerID));
         }
 
+        // attach some event listeners to the top (control) layer
+        let ctlLayer = this.layerElementList[this.layerElementList.length-1];
+        let ctlDrawContext = ctlLayer.getContext("2d");
+        ctlLayer.addEventListener("mousedown",mouseDown);
+        ctlLayer.addEventListener("mouseup",mouseUp);
+        ctlLayer.addEventListener("mousemove",mouseMove);
+
         // create a checkbox for each component of the sensor data
         for (let ind = 0; ind < this.axisTitles.length; ind++) {
 
@@ -174,6 +183,37 @@ class PlotIOLab {
             } else {
                 document.getElementById(this.canvaslayer).style.display = "none";
             }
+        }
+
+        // event handlers for mouse
+        let ctlDrawing = false;
+        let mousePtrX, mousePtrY;
+        
+        function mouseDown(e) {
+          ctlDrawing = true;
+          mousePtrX = e.offsetX;
+          mousePtrY = e.offsetY;       
+        }
+        
+        function mouseUp(e) {
+          ctlDrawing = false;
+          drawRect(mousePtrX, mousePtrY, e.offsetX, e.offsetY);
+        }
+        
+        function mouseMove(e) {
+          if (ctlDrawing) {
+            drawRect(mousePtrX, mousePtrY, e.offsetX, e.offsetY);
+          }
+        }
+        
+        function drawRect(x1, y1, x2, y2) {
+          ctlDrawContext.beginPath();
+          ctlDrawContext.strokeStyle = 'black';
+          ctlDrawContext.lineWidth = 1;
+
+          ctlDrawContext.clearRect(0, 0, plotThis.baseElement.width, plotThis.baseElement.height);
+          ctlDrawContext.rect(x1, y1, (x2-x1), (y2-y1));
+          ctlDrawContext.stroke();
         }
 
     } // constructor
