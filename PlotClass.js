@@ -38,8 +38,8 @@ class ViewPort {
 
     // this method returns data coordinates when passed pixel coordinates
     pixelToData(xPix, yPix) {
-        let tDat = this.xMin + this.xSpan*xPix/this.cWidth;
-        let yDat = this.yMax - this.ySpan*yPix/this.cHeight;
+        let tDat = this.xMin + this.xSpan * xPix / this.cWidth;
+        let yDat = this.yMax - this.ySpan * yPix / this.cHeight;
         return [tDat, yDat];
     }
 
@@ -136,11 +136,12 @@ class PlotIOLab {
         }
 
         // attach some event listeners to the top (control) layer
-        let ctlLayer = this.layerElementList[this.layerElementList.length-1];
+        let ctlLayer = this.layerElementList[this.layerElementList.length - 1];
         let ctlDrawContext = ctlLayer.getContext("2d");
-        ctlLayer.addEventListener("mousedown",mouseDown);
-        ctlLayer.addEventListener("mouseup",mouseUp);
-        ctlLayer.addEventListener("mousemove",mouseMove);
+        ctlLayer.addEventListener("mousedown", mouseDown);
+        ctlLayer.addEventListener("mouseup", mouseUp);
+        ctlLayer.addEventListener("mousemove", mouseMove);
+        ctlLayer.addEventListener("mouseout", mouseOut);
 
         // create a checkbox for each component of the sensor data
         for (let ind = 0; ind < this.axisTitles.length; ind++) {
@@ -188,32 +189,43 @@ class PlotIOLab {
         // event handlers for mouse
         let ctlDrawing = false;
         let mousePtrX, mousePtrY;
-        
-        function mouseDown(e) {
-          ctlDrawing = true;
-          mousePtrX = e.offsetX;
-          mousePtrY = e.offsetY;       
-        }
-        
-        function mouseUp(e) {
-          ctlDrawing = false;
-          drawRect(mousePtrX, mousePtrY, e.offsetX, e.offsetY);
-        }
-        
-        function mouseMove(e) {
-          if (ctlDrawing) {
-            drawRect(mousePtrX, mousePtrY, e.offsetX, e.offsetY);
-          }
-        }
-        
-        function drawRect(x1, y1, x2, y2) {
-          ctlDrawContext.beginPath();
-          ctlDrawContext.strokeStyle = 'black';
-          ctlDrawContext.lineWidth = 1;
 
-          ctlDrawContext.clearRect(0, 0, plotThis.baseElement.width, plotThis.baseElement.height);
-          ctlDrawContext.rect(x1, y1, (x2-x1), (y2-y1));
-          ctlDrawContext.stroke();
+        function mouseDown(e) {
+            ctlDrawing = true;
+            mousePtrX = e.offsetX;
+            mousePtrY = e.offsetY;
+        }
+
+        function mouseUp(e) {
+            ctlDrawing = false;
+            drawRect(mousePtrX, mousePtrY, e.offsetX, e.offsetY);
+        }
+
+        function mouseMove(e) {
+            if (ctlDrawing) {
+                drawRect(mousePtrX, mousePtrY, e.offsetX, e.offsetY);
+            }
+        }
+
+        function mouseOut(e) {
+            if (ctlDrawing) {
+                ctlDrawing = false;
+            }
+        }
+
+        function drawRect(x1, y1, x2, y2) {
+           
+            ctlDrawContext.strokeStyle = 'black';
+            ctlDrawContext.lineWidth = 1;
+
+            ctlDrawContext.clearRect(0, 0, plotThis.baseElement.width+2, plotThis.baseElement.height+2);
+
+            if (x1 != x2 && y1 != y2) {
+                ctlDrawContext.beginPath();
+                ctlDrawContext.rect(x1, y1, (x2 - x1), (y2 - y1));
+                ctlDrawContext.stroke();
+            }
+            
         }
 
     } // constructor
