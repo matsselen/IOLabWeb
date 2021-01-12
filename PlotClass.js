@@ -16,11 +16,14 @@ class ViewPort {
         this.yMax = yMax;                       // maximum data y value
         this.canvasElement = canvasElement;     // the base canvas of the plot
 
+        this.xAxisOffset = 30;                  // space (px) at the left used to draw y-axis labels
+        this.yAxisOffset = 20;                  // space (px) at the bottom used to draw x-axis labels
+
         // derived values
         this.xSpan = xMax - xMin;               // x range
         this.ySpan = yMax - yMin;               // y range
-        this.cWidth = canvasElement.width;      // canvas width in pixels
-        this.cHeight = canvasElement.height;    // canvas height in pixels
+        this.cWidth = canvasElement.width - this.xAxisOffset;      // canvas width in pixels
+        this.cHeight = canvasElement.height - this.yAxisOffset;    // canvas height in pixels
     };
 
     // alight the viewport with time tTest and report back how many shifts were needed
@@ -45,22 +48,34 @@ class ViewPort {
     }
 
     // see if the viewport contain time tTest
-    containsTime = function (tTest) {
-        return ((tTest >= this.xMin) && (tTest < this.xMax));
+    containsXdata = function (xData) {
+        return ((xData >= this.xMin) && (xData < this.xMax));
     }
 
-    // this method shifts the viewport by nShift*xSpan
-    xShiftView = function (nShift) {
-        this.xMin = this.xMin + nShift * this.xSpan;
-        this.xMax = this.xMax + nShift * this.xSpan;
+    // see if the viewport contain time yData
+    containsYdata = function (yData) {
+        return ((yData >= this.yMin) && (yData < this.yMax));
     }
+
+
 
     // this method returns pixel coordinates when passed data coordinates
     dataToPixel(tDat, yDat) {
-        let xPix = ((tDat - this.xMin) / this.xSpan) * this.cWidth;
+        let xPix = this.xAxisOffset + ((tDat - this.xMin) / this.xSpan) * this.cWidth;
         let yPix = this.cHeight - ((yDat - this.yMin) / this.ySpan) * this.cHeight;
-        //return [parseInt(xPix), parseInt(yPix)];
         return [xPix, yPix];
+    }
+
+    // this method returns pixel coordinates when passed data coordinates
+    // and adjusts the coordinates to avoid pixel smearing when drawing chart axes
+    dataToPixelAxes(tDat, yDat, ctx) {
+        let xPix = this.xAxisOffset + ((tDat - this.xMin) / this.xSpan) * this.cWidth;
+        let yPix = this.cHeight - ((yDat - this.yMin) / this.ySpan) * this.cHeight;
+        if (ctx.lineWidth % 2 != 0) { // if the linewidth is an odd integer (like 1)
+            return [parseInt(xPix) + 0.5, parseInt(yPix) + 0.5];
+        } else {
+            return [parseInt(xPix), parseInt(yPix)];;
+        }
     }
 
     // this method returns data coordinates when passed pixel coordinates
@@ -86,6 +101,7 @@ class PlotIOLab {
         this.layerIDlist = [];              // a list of all canvas layer ID's
         this.layerElementList = [];         // save the element handles to save "getElementById" calls
         this.checkboxIDlist = [];           // a list of all checkbox ID's
+        this.chartLineWidth = 2;            // the width of the chart lines
 
         // this will hold (t,x,[y,z,...]) of last data point plotted 
         // start with [t] and we will add 0's for each trace further below
@@ -131,8 +147,12 @@ class PlotIOLab {
         baseCanvas.setAttribute("id", this.baseID);
         baseCanvas.setAttribute("width", 700);
         baseCanvas.setAttribute("height", 200);
-        baseCanvas.style.border = "1px solid #4d4545";
+        //baseCanvas.style.border = "1px solid #4d4545";
         baseCanvas.style.background = "white";
+
+        let baseContext = baseCanvas.getContext("2d");
+        let pixelRatio = getPixelRatio(baseContext);
+        console.log("pixelRatio ", pixelRatio);
 
         // create the control elements that appear above the canvas
         let controls = document.createElement("div");
@@ -253,6 +273,19 @@ class PlotIOLab {
             }
         }
 
+        // play with optimizing pixel width
+        function getPixelRatio(context) {
+            let dpr = window.devicePixelRatio || 1;
+            let bsr = context.webkitBackingStorePixelRatio ||
+                context.mozBackingStorePixelRatio ||
+                context.msBackingStorePixelRatio ||
+                context.oBackingStorePixelRatio ||
+                context.backingStorePixelRatio || 1;
+
+            console.log("dpr bsr ", dpr, bsr);
+            return dpr / bsr;
+        }
+
     } // constructor
 
     //==========================================================================================
@@ -262,12 +295,61 @@ class PlotIOLab {
 
         // get the bottom drawing layer context
         let ctx = this.layerElementList[0].getContext("2d");
-        ctx.strokeStyle = '#404040';
-        ctx.lineWidth = 1;
+        ctx.strokeStyle = '#696969';
+
+        // draw a horizontal line at y=0 if this in on the screen
+
+        this.drawHline(ctx, vp, 0, 1, '#696969');
+        this.drawVline(ctx, vp, 1, 1, '#696969');
+
+        this.drawHline(ctx, vp, vp.yMin, 1, '#000000', "<");
+        this.drawVline(ctx, vp, vp.xMin, 1, '#000000', "<");
+
+        this.drawHline(ctx, vp, vp.yMin + 5, 1, '#000000', "-");
+        this.drawVline(ctx, vp, vp.xMin +.5, 1, '#000000', "-");
+
+        ctx.font = "12px Arial";
+        ctx.fillText("1 2 3 4 5", ctx.canvas.width / 2, ctx.canvas.height / 2 + 20);
+    }
+
+    // draws a vertical line at y = yDat on context ctx reference to viewport vp 
+    // and with width:lineWidth and color:strokeStyle 
+    drawHline(ctx, vp, yDat, lineWidth, strokeStyle, opt="") {
+        ctx.lineWidth = lineWidth;
+        ctx.strokeStyle = strokeStyle;
+
         ctx.beginPath();
 
-        let pix1 = vp.dataToPixel(vp.xMin,(vp.yMax+vp.yMin)/2);
-        let pix2 = vp.dataToPixel(vp.xMax,(vp.yMax+vp.yMin)/2);
+        let pix1 = vp.dataToPixelAxes(vp.xMin, yDat, ctx);
+        let pix2 = vp.dataToPixelAxes(vp.xMax, yDat, ctx);
+
+        if (opt == "<") { // make the starting end 5 px longer
+            pix1[0] -= 5;
+        } else if (opt == "-") { // make this a tick-mark
+            pix2[0] = pix1[0] - 5;
+        }
+
+        ctx.moveTo(pix1[0], pix1[1]);
+        ctx.lineTo(pix2[0], pix2[1]);
+        ctx.stroke();
+
+    }
+
+    // draws a vertical line at y = yDat on context ctx reference to viewport vp 
+    // and with width:lineWidth and color:strokeStyle 
+    drawVline(ctx, vp, xDat, lineWidth, strokeStyle, opt="") {
+        ctx.lineWidth = lineWidth;
+        ctx.strokeStyle = strokeStyle;
+
+        ctx.beginPath();
+        let pix1 = vp.dataToPixelAxes(xDat, vp.yMin, ctx);
+        let pix2 = vp.dataToPixelAxes(xDat, vp.yMax, ctx);
+
+        if (opt == "<") { // make the starting end 5 px longer
+            pix1[1] += 5;
+        } else if (opt == "-") { // make this a tick-mark
+            pix2[1] = pix1[1] + 5;
+        }       
 
         ctx.moveTo(pix1[0], pix1[1]);
         ctx.lineTo(pix2[0], pix2[1]);
@@ -284,7 +366,9 @@ class PlotIOLab {
             let ctx = this.layerElementList[ind].getContext("2d");
             contextList.push(ctx);
             ctx.strokeStyle = this.layerColorList[ind];
-            ctx.lineWidth = 2;
+            // set the default linewidth to be the same for all layers
+            // this may be modified when (for example) drawing axes
+            ctx.lineWidth = this.chartLineWidth;
         }
 
         // the size of all layers is the same as the bottom one
