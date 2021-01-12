@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // test IOLabPlot class
   accPlotClass = new PlotIOLab(1,"testContainer");
-  //accPlotClass.drawAxes();
+  accPlotClass.drawPlotAxes(accPlotClass.runningDataView);
 
   // update the UI
   updateSystemState();

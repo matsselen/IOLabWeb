@@ -262,8 +262,8 @@ class PlotIOLab {
 
         // get the bottom drawing layer context
         let ctx = this.layerElementList[0].getContext("2d");
-        ctx.strokeStyle = 'black';
-        ctx.lineWidth = .5;
+        ctx.strokeStyle = '#404040';
+        ctx.lineWidth = 1;
         ctx.beginPath();
 
         let pix1 = vp.dataToPixel(vp.xMin,(vp.yMax+vp.yMin)/2);
@@ -272,7 +272,6 @@ class PlotIOLab {
         ctx.moveTo(pix1[0], pix1[1]);
         ctx.lineTo(pix2[0], pix2[1]);
         ctx.stroke();
-
 
     }
 
