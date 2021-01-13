@@ -150,10 +150,6 @@ class PlotIOLab {
         //baseCanvas.style.border = "1px solid #4d4545";
         baseCanvas.style.background = "white";
 
-        let baseContext = baseCanvas.getContext("2d");
-        let pixelRatio = getPixelRatio(baseContext);
-        console.log("pixelRatio ", pixelRatio);
-
         // create the control elements that appear above the canvas
         let controls = document.createElement("div");
         let chartName = document.createTextNode(this.plotName + "\xA0\xA0");
@@ -215,11 +211,14 @@ class PlotIOLab {
             // add the labels and boxes to the control region
             controls.appendChild(axis);
             controls.appendChild(cb);
-
-            // Set up the viewport that will be used while the DAQ is running 
-            this.runningDataView = new ViewPort(0, 10, -25, 35, this.baseElement);
-
         }
+
+        // Set up the viewport that will be used while the DAQ is running 
+        this.runningDataView = new ViewPort(0, 10, -25, 35, this.baseElement);
+
+
+        // =================================================================================
+        // IOLabPlot Constructor functions and event handlers
 
         // event handler for the layer selection checkboxes
         function selectLayer() {
@@ -232,34 +231,35 @@ class PlotIOLab {
             }
         }
 
-        // event handlers for mouse
-        let ctlDrawing = false;
+        // various handlers for mouse events
+        let selecting = false;
         let mousePtrX, mousePtrY;
 
         function mouseDown(e) {
-            ctlDrawing = true;
+            selecting = true;
             mousePtrX = e.offsetX;
             mousePtrY = e.offsetY;
         }
 
         function mouseUp(e) {
-            ctlDrawing = false;
-            drawRect(mousePtrX, mousePtrY, e.offsetX, e.offsetY);
+            selecting = false;
+            drawSelectionRect(mousePtrX, mousePtrY, e.offsetX, e.offsetY);
         }
 
         function mouseMove(e) {
-            if (ctlDrawing) {
-                drawRect(mousePtrX, mousePtrY, e.offsetX, e.offsetY);
+            if (selecting) {
+                drawSelectionRect(mousePtrX, mousePtrY, e.offsetX, e.offsetY);
             }
         }
 
         function mouseOut(e) {
-            if (ctlDrawing) {
-                ctlDrawing = false;
+            if (selecting) {
+                selecting = false;
             }
         }
 
-        function drawRect(x1, y1, x2, y2) {
+        // use when selecting a rectangle for some control function like zooming
+        function drawSelectionRect(x1, y1, x2, y2) {
 
             ctlDrawContext.strokeStyle = 'black';
             ctlDrawContext.lineWidth = 1;
@@ -273,22 +273,10 @@ class PlotIOLab {
             }
         }
 
-        // play with optimizing pixel width
-        function getPixelRatio(context) {
-            let dpr = window.devicePixelRatio || 1;
-            let bsr = context.webkitBackingStorePixelRatio ||
-                context.mozBackingStorePixelRatio ||
-                context.msBackingStorePixelRatio ||
-                context.oBackingStorePixelRatio ||
-                context.backingStorePixelRatio || 1;
-
-            console.log("dpr bsr ", dpr, bsr);
-            return dpr / bsr;
-        }
-
     } // constructor
 
     //==========================================================================================
+    // IOLabPlot class methods
 
     // draw plot axes on the layer below the chart traces of ViewPort vp
     drawPlotAxes(vp) {
@@ -305,7 +293,7 @@ class PlotIOLab {
             this.drawVline(ctx, vp, t, 1, '#000000', "-");
         }
 
-        let yStart = parseInt(vp.yMin/10)*10
+        let yStart = parseInt(vp.yMin / 10) * 10
         for (let y = yStart; y < vp.yMax; y += 10) {
             let pix = vp.dataToPixel(vp.xMin, y);
             ctx.fillText(y.toString().padStart(4), pix[0] - 25, pix[1] + 3);
