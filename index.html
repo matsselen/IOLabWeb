@@ -12,7 +12,7 @@
 
   <script src="CanvasStack-2v01.js"></script>
   <script src="globalVariables.js"></script>
-  <script src="box_handlers.js"></script>
+  <script src="misc.js"></script>
   <script src="process_data.js"></script>
   <script src="iolab_options.js"></script>
   <script src="config.js"></script>
@@ -54,29 +54,28 @@
     <br />
 
     <p>
-      <input id="text_area_ck" type="checkbox" checked="true">:Tx/Rx Control Records &nbsp;&nbsp;
+      <!-- <input id="text_area_ck" type="checkbox" checked="true">:Tx/Rx Control Records &nbsp;&nbsp; -->
       <input id="debug_ck" type="checkbox" checked="true">:Debug Stuff
     </p>
 
-
-    <div id="textAreaContainer">
-      <table>
-        <tr>
-          <td>Tx:</td>
-          <td>Rx:</td>
-        </tr>
-        <tr>
-          <td><textarea id="dataBoxTx" rows="10" cols="30"
-              style="overflow:scroll; resize:horizontal; min-width:200px;"></textarea></td>
-          <td><textarea id="dataBoxRx" rows="10" cols="60"
-              style="overflow:scroll; resize:horizontal; min-width:200px;"></textarea></td>
-        </tr>
-      </table>
-    </div>
-
-
     <!-- For Debugging -->
     <div id="debugStuff">
+
+      <div id="textAreaContainer">
+        <table>
+          <tr>
+            <td>Tx:</td>
+            <td>Rx:</td>
+          </tr>
+          <tr>
+            <td><textarea id="dataBoxTx" rows="10" cols="30"
+                style="overflow:scroll; resize:horizontal; min-width:200px;"></textarea></td>
+            <td><textarea id="dataBoxRx" rows="10" cols="60"
+                style="overflow:scroll; resize:horizontal; min-width:200px;"></textarea></td>
+          </tr>
+        </table>
+      </div>
+
       <p> <button id="butDebug" type="button">Debug</button></p>
 
       <p> Rx Download: <a href="" id="downloadData" onclick="saveToFile()" title="Download contents of Rx"
