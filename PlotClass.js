@@ -101,7 +101,7 @@ class PlotIOLab {
         this.layerIDlist = [];              // a list of all canvas layer ID's
         this.layerElementList = [];         // save the element handles to save "getElementById" calls
         this.checkboxIDlist = [];           // a list of all checkbox ID's
-        this.chartLineWidth = 2;            // the width of the chart lines
+        this.chartLineWidth = 1;            // the width of the chart lines
 
         // this will hold (t,x,[y,z,...]) of last data point plotted 
         // start with [t] and we will add 0's for each trace further below
@@ -295,26 +295,31 @@ class PlotIOLab {
 
         // get the bottom drawing layer context
         let ctx = this.layerElementList[0].getContext("2d");
-        ctx.strokeStyle = '#696969';
+        ctx.strokeStyle = 'black';
+        ctx.font = "11px Arial";
 
-        // draw a horizontal line at y=0 if this in on the screen
-
-        this.drawHline(ctx, vp, 0, 1, '#696969');
-        this.drawVline(ctx, vp, 1, 1, '#696969');
+        for (let t = vp.xMin; t < vp.xMax; t += 1) {
+            let pix = vp.dataToPixel(t, vp.yMin);
+            ctx.fillText(t.toString(), pix[0]-2, pix[1]+16);
+            this.drawVline(ctx, vp, t, 1, '#cccccc', "");
+            this.drawVline(ctx, vp, t, 1, '#000000', "-");
+        }
+        
+        for (let y = vp.yMin; y < vp.yMax; y += 5) {
+            let pix = vp.dataToPixel(vp.xMin, y);
+            ctx.fillText(y.toString(), pix[0]-25, pix[1]+3);
+            this.drawHline(ctx, vp, y, 1, '#cccccc', "");
+            this.drawHline(ctx, vp, y, 1, '#000000', "-");            
+        }
 
         this.drawHline(ctx, vp, vp.yMin, 1, '#000000', "<");
         this.drawVline(ctx, vp, vp.xMin, 1, '#000000', "<");
-
-        this.drawHline(ctx, vp, vp.yMin + 5, 1, '#000000', "-");
-        this.drawVline(ctx, vp, vp.xMin +.5, 1, '#000000', "-");
-
-        ctx.font = "12px Arial";
-        ctx.fillText("1 2 3 4 5", ctx.canvas.width / 2, ctx.canvas.height / 2 + 20);
+        this.drawHline(ctx, vp, 0, 1, '#000000');
     }
 
     // draws a vertical line at y = yDat on context ctx reference to viewport vp 
     // and with width:lineWidth and color:strokeStyle 
-    drawHline(ctx, vp, yDat, lineWidth, strokeStyle, opt="") {
+    drawHline(ctx, vp, yDat, lineWidth, strokeStyle, opt = "") {
         ctx.lineWidth = lineWidth;
         ctx.strokeStyle = strokeStyle;
 
@@ -337,7 +342,7 @@ class PlotIOLab {
 
     // draws a vertical line at y = yDat on context ctx reference to viewport vp 
     // and with width:lineWidth and color:strokeStyle 
-    drawVline(ctx, vp, xDat, lineWidth, strokeStyle, opt="") {
+    drawVline(ctx, vp, xDat, lineWidth, strokeStyle, opt = "") {
         ctx.lineWidth = lineWidth;
         ctx.strokeStyle = strokeStyle;
 
@@ -349,7 +354,7 @@ class PlotIOLab {
             pix1[1] += 5;
         } else if (opt == "-") { // make this a tick-mark
             pix2[1] = pix1[1] + 5;
-        }       
+        }
 
         ctx.moveTo(pix1[0], pix1[1]);
         ctx.lineTo(pix2[0], pix2[1]);
@@ -424,6 +429,8 @@ class PlotIOLab {
                     shiftView = true;
                     console.log("In plotRunningData(2) - shifted viewport by ", nShift);
                 }
+
+                if (shiftView) contextList[0].clearRect(0, 0, cWidth, cHeight);
 
                 for (let tr = 1; tr < this.nTraces + 1; tr++) {
 
