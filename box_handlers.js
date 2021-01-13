@@ -32,10 +32,10 @@ function sensorSelect() {
 // set things up initially to show & hide the appropriate buttons
 function initialChartSelect() {
 
-  document.getElementById("textAreaContainer").style.display = "block";
-  document.getElementById("text_area_ck").checked = true;
+  document.getElementById("textAreaContainer").style.display = "none";
+  document.getElementById("text_area_ck").checked = false;
 
-  document.getElementById("debugStuff").style.display = "block";
-  document.getElementById("debug_ck").checked = true;
+  document.getElementById("debugStuff").style.display = "none";
+  document.getElementById("debug_ck").checked = false;
 
 }
