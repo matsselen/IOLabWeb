@@ -41,8 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
   notSupported.classList.toggle('hidden', 'serial' in navigator);
 
   // create canvas stacks and layers for charts and set these up
-  setupChartControls();
-  initialChartSelect();
+  setupControls();
   resetAcquisition();
 
   // test IOLabPlot class
