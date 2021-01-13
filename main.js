@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
   resetAcquisition();
 
   // test IOLabPlot class
-  accPlotClass = new PlotIOLab(1,"testContainer");
+  accPlotClass = new PlotIOLab(1, "testContainer");
   accPlotClass.drawPlotAxes(accPlotClass.runningDataView);
 
   // update the UI
@@ -60,9 +60,14 @@ async function clickConnect() {
 
   // if we are already connected then disconnect
   if (port != null) {
-    await disconnectAndStop();
-    updateSystemState();
-    return;
+    if (runningDAQ) {
+      console.log("Don't disconnect while running !");
+      return;
+    } else {
+      await disconnectAndStop();
+      updateSystemState();
+      return;
+    }
   }
 
   // otherwise try connecting
@@ -106,19 +111,19 @@ async function clickStartStop() {
     if (lastFrame > 0) justRestarted = true;
 
 
-  // stop DAQ and plotting if we are running
+    // stop DAQ and plotting if we are running
   } else {
     console.log("Stop runnung");
 
     // clear the runningDAQ flag send a startData record to the system
     runningDAQ = false;
     await sendRecord(getCommandRecord("stopData"));
-    
+
     // stop updating the data plots
     clearInterval(plotTimerID);
 
   }
-  
+
   updateSystemState();
 
 }
@@ -309,7 +314,7 @@ function updateSystemState() {
     butSend.hidden = true;
   }
 
-  if(current_cmd == "setFixedConfig") {
+  if (current_cmd == "setFixedConfig") {
     butSend.textContent = "Configure";
   } else {
     butSend.textContent = "Send Command";

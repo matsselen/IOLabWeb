@@ -217,7 +217,7 @@ class PlotIOLab {
             controls.appendChild(cb);
 
             // Set up the viewport that will be used while the DAQ is running 
-            this.runningDataView = new ViewPort(0, 10, -15, 25, this.baseElement);
+            this.runningDataView = new ViewPort(0, 10, -25, 35, this.baseElement);
 
         }
 
@@ -305,7 +305,8 @@ class PlotIOLab {
             this.drawVline(ctx, vp, t, 1, '#000000', "-");
         }
 
-        for (let y = vp.yMin; y < vp.yMax; y += 5) {
+        let yStart = parseInt(vp.yMin/10)*10
+        for (let y = yStart; y < vp.yMax; y += 10) {
             let pix = vp.dataToPixel(vp.xMin, y);
             ctx.fillText(y.toString().padStart(4), pix[0] - 25, pix[1] + 3);
             this.drawHline(ctx, vp, y, 1, '#cccccc', "");
