@@ -281,10 +281,14 @@ class PlotIOLab {
     // draw plot axes on the layer below the chart traces of ViewPort vp
     drawPlotAxes(vp) {
 
-        // get the bottom drawing layer context
+        // get the bottom drawing layer context and set up the default text style
         let ctx = this.layerElementList[0].getContext("2d");
         ctx.strokeStyle = 'black';
         ctx.font = "11px Arial";
+
+        // draw and label the vertial grid-lines (time axis)
+        // draw about 10 lines at appropriate even intervals
+        let roughDt = vp.xSpan/10;
 
         for (let t = vp.xMin; t < vp.xMax; t += 1) {
             let pix = vp.dataToPixel(t, vp.yMin);
@@ -293,6 +297,7 @@ class PlotIOLab {
             this.drawVline(ctx, vp, t, 1, '#000000', "-");
         }
 
+        // draw and label the horixontal grid-lines (data axis) 
         let yStart = parseInt(vp.yMin / 10) * 10
         for (let y = yStart; y < vp.yMax; y += 10) {
             let pix = vp.dataToPixel(vp.xMin, y);
