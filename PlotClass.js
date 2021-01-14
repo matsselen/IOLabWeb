@@ -103,6 +103,8 @@ class PlotIOLab {
         this.checkboxIDlist = [];           // a list of all checkbox ID's
         this.chartLineWidth = 1;            // the width of the chart lines
 
+        this.viewStack = [];                // a stack of static viewports ([0] is always current)
+
         // this will hold (t,x,[y,z,...]) of last data point plotted 
         // start with [t] and we will add 0's for each trace further below
         this.datLast = [-1];
@@ -177,14 +179,6 @@ class PlotIOLab {
             this.layerElementList.push(document.getElementById(layerID));
         }
 
-        // attach some event listeners to the top (control) layer
-        let ctlLayer = this.layerElementList[this.layerElementList.length - 1];
-        let ctlDrawContext = ctlLayer.getContext("2d");
-        ctlLayer.addEventListener("mousedown", mouseDown);
-        ctlLayer.addEventListener("mouseup", mouseUp);
-        ctlLayer.addEventListener("mousemove", mouseMove);
-        ctlLayer.addEventListener("mouseout", mouseOut);
-
         // create a checkbox for each component of the sensor data
         for (let ind = 0; ind < this.axisTitles.length; ind++) {
 
@@ -215,6 +209,14 @@ class PlotIOLab {
 
         // Set up the viewport that will be used while the DAQ is running 
         this.runningDataView = new ViewPort(0, 10, -25, 35, this.baseElement);
+
+        // attach some event listeners to the top (control) layer
+        let ctlLayer = this.layerElementList[this.layerElementList.length - 1];
+        let ctlDrawContext = ctlLayer.getContext("2d");
+        ctlLayer.addEventListener("mousedown", mouseDown);
+        ctlLayer.addEventListener("mouseup", mouseUp);
+        ctlLayer.addEventListener("mousemove", mouseMove);
+        ctlLayer.addEventListener("mouseout", mouseOut);
 
 
         // =================================================================================
@@ -288,8 +290,13 @@ class PlotIOLab {
 
         // draw and label the vertial grid-lines (time axis)
         // draw about 10 lines at appropriate even intervals
-        let roughDt = vp.xSpan/10;
+        // the actial interval should be 
+        let roughDt = vp.xSpan / 10;
 
+        // start with the multiple of 1 immediately above xMin
+        // (unless we are starting at 0)
+        let tStart = parseInt(vp.xMin + 1);
+        if (vp.xMin == 0) tStart = 0;
         for (let t = vp.xMin; t < vp.xMax; t += 1) {
             let pix = vp.dataToPixel(t, vp.yMin);
             ctx.fillText(t.toString(), pix[0] - 3, pix[1] + 16);
@@ -298,7 +305,9 @@ class PlotIOLab {
         }
 
         // draw and label the horixontal grid-lines (data axis) 
-        let yStart = parseInt(vp.yMin / 10) * 10
+        // start with the multiple of 10 immediately above yMin
+        let yStart = parseInt(vp.yMin / 10) * 10;
+        if (yStart > 0) ySTart += 1;
         for (let y = yStart; y < vp.yMax; y += 10) {
             let pix = vp.dataToPixel(vp.xMin, y);
             ctx.fillText(y.toString().padStart(4), pix[0] - 25, pix[1] + 3);
@@ -356,6 +365,26 @@ class PlotIOLab {
 
     }
 
+    // this is called when data acquisition is stopped 
+    displayStaticData() {
+
+        // first create a viewport that contains the entire time-range      
+        this.staticDataView = new ViewPort(0, this.runningDataView.xMax,
+            this.runningDataView.yMin, this.runningDataView.yMax,
+            this.baseElement
+        );
+
+        // Save the default static view on a stack. Zoomed views will pushed on to the bottom
+        // of this stack so that element [0] is always the current view and previous views can 
+        // be easily retireved. 
+        this.viewStack.push(this.staticDataView);
+
+        this.plotStaticData();
+            
+
+    }
+
+
     // Plots data after data acquisition is stopped or paused.
     plotStaticData() {
 
@@ -365,8 +394,6 @@ class PlotIOLab {
             let ctx = this.layerElementList[ind].getContext("2d");
             contextList.push(ctx);
             ctx.strokeStyle = this.layerColorList[ind];
-            // set the default linewidth to be the same for all layers
-            // this may be modified when (for example) drawing axes
             ctx.lineWidth = this.chartLineWidth;
         }
 
@@ -376,92 +403,48 @@ class PlotIOLab {
 
         let sensorID = this.sensorNum;
 
-        // see if we have unread calibrated data
-        if (calReadPtr[sensorID] < calData[sensorID].length) {
 
-            let pix = []; // holds an [x,y] pixel coordinate
+        // clear canvas and draw the axes appropriate for the current viewport
+        contextList[0].clearRect(0, 0, cWidth, cHeight);
+        this.drawPlotAxes(this.viewStack[0]);
 
-            // find the time coordinate of the data at the current read pointer
-            let td = calData[sensorID][calReadPtr[sensorID]][0];
+        let inPort = false;
+        let pix = [];
 
-            // make sure the viewport contains this time
-            let nShift = this.runningDataView.alignWith(td);
-            if (nShift != 0) {
-                console.log("In plotRunningData(1) - shifted viewport by ", nShift);
+        // loop over data
+        for (let ind = 0; ind < calData[sensorID].length; ind++) {
+
+            let tplot = calData[sensorID][ind][0]; // the current time coordinate
+
+            // don't bother plottint to the right of the viewport
+            if (tplot > this.viewStack[0].xMax) { 
+                break; 
             }
 
-            // for each trace, find the starting point
-            for (let tr = 1; tr < this.nTraces + 1; tr++) { //traces start numbering at 1
-
-                contextList[tr].beginPath();
-
-                // if this is the first call after instantiating the class, 
-                // start with the data at calReadPtr (presumably 0)
-                if (this.datLast[0] < 0) {
-
-                    this.drawPlotAxes(this.runningDataView);
-
-                    let xd = calData[sensorID][calReadPtr[sensorID]][tr];
-                    pix = this.runningDataView.dataToPixel(td, xd);
-
-                } else { // if this is not the first call start with the last datapoint we plotted
-
-                    let tstart = this.datLast[0];
-                    pix = this.runningDataView.dataToPixel(tstart, this.datLast[tr]);
-                }
-                contextList[tr].moveTo(pix[0], pix[1]);
-            }
-
-            let shiftView = false; // use this to indicate we are shifting the viewport
-            for (let ind = calReadPtr[sensorID]; ind < calData[sensorID].length; ind++) {
-
-                let tplot = calData[sensorID][ind][0]; // the current time coordinate
-
-                // shift the viewport if necessary
-                let nShift = this.runningDataView.alignWith(tplot);
-                if (nShift != 0) {
-                    shiftView = true;
-                    console.log("In plotRunningData(2) - shifted viewport by ", nShift);
-                }
-
-                // if we are about to shift the viewport clear the axis layer and redraw the axes
-                if (shiftView) {
-                    contextList[0].clearRect(0, 0, cWidth, cHeight);
-                    this.drawPlotAxes(this.runningDataView);
-                }
-
+            // find the first dataploint at the leftmost edge of the viewport 
+            // and start the line these
+            if (!inPort && tplot >= this.viewStack[0].xMin) {
+                inPort = true;
                 for (let tr = 1; tr < this.nTraces + 1; tr++) {
-
-                    // see if we need to wrap
-                    if (shiftView) {
-
-                        // draw the current line before wrapping
-                        contextList[tr].stroke();
-
-                        // clear canvas before wrapping
-                        contextList[tr].clearRect(0, 0, cWidth, cHeight);
-                        pix = this.runningDataView.dataToPixel(tplot, calData[sensorID][ind][tr]);
-                        contextList[tr].beginPath();
-                        contextList[tr].moveTo(pix[0], pix[1]);
-
-                    } else {
-
-                        pix = this.runningDataView.dataToPixel(tplot, calData[sensorID][ind][tr]);
-                        contextList[tr].lineTo(pix[0], pix[1]);
-
-                    }
+                    contextList[tr].clearRect(0, 0, cWidth, cHeight);
+                    pix = this.runningDataView.dataToPixel(tplot, calData[sensorID][ind][tr]);
+                    contextList[tr].beginPath();
+                    contextList[tr].moveTo(pix[0], pix[1]);
                 }
-                shiftView = false;
-            }
-
-            // set pointers to their new values and finish the line
-            calReadPtr[sensorID] = calData[sensorID].length;
-            this.datLast[0] = calData[sensorID][calData[sensorID].length - 1][0];
-            for (let tr = 1; tr < this.nTraces + 1; tr++) {
-                this.datLast[tr] = calData[sensorID][calData[sensorID].length - 1][tr];
-                contextList[tr].stroke();
+            
+            } else { // once we have the first point start drawing the rest
+                for (let tr = 1; tr < this.nTraces + 1; tr++) {
+                    pix = this.runningDataView.dataToPixel(tplot, calData[sensorID][ind][tr]);
+                    contextList[tr].lineTo(pix[0], pix[1]);
+                }
             }
         }
+
+
+        for (let tr = 1; tr < this.nTraces + 1; tr++) {
+            contextList[tr].stroke();
+        }
+
     } // plotStaticData
 
     // Plots any new avaiable data. Called on a timer during data acquisition.
@@ -473,8 +456,6 @@ class PlotIOLab {
             let ctx = this.layerElementList[ind].getContext("2d");
             contextList.push(ctx);
             ctx.strokeStyle = this.layerColorList[ind];
-            // set the default linewidth to be the same for all layers
-            // this may be modified when (for example) drawing axes
             ctx.lineWidth = this.chartLineWidth;
         }
 

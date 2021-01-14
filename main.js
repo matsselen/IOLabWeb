@@ -121,6 +121,8 @@ async function clickStartStop() {
     // stop updating the data plots
     clearInterval(plotTimerID);
 
+    accPlotClass.displayStaticData();
+
   }
 
   updateSystemState();
@@ -144,6 +146,7 @@ async function clickDebug() {
   //accPlotClass = new PlotIOLab(1,"testContainer");
   accPlotClass.testClass();
   accPlotClass.testCanvas();
+  accPlotClass.displayStaticData();
 }
 
 
