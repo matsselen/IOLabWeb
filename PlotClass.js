@@ -24,10 +24,26 @@ class ViewPort {
         this.ySpan = yMax - yMin;               // y range
         this.cWidth = canvasElement.width - this.xAxisOffset;      // canvas width in pixels
         this.cHeight = canvasElement.height - this.yAxisOffset;    // canvas height in pixels
-    };
+    }; // end constructor
+
+    //=========================================================================================
+    //======================ViewPort Methods===================================================
+
+    // pick the optimum values for time-axis labels 
+    // (basically some multiple of 1, 2, 5, 10 so that we get between 5 and 15 labels )
+    pickTimeAxis() {
+
+        // find the upper and lower bounds of the interval size
+        let int_max = this.xSpan/5;
+        let int_min = this.xSpan/15;
+
+        // find the 
+
+        return ([1,2]);
+    }
 
     // alight the viewport with time tTest and report back how many shifts were needed
-    alignWith = function (tTest) {
+    alignWith (tTest) {
 
         let nShift = 0;
 
@@ -48,12 +64,12 @@ class ViewPort {
     }
 
     // see if the viewport contain time tTest
-    containsXdata = function (xData) {
+    containsXdata(xData) {
         return ((xData >= this.xMin) && (xData < this.xMax));
     }
 
     // see if the viewport contain time yData
-    containsYdata = function (yData) {
+    containsYdata(yData) {
         return ((yData >= this.yMin) && (yData < this.yMax));
     }
 
@@ -318,8 +334,11 @@ class PlotIOLab {
         }
 
     } // constructor
+    //======================================================================================================
+    //======================================================================================================
+    //======================================================================================================
 
-
+    //===============================IOLabPlot Methods======================================================
     // draw plot axes on the layer below the chart traces of ViewPort vp
     drawPlotAxes(vp) {
 
@@ -333,8 +352,7 @@ class PlotIOLab {
 
         // draw and label the vertial grid-lines (time axis)
         // draw about 10 lines at appropriate even intervals
-        // the actial interval should be 
-        let roughDt = vp.xSpan / 10;
+        let timeAxis = vp.pickTimeAxis();
 
         // start with the multiple of 1 immediately above xMin
         // (unless we are starting at 0)
@@ -343,6 +361,8 @@ class PlotIOLab {
         for (let t = vp.xMin; t < vp.xMax; t += 1) {
             let pix = vp.dataToPixel(t, vp.yMin);
             ctx.fillText(t.toString(), pix[0] - 3, pix[1] + 16);
+            //ctx.fillText(t.toPrecision(2), pix[0] - 8, pix[1] + 16);
+            //ctx.fillText(t.toFixed(), pix[0] - 3, pix[1] + 16);
             this.drawVline(ctx, vp, t, 1, '#cccccc', "");
             this.drawVline(ctx, vp, t, 1, '#000000', "-");
         }
@@ -431,7 +451,6 @@ class PlotIOLab {
 
 
     }
-
 
     // Plots data after data acquisition is stopped or paused.
     plotStaticData() {
