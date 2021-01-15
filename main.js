@@ -99,6 +99,14 @@ async function clickStartStop() {
   if (!runningDAQ) {
     console.log("Start runnung");
 
+    // remove the static viewports from the stack if there are any
+    while (accPlotClass.viewStack.length > 1) {
+      accPlotClass.viewStack.shift();
+    }
+    accPlotClass.mouseMode = "";
+    accPlotClass.drawPlotAxes(accPlotClass.viewStack[0]);
+    accPlotClass.plotStaticData();
+
     // set the runningDAQ flag send a startData record to the system
     runningDAQ = true;
     await sendRecord(getCommandRecord("startData"));
@@ -121,6 +129,7 @@ async function clickStartStop() {
     // stop updating the data plots
     clearInterval(plotTimerID);
 
+    accPlotClass.mouseMode = "zoom";
     accPlotClass.displayStaticData();
 
   }
