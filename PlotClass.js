@@ -37,7 +37,27 @@ class ViewPort {
         let int_max = this.xSpan/5;
         let int_min = this.xSpan/15;
 
-        // find the 
+        // divide xSpan by 500,200,100,50,20,10,5,2,1,.5,.2,.1 ... until the resuls is between 5 and 15
+        // for now it only works if the range is less than 5000 seconds
+        if (this.xSpan > 6000) {
+            console.log("error in pickTimeAxis: xSpan = ",this.xSpan);
+            return ([0,1000]);
+        } 
+
+        let interval;
+        let minTicks = 5;
+        let base = [500,200,100];
+        for (let exp = 1; exp < 10; exp++) {
+            let dec = Math.pow(10,exp);
+            for (let b = 0; b < base.length; b++) {
+                interval = base[b]/dec;
+                if(this.xSpan/interval > minTicks) {
+                    // this is a good interval so find lowest tick label
+                    let start = parseInt(this.xMin/interval + 1)*interval;
+                    return([start,interval]);
+                }
+            }
+        }
 
         return ([1,2]);
     }
