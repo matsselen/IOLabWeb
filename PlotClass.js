@@ -151,7 +151,7 @@ class ViewPort {
 
     // this method returns data coordinates when passed pixel coordinates
     pixelToData(xPix, yPix) {
-        let tDat = this.xMin + this.xSpan * (xPix-this.xAxisOffset) / this.cWidth;
+        let tDat = this.xMin + this.xSpan * (xPix - this.xAxisOffset) / this.cWidth;
         let yDat = this.yMax - this.ySpan * yPix / this.cHeight;
         return [tDat, yDat];
     }
@@ -292,6 +292,7 @@ class PlotIOLab {
         ctlLayer.addEventListener("mouseup", mouseUp);
         ctlLayer.addEventListener("mousemove", mouseMove);
         ctlLayer.addEventListener("mouseout", mouseOut);
+        ctlLayer.addEventListener("dblclick", dblclick);
 
         // give a name to the second to last layer so we can draw on it
         let infoLayer = this.layerElementList[this.layerElementList.length - 2];
@@ -314,6 +315,15 @@ class PlotIOLab {
         // various handlers for mouse events
         let selecting = false;
         let mousePtrX, mousePtrY;
+
+        function dblclick(e) {
+            // remove any static viewports from the stack
+            while (plotThis.viewStack.length > 1) {
+                plotThis.viewStack.shift();
+            }
+            // scale x-axis and plot all data
+            plotThis.displayStaticData();
+        }
 
         function mouseDown(e) {
             if (accPlotClass.mouseMode == "zoom") {
@@ -378,7 +388,7 @@ class PlotIOLab {
                     selecting = false;
                 }
             }
-            drawInfo(e,"clear");
+            drawInfo(e, "clear");
         }
 
         // use when selecting a rectangle for some control function like zooming
@@ -394,9 +404,9 @@ class PlotIOLab {
             plotThis.drawVline(infoDrawContext, plotThis.viewStack[0], pix[0], 1, '#f2a241');
 
             infoDrawContext.font = "10px Arial";
-            let text = "(" + e.offsetX.toFixed() + "," + e.offsetY.toFixed()+")";
-            infoDrawContext.fillText(text, e.offsetX, e.offsetY-10);
-            text = "(" + pix[0].toFixed(3) + "," + pix[1].toFixed(3)+")";
+            let text = "(" + e.offsetX.toFixed() + "," + e.offsetY.toFixed() + ")";
+            infoDrawContext.fillText(text, e.offsetX, e.offsetY - 10);
+            text = "(" + pix[0].toFixed(3) + "," + pix[1].toFixed(3) + ")";
             infoDrawContext.fillText(text, e.offsetX, e.offsetY);
 
         }
@@ -515,24 +525,30 @@ class PlotIOLab {
     displayStaticData() {
 
         // get the time of the last acquired data
-        let tLast = calData[this.sensorNum][calData[this.sensorNum].length - 1][0];
-        tLast = parseInt(tLast + 1);
+        let datLength = calData[this.sensorNum].length;
+
+        if (datLength < 1) {
+            console.log("In displayStaticData(): no data to display ");
+
+        } else {
+            let tLast = calData[this.sensorNum][datLength - 1][0];
+            tLast = parseInt(tLast + 1);
 
 
-        // first create a viewport that contains the entire time-range      
-        this.staticDataView = new ViewPort(0, tLast,
-            this.runningDataView.yMin, this.runningDataView.yMax,
-            this.baseElement
-        );
+            // first create a viewport that contains the entire time-range      
+            this.staticDataView = new ViewPort(0, tLast,
+                this.runningDataView.yMin, this.runningDataView.yMax,
+                this.baseElement
+            );
 
-        // Save the default static view on a stack. Zoomed views will pushed on to the bottom
-        // of this stack so that element [0] is always the current view and previous views can 
-        // be easily retireved. 
-        this.viewStack.unshift(this.staticDataView);
+            // Save the default static view on a stack. Zoomed views will pushed on to the bottom
+            // of this stack so that element [0] is always the current view and previous views can 
+            // be easily retireved. 
+            this.viewStack.unshift(this.staticDataView);
 
-        this.plotStaticData();
+            this.plotStaticData();
 
-
+        }
     }
 
     // Plots data after data acquisition is stopped or paused.
@@ -704,40 +720,9 @@ class PlotIOLab {
         }
     } // plotRunningData
 
-
-    // for farting around
     testClass() {
-        console.log("In testDraw");
+        console.log("In testClass");
         console.log(this);
     }
-
-    testCanvas() {
-        let ctx = null;
-
-        ctx = this.layerElementList[0].getContext("2d");
-        ctx.strokeStyle = 'black';
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        ctx.moveTo(10, 10);
-        ctx.lineTo(50, 50);
-        ctx.stroke();
-
-        ctx = this.layerElementList[1].getContext("2d");
-        ctx.strokeStyle = 'red';
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        ctx.moveTo(50, 50);
-        ctx.lineTo(100, 100);
-        ctx.stroke();
-
-        ctx = this.layerElementList[2].getContext("2d");
-        ctx.strokeStyle = 'blue';
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        ctx.moveTo(100, 100);
-        ctx.lineTo(150, 150);
-        ctx.stroke();
-    }
-
 };
 

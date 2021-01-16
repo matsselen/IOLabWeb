@@ -99,10 +99,11 @@ async function clickStartStop() {
   if (!runningDAQ) {
     console.log("Start runnung");
 
-    // remove the static viewports from the stack if there are any
+    // remove any static viewports from the stack
     while (accPlotClass.viewStack.length > 1) {
       accPlotClass.viewStack.shift();
     }
+    
     accPlotClass.mouseMode = "";
     accPlotClass.drawPlotAxes(accPlotClass.viewStack[0]);
     accPlotClass.plotStaticData();
@@ -153,9 +154,8 @@ async function clickDebug() {
   //xxx = new PlotIOLab(1,"testContainer");
   //xxx.testFunc();
   //accPlotClass = new PlotIOLab(1,"testContainer");
-  accPlotClass.testClass();
-  accPlotClass.testCanvas();
-  accPlotClass.displayStaticData();
+  //accPlotClass.testClass();
+
 }
 
 
@@ -167,6 +167,8 @@ async function sendRecord(byteArray) {
   if (port != null) {
     dataBoxTx.innerHTML += byteArray + '\n';
     writer.write(byteArray.buffer);
+    console.log("In sendRecord: ",byteArray);
+    console.log("Date.now: ",Date.now()," performance.now() ",performance.now());
   } else {
     console.log("sendRecord: serial port is not open");
   }
