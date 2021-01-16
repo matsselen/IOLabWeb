@@ -29,38 +29,38 @@ class ViewPort {
     //=========================================================================================
     //======================ViewPort Methods===================================================
 
-     // pick the optimum values for data-axis labels 
+    // pick the optimum values for data-axis labels 
     // (basically some multiple of 1, 2, 5, 10 so that we get between 5 and 15 labels )
     pickDataAxis() {
 
         // divide ySpan by 500,200,100,50,20,10,5,2,1,.5,.2,.1 ... until the resuls is between 5 and 15
         // for now it only works if the range is less than 6000 
         if (this.ySpan > 6000) {
-            console.log("error in pickDataAxis: ySpan = ",this.xSpan);
-            return ([0,1000,0]);
-        } 
+            console.log("error in pickDataAxis: ySpan = ", this.xSpan);
+            return ([0, 1000, 0]);
+        }
 
         let interval;
         let minTicks = 5;
-        let base = [500,200,100];
+        let base = [500, 200, 100];
         for (let exp = 1; exp < 10; exp++) {
-            let dec = Math.pow(10,exp);
+            let dec = Math.pow(10, exp);
             for (let b = 0; b < base.length; b++) {
-                interval = base[b]/dec;
-                if(this.ySpan/interval > minTicks) {
+                interval = base[b] / dec;
+                if (this.ySpan / interval > minTicks) {
                     // this is a good interval so find lowest tick label
-                    let start = parseInt(this.yMin/interval + 1)*interval;
+                    let start = parseInt(this.yMin / interval + 1) * interval;
                     if (this.yMin < 0) start -= interval;
-                    let precision = Math.max(exp-2,0);
-                    console.log("In pickDataAxis() base, exp, start, interval, precision ",base[b],exp,start, interval, precision);
-                    return([start,interval,precision]);
+                    let precision = Math.max(exp - 2, 0);
+                    console.log("In pickDataAxis() base, exp, start, interval, precision ", base[b], exp, start, interval, precision);
+                    return ([start, interval, precision]);
                 }
             }
         }
         console.log("In pickDataAxis(): Should get to this place.")
-        return ([0,1,1]);
+        return ([0, 1, 1]);
     }
-   
+
     // pick the optimum values for time-axis labels 
     // (basically some multiple of 1, 2, 5, 10 so that we get between 5 and 15 labels )
     pickTimeAxis() {
@@ -68,32 +68,32 @@ class ViewPort {
         // divide xSpan by 500,200,100,50,20,10,5,2,1,.5,.2,.1 ... until the resuls is between 5 and 15
         // for now it only works if the range is less than 6000 seconds
         if (this.xSpan > 6000) {
-            console.log("error in pickTimeAxis: xSpan = ",this.xSpan);
-            return ([0,1000,0]);
-        } 
+            console.log("error in pickTimeAxis: xSpan = ", this.xSpan);
+            return ([0, 1000, 0]);
+        }
 
         let interval;
         let minTicks = 5;
-        let base = [500,200,100];
+        let base = [500, 200, 100];
         for (let exp = 1; exp < 10; exp++) {
-            let dec = Math.pow(10,exp);
+            let dec = Math.pow(10, exp);
             for (let b = 0; b < base.length; b++) {
-                interval = base[b]/dec;
-                if(this.xSpan/interval > minTicks) {
+                interval = base[b] / dec;
+                if (this.xSpan / interval > minTicks) {
                     // this is a good interval so find lowest tick label
-                    let start = parseInt(this.xMin/interval + 1)*interval;
-                    let precision = Math.max(exp-2,0);
-                    console.log("In pickTimeAxis() base, exp, start, interval, precision ",base[b],exp,start, interval, precision);
-                    return([start,interval,precision]);
+                    let start = parseInt(this.xMin / interval + 1) * interval;
+                    let precision = Math.max(exp - 2, 0);
+                    console.log("In pickTimeAxis() base, exp, start, interval, precision ", base[b], exp, start, interval, precision);
+                    return ([start, interval, precision]);
                 }
             }
         }
         console.log("In pickTimeAxis(): Should get to this place.")
-        return ([0,1,1]);
+        return ([0, 1, 1]);
     }
 
     // alight the viewport with time tTest and report back how many shifts were needed
-    alignWith (tTest) {
+    alignWith(tTest) {
 
         let nShift = 0;
 
@@ -113,17 +113,20 @@ class ViewPort {
         return nShift;
     }
 
-    // see if the viewport contain time tTest
+    // see if the viewport contains time tTest
     containsXdata(xData) {
         return ((xData >= this.xMin) && (xData < this.xMax));
     }
 
-    // see if the viewport contain time yData
+    // see if the viewport contains time yData
     containsYdata(yData) {
         return ((yData >= this.yMin) && (yData < this.yMax));
     }
 
-
+    // see if the viewport contains point [tTest, yDat]
+    containsPoint(xData, yData) {
+        return ((xData >= this.xMin) && (xData < this.xMax) && (yData >= this.yMin) && (yData < this.yMax));
+    }
 
     // this method returns pixel coordinates when passed data coordinates
     dataToPixel(tDat, yDat) {
@@ -137,6 +140,8 @@ class ViewPort {
     dataToPixelAxes(tDat, yDat, ctx) {
         let xPix = this.xAxisOffset + ((tDat - this.xMin) / this.xSpan) * this.cWidth;
         let yPix = this.cHeight - ((yDat - this.yMin) / this.ySpan) * this.cHeight;
+        //let xPix = this.xAxisOffset + ((tDat - this.xMin) / this.xSpan) * (this.cWidth - this.xAxisOffset);
+        //let yPix = this.cHeight - this.yAxisOffset - ((yDat - this.yMin) / this.ySpan) * (this.cHeight - this.yAxisOffset);
         if (ctx.lineWidth % 2 != 0) { // if the linewidth is an odd integer (like 1)
             return [parseInt(xPix) + 0.5, parseInt(yPix) + 0.5];
         } else {
@@ -146,7 +151,7 @@ class ViewPort {
 
     // this method returns data coordinates when passed pixel coordinates
     pixelToData(xPix, yPix) {
-        let tDat = this.xMin + this.xSpan * xPix / this.cWidth;
+        let tDat = this.xMin + this.xSpan * (xPix-this.xAxisOffset) / this.cWidth;
         let yDat = this.yMax - this.ySpan * yPix / this.cHeight;
         return [tDat, yDat];
     }
@@ -234,13 +239,14 @@ class PlotIOLab {
 
         // create the canvas stack that will be used for displaying chart traces 
         // as well as the background grid and zoom controls
-        let canvasStack = new CanvasStack(this.baseID);
+        let canvasStack = new CanvasStack(this.baseID, this.nTraces + 4);
 
         // create one overlay layer for each chart trace plus 2 additional layers
-        //   layer N+1:  top layer is for control
-        //  layers 1-N:  one layer for each of the N chart trace 
-        //     layer 0:  bottom layer is for the axes
-        for (let ind = 0; ind < (this.axisTitles.length + 2); ind++) {
+        //      layer N+2:  top layer is for zooming & panning control
+        //      layer N+1:  top layer is for displaying cursor info
+        //  layers 1 to N:  one layer for each of the N chart trace 
+        //        layer 0:  bottom layer is for the axes
+        for (let ind = 0; ind < (this.axisTitles.length + 3); ind++) {
             let layerID = canvasStack.createLayer();
             this.layerIDlist.push(layerID);
             this.layerElementList.push(document.getElementById(layerID));
@@ -287,6 +293,9 @@ class PlotIOLab {
         ctlLayer.addEventListener("mousemove", mouseMove);
         ctlLayer.addEventListener("mouseout", mouseOut);
 
+        // give a name to the second to last layer so we can draw on it
+        let infoLayer = this.layerElementList[this.layerElementList.length - 2];
+        let infoDrawContext = infoLayer.getContext("2d");
 
         // =================================================================================
         // IOLabPlot Constructor functions and event handlers
@@ -353,11 +362,14 @@ class PlotIOLab {
         }
 
         function mouseMove(e) {
+            // draw selection box on control layer
             if (accPlotClass.mouseMode == "zoom") {
                 if (selecting) {
                     drawSelectionRect(mousePtrX, mousePtrY, e.offsetX, e.offsetY);
                 }
             }
+            // put stuff on info layer
+            drawInfo(e);
         }
 
         function mouseOut(e) {
@@ -366,6 +378,27 @@ class PlotIOLab {
                     selecting = false;
                 }
             }
+            drawInfo(e,"clear");
+        }
+
+        // use when selecting a rectangle for some control function like zooming
+        function drawInfo(e, mode = "") {
+
+            // clear the canvas (and return if thats all we were supposed to do)
+            infoDrawContext.clearRect(0, 0, plotThis.baseElement.width + 2, plotThis.baseElement.height + 2);
+            if (mode == "clear") return;
+
+            let pix = plotThis.viewStack[0].pixelToData(e.offsetX, e.offsetY);
+
+            plotThis.drawHline(infoDrawContext, plotThis.viewStack[0], pix[1], 1, '#f2a241');
+            plotThis.drawVline(infoDrawContext, plotThis.viewStack[0], pix[0], 1, '#f2a241');
+
+            infoDrawContext.font = "10px Arial";
+            let text = "(" + e.offsetX.toFixed() + "," + e.offsetY.toFixed()+")";
+            infoDrawContext.fillText(text, e.offsetX, e.offsetY-10);
+            text = "(" + pix[0].toFixed(3) + "," + pix[1].toFixed(3)+")";
+            infoDrawContext.fillText(text, e.offsetX, e.offsetY);
+
         }
 
         // use when selecting a rectangle for some control function like zooming
@@ -374,13 +407,18 @@ class PlotIOLab {
             ctlDrawContext.strokeStyle = '#f2a241';
             ctlDrawContext.lineWidth = 1;
 
+
+            // start by clearing the rectangle
             ctlDrawContext.clearRect(0, 0, plotThis.baseElement.width + 2, plotThis.baseElement.height + 2);
 
+            // draw a new rectangle unless points 1 and 2 are the same
             if (x1 != x2 && y1 != y2) {
                 ctlDrawContext.beginPath();
                 ctlDrawContext.rect(x1 + .5, y1 + .5, (x2 - x1), (y2 - y1));
                 ctlDrawContext.stroke();
             }
+
+
         }
 
     } // constructor
@@ -401,6 +439,7 @@ class PlotIOLab {
         ctx.clearRect(0, 0, this.baseElement.width + 2, this.baseElement.height + 2);
 
         // x-axis: pick the starting time, interval, and precision based on viewport
+        console.log("In drawPlotAxes: ViewPort ", vp);
         let timeAxis = vp.pickTimeAxis();
 
         // draw and label the vertical gridlines
