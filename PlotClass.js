@@ -29,19 +29,47 @@ class ViewPort {
     //=========================================================================================
     //======================ViewPort Methods===================================================
 
+     // pick the optimum values for data-axis labels 
+    // (basically some multiple of 1, 2, 5, 10 so that we get between 5 and 15 labels )
+    pickDataAxis() {
+
+        // divide ySpan by 500,200,100,50,20,10,5,2,1,.5,.2,.1 ... until the resuls is between 5 and 15
+        // for now it only works if the range is less than 6000 
+        if (this.ySpan > 6000) {
+            console.log("error in pickDataAxis: ySpan = ",this.xSpan);
+            return ([0,1000,0]);
+        } 
+
+        let interval;
+        let minTicks = 5;
+        let base = [500,200,100];
+        for (let exp = 1; exp < 10; exp++) {
+            let dec = Math.pow(10,exp);
+            for (let b = 0; b < base.length; b++) {
+                interval = base[b]/dec;
+                if(this.ySpan/interval > minTicks) {
+                    // this is a good interval so find lowest tick label
+                    let start = parseInt(this.yMin/interval + 1)*interval;
+                    if (this.yMin < 0) start -= interval;
+                    let precision = Math.max(exp-2,0);
+                    console.log("In pickDataAxis() base, exp, start, interval, precision ",base[b],exp,start, interval, precision);
+                    return([start,interval,precision]);
+                }
+            }
+        }
+        console.log("In pickDataAxis(): Should get to this place.")
+        return ([0,1,1]);
+    }
+   
     // pick the optimum values for time-axis labels 
     // (basically some multiple of 1, 2, 5, 10 so that we get between 5 and 15 labels )
     pickTimeAxis() {
 
-        // find the upper and lower bounds of the interval size
-        let int_max = this.xSpan/5;
-        let int_min = this.xSpan/15;
-
         // divide xSpan by 500,200,100,50,20,10,5,2,1,.5,.2,.1 ... until the resuls is between 5 and 15
-        // for now it only works if the range is less than 5000 seconds
+        // for now it only works if the range is less than 6000 seconds
         if (this.xSpan > 6000) {
             console.log("error in pickTimeAxis: xSpan = ",this.xSpan);
-            return ([0,1000]);
+            return ([0,1000,0]);
         } 
 
         let interval;
@@ -54,12 +82,14 @@ class ViewPort {
                 if(this.xSpan/interval > minTicks) {
                     // this is a good interval so find lowest tick label
                     let start = parseInt(this.xMin/interval + 1)*interval;
-                    return([start,interval]);
+                    let precision = Math.max(exp-2,0);
+                    console.log("In pickTimeAxis() base, exp, start, interval, precision ",base[b],exp,start, interval, precision);
+                    return([start,interval,precision]);
                 }
             }
         }
-
-        return ([1,2]);
+        console.log("In pickTimeAxis(): Should get to this place.")
+        return ([0,1,1]);
     }
 
     // alight the viewport with time tTest and report back how many shifts were needed
@@ -370,30 +400,24 @@ class PlotIOLab {
         // clear the axis canvas
         ctx.clearRect(0, 0, this.baseElement.width + 2, this.baseElement.height + 2);
 
-        // draw and label the vertial grid-lines (time axis)
-        // draw about 10 lines at appropriate even intervals
+        // x-axis: pick the starting time, interval, and precision based on viewport
         let timeAxis = vp.pickTimeAxis();
 
-        // start with the multiple of 1 immediately above xMin
-        // (unless we are starting at 0)
-        let tStart = parseInt(vp.xMin + 1);
-        if (vp.xMin == 0) tStart = 0;
-        for (let t = vp.xMin; t < vp.xMax; t += 1) {
+        // draw and label the vertical gridlines
+        for (let t = timeAxis[0]; t < vp.xMax; t += timeAxis[1]) {
             let pix = vp.dataToPixel(t, vp.yMin);
-            ctx.fillText(t.toString(), pix[0] - 3, pix[1] + 16);
-            //ctx.fillText(t.toPrecision(2), pix[0] - 8, pix[1] + 16);
-            //ctx.fillText(t.toFixed(), pix[0] - 3, pix[1] + 16);
+            ctx.fillText(t.toFixed(timeAxis[2]), pix[0] - 3, pix[1] + 16);
             this.drawVline(ctx, vp, t, 1, '#cccccc', "");
             this.drawVline(ctx, vp, t, 1, '#000000', "-");
         }
 
-        // draw and label the horixontal grid-lines (data axis) 
-        // start with the multiple of 10 immediately above yMin
-        let yStart = parseInt(vp.yMin / 10) * 10;
-        if (yStart > 0) yStart += 1;
-        for (let y = yStart; y < vp.yMax; y += 10) {
+        // y-axis: pick the starting data value, interval, and precision based on viewport
+        let dataAxis = vp.pickDataAxis();
+
+        // draw and label the horizontal gridlines
+        for (let y = dataAxis[0]; y < vp.yMax; y += dataAxis[1]) {
             let pix = vp.dataToPixel(vp.xMin, y);
-            ctx.fillText(y.toString().padStart(4), pix[0] - 25, pix[1] + 3);
+            ctx.fillText(y.toFixed(dataAxis[2]).padStart(4), pix[0] - 25, pix[1] + 3);
             this.drawHline(ctx, vp, y, 1, '#cccccc', "");
             this.drawHline(ctx, vp, y, 1, '#000000', "-");
         }
