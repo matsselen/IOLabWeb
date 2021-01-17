@@ -8,9 +8,9 @@
 class PlotSet {
     constructor(sensorList, parentName) {
 
-        this.plotSetThis = this;
-        this.sensorList = sensorList;
-        this.parentName = parentName;
+        this.plotSetThis = this;        // save "this" to used in callback routines
+        this.sensorList = sensorList;   // list of sensor numbers (as defined in config.js)
+        this.parentName = parentName;   // the name of the existing parent element
 
         this.plotObjectList = [];
 
@@ -24,17 +24,51 @@ class PlotSet {
 
             // create the <div> element that will be the parent element for each sensors plot
             let sensDiv = document.createElement("div");
-            let sensorID = "plot_sens_"+this.sensor.toString();
+            let sensorID = "plot_sens_" + this.sensor.toString();
             sensDiv.setAttribute("id", sensorID);
 
             // append the plot for this sensor to the parent element
             parent.appendChild(sensDiv);
 
             // create an IOLabPlot object on each plot element
-            this.plotObjectList.push(new PlotIOLab(this.sensor,sensorID));
+            this.plotObjectList.push(new PlotIOLab(this.sensor, sensorID));
         }
-
     };
+
+    startAcquisition() {
+
+        for (let ind = 0; ind < this.plotObjectList.length; ind++) {
+
+            let plot = this.plotObjectList[ind];
+
+            // remove any static viewports from the stack
+            while (plot.viewStack.length > 1) {
+                plot.viewStack.shift();
+            }
+
+            plot.mouseMode = "";
+            plot.drawPlotAxes(plot.viewStack[0]);
+            plot.plotStaticData();
+        }
+    }
+
+    stopAcquisition() {
+        for (let ind = 0; ind < this.plotObjectList.length; ind++) {
+
+            let plot = this.plotObjectList[ind];
+
+            plot.mouseMode = "zoom";
+            plot.displayStaticData();
+        }
+    }
+
+    plotRunningData() {
+        for (let ind = 0; ind < this.plotObjectList.length; ind++) {
+            this.plotObjectList[ind].plotRunningData();
+        }
+    }
+
+
 };
 
 // this class defines the data value range displayed on a chart in calibrated data units
@@ -198,18 +232,18 @@ class PlotIOLab {
         this.sensorNum = sensorNum;     // the number of the sensor being plotted
         this.parentName = parentName;   // the ID of the parent <div> block
 
-        let plotThis = this;                // save "this" to used in callback routines
+        let plotThis = this;            // save "this" to used in callback routines
 
-        this.layerColorList = [];           // holds the canvas layer colors
-        this.layerIDlist = [];              // a list of all canvas layer ID's
-        this.layerElementList = [];         // save the element handles to save "getElementById" calls
-        this.checkboxIDlist = [];           // a list of all checkbox ID's
-        this.chartLineWidth = 1;            // the width of the chart lines
+        this.layerColorList = [];       // holds the canvas layer colors
+        this.layerIDlist = [];          // a list of all canvas layer ID's
+        this.layerElementList = [];     // save the element handles to save "getElementById" calls
+        this.checkboxIDlist = [];       // a list of all checkbox ID's
+        this.chartLineWidth = 1;        // the width of the chart lines
 
-        this.initialTimeSpan = 10;          // the initial time axis range (seconds)
+        this.initialTimeSpan = 10;      // the initial time axis range (seconds)
 
-        this.viewStack = [];                // a stack of static viewports ([0] is always current)
-        this.mouseMode = "zoom";            // different behaviors for zooming, panning, analysis, etc
+        this.viewStack = [];            // a stack of static viewports ([0] is always current)
+        this.mouseMode = "zoom";        // different behaviors for zooming, panning, analysis, etc
 
         // this will hold (t,x,[y,z,...]) of last data point plotted 
         // start with [t] and we will add 0's for each trace further below
@@ -229,7 +263,7 @@ class PlotIOLab {
         if (this.sensor == null) {
             console.log("in PlotIOLab: Didnt find sensor " + sensorNum.toString());
         } else {
-            if(dbgInfo) console.log("In PlotIOLab building plot for sensor "+this.sensor.desc);
+            if (dbgInfo) console.log("In PlotIOLab building plot for sensor " + this.sensor.desc);
         }
 
         // extract some useful info from the sensor object

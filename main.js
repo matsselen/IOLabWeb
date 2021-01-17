@@ -102,14 +102,16 @@ async function clickStartStop() {
   if (!runningDAQ) {
     console.log("Start runnung");
 
-    // remove any static viewports from the stack
-    while (accPlotClass.viewStack.length > 1) {
-      accPlotClass.viewStack.shift();
-    }
+    // // remove any static viewports from the stack
+    // while (accPlotClass.viewStack.length > 1) {
+    //   accPlotClass.viewStack.shift();
+    // }
     
-    accPlotClass.mouseMode = "";
-    accPlotClass.drawPlotAxes(accPlotClass.viewStack[0]);
-    accPlotClass.plotStaticData();
+    // accPlotClass.mouseMode = "";
+    // accPlotClass.drawPlotAxes(accPlotClass.viewStack[0]);
+    // accPlotClass.plotStaticData();
+
+    plotSet.startAcquisition();
 
     // set the runningDAQ flag send a startData record to the system
     runningDAQ = true;
@@ -133,8 +135,10 @@ async function clickStartStop() {
     // stop updating the data plots
     clearInterval(plotTimerID);
 
-    accPlotClass.mouseMode = "zoom";
-    accPlotClass.displayStaticData();
+    // accPlotClass.mouseMode = "zoom";
+    // accPlotClass.displayStaticData();
+
+    plotSet.stopAcquisition();
 
   }
 
@@ -144,8 +148,10 @@ async function clickStartStop() {
 
 // plots new data (called above)
 function plotNewData() {
-  // plot data from whatever sensors are selected (just accelerometer for now)
-  accPlotClass.plotRunningData();
+
+  // plot data from whatever sensors are selected 
+  plotSet.plotRunningData();
+  //accPlotClass.plotRunningData();
 
 }
 
