@@ -15,6 +15,8 @@ var calRecordTimerMS = 50;
 var plotTimerID;
 var plotTimerMS = 50;
 
+// writes extra info to the console if true
+var dbgInfo = true;
 
 // the last IOLab command record selected
 var current_cmd = "none";
@@ -25,7 +27,7 @@ var current_config_code;
 
 // stuff for processing raw records
 var ncalls = 0;
-var n_rectype = new Array(200).fill(0); //just for debugging
+var n_rectype = new Array(200).fill(0);
 
 // this holds the last ACK info
 var ackCommand;

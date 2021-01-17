@@ -52,12 +52,12 @@ class ViewPort {
                     let start = parseInt(this.yMin / interval + 1) * interval;
                     if (this.yMin < 0) start -= interval;
                     let precision = Math.max(exp - 2, 0);
-                    console.log("In pickDataAxis() base, exp, start, interval, precision ", base[b], exp, start, interval, precision);
+                    if(dbgInfo) console.log("In pickDataAxis() base, exp, start, interval, precision ", base[b], exp, start, interval, precision);
                     return ([start, interval, precision]);
                 }
             }
         }
-        console.log("In pickDataAxis(): Should get to this place.")
+        console.log("In pickDataAxis(): Should never get to this place.")
         return ([0, 1, 1]);
     }
 
@@ -83,12 +83,12 @@ class ViewPort {
                     // this is a good interval so find lowest tick label
                     let start = parseInt(this.xMin / interval + 1) * interval;
                     let precision = Math.max(exp - 2, 0);
-                    console.log("In pickTimeAxis() base, exp, start, interval, precision ", base[b], exp, start, interval, precision);
+                    if(dbgInfo) console.log("In pickTimeAxis() base, exp, start, interval, precision ", base[b], exp, start, interval, precision);
                     return ([start, interval, precision]);
                 }
             }
         }
-        console.log("In pickTimeAxis(): Should get to this place.")
+        console.log("In pickTimeAxis(): Should never get to this place.")
         return ([0, 1, 1]);
     }
 
@@ -303,7 +303,7 @@ class PlotIOLab {
 
         // event handler for the layer selection checkboxes
         function selectLayer() {
-            console.log("In Plot::selectLayer() ", this.id, this.canvaslayer, this.checked);
+            if(dbgInfo) console.log("In Plot::selectLayer() ", this.id, this.canvaslayer, this.checked);
 
             if (this.checked) {
                 document.getElementById(this.canvaslayer).style.display = "block";
@@ -317,12 +317,14 @@ class PlotIOLab {
         let mousePtrX, mousePtrY;
 
         function dblclick(e) {
-            // remove any static viewports from the stack
-            while (plotThis.viewStack.length > 1) {
-                plotThis.viewStack.shift();
+            if (accPlotClass.mouseMode == "zoom") {
+                // remove any static viewports from the stack
+                while (plotThis.viewStack.length > 1) {
+                    plotThis.viewStack.shift();
+                }
+                // scale x-axis and plot all data
+                plotThis.displayStaticData();
             }
-            // scale x-axis and plot all data
-            plotThis.displayStaticData();
         }
 
         function mouseDown(e) {
@@ -449,7 +451,7 @@ class PlotIOLab {
         ctx.clearRect(0, 0, this.baseElement.width + 2, this.baseElement.height + 2);
 
         // x-axis: pick the starting time, interval, and precision based on viewport
-        console.log("In drawPlotAxes: ViewPort ", vp);
+        if(dbgInfo) console.log("In drawPlotAxes: ViewPort ", vp);
         let timeAxis = vp.pickTimeAxis();
 
         // draw and label the vertical gridlines
@@ -528,7 +530,7 @@ class PlotIOLab {
         let datLength = calData[this.sensorNum].length;
 
         if (datLength < 1) {
-            console.log("In displayStaticData(): no data to display ");
+            if(dbgInfo) console.log("In displayStaticData(): no data to display ");
 
         } else {
             let tLast = calData[this.sensorNum][datLength - 1][0];
@@ -606,9 +608,10 @@ class PlotIOLab {
             }
         }
 
-
+        // finish each of the lines and clear the part of each canvas that overlaps with the x-axis labels (cluge)
         for (let tr = 1; tr < this.nTraces + 1; tr++) {
             contextList[tr].stroke();
+            contextList[tr].clearRect(0, cHeight-this.viewStack[0].yAxisOffset, cWidth, cHeight);
         }
 
     } // plotStaticData
@@ -643,7 +646,7 @@ class PlotIOLab {
             // make sure the viewport contains this time
             let nShift = this.viewStack[0].alignWith(td);
             if (nShift != 0) {
-                console.log("In plotRunningData(1) - shifted viewport by ", nShift);
+                if(dbgInfo) console.log("In plotRunningData(1) - shifted viewport by ", nShift);
             }
 
             // for each trace, find the starting point
@@ -677,7 +680,7 @@ class PlotIOLab {
                 let nShift = this.viewStack[0].alignWith(tplot);
                 if (nShift != 0) {
                     shiftView = true;
-                    console.log("In plotRunningData(2) - shifted viewport by ", nShift);
+                    if(dbgInfo) console.log("In plotRunningData(2) - shifted viewport by ", nShift);
                 }
 
                 // if we are about to shift the viewport clear the axis layer and redraw the axes
