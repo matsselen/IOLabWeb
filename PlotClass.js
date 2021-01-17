@@ -5,6 +5,8 @@
 
 'use strict';
 
+
+
 // this class defines the data value range displayed on a chart in calibrated data units
 // and provides methods to maniplate data for plotting
 class ViewPort {
@@ -611,7 +613,7 @@ class PlotIOLab {
         // finish each of the lines and clear the part of each canvas that overlaps with the x-axis labels (cluge)
         for (let tr = 1; tr < this.nTraces + 1; tr++) {
             contextList[tr].stroke();
-            contextList[tr].clearRect(0, cHeight-this.viewStack[0].yAxisOffset, cWidth, cHeight);
+            contextList[tr].clearRect(0, cHeight-this.viewStack[0].yAxisOffset, cWidth, this.viewStack[0].yAxisOffset);
         }
 
     } // plotStaticData

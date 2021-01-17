@@ -1,5 +1,6 @@
 // Global variables for data acquisition
 'use strict';
+
 // run control
 var justRestarted = false;
 var justTurnedOnRemote = false;
