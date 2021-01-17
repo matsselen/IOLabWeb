@@ -4,6 +4,7 @@
 'use strict';
 
 var accPlotClass = null;
+var plotSet = null;
 
 let port = null;
 let reader = null;
@@ -45,8 +46,10 @@ document.addEventListener('DOMContentLoaded', () => {
   resetAcquisition();
 
   // test IOLabPlot class
-  accPlotClass = new PlotIOLab(1, "testContainer");
-  accPlotClass.drawPlotAxes(accPlotClass.runningDataView);
+  // accPlotClass = new PlotIOLab(1, "testContainer");
+  // accPlotClass.drawPlotAxes(accPlotClass.runningDataView);
+
+  plotSet = new PlotSet([1,3],"testContainer");
 
   // update the UI
   updateSystemState();

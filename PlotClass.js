@@ -5,7 +5,37 @@
 
 'use strict';
 
+class PlotSet {
+    constructor(sensorList, parentName) {
 
+        this.plotSetThis = this;
+        this.sensorList = sensorList;
+        this.parentName = parentName;
+
+        this.plotObjectList = [];
+
+        // find the parent element
+        let parent = document.getElementById(this.parentName);
+
+        // loop over sensors
+        for (let ind = 0; ind < sensorList.length; ind++) {
+
+            this.sensor = sensorList[ind];
+
+            // create the <div> element that will be the parent element for each sensors plot
+            let sensDiv = document.createElement("div");
+            let sensorID = "plot_sens_"+this.sensor.toString();
+            sensDiv.setAttribute("id", sensorID);
+
+            // append the plot for this sensor to the parent element
+            parent.appendChild(sensDiv);
+
+            // create an IOLabPlot object on each plot element
+            this.plotObjectList.push(new PlotIOLab(this.sensor,sensorID));
+        }
+
+    };
+};
 
 // this class defines the data value range displayed on a chart in calibrated data units
 // and provides methods to maniplate data for plotting
@@ -54,7 +84,7 @@ class ViewPort {
                     let start = parseInt(this.yMin / interval + 1) * interval;
                     if (this.yMin < 0) start -= interval;
                     let precision = Math.max(exp - 2, 0);
-                    if(dbgInfo) console.log("In pickDataAxis() base, exp, start, interval, precision ", base[b], exp, start, interval, precision);
+                    if (dbgInfo) console.log("In pickDataAxis() base, exp, start, interval, precision ", base[b], exp, start, interval, precision);
                     return ([start, interval, precision]);
                 }
             }
@@ -85,7 +115,7 @@ class ViewPort {
                     // this is a good interval so find lowest tick label
                     let start = parseInt(this.xMin / interval + 1) * interval;
                     let precision = Math.max(exp - 2, 0);
-                    if(dbgInfo) console.log("In pickTimeAxis() base, exp, start, interval, precision ", base[b], exp, start, interval, precision);
+                    if (dbgInfo) console.log("In pickTimeAxis() base, exp, start, interval, precision ", base[b], exp, start, interval, precision);
                     return ([start, interval, precision]);
                 }
             }
@@ -176,8 +206,10 @@ class PlotIOLab {
         this.checkboxIDlist = [];           // a list of all checkbox ID's
         this.chartLineWidth = 1;            // the width of the chart lines
 
+        this.initialTimeSpan = 10;          // the initial time axis range (seconds)
+
         this.viewStack = [];                // a stack of static viewports ([0] is always current)
-        this.mouseMode = "zoom";                // different behaviors for zooming, panning, analysis, etc
+        this.mouseMode = "zoom";            // different behaviors for zooming, panning, analysis, etc
 
         // this will hold (t,x,[y,z,...]) of last data point plotted 
         // start with [t] and we will add 0's for each trace further below
@@ -196,11 +228,14 @@ class PlotIOLab {
         // make sure the sensor was found
         if (this.sensor == null) {
             console.log("in PlotIOLab: Didnt find sensor " + sensorNum.toString());
+        } else {
+            if(dbgInfo) console.log("In PlotIOLab building plot for sensor "+this.sensor.desc);
         }
 
         // extract some useful info from the sensor object
         this.plotName = this.sensor.desc;       // the name of the chart
         this.axisTitles = this.sensor.legends;  // the trace labels
+        this.scales = this.sensor.scales;       // the initial y-axis scale range
         this.baseID = this.sensor.shortDesc;    // the ID of the bottom layer (used for drawing axes)
 
         // the number of traces is the same as the number of axis titles and 
@@ -283,9 +318,11 @@ class PlotIOLab {
         }
 
         // Set up the viewport that will be used while the DAQ is running 
-        this.runningDataView = new ViewPort(0, 10, -25, 35, this.baseElement);
+        this.runningDataView = new ViewPort(0, this.initialTimeSpan, this.scales[0], this.scales[1], this.baseElement);
         this.viewStack.push(this.runningDataView);
 
+        // draw plot axes
+        this.drawPlotAxes(this.viewStack[0]);
 
         // attach some event listeners to the top (control) layer
         let ctlLayer = this.layerElementList[this.layerElementList.length - 1];
@@ -300,12 +337,14 @@ class PlotIOLab {
         let infoLayer = this.layerElementList[this.layerElementList.length - 2];
         let infoDrawContext = infoLayer.getContext("2d");
 
+
+
         // =================================================================================
         // IOLabPlot Constructor functions and event handlers
 
         // event handler for the layer selection checkboxes
         function selectLayer() {
-            if(dbgInfo) console.log("In Plot::selectLayer() ", this.id, this.canvaslayer, this.checked);
+            if (dbgInfo) console.log("In Plot::selectLayer() ", this.id, this.canvaslayer, this.checked);
 
             if (this.checked) {
                 document.getElementById(this.canvaslayer).style.display = "block";
@@ -319,7 +358,7 @@ class PlotIOLab {
         let mousePtrX, mousePtrY;
 
         function dblclick(e) {
-            if (accPlotClass.mouseMode == "zoom") {
+            if (plotThis.mouseMode == "zoom") {
                 // remove any static viewports from the stack
                 while (plotThis.viewStack.length > 1) {
                     plotThis.viewStack.shift();
@@ -330,7 +369,7 @@ class PlotIOLab {
         }
 
         function mouseDown(e) {
-            if (accPlotClass.mouseMode == "zoom") {
+            if (plotThis.mouseMode == "zoom") {
                 selecting = true;
                 mousePtrX = e.offsetX;
                 mousePtrY = e.offsetY;
@@ -338,7 +377,7 @@ class PlotIOLab {
         }
 
         function mouseUp(e) {
-            if (accPlotClass.mouseMode == "zoom") {
+            if (plotThis.mouseMode == "zoom") {
                 selecting = false;
 
                 if (mousePtrX != e.offsetX & mousePtrY != e.offsetY) {
@@ -377,7 +416,7 @@ class PlotIOLab {
 
         function mouseMove(e) {
             // draw selection box on control layer
-            if (accPlotClass.mouseMode == "zoom") {
+            if (plotThis.mouseMode == "zoom") {
                 if (selecting) {
                     drawSelectionRect(mousePtrX, mousePtrY, e.offsetX, e.offsetY);
                 }
@@ -387,7 +426,7 @@ class PlotIOLab {
         }
 
         function mouseOut(e) {
-            if (accPlotClass.mouseMode == "zoom") {
+            if (plotThis.mouseMode == "zoom") {
                 if (selecting) {
                     selecting = false;
                 }
@@ -453,7 +492,7 @@ class PlotIOLab {
         ctx.clearRect(0, 0, this.baseElement.width + 2, this.baseElement.height + 2);
 
         // x-axis: pick the starting time, interval, and precision based on viewport
-        if(dbgInfo) console.log("In drawPlotAxes: ViewPort ", vp);
+        if (dbgInfo) console.log("In drawPlotAxes: ViewPort ", vp);
         let timeAxis = vp.pickTimeAxis();
 
         // draw and label the vertical gridlines
@@ -532,7 +571,7 @@ class PlotIOLab {
         let datLength = calData[this.sensorNum].length;
 
         if (datLength < 1) {
-            if(dbgInfo) console.log("In displayStaticData(): no data to display ");
+            if (dbgInfo) console.log("In displayStaticData(): no data to display ");
 
         } else {
             let tLast = calData[this.sensorNum][datLength - 1][0];
@@ -613,7 +652,7 @@ class PlotIOLab {
         // finish each of the lines and clear the part of each canvas that overlaps with the x-axis labels (cluge)
         for (let tr = 1; tr < this.nTraces + 1; tr++) {
             contextList[tr].stroke();
-            contextList[tr].clearRect(0, cHeight-this.viewStack[0].yAxisOffset, cWidth, this.viewStack[0].yAxisOffset);
+            contextList[tr].clearRect(0, cHeight - this.viewStack[0].yAxisOffset, cWidth, this.viewStack[0].yAxisOffset);
         }
 
     } // plotStaticData
@@ -648,7 +687,7 @@ class PlotIOLab {
             // make sure the viewport contains this time
             let nShift = this.viewStack[0].alignWith(td);
             if (nShift != 0) {
-                if(dbgInfo) console.log("In plotRunningData(1) - shifted viewport by ", nShift);
+                if (dbgInfo) console.log("In plotRunningData(1) - shifted viewport by ", nShift);
             }
 
             // for each trace, find the starting point
@@ -682,7 +721,7 @@ class PlotIOLab {
                 let nShift = this.viewStack[0].alignWith(tplot);
                 if (nShift != 0) {
                     shiftView = true;
-                    if(dbgInfo) console.log("In plotRunningData(2) - shifted viewport by ", nShift);
+                    if (dbgInfo) console.log("In plotRunningData(2) - shifted viewport by ", nShift);
                 }
 
                 // if we are about to shift the viewport clear the axis layer and redraw the axes
