@@ -13,13 +13,17 @@ class PlotSet {
         this.parentName = parentName;   // the name of the existing parent element
 
         this.plotObjectList = [];
-        this.sensorNameList = [];
+        this.checkboxIDlist = [];       // a list of all checkbox ID's
 
         // find the parent element
         let parent = document.getElementById(this.parentName);
 
         // create the control elements that appear above the canvas
         let controls = document.createElement("div");
+        let controlTitle = document.createTextNode("Sensors: \xA0\xA0");
+        controls.appendChild(controlTitle);
+
+        parent.appendChild(controls);
 
         // loop over sensors
         for (let ind = 0; ind < sensorList.length; ind++) {
@@ -41,22 +45,57 @@ class PlotSet {
                 console.log("in PlotSet: Didnt find sensor " + sensorNum.toString());
             } else {
                 if (dbgInfo) console.log("In PlotSet: found " + this.sensor.desc);
-                this.sensorNameList.push(this.sensor.desc);
             }
 
             // create the <div> element that will be the parent element for each sensors plot
             let sensDiv = document.createElement("div");
-            let sensorID = "plot_sens_" + this.sensorNum.toString();
+            let sensorID = "plot_sens_" + this.sensor.shortDesc;
             sensDiv.setAttribute("id", sensorID);
+            sensDiv.style.position = "relative";
 
             // append the plot for this sensor to the parent element
             parent.appendChild(sensDiv);
 
             // create an IOLabPlot object on each plot element
-            this.plotObjectList.push(new PlotIOLab(this.sensorNum, sensorID));
+            this.plotObjectList.push(new PlotIOLab(this.sensorNum, sensorID));            
+            
+            // create the checkbox to show/hide each sensor plot
+            let cb = document.createElement("input");
+            let cbID = "cb_" + sensorID;
+            this.checkboxIDlist.push(cbID);
+
+            cb.setAttribute("id", cbID);
+            cb.setAttribute("type", "checkbox");
+            cb.setAttribute("checked", "true");
+
+            // pay attention to when the box is checked or unchecekd
+            cb.addEventListener("click", selectSensor);
+
+            // save which element this is controling
+            cb.sensorDivID = sensorID;
+
+            // create the axis labels before each checkbox
+            let whichSens = document.createTextNode("\xA0\xA0" + this.sensor.shortDesc + ":");
+
+            // add the labels and boxes to the control region
+            controls.appendChild(whichSens);
+            controls.appendChild(cb);
+
         }
 
+        // =================================================================================
+        // PlotSet Constructor functions and event handlers
 
+        // event handler for the layer selection checkboxes
+        function selectSensor() {
+            if (dbgInfo) console.log("In Plot::selectSensor() ", this.id, this.checked);
+
+            if (this.checked) {
+                document.getElementById(this.sensorDivID).style.display = "block";
+            } else {
+                document.getElementById(this.sensorDivID).style.display = "none";
+            }
+        }
 
     };
 
