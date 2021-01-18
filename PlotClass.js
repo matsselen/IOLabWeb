@@ -12,8 +12,8 @@ class PlotSet {
         this.sensorList = sensorList;   // list of sensor numbers (as defined in config.js)
         this.parentName = parentName;   // the name of the existing parent element
 
-        this.plotObjectList = [];
-        this.checkboxIDlist = [];       // a list of all checkbox ID's
+        this.plotObjectList = [];       // list of PlotIOLab insances (one for each sensor)
+        this.checkboxIDlist = [];       // a list of all checkbox ID's (one for each sensor)
 
         // find the parent element
         let parent = document.getElementById(this.parentName);
@@ -23,7 +23,9 @@ class PlotSet {
         let controlTitle = document.createTextNode("Sensors: \xA0\xA0");
         controls.appendChild(controlTitle);
 
+        // add the control region to the page and put some vertical space below it
         parent.appendChild(controls);
+        parent.appendChild(document.createElement("p")); 
 
         // loop over sensors
         for (let ind = 0; ind < sensorList.length; ind++) {
@@ -182,7 +184,7 @@ class ViewPort {
                     let start = parseInt(this.yMin / interval + 1) * interval;
                     if (this.yMin < 0) start -= interval;
                     let precision = Math.max(exp - 2, 0);
-                    if (dbgInfo) console.log("In pickDataAxis() base, exp, start, interval, precision ", base[b], exp, start, interval, precision);
+                    //if (dbgInfo) console.log("In pickDataAxis() base, exp, start, interval, precision ", base[b], exp, start, interval, precision);
                     return ([start, interval, precision]);
                 }
             }
@@ -213,7 +215,7 @@ class ViewPort {
                     // this is a good interval so find lowest tick label
                     let start = parseInt(this.xMin / interval + 1) * interval;
                     let precision = Math.max(exp - 2, 0);
-                    if (dbgInfo) console.log("In pickTimeAxis() base, exp, start, interval, precision ", base[b], exp, start, interval, precision);
+                    //if (dbgInfo) console.log("In pickTimeAxis() base, exp, start, interval, precision ", base[b], exp, start, interval, precision);
                     return ([start, interval, precision]);
                 }
             }
@@ -782,12 +784,6 @@ class PlotIOLab {
             // find the time coordinate of the data at the current read pointer
             let td = calData[sensorID][calReadPtr[sensorID]][0];
 
-            // make sure the viewport contains this time
-            let nShift = this.viewStack[0].alignWith(td);
-            if (nShift != 0) {
-                if (dbgInfo) console.log("In plotRunningData(1) - shifted viewport by ", nShift);
-            }
-
             // for each trace, find the starting point
             for (let tr = 1; tr < this.nTraces + 1; tr++) { //traces start numbering at 1
 
@@ -819,14 +815,11 @@ class PlotIOLab {
                 let nShift = this.viewStack[0].alignWith(tplot);
                 if (nShift != 0) {
                     shiftView = true;
+                    contextList[0].clearRect(0, 0, cWidth, cHeight);
+                    this.drawPlotAxes(this.viewStack[0]);
                     if (dbgInfo) console.log("In plotRunningData(2) - shifted viewport by ", nShift);
                 }
 
-                // if we are about to shift the viewport clear the axis layer and redraw the axes
-                if (shiftView) {
-                    contextList[0].clearRect(0, 0, cWidth, cHeight);
-                    this.drawPlotAxes(this.viewStack[0]);
-                }
 
                 for (let tr = 1; tr < this.nTraces + 1; tr++) {
 

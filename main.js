@@ -3,7 +3,7 @@
 //
 'use strict';
 
-var accPlotClass = null;
+//var accPlotClass = null;
 var plotSet = null;
 
 let port = null;
@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // accPlotClass = new PlotIOLab(1, "testContainer");
   // accPlotClass.drawPlotAxes(accPlotClass.runningDataView);
 
-  plotSet = new PlotSet([1,3],"testContainer");
+  plotSet = new PlotSet(sensorIDlist,"testContainer");
 
   // update the UI
   updateSystemState();

@@ -127,7 +127,8 @@ function buildConfigPicker() {
   }
 
   //configPicker.selectedIndex = 17; // default to "kitchen sink"
-  configPicker.selectedIndex = 1; // default to accelerometer
+  //configPicker.selectedIndex = 13; // default to accelerometer
+  configPicker.selectedIndex = 13; // high speed orientation
   current_config = configPicker.options[configPicker.selectedIndex].value;
   current_config_code = iolabConfig.fixedConfigurations[configPicker.selectedIndex]["code"];
   document.getElementById('config-picker').style.visibility = "hidden";
