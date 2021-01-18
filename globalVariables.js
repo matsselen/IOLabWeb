@@ -1,5 +1,9 @@
 // Global variables for data acquisition
 'use strict';
+
+// configuration information (hardwired for now)
+var sensorIDlist = [1,3];
+
 // run control
 var justRestarted = false;
 var justTurnedOnRemote = false;

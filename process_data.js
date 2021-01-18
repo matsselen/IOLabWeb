@@ -307,33 +307,45 @@ function buildAndCalibrate() {
   // accelerometer
   var sensorID = 1;
 
-  // puts the raw bytes together and applies calibration (cal just estimated for now)
-  // six bytes per sample: [x_hi, x_lo, y_hi, y_lo, z_hi, z_lo]
-  if (sensorID == 1) {
-    for (let ind = rawReadPtr[sensorID]; ind < rawData[sensorID].length; ind++) {
+  for (let s = 0; s < sensorIDlist.length; s++) {
 
-      var nbytes = rawData[sensorID][ind][2].length;
-      if (nbytes % 6 != 0) {
-        console.log("accelerometer bytecount not a multiple of 6");
-      } else {
-        var nsamples = nbytes / 6;
-        for (let i = 0; i < nsamples; i++) {
-          var j = i * 6;
-          var xDat = rawData[sensorID][ind][2][j] << 8 | rawData[sensorID][ind][2][j + 1];
-          var yDat = rawData[sensorID][ind][2][j + 2] << 8 | rawData[sensorID][ind][2][j + 3];
-          var zDat = rawData[sensorID][ind][2][j + 4] << 8 | rawData[sensorID][ind][2][j + 5];
-          var tDat = (rawData[sensorID][ind][0][0] + i / nsamples) * 0.010;
-          var calx = calAccel(xDat);
-          var caly = calAccel(yDat);
-          var calz = calAccel(zDat);
+    var sensorID = sensorIDlist[s];
 
-          // accdelerometer is turned on PCB so x = -y and y = x
-          calData[sensorID][calWritePtr[sensorID]++] = [tDat, -caly, calx, calz];
+    // puts the raw bytes together and applies calibration (cal just estimated for now)
+    // six bytes per sample: [x_hi, x_lo, y_hi, y_lo, z_hi, z_lo]
+    if (sensorID == 1 || sensorID == 3) {
+      for (let ind = rawReadPtr[sensorID]; ind < rawData[sensorID].length; ind++) {
+
+        var nbytes = rawData[sensorID][ind][2].length;
+        if (nbytes % 6 != 0) {
+          console.log(" bytecount not a multiple of 6");
+        } else {
+          var nsamples = nbytes / 6;
+          for (let i = 0; i < nsamples; i++) {
+            var j = i * 6;
+            var xDat = rawData[sensorID][ind][2][j] << 8 | rawData[sensorID][ind][2][j + 1];
+            var yDat = rawData[sensorID][ind][2][j + 2] << 8 | rawData[sensorID][ind][2][j + 3];
+            var zDat = rawData[sensorID][ind][2][j + 4] << 8 | rawData[sensorID][ind][2][j + 5];
+            var tDat = (rawData[sensorID][ind][0][0] + i / nsamples) * 0.010;
+            if (sensorID == 1) {
+              var calx = calAccel(xDat);
+              var caly = calAccel(yDat);
+              var calz = calAccel(zDat);
+              // accdelerometer is turned on PCB so x = -y and y = x
+              calData[sensorID][calWritePtr[sensorID]++] = [tDat, -caly, calx, calz];
+            } else if (sensorID == 3) {
+              var calx = calGyro(xDat);
+              var caly = calGyro(yDat);
+              var calz = calGyro(zDat);
+              calData[sensorID][calWritePtr[sensorID]++] = [tDat, caly, calx, calz];          
+            }
+          }
         }
       }
+      rawReadPtr[sensorID] = rawData[sensorID].length;
     }
-    rawReadPtr[sensorID] = rawData[sensorID].length;
   }
+
 }
 
 // turn 16 bit twos complement signed int into signed int and pretend-calibrate 
@@ -345,5 +357,16 @@ function calAccel(n) {
     return 9.81 * r3 / 8080;
   } else {
     return 9.81 * n / 8080;
+  }
+}
+
+function calGyro(n) {
+  if (n > 0x7fff) {
+    var r1 = ~n;
+    var r2 = r1 & 0xffff;
+    var r3 = -1 * (r2 + 1);
+    return r3 / 815;
+  } else {
+    return n / 815;
   }
 }
