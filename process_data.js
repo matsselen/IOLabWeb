@@ -313,7 +313,7 @@ function buildAndCalibrate() {
 
     // puts the raw bytes together and applies calibration (cal just estimated for now)
     // six bytes per sample: [x_hi, x_lo, y_hi, y_lo, z_hi, z_lo]
-    if (sensorID == 1 || sensorID == 3) {
+    if (sensorID == 1 || sensorID == 2 || sensorID == 3) {
       for (let ind = rawReadPtr[sensorID]; ind < rawData[sensorID].length; ind++) {
 
         var nbytes = rawData[sensorID][ind][2].length;
@@ -333,12 +333,16 @@ function buildAndCalibrate() {
               var calz = calAccel(zDat);
               // accdelerometer is turned on PCB so x = -y and y = x
               calData[sensorID][calWritePtr[sensorID]++] = [tDat, -caly, calx, calz];
+            } else if (sensorID == 2) {
+              var calx = calMag(xDat);
+              var caly = calMag(yDat);
+              var calz = calMag(zDat);
+              calData[sensorID][calWritePtr[sensorID]++] = [tDat, caly, calx, calz];          
             } else if (sensorID == 3) {
               var calx = calGyro(xDat);
               var caly = calGyro(yDat);
               var calz = calGyro(zDat);
-              calData[sensorID][calWritePtr[sensorID]++] = [tDat, caly, calx, calz];          
-            }
+              calData[sensorID][calWritePtr[sensorID]++] = [tDat, caly, calx, calz];             }
           }
         }
       }
@@ -357,6 +361,17 @@ function calAccel(n) {
     return 9.81 * r3 / 8080;
   } else {
     return 9.81 * n / 8080;
+  }
+}
+
+function calMag(n) {
+  if (n > 0x7fff) {
+    var r1 = ~n;
+    var r2 = r1 & 0xffff;
+    var r3 = -1 * (r2 + 1);
+    return (r3+500)/50;
+  } else {
+    return (n+500)/50;
   }
 }
 
