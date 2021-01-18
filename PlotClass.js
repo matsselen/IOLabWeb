@@ -13,26 +13,51 @@ class PlotSet {
         this.parentName = parentName;   // the name of the existing parent element
 
         this.plotObjectList = [];
+        this.sensorNameList = [];
 
         // find the parent element
         let parent = document.getElementById(this.parentName);
 
+        // create the control elements that appear above the canvas
+        let controls = document.createElement("div");
+
         // loop over sensors
         for (let ind = 0; ind < sensorList.length; ind++) {
 
-            this.sensor = sensorList[ind];
+            this.sensorNum = sensorList[ind];
+
+            // start by finding the "sensor" entry in config.js (var iolabConfig) that matches sensorNum
+            this.sensor = null;
+            for (let ind = 0; ind < iolabConfig.sensors.length; ind++) {
+                let sens = iolabConfig.sensors[ind];
+                if (sens.code == this.sensorNum) {
+                    this.sensor = sens;
+                    break;
+                }
+            }
+
+            // make sure the sensor was found
+            if (this.sensor == null) {
+                console.log("in PlotSet: Didnt find sensor " + sensorNum.toString());
+            } else {
+                if (dbgInfo) console.log("In PlotSet: found " + this.sensor.desc);
+                this.sensorNameList.push(this.sensor.desc);
+            }
 
             // create the <div> element that will be the parent element for each sensors plot
             let sensDiv = document.createElement("div");
-            let sensorID = "plot_sens_" + this.sensor.toString();
+            let sensorID = "plot_sens_" + this.sensorNum.toString();
             sensDiv.setAttribute("id", sensorID);
 
             // append the plot for this sensor to the parent element
             parent.appendChild(sensDiv);
 
             // create an IOLabPlot object on each plot element
-            this.plotObjectList.push(new PlotIOLab(this.sensor, sensorID));
+            this.plotObjectList.push(new PlotIOLab(this.sensorNum, sensorID));
         }
+
+
+
     };
 
     startAcquisition() {
