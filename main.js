@@ -46,9 +46,6 @@ document.addEventListener('DOMContentLoaded', () => {
   resetAcquisition();
 
   // test IOLabPlot class
-  // accPlotClass = new PlotIOLab(1, "testContainer");
-  // accPlotClass.drawPlotAxes(accPlotClass.runningDataView);
-
   plotSet = new PlotSet(sensorIDlist,"testContainer");
 
   // update the UI
