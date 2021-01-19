@@ -52,8 +52,8 @@ function getCommandRecord(command, remoteID, payload) {
 // (should be consistent with the commands defined above)
 function buildCmdPicker() {
 
-  var cmdPicker = document.getElementById('cmd-picker');
-  var cmdOption = null;
+  let cmdPicker = document.getElementById('cmd-picker');
+  let cmdOption = null;
 
   // build drowpdown menu
   cmdOption = document.createElement('option');

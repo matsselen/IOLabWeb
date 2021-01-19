@@ -16,6 +16,8 @@ const butStartStop = document.getElementById('butStartStop');
 const butDebug = document.getElementById('butDebug');
 const dongleStatusDisplay = document.getElementById('dongleStatusDisplay');
 const remoteStatusDisplay = document.getElementById('remoteStatusDisplay');
+const configSelect = document.getElementById('configSelect');
+const cmdPicker = document.getElementById('cmd-picker');
 
 const dataBoxTx = document.getElementById("dataBoxTx");
 const dataBoxRx = document.getElementById("dataBoxRx");
@@ -309,12 +311,20 @@ async function readLoop() {
 // the state of the data acquisition system
 function updateSystemState() {
 
+  if (showCommands) {
+    cmdPicker.style.visibility = "visible";
+  } else {
+    cmdPicker.style.visibility = "hidden";
+  }
+
   if (serialConnected) {
     butConnect.textContent = "Disconnect Serial Port";
-    butSend.hidden = false;
+    configSelect.style.display = "block";
+    //butSend.hidden = false;
   } else {
     butConnect.textContent = "Connect to Serial Port";
-    butSend.hidden = true;
+    configSelect.style.display = "none";
+    //butSend.hidden = true;
   }
 
   if (current_cmd == "setFixedConfig") {

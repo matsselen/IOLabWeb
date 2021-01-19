@@ -19,8 +19,9 @@ var calRecordTimerMS = 50;
 var plotTimerID;
 var plotTimerMS = 50;
 
-// writes extra info to the console if true
-var dbgInfo = true;
+// useful expert tools
+var dbgInfo = false;
+var showCommands = false;
 
 // the last IOLab command record selected
 var current_cmd = "none";

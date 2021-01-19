@@ -39,22 +39,21 @@
       <code>chrome://flags</code>
     </div>
 
+    <p><button id="butConnect" type="button">Connect</button> &nbsp; &nbsp; <select id="cmd-picker"></select></p>
 
-    <p><button id="butConnect" type="button">Connect</button></p>
+    <!-- <label>Configuration: <select id="cmd-picker"></select></label> -->
+    <div id="configSelect">
+      <button id="butSend" type="button">Configure</button>
+      <label><select id="config-picker"></select></label>
+      <button id="butStartStop" type="button">Start</button>
+    </div>
 
-    <label>Command: <select id="cmd-picker"></select></label>
-    <label><select id="config-picker"></select></label>
-
-    <button id="butSend" type="button">Configure</button>
-    <button id="butStartStop" type="button">Start</button>
-
-    <br /><br /><br />
+    <br />
     <div id="testContainer" style="position:relative">
     </div>
     <br />
 
     <p>
-      <!-- <input id="text_area_ck" type="checkbox" checked="true">:Tx/Rx Control Records &nbsp;&nbsp; -->
       <input id="debug_ck" type="checkbox" checked="true">:Debug Stuff
     </p>
 
