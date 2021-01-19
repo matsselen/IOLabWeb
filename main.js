@@ -16,6 +16,7 @@ const butStartStop = document.getElementById('butStartStop');
 const butDebug = document.getElementById('butDebug');
 const dongleStatusDisplay = document.getElementById('dongleStatusDisplay');
 const remoteStatusDisplay = document.getElementById('remoteStatusDisplay');
+const testContainer = document.getElementById('testContainer');
 
 const dataBoxTx = document.getElementById("dataBoxTx");
 const dataBoxRx = document.getElementById("dataBoxRx");
@@ -46,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
   resetAcquisition();
 
   // test IOLabPlot class
-  plotSet = new PlotSet(sensorIDlist,"testContainer");
+  plotSet = new PlotSet(sensorIDlist, "testContainer");
 
   // update the UI
   updateSystemState();
@@ -99,15 +100,6 @@ async function clickStartStop() {
   if (!runningDAQ) {
     console.log("Start runnung");
 
-    // // remove any static viewports from the stack
-    // while (accPlotClass.viewStack.length > 1) {
-    //   accPlotClass.viewStack.shift();
-    // }
-    
-    // accPlotClass.mouseMode = "";
-    // accPlotClass.drawPlotAxes(accPlotClass.viewStack[0]);
-    // accPlotClass.plotStaticData();
-
     plotSet.startAcquisition();
 
     // set the runningDAQ flag send a startData record to the system
@@ -132,9 +124,7 @@ async function clickStartStop() {
     // stop updating the data plots
     clearInterval(plotTimerID);
 
-    // accPlotClass.mouseMode = "zoom";
-    // accPlotClass.displayStaticData();
-
+    // display static data
     plotSet.stopAcquisition();
 
   }
@@ -161,6 +151,10 @@ async function clickDebug() {
   //xxx.testFunc();
   //accPlotClass = new PlotIOLab(1,"testContainer");
   //accPlotClass.testClass();
+  while (testContainer.childNodes.length > 0) {
+    testContainer.childNodes[0].remove();
+  }
+  plotSet = null;
 
 }
 
@@ -173,8 +167,8 @@ async function sendRecord(byteArray) {
   if (port != null) {
     dataBoxTx.innerHTML += byteArray + '\n';
     writer.write(byteArray.buffer);
-    console.log("In sendRecord: ",byteArray);
-    console.log("Date.now: ",Date.now()," performance.now() ",performance.now());
+    console.log("In sendRecord: ", byteArray);
+    console.log("Date.now: ", Date.now(), " performance.now() ", performance.now());
   } else {
     console.log("sendRecord: serial port is not open");
   }

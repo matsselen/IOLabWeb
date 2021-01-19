@@ -68,8 +68,7 @@ class PlotSet {
 
             cb.setAttribute("id", cbID);
             cb.setAttribute("type", "checkbox");
-            cb.setAttribute("checked", "true");
-
+            
             // pay attention to when the box is checked or unchecekd
             cb.addEventListener("click", selectSensor);
 
@@ -82,6 +81,10 @@ class PlotSet {
             // add the labels and boxes to the control region
             controls.appendChild(whichSens);
             controls.appendChild(cb);
+
+            // hide the plots for now
+            sensDiv.style.display = "none";
+            cb.checked = false;
 
         }
 
@@ -400,7 +403,7 @@ class PlotIOLab {
 
             cb.setAttribute("id", cbID);
             cb.setAttribute("type", "checkbox");
-            cb.setAttribute("checked", "true");
+            cb.checked = true;
 
             // pay attention to when the box is checked or unchecekd
             cb.addEventListener("click", selectLayer);
