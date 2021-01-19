@@ -16,7 +16,7 @@ class PlotSet {
         this.checkboxIDlist = [];       // a list of all checkbox ID's (one for each sensor)
 
         // find the parent element
-        let parent = document.getElementById(this.parentName);
+        this.parentElement = document.getElementById(this.parentName);
 
         // create the control elements that appear above the canvas
         let controls = document.createElement("div");
@@ -24,8 +24,8 @@ class PlotSet {
         controls.appendChild(controlTitle);
 
         // add the control region to the page and put some vertical space below it
-        parent.appendChild(controls);
-        parent.appendChild(document.createElement("p")); 
+        this.parentElement.appendChild(controls);
+        this.parentElement.appendChild(document.createElement("p")); 
 
         // loop over sensors
         for (let ind = 0; ind < sensorList.length; ind++) {
@@ -56,7 +56,7 @@ class PlotSet {
             sensDiv.style.position = "relative";
 
             // append the plot for this sensor to the parent element
-            parent.appendChild(sensDiv);
+            this.parentElement.appendChild(sensDiv);
 
             // create an IOLabPlot object on each plot element
             this.plotObjectList.push(new PlotIOLab(this.sensorNum, sensorID));            
@@ -103,6 +103,21 @@ class PlotSet {
         }
 
     };
+
+    // clean up the DOM
+    reset() {
+
+        // clean up each child plot class
+        while (this.plotObjectList.length > 0) {
+            this.plotObjectList[0].reset();
+            this.plotObjectList.shift();
+        }
+
+        // clean up ourselves
+        while (this.parentElement.childNodes.length > 0) {
+            this.parentElement.childNodes[0].remove();
+          }
+    }
 
     startAcquisition() {
 
@@ -370,9 +385,9 @@ class PlotIOLab {
         controls.appendChild(chartName);
 
         // get the existing parent element and add the controls and base canvas that we just created
-        let parent = document.getElementById(this.parentName);
-        parent.appendChild(controls);
-        parent.appendChild(baseCanvas);
+        this.parentElement = document.getElementById(this.parentName);
+        this.parentElement.appendChild(controls);
+        this.parentElement.appendChild(baseCanvas);
 
         // save the base canvas element info.
         this.baseElement = document.getElementById(this.baseID);
@@ -583,6 +598,14 @@ class PlotIOLab {
     //======================================================================================================
 
     //===============================IOLabPlot Methods======================================================
+
+    // clean up the DOM
+    reset() {
+        while (this.parentElement.childNodes.length > 0) {
+            this.parentElement.childNodes[0].remove();
+          }
+    }
+
     // draw plot axes on the layer below the chart traces of ViewPort vp
     drawPlotAxes(vp) {
 

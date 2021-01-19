@@ -16,7 +16,6 @@ const butStartStop = document.getElementById('butStartStop');
 const butDebug = document.getElementById('butDebug');
 const dongleStatusDisplay = document.getElementById('dongleStatusDisplay');
 const remoteStatusDisplay = document.getElementById('remoteStatusDisplay');
-const testContainer = document.getElementById('testContainer');
 
 const dataBoxTx = document.getElementById("dataBoxTx");
 const dataBoxRx = document.getElementById("dataBoxRx");
@@ -138,7 +137,6 @@ function plotNewData() {
 
   // plot data from whatever sensors are selected 
   plotSet.plotRunningData();
-  //accPlotClass.plotRunningData();
 
 }
 
@@ -147,19 +145,11 @@ function plotNewData() {
 async function clickDebug() {
   console.log("Debug button clicked (put breakpoint here)");
   //window.dispatchEvent(new Event('resize'));
-  //xxx = new PlotIOLab(1,"testContainer");
-  //xxx.testFunc();
-  //accPlotClass = new PlotIOLab(1,"testContainer");
-  //accPlotClass.testClass();
-  while (testContainer.childNodes.length > 0) {
-    testContainer.childNodes[0].remove();
-  }
+
+  plotSet.reset();
   plotSet = null;
 
 }
-
-
-
 
 //============================================
 // send a byte array to the serial port
