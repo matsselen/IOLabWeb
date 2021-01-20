@@ -1,4 +1,42 @@
 'use strict';
+
+//===================================================================
+// summarize some useful info from config.js
+function getIOLabConfigInfo() {
+
+  // store information about each sensor, indexed by sensor number
+  for (let ind = 0; ind < iolabConfig.sensors.length; ind++) {
+    let sens = iolabConfig.sensors[ind];
+    sensorInfoList[sens.code] = sens;
+  }
+
+  // store information about each fixed configuration, index by config number
+  for (let ind = 0; ind < iolabConfig.fixedConfigurations.length; ind++) {
+    let fc = iolabConfig.fixedConfigurations[ind];
+
+    let sensList = [];
+    let rateList = [];
+    let longDesc = fc.code.toString()+": ";
+    for (let ind = 0; ind < fc.sensors.length; ind++) {
+      let skey = fc.sensors[ind].sensorKey;
+      let srate = fc.sensors[ind].sampleRate;
+      longDesc += sensorInfoList[skey].shortDesc + '(' + srate.toString() + 'Hz) \n';
+
+      sensList.push(skey);
+      rateList.push(srate);
+    }
+
+    fc.sensList = sensList;
+    fc.rateList = rateList;
+    fc.longDesc = longDesc
+
+
+    fixedConfigList[fc.code] = fc;
+  }
+
+}
+
+
 //====================================================================
 // returns the appropriate byte array for the requested command record
 function getCommandRecord(command, remoteID, payload) {
@@ -93,14 +131,14 @@ function buildCmdPicker() {
   cmdPicker.appendChild(cmdOption);
 
   // default to setFixedConfig
-  cmdPicker.selectedIndex = 3; 
+  cmdPicker.selectedIndex = 3;
   current_cmd = cmdPicker.options[cmdPicker.selectedIndex].value;
   document.getElementById('config-picker').style.visibility = "visible";
 
   cmdPicker.onchange = function () {
 
     current_cmd = cmdPicker.options[cmdPicker.selectedIndex].value;
-    console.log("current_cmd= "+current_cmd);
+    console.log("current_cmd= " + current_cmd);
 
     if (current_cmd == "setFixedConfig") {
       document.getElementById('config-picker').style.visibility = "visible";
@@ -117,16 +155,14 @@ function buildCmdPicker() {
 function buildConfigPicker() {
 
   var configPicker = document.getElementById('config-picker');
-
   var configOption;
 
-  
   for (let i = 0; i < iolabConfig.fixedConfigurations.length; i++) {
     configOption = document.createElement('option');
-    //var fc = iolabConfig.fixedConfigurations[i];
-    //fixedConfigList[i] = 
 
-    configOption.value = configOption.innerText = iolabConfig.fixedConfigurations[i]["desc"];
+    let code = iolabConfig.fixedConfigurations[i].code;
+    configOption.value = configOption.innerText = fixedConfigList[code].longDesc;
+
     configPicker.appendChild(configOption);
   }
 

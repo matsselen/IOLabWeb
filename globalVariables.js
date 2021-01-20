@@ -2,7 +2,7 @@
 'use strict';
 
 // configuration information (hardwired for now)
-var sensorIDlist = [1,2,3];
+var sensorIDlist = [];
 
 // run control
 var justRestarted = false;

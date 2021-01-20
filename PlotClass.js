@@ -1,6 +1,5 @@
 // 
 // These classes are used for plotting
-// (more documentation will come when Mats feels like it)
 //
 
 'use strict';
@@ -8,7 +7,7 @@
 class PlotSet {
     constructor(sensorList, parentName) {
 
-        this.plotSetThis = this;        // save "this" to used in callback routines
+        this.plotSetThis = this;        // save "this" to use in callback routines
         this.sensorList = sensorList;   // list of sensor numbers (as defined in config.js)
         this.parentName = parentName;   // the name of the existing parent element
 

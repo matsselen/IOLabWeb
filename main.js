@@ -36,6 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   inputFile.addEventListener("change", readInputFile);
 
+  getIOLabConfigInfo();
   buildConfigPicker();
   buildCmdPicker();
 
@@ -48,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
   resetAcquisition();
 
   // test IOLabPlot class
-  plotSet = new PlotSet(sensorIDlist, "testContainer");
+  //plotSet = new PlotSet(sensorIDlist, "testContainer");
 
   // update the UI
   updateSystemState();
@@ -90,6 +91,17 @@ async function clickSend() {
       console.log(byteArray);
       await sendRecord(byteArray);
     }, 100);
+
+    sensorIDlist = fixedConfigList[current_config_code].sensList;
+    // create plots
+    if (plotSet != null) {
+      plotSet.reset();
+      plotSet = null;
+      resetAcquisition();
+    }
+    plotSet = new PlotSet(sensorIDlist, "testContainer");
+
+
   }
 }
 
@@ -147,9 +159,10 @@ function plotNewData() {
 async function clickDebug() {
   console.log("Debug button clicked (put breakpoint here)");
   //window.dispatchEvent(new Event('resize'));
-
-  plotSet.reset();
-  plotSet = null;
+  serialConnected = true;
+  updateSystemState();
+  // plotSet.reset();
+  // plotSet = null;
 
 }
 
