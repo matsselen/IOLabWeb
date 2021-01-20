@@ -120,8 +120,12 @@ function buildConfigPicker() {
 
   var configOption;
 
+  
   for (let i = 0; i < iolabConfig.fixedConfigurations.length; i++) {
     configOption = document.createElement('option');
+    //var fc = iolabConfig.fixedConfigurations[i];
+    //fixedConfigList[i] = 
+
     configOption.value = configOption.innerText = iolabConfig.fixedConfigurations[i]["desc"];
     configPicker.appendChild(configOption);
   }

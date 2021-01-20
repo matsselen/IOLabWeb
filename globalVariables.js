@@ -26,13 +26,15 @@ var showCommands = false;
 // the last IOLab command record selected
 var current_cmd = "none";
 
-// the last IOLab fixed config selected
+// configuration stuff
+var fixedConfigList = new Array(50).fill(0);
+var sensorInfoList = new Array(250).fill(0);
 var current_config = "none";
 var current_config_code;
 
 // stuff for processing raw records
 var ncalls = 0;
-var n_rectype = new Array(200).fill(0);
+var n_rectype = new Array(250).fill(0);
 
 // this holds the last ACK info
 var ackCommand;
@@ -95,17 +97,13 @@ var readPointer = 0;
 
 // raw unpacked data indexed by sensor number. Filled by processDataRecord().
 // rawReadPtr is used by buildAndCalibrate() to keep track of where we are
-var rawData = [[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]];
-var rawReadPtr = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+// (initialized in resetAcquisition())
+var rawData = null;
+var rawReadPtr = null;
 
 // calibrated data indexed by sensor number. Filled by buildAndCalibrate() and 
 // used by plottong code along with calWritePtr and calReadPtr
-var calData = [[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]];
-var calWritePtr = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
-var calReadPtr = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
-
-// sensors (numbering is the same as win/mac application):
-// number name
-//  0     rssi 
-//  1     accelerometer 
-//  
+// (initialized in resetAcquisition())
+var calData = null;
+var calWritePtr = null;
+var calReadPtr = null;
