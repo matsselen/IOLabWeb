@@ -10,12 +10,17 @@ function resetAcquisition() {
   lastFrame = -1;
   elapsedFrame = -1;
 
-  rawData = [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []];
-  rawReadPtr = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+  let maxSens = 250; // big only because ECG "sensor" is 241
+  rawReadPtr  = new Array(maxSens).fill(0);
+  calWritePtr = new Array(maxSens).fill(0);
+  calReadPtr  = new Array(maxSens).fill(0);
 
-  calData = [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []];
-  calWritePtr = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-  calReadPtr = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+  rawData = [];
+  calData = [];
+  for (let i = 0; i < maxSens; i++) {
+    rawData.push([]);
+    calData.push([]);
+  }
 
 }
 

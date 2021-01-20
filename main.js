@@ -16,6 +16,8 @@ const butStartStop = document.getElementById('butStartStop');
 const butDebug = document.getElementById('butDebug');
 const dongleStatusDisplay = document.getElementById('dongleStatusDisplay');
 const remoteStatusDisplay = document.getElementById('remoteStatusDisplay');
+const configSelect = document.getElementById('configSelect');
+const cmdPicker = document.getElementById('cmd-picker');
 
 const dataBoxTx = document.getElementById("dataBoxTx");
 const dataBoxRx = document.getElementById("dataBoxRx");
@@ -34,6 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   inputFile.addEventListener("change", readInputFile);
 
+  getIOLabConfigInfo();
   buildConfigPicker();
   buildCmdPicker();
 
@@ -44,9 +47,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // create canvas stacks and layers for charts and set these up
   setupControls();
   resetAcquisition();
-
-  // test IOLabPlot class
-  plotSet = new PlotSet(sensorIDlist,"testContainer");
 
   // update the UI
   updateSystemState();
@@ -88,6 +88,16 @@ async function clickSend() {
       console.log(byteArray);
       await sendRecord(byteArray);
     }, 100);
+
+    // remove any existing plots
+    if (plotSet != null) {
+      plotSet.reset();
+      plotSet = null;
+      resetAcquisition();
+    }
+    // create new plots
+    sensorIDlist = fixedConfigList[current_config_code].sensList;
+    plotSet = new PlotSet(sensorIDlist, "plotContainer");
   }
 }
 
@@ -98,15 +108,6 @@ async function clickStartStop() {
   // start DAQ if we are not already running
   if (!runningDAQ) {
     console.log("Start runnung");
-
-    // // remove any static viewports from the stack
-    // while (accPlotClass.viewStack.length > 1) {
-    //   accPlotClass.viewStack.shift();
-    // }
-    
-    // accPlotClass.mouseMode = "";
-    // accPlotClass.drawPlotAxes(accPlotClass.viewStack[0]);
-    // accPlotClass.plotStaticData();
 
     plotSet.startAcquisition();
 
@@ -132,9 +133,7 @@ async function clickStartStop() {
     // stop updating the data plots
     clearInterval(plotTimerID);
 
-    // accPlotClass.mouseMode = "zoom";
-    // accPlotClass.displayStaticData();
-
+    // display static data
     plotSet.stopAcquisition();
 
   }
@@ -148,7 +147,6 @@ function plotNewData() {
 
   // plot data from whatever sensors are selected 
   plotSet.plotRunningData();
-  //accPlotClass.plotRunningData();
 
 }
 
@@ -157,15 +155,12 @@ function plotNewData() {
 async function clickDebug() {
   console.log("Debug button clicked (put breakpoint here)");
   //window.dispatchEvent(new Event('resize'));
-  //xxx = new PlotIOLab(1,"testContainer");
-  //xxx.testFunc();
-  //accPlotClass = new PlotIOLab(1,"testContainer");
-  //accPlotClass.testClass();
+  serialConnected = true;
+  updateSystemState();
+  // plotSet.reset();
+  // plotSet = null;
 
 }
-
-
-
 
 //============================================
 // send a byte array to the serial port
@@ -173,8 +168,8 @@ async function sendRecord(byteArray) {
   if (port != null) {
     dataBoxTx.innerHTML += byteArray + '\n';
     writer.write(byteArray.buffer);
-    console.log("In sendRecord: ",byteArray);
-    console.log("Date.now: ",Date.now()," performance.now() ",performance.now());
+    console.log("In sendRecord: ", byteArray);
+    console.log("Date.now: ", Date.now(), " performance.now() ", performance.now());
   } else {
     console.log("sendRecord: serial port is not open");
   }
@@ -257,6 +252,9 @@ async function disconnectAndStop() {
   clearInterval(calRecordTimerID);
   clearInterval(plotTimerID);
 
+
+
+
   console.log("Turn off remote 1");
   await sendRecord(getCommandRecord("powerDown"));
 
@@ -325,12 +323,18 @@ async function readLoop() {
 // the state of the data acquisition system
 function updateSystemState() {
 
+  if (showCommands) {
+    cmdPicker.style.visibility = "visible";
+  } else {
+    cmdPicker.style.visibility = "hidden";
+  }
+
   if (serialConnected) {
     butConnect.textContent = "Disconnect Serial Port";
-    butSend.hidden = false;
+    if (remoteConnected)configSelect.style.display = "block";
   } else {
     butConnect.textContent = "Connect to Serial Port";
-    butSend.hidden = true;
+    configSelect.style.display = "none";
   }
 
   if (current_cmd == "setFixedConfig") {
@@ -349,6 +353,8 @@ function updateSystemState() {
   if ((remote1ID > 0) && (remoteStatus[0])) {
     remoteStatusDisplay.innerHTML = "0x" + remote1ID.toString(16) +
       " (" + remoteVoltage[0].toFixed(2) + " V)";
+      remoteConnected = true;
+      configSelect.style.display = "block";
   } else {
     remoteStatusDisplay.innerHTML = "none";
   }

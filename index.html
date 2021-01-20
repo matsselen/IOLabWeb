@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-  <title>IOLab Web v0.4.1</title>
+  <title>IOLab Web v0.5.1</title>
   <meta charset="utf-8">
   <meta name="iolab" content="testing-w-web-serial">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -39,24 +39,37 @@
       <code>chrome://flags</code>
     </div>
 
+    <table>
+      <tr>
+        <td>
+          <p><button id="butConnect" type="button">Connect</button> &nbsp; &nbsp; <select id="cmd-picker"></select></p>
+        </td>
+        <td>
+          <p style="color: rgb(200,200,200); text-align: right; width: 500px;">Debug:<input id="debug_ck"
+              type="checkbox" checked="true"></p>
+        </td>
+      </tr>
+    </table>
 
-    <p><button id="butConnect" type="button">Connect</button></p>
-
-    <label>Command: <select id="cmd-picker"></select></label>
-    <label><select id="config-picker"></select></label>
-
-    <button id="butSend" type="button">Configure</button>
-    <button id="butStartStop" type="button">Start</button>
-
-    <br /><br /><br />
-    <div id="testContainer" style="position:relative">
+    <div id="configSelect">
+      <table>
+        <tr>
+          <td><button id="butSend" type="button">Configure</button></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>
+            <label><select id="config-picker"
+                style="font: 12px Arial; width: 400px; word-wrap: break-word;"></select></label>
+          </td>
+          <td>&nbsp;&nbsp;<button id="butStartStop" type="button">Start</button></td>
+        </tr>
+      </table>
     </div>
-    <br />
 
-    <p>
-      <!-- <input id="text_area_ck" type="checkbox" checked="true">:Tx/Rx Control Records &nbsp;&nbsp; -->
-      <input id="debug_ck" type="checkbox" checked="true">:Debug Stuff
-    </p>
+    <br />
+    <div id="plotContainer" style="position:relative">
+    </div>
 
     <!-- For Debugging -->
     <div id="debugStuff">

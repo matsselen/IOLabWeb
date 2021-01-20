@@ -366,6 +366,9 @@ var iolabConfig =
       "code": 9,
       "desc": "Wheel",
       "shortDesc": "Wheel",
+      "legends": ["displacement", "velocity", "acceleration"],
+      "pathColors": ["#BB0000", "#0000BB", "#008800"],
+      "scales": [-2, 2],
       "subCharts": [
         {
           "desc": "Position",
@@ -435,6 +438,8 @@ var iolabConfig =
       "code": 13,
       "desc": "Digital",
       "shortDesc": "Digi",
+      "legends": ["Voltage"],
+      "pathColors": ["#0000BB"],
       "scales": [0, 5],
       "autoScaleY": false
     },
