@@ -331,7 +331,7 @@ function updateSystemState() {
 
   if (serialConnected) {
     butConnect.textContent = "Disconnect Serial Port";
-    if (remoteConnected)configSelect.style.display = "block";
+    if (remoteConnected) configSelect.style.display = "block";
   } else {
     butConnect.textContent = "Connect to Serial Port";
     configSelect.style.display = "none";
@@ -353,9 +353,11 @@ function updateSystemState() {
   if ((remote1ID > 0) && (remoteStatus[0])) {
     remoteStatusDisplay.innerHTML = "0x" + remote1ID.toString(16) +
       " (" + remoteVoltage[0].toFixed(2) + " V)";
-      remoteConnected = true;
-      configSelect.style.display = "block";
+    remoteConnected = true;
+    configSelect.style.display = "block";
   } else {
+    remoteConnected = false;
+    configSelect.style.display = "none";
     remoteStatusDisplay.innerHTML = "none";
   }
 
