@@ -1,7 +1,7 @@
 // Global variables for data acquisition
 'use strict';
 
-// configuration information (hardwired for now)
+// configuration information 
 var sensorIDlist = [];
 
 // run control
@@ -10,6 +10,7 @@ var justTurnedOnRemote = false;
 var runningDAQ = false;
 var daqConfigured = false;
 var serialConnected = false;
+var remoteConnected = false;
 
 // event timers
 var rawRecordTimerID;

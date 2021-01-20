@@ -48,9 +48,6 @@ document.addEventListener('DOMContentLoaded', () => {
   setupControls();
   resetAcquisition();
 
-  // test IOLabPlot class
-  //plotSet = new PlotSet(sensorIDlist, "testContainer");
-
   // update the UI
   updateSystemState();
 
@@ -92,16 +89,15 @@ async function clickSend() {
       await sendRecord(byteArray);
     }, 100);
 
-    sensorIDlist = fixedConfigList[current_config_code].sensList;
-    // create plots
+    // remove any existing plots
     if (plotSet != null) {
       plotSet.reset();
       plotSet = null;
       resetAcquisition();
     }
-    plotSet = new PlotSet(sensorIDlist, "testContainer");
-
-
+    // create new plots
+    sensorIDlist = fixedConfigList[current_config_code].sensList;
+    plotSet = new PlotSet(sensorIDlist, "plotContainer");
   }
 }
 
@@ -256,6 +252,9 @@ async function disconnectAndStop() {
   clearInterval(calRecordTimerID);
   clearInterval(plotTimerID);
 
+
+
+
   console.log("Turn off remote 1");
   await sendRecord(getCommandRecord("powerDown"));
 
@@ -332,12 +331,10 @@ function updateSystemState() {
 
   if (serialConnected) {
     butConnect.textContent = "Disconnect Serial Port";
-    configSelect.style.display = "block";
-    //butSend.hidden = false;
+    if (remoteConnected)configSelect.style.display = "block";
   } else {
     butConnect.textContent = "Connect to Serial Port";
     configSelect.style.display = "none";
-    //butSend.hidden = true;
   }
 
   if (current_cmd == "setFixedConfig") {
@@ -356,6 +353,8 @@ function updateSystemState() {
   if ((remote1ID > 0) && (remoteStatus[0])) {
     remoteStatusDisplay.innerHTML = "0x" + remote1ID.toString(16) +
       " (" + remoteVoltage[0].toFixed(2) + " V)";
+      remoteConnected = true;
+      configSelect.style.display = "block";
   } else {
     remoteStatusDisplay.innerHTML = "none";
   }
