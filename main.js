@@ -114,13 +114,13 @@ async function clickStartStop() {
     // set the runningDAQ flag send a startData record to the system
     runningDAQ = true;
     await sendRecord(getCommandRecord("startData"));
+    startTime = performance.now();
 
     // update the data plots every plotTimerMS ms
     plotTimerID = setInterval(plotNewData, plotTimerMS);
 
     // keep track whether this is a restart or a first time start
     if (lastFrame > 0) justRestarted = true;
-
 
     // stop DAQ and plotting if we are running
   } else {
@@ -129,6 +129,7 @@ async function clickStartStop() {
     // clear the runningDAQ flag send a startData record to the system
     runningDAQ = false;
     await sendRecord(getCommandRecord("stopData"));
+    stopTime = performance.now();
 
     // stop updating the data plots
     clearInterval(plotTimerID);
