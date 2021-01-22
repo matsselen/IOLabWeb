@@ -168,8 +168,6 @@ async function sendRecord(byteArray) {
   if (port != null) {
     dataBoxTx.innerHTML += byteArray + '\n';
     writer.write(byteArray.buffer);
-    console.log("In sendRecord: ", byteArray);
-    console.log("Date.now: ", Date.now(), " performance.now() ", performance.now());
   } else {
     console.log("sendRecord: serial port is not open");
   }

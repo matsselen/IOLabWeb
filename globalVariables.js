@@ -11,6 +11,8 @@ var runningDAQ = false;
 var daqConfigured = false;
 var serialConnected = false;
 var remoteConnected = false;
+var startTime = 0;
+var stopTime = 0;
 
 // event timers
 var rawRecordTimerID;
