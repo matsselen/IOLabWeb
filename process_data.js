@@ -11,9 +11,9 @@ function resetAcquisition() {
   elapsedFrame = -1;
 
   let maxSens = 250; // big only because ECG "sensor" is 241
-  rawReadPtr  = new Array(maxSens).fill(0);
+  rawReadPtr = new Array(maxSens).fill(0);
   calWritePtr = new Array(maxSens).fill(0);
-  calReadPtr  = new Array(maxSens).fill(0);
+  calReadPtr = new Array(maxSens).fill(0);
 
   rawData = [];
   calData = [];
@@ -309,60 +309,115 @@ function processDataRecord(recStart, recLength) {
 // at the moment its rather crude, but you get the idea
 function buildAndCalibrate() {
 
-  // accelerometer
-  var sensorID = 1;
-
+  // loop over sensors
   for (let s = 0; s < sensorIDlist.length; s++) {
 
-    var sensorID = sensorIDlist[s];
+    let sensorID = sensorIDlist[s];
 
-    // puts the raw bytes together and applies calibration (cal just estimated for now)
+    // the accelerometer, magnetometer, and gyroscope have the same data formats
     // six bytes per sample: [x_hi, x_lo, y_hi, y_lo, z_hi, z_lo]
     if (sensorID == 1 || sensorID == 2 || sensorID == 3) {
+
+      // loop over data packets that arrived since the last time
       for (let ind = rawReadPtr[sensorID]; ind < rawData[sensorID].length; ind++) {
 
-        var nbytes = rawData[sensorID][ind][2].length;
+        let nbytes = rawData[sensorID][ind][2].length;
         if (nbytes % 6 != 0) {
           console.log(" bytecount not a multiple of 6");
         } else {
-          var nsamples = nbytes / 6;
+
+          // loop over the data samples in each packet
+          let nsamples = nbytes / 6;
           for (let i = 0; i < nsamples; i++) {
-            var j = i * 6;
-            var xDat = rawData[sensorID][ind][2][j] << 8 | rawData[sensorID][ind][2][j + 1];
-            var yDat = rawData[sensorID][ind][2][j + 2] << 8 | rawData[sensorID][ind][2][j + 3];
-            var zDat = rawData[sensorID][ind][2][j + 4] << 8 | rawData[sensorID][ind][2][j + 5];
-            var tDat = (rawData[sensorID][ind][0][0] + i / nsamples) * 0.010;
+            let j = i * 6;
+            let xDat = rawData[sensorID][ind][2][j] << 8 | rawData[sensorID][ind][2][j + 1];
+            let yDat = rawData[sensorID][ind][2][j + 2] << 8 | rawData[sensorID][ind][2][j + 3];
+            let zDat = rawData[sensorID][ind][2][j + 4] << 8 | rawData[sensorID][ind][2][j + 5];
+            let tDat = (rawData[sensorID][ind][0][0] + i / nsamples) * 0.010;
+
+            // accelerometer
             if (sensorID == 1) {
-              var calx = calAccel(xDat);
-              var caly = calAccel(yDat);
-              var calz = calAccel(zDat);
+              let calx = calAccel(xDat);
+              let caly = calAccel(yDat);
+              let calz = calAccel(zDat);
               // accdelerometer is turned on PCB so x = -y and y = x
               calData[sensorID][calWritePtr[sensorID]++] = [tDat, -caly, calx, calz];
+
+              // magnetometer
             } else if (sensorID == 2) {
-              var calx = calMag(xDat);
-              var caly = calMag(yDat);
-              var calz = calMag(zDat);
-              calData[sensorID][calWritePtr[sensorID]++] = [tDat, caly, calx, calz];          
+              let calx = calMag(xDat);
+              let caly = calMag(yDat);
+              let calz = calMag(zDat);
+              calData[sensorID][calWritePtr[sensorID]++] = [tDat, caly, calx, calz];
+
+              // gyroscope
             } else if (sensorID == 3) {
-              var calx = calGyro(xDat);
-              var caly = calGyro(yDat);
-              var calz = calGyro(zDat);
-              calData[sensorID][calWritePtr[sensorID]++] = [tDat, caly, calx, calz];             }
+              let calx = calGyro(xDat);
+              let caly = calGyro(yDat);
+              let calz = calGyro(zDat);
+              calData[sensorID][calWritePtr[sensorID]++] = [tDat, caly, calx, calz];
+            }
+          }//sample loop
+        }
+      }//data packet loop
+
+      // advance raw data read pointer
+      rawReadPtr[sensorID] = rawData[sensorID].length;
+
+      // for the ecg sensor
+    } else if (sensorID == 241) {
+
+      // loop over data packets that arrived since the last time
+      for (let ind = rawReadPtr[sensorID]; ind < rawData[sensorID].length; ind++) {
+
+        let nbytes = rawData[sensorID][ind][2].length;
+        if (nbytes % 6 != 0) {
+          console.log(" bytecount not a multiple of 6");
+        } else {
+
+          // loop over the data samples in each packet
+          let nsamples = nbytes / 12;
+          for (let i = 0; i < nsamples; i++) {
+            let j = i * 12;
+            let raDat = (0xf & rawData[sensorID][ind][2][j]) << 8 | rawData[sensorID][ind][2][j+1];
+            let laDat = (0xf & rawData[sensorID][ind][2][j+2]) << 8 | rawData[sensorID][ind][2][j+3];
+            let llDat = (0xf & rawData[sensorID][ind][2][j+4]) << 8 | rawData[sensorID][ind][2][j+5];
+            let c1Dat = (0xf & rawData[sensorID][ind][2][j+6]) << 8 | rawData[sensorID][ind][2][j+7];
+            let c2Dat = (0xf & rawData[sensorID][ind][2][j+8]) << 8 | rawData[sensorID][ind][2][j+9];
+            let c3Dat = (0xf & rawData[sensorID][ind][2][j+10]) << 8 | rawData[sensorID][ind][2][j+11];
+            let tDat = (rawData[sensorID][ind][0][0] + i / nsamples) * 0.010;
+
+            // simple leads
+            let cal_I   = laDat - raDat;
+            let cal_II  = llDat - raDat;
+            let cal_III = llDat - laDat;
+            // augmented leads
+            let cal_aRA = raDat - (laDat+llDat)/2;
+            let cal_aLA = laDat - (raDat+llDat)/2;
+            let cal_aLL = laDat - (raDat+laDat)/2;
+            // chest leads
+            let cref = (raDat+laDat+llDat)/3;
+            let cal_C1  = c1Dat - cref;
+            let cal_C2  = c2Dat - cref;
+            let cal_C3  = c3Dat - cref;
+
+            // leads are all inverted so multiply each by "-"
+            calData[sensorID][calWritePtr[sensorID]++] = [tDat, -cal_I, -cal_II, -cal_III, -cal_aRA, -cal_aLA,-cal_aLL, -cal_C1, -cal_C2, -cal_C3];
           }
         }
       }
-      rawReadPtr[sensorID] = rawData[sensorID].length;
     }
-  }
+
+  }//sensor loop
 
 }
 
 // turn 16 bit twos complement signed int into signed int and pretend-calibrate 
 function calAccel(n) {
   if (n > 0x7fff) {
-    var r1 = ~n;
-    var r2 = r1 & 0xffff;
-    var r3 = -1 * (r2 + 1);
+    let r1 = ~n;
+    let r2 = r1 & 0xffff;
+    let r3 = -1 * (r2 + 1);
     return 9.81 * r3 / 8080;
   } else {
     return 9.81 * n / 8080;
@@ -371,20 +426,20 @@ function calAccel(n) {
 
 function calMag(n) {
   if (n > 0x7fff) {
-    var r1 = ~n;
-    var r2 = r1 & 0xffff;
-    var r3 = -1 * (r2 + 1);
-    return (r3+500)/50;
+    let r1 = ~n;
+    let r2 = r1 & 0xffff;
+    let r3 = -1 * (r2 + 1);
+    return (r3 + 500) / 50;
   } else {
-    return (n+500)/50;
+    return (n + 500) / 50;
   }
 }
 
 function calGyro(n) {
   if (n > 0x7fff) {
-    var r1 = ~n;
-    var r2 = r1 & 0xffff;
-    var r3 = -1 * (r2 + 1);
+    let r1 = ~n;
+    let r2 = r1 & 0xffff;
+    let r3 = -1 * (r2 + 1);
     return r3 / 815;
   } else {
     return n / 815;
