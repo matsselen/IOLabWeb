@@ -156,10 +156,10 @@ function plotNewData() {
 async function clickDebug() {
   console.log("Debug button clicked (put breakpoint here)");
   //window.dispatchEvent(new Event('resize'));
-  serialConnected = true;
-  updateSystemState();
-  // plotSet.reset();
-  // plotSet = null;
+  //serialConnected = true;
+  //updateSystemState();
+  //plotSet.reset();
+  //plotSet = null;
 
 }
 

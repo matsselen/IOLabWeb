@@ -165,7 +165,8 @@ class ViewPort {
         this.yMax = yMax;                       // maximum data y value
         this.canvasElement = canvasElement;     // the base canvas of the plot
 
-        this.xAxisOffset = 30;                  // space (px) at the left used to draw y-axis labels
+        this.xAxisOffset = 50;                  // space (px) at the left used to draw y-axis labels
+        //this.xAxisOffset = 30;                  // space (px) at the left used to draw y-axis labels
         this.yAxisOffset = 20;                  // space (px) at the bottom used to draw x-axis labels
 
         // derived values

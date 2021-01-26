@@ -10,7 +10,7 @@ function resetAcquisition() {
   lastFrame = -1;
   elapsedFrame = -1;
 
-  let maxSens = 250; // big only because ECG "sensor" is 241
+  let maxSens = 30;
   rawReadPtr = new Array(maxSens).fill(0);
   calWritePtr = new Array(maxSens).fill(0);
   calReadPtr = new Array(maxSens).fill(0);
@@ -365,47 +365,52 @@ function buildAndCalibrate() {
       rawReadPtr[sensorID] = rawData[sensorID].length;
 
       // for the ecg sensor
-    } else if (sensorID == 241) {
+    } else if (sensorID == 27) {
 
       // loop over data packets that arrived since the last time
       for (let ind = rawReadPtr[sensorID]; ind < rawData[sensorID].length; ind++) {
 
         let nbytes = rawData[sensorID][ind][2].length;
-        if (nbytes % 6 != 0) {
-          console.log(" bytecount not a multiple of 6");
+        if (nbytes % 12 != 0) {
+          console.log(" bytecount not a multiple of 12");
         } else {
 
           // loop over the data samples in each packet
           let nsamples = nbytes / 12;
           for (let i = 0; i < nsamples; i++) {
             let j = i * 12;
-            let raDat = (0xf & rawData[sensorID][ind][2][j]) << 8 | rawData[sensorID][ind][2][j+1];
-            let laDat = (0xf & rawData[sensorID][ind][2][j+2]) << 8 | rawData[sensorID][ind][2][j+3];
-            let llDat = (0xf & rawData[sensorID][ind][2][j+4]) << 8 | rawData[sensorID][ind][2][j+5];
-            let c1Dat = (0xf & rawData[sensorID][ind][2][j+6]) << 8 | rawData[sensorID][ind][2][j+7];
-            let c2Dat = (0xf & rawData[sensorID][ind][2][j+8]) << 8 | rawData[sensorID][ind][2][j+9];
-            let c3Dat = (0xf & rawData[sensorID][ind][2][j+10]) << 8 | rawData[sensorID][ind][2][j+11];
+            let raDat = (0xf & rawData[sensorID][ind][2][j]) << 8 | rawData[sensorID][ind][2][j + 1];
+            let laDat = (0xf & rawData[sensorID][ind][2][j + 2]) << 8 | rawData[sensorID][ind][2][j + 3];
+            let llDat = (0xf & rawData[sensorID][ind][2][j + 4]) << 8 | rawData[sensorID][ind][2][j + 5];
+            let c1Dat = (0xf & rawData[sensorID][ind][2][j + 6]) << 8 | rawData[sensorID][ind][2][j + 7];
+            let c2Dat = (0xf & rawData[sensorID][ind][2][j + 8]) << 8 | rawData[sensorID][ind][2][j + 9];
+            let c3Dat = (0xf & rawData[sensorID][ind][2][j + 10]) << 8 | rawData[sensorID][ind][2][j + 11];
             let tDat = (rawData[sensorID][ind][0][0] + i / nsamples) * 0.010;
 
-            // simple leads
-            let cal_I   = laDat - raDat;
-            let cal_II  = llDat - raDat;
-            let cal_III = llDat - laDat;
-            // augmented leads
-            let cal_aRA = raDat - (laDat+llDat)/2;
-            let cal_aLA = laDat - (raDat+llDat)/2;
-            let cal_aLL = laDat - (raDat+laDat)/2;
-            // chest leads
-            let cref = (raDat+laDat+llDat)/3;
-            let cal_C1  = c1Dat - cref;
-            let cal_C2  = c2Dat - cref;
-            let cal_C3  = c3Dat - cref;
+            // 2^12 counts = 3 volts. The minus sign fixes an sign inversion elsewhere.
+            let countsPerVolt = -4096 / 3;
 
-            // leads are all inverted so multiply each by "-"
-            calData[sensorID][calWritePtr[sensorID]++] = [tDat, -cal_I, -cal_II, -cal_III, -cal_aRA, -cal_aLA,-cal_aLL, -cal_C1, -cal_C2, -cal_C3];
+            // calibrated simple leads
+            let cal_I = (laDat - raDat) / countsPerVolt;
+            let cal_II = (llDat - raDat) / countsPerVolt;
+            let cal_III = (llDat - laDat) / countsPerVolt;
+            // calibrated augmented leads
+            let cal_aRA = (raDat - (laDat + llDat) / 2) / countsPerVolt;
+            let cal_aLA = (laDat - (raDat + llDat) / 2) / countsPerVolt;
+            let cal_aLL = (laDat - (raDat + laDat) / 2) / countsPerVolt;
+            // calibrated chest leads
+            let cref = (raDat + laDat + llDat) / 3;
+            let cal_C1 = (c1Dat - cref) / countsPerVolt;
+            let cal_C2 = (c2Dat - cref) / countsPerVolt;
+            let cal_C3 = (c3Dat - cref) / countsPerVolt;
+
+            calData[sensorID][calWritePtr[sensorID]++] = [tDat, cal_I, cal_II, cal_III, cal_aRA, cal_aLA, cal_aLL, cal_C1, cal_C2, cal_C3];
           }
         }
       }
+      
+      // advance raw data read pointer
+      rawReadPtr[sensorID] = rawData[sensorID].length;
     }
 
   }//sensor loop

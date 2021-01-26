@@ -268,6 +268,20 @@ var iolabConfig =
       "highSpeed": true,
       "frequencies": [100, 200, 400],
       "sensors": [{ "sensorKey": 241, "sampleRate": 400 }]
+    },
+    {
+      "code": 48,
+      "desc": "ECG6",
+      "highSpeed": true,
+      "frequencies": [100, 200, 400],
+      "sensors": [{ "sensorKey": 27, "sampleRate": 400 }]
+    },
+    {
+      "code": 49,
+      "desc": "ECG6 (HS)",
+      "highSpeed": true,
+      "frequencies": [100, 200, 400],
+      "sensors": [{ "sensorKey": 27, "sampleRate": 800 }]
     }
   ],
   "sensors": [
@@ -488,9 +502,31 @@ var iolabConfig =
       "autoScaleY": false
     },
     {
-      "code": 241,
+      "code": 27,
       "desc": "Electrocardiogram (9)",
       "shortDesc": "ECG9",
+      "unit": "mV",
+      "legends": ["I", "II", "III", "aVR", "aVL", "aVF", "V1", "V3", "V6"],
+      "pathColors": [
+        "#819263",
+        "#3ca13b",
+        "#546f6f",
+        "#342fdd",
+        "#49a6ff",
+        "#515095",
+        "#c34947",
+        "#fa3430",
+        "#a73431"
+      ],
+      "timeAverageIdx": 2,
+      "scales": [-0.5, 0.5],
+      "minScalingRate": 5,
+      "autoScaleY": true
+    },    
+    {
+      "code": 241,
+      "desc": "Electrocardiogram (9-old)",
+      "shortDesc": "ECG9-old",
       "unit": "mV",
       "legends": ["I", "II", "III", "aVR", "aVL", "aVF", "V1", "V3", "V6"],
       "pathColors": [

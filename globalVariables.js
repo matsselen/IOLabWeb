@@ -23,7 +23,7 @@ var plotTimerID;
 var plotTimerMS = 50;
 
 // useful expert tools
-var dbgInfo = false;
+var dbgInfo = true;
 var showCommands = false;
 
 // the last IOLab command record selected
@@ -31,7 +31,7 @@ var current_cmd = "none";
 
 // configuration stuff
 var fixedConfigList = new Array(50).fill(0);
-var sensorInfoList = new Array(250).fill(0);
+var sensorInfoList = new Array(30).fill(0);
 var current_config = "none";
 var current_config_code;
 
