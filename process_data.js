@@ -43,8 +43,8 @@ function extractRecords() {
       readPointer++;
     } else {
 
-      var payloadBytes = rxdata[readPointer + 2];
-      var indexEOP = readPointer + payloadBytes + 3;
+      let payloadBytes = rxdata[readPointer + 2];
+      let indexEOP = readPointer + payloadBytes + 3;
 
       // make sure we have enough data to include the end of the packet
       if (indexEOP < writePointer) {
@@ -53,7 +53,7 @@ function extractRecords() {
         if (rxdata[indexEOP] == 0x0A) {
 
           // if we get here we seem to have a good record
-          var recType = rxdata[readPointer + 1]
+          let recType = rxdata[readPointer + 1]
           if (recType > 199) {
             console.log("Ooops recType = " + recType)
             recType = 199;
@@ -149,11 +149,11 @@ function processGetPacketConfig(recStart, recLength) {
 
   lengthBySensor = [new Array(30).fill(0), new Array(30).fill(0)];
 
-  var remote = rxdata[recStart] - 1;
+  let remote = rxdata[recStart] - 1;
   if (remote == 0 || remote == 1) {
     nSensor[remote] = rxdata[recStart + 1];
-    var j = 0;
-    for (var i = recStart + 2; i < recStart + recLength; i += 2) {
+    let j = 0;
+    for (let i = recStart + 2; i < recStart + recLength; i += 2) {
       sensorArray[remote][j] = rxdata[i];
       lengthArray[remote][j] = rxdata[i + 1];
       lengthBySensor[remote][rxdata[i]] = rxdata[i + 1];
@@ -171,7 +171,7 @@ function processGetPacketConfig(recStart, recLength) {
 // Process responses to the Get Fixed Config command
 function processGetFixedConfig(recStart, recLength) {
 
-  var remote = rxdata[recStart] - 1;
+  let remote = rxdata[recStart] - 1;
   if (remote == 0 || remote == 1) {
     fixedConfig[remote] = rxdata[recStart + 1];
     console.log("In GetFixedConfig: Remote=" + remote + " Fixed Configuration=" + fixedConfig[remote]);
@@ -184,7 +184,7 @@ function processGetFixedConfig(recStart, recLength) {
 
 // Process responses to the Get Remote Status command
 function processGetRemoteStatus(recStart, recLength) {
-  var remote = rxdata[recStart] - 1;
+  let remote = rxdata[recStart] - 1;
   if (remote == 0 || remote == 1) {
     remoteStatus[remote] = 1;
     remoteSensorFirmwareVersion[remote] = (rxdata[recStart + 1] << 8) + rxdata[recStart + 2];
@@ -203,7 +203,7 @@ function processGetRemoteStatus(recStart, recLength) {
 // Process asynchronous RF Connection records sent by the remote
 // when it is turned on or off
 function processRFconnection(recStart, recLength) {
-  var remote = rxdata[recStart] - 1;
+  let remote = rxdata[recStart] - 1;
   if (remote == 0 || remote == 1) {
     remoteRFstatus[remote] = rxdata[recStart + 1];
     if (remoteRFstatus[remote] > 0) {
@@ -225,7 +225,7 @@ function processRFconnection(recStart, recLength) {
 // Process asynchronous data records sent by the remote acquiring data
 function processDataRecord(recStart, recLength) {
 
-  var remote = rxdata[recStart] - 1;
+  let remote = rxdata[recStart] - 1;
   // only read out remote 1 for now
   if (remote != 0) {
     console.log("ignoring remote " + (remote + 1));
@@ -233,9 +233,9 @@ function processDataRecord(recStart, recLength) {
   } else {
 
     // stuff from header & footer
-    var frame = rxdata[recStart + 1];
-    var rfstat = rxdata[recStart + 2];
-    var rssi = rxdata[recStart + recLength - 1];
+    let frame = rxdata[recStart + 1];
+    let rfstat = rxdata[recStart + 2];
+    let rssi = rxdata[recStart + recLength - 1];
 
     // save header info as sensor 0.
     rawData[0].push([frame, rfstat, rssi]);
@@ -264,7 +264,7 @@ function processDataRecord(recStart, recLength) {
       // if its not the first data packet after a reset or a restart then find the change 
       // since the last one, taking into account the possibility that the counter wrapped
     } else {
-      var frameChange = frame - lastFrame;
+      let frameChange = frame - lastFrame;
       if (frameChange < 0) frameChange += 256;
       if (frameChange > 1) {
         console.log("OOPS - skipped a frame: this frame=" + frame + " last frame =" + lastFrame);
@@ -274,26 +274,26 @@ function processDataRecord(recStart, recLength) {
     }
 
     // stuff from data portion
-    var ptr = recStart + 3;
-    var nsens = rxdata[ptr];
+    let ptr = recStart + 3;
+    let nsens = rxdata[ptr];
 
     for (let s = 0; s < nsens; s++) {
-      var sens = rxdata[++ptr] & 0x7F; // Sensor. Mask off the overflow bit...
-      var ovfl = rxdata[ptr] & 0x80;   // ...and flag it here
-      var nbytes = rxdata[++ptr];
-      var lastValidIndex = ptr + nbytes;
-      var maxbytes = lengthBySensor[0][sens];
+      let sens = rxdata[++ptr] & 0x7F; // Sensor. Mask off the overflow bit...
+      let ovfl = rxdata[ptr] & 0x80;   // ...and flag it here
+      let nbytes = rxdata[++ptr];
+      let lastValidIndex = ptr + nbytes;
+      let maxbytes = lengthBySensor[0][sens];
       if (maxbytes == 0) console.log("yikes - sens=" + sens + " nbytes=" + nbytes + " ptr=" + ptr + " maxbytes=" + maxbytes);
-      var lastBufferIndex = ptr + maxbytes;
+      let lastBufferIndex = ptr + maxbytes;
 
-      var j = 0;
-      var dataList = [];
+      let j = 0;
+      let dataList = [];
       while (ptr < lastValidIndex) {
         dataList[j++] = rxdata[++ptr];
       }
 
       // Build data packet
-      var dataPacket = [[elapsedFrame, rfstat, rssi], [sens, ovfl], dataList];
+      let dataPacket = [[elapsedFrame, rfstat, rssi], [sens, ovfl], dataList];
 
       // push the data onto a 2D raw data array indexed by sensor ID.
       rawData[sens].push(dataPacket);
