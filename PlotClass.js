@@ -57,8 +57,12 @@ class PlotSet {
             // append the plot for this sensor to the parent element
             this.parentElement.appendChild(sensDiv);
 
+            //adjust the height of the charts based on the number of charts
+            let chartHeight = 200;
+            if (sensorList.length > 5) chartHeight = 150;
+
             // create an IOLabPlot object on each plot element
-            this.plotObjectList.push(new PlotIOLab(this.sensorNum, sensorID));            
+            this.plotObjectList.push(new PlotIOLab(this.sensorNum, sensorID, chartHeight));            
             
             // create the checkbox to show/hide each sensor plot
             let cb = document.createElement("input");
@@ -165,8 +169,7 @@ class ViewPort {
         this.yMax = yMax;                       // maximum data y value
         this.canvasElement = canvasElement;     // the base canvas of the plot
 
-        this.xAxisOffset = 50;                  // space (px) at the left used to draw y-axis labels
-        //this.xAxisOffset = 30;                  // space (px) at the left used to draw y-axis labels
+        this.xAxisOffset = 30;                  // space (px) at the left used to draw y-axis labels
         this.yAxisOffset = 20;                  // space (px) at the bottom used to draw x-axis labels
 
         // derived values
@@ -311,10 +314,12 @@ class ViewPort {
 class PlotIOLab {
 
     // the constructor sets up a ploting area and its controls
-    constructor(sensorNum, parentName) {
+    constructor(sensorNum, parentName, chartHeight = 200, chartWidth = 700) {
 
         this.sensorNum = sensorNum;     // the number of the sensor being plotted
         this.parentName = parentName;   // the ID of the parent <div> block
+        this.chartHeight = chartHeight; // initial height of the chart in pixels
+        this.chartWidth = chartWidth;   // initial width of the chart in pixels
 
         let plotThis = this;            // save "this" to used in callback routines
 
@@ -374,9 +379,8 @@ class PlotIOLab {
         // create the base layer canvas and set its properties 
         let baseCanvas = document.createElement("canvas");
         baseCanvas.setAttribute("id", this.baseID);
-        baseCanvas.setAttribute("width", 700);
-        baseCanvas.setAttribute("height", 200);
-        //baseCanvas.style.border = "1px solid #4d4545";
+        baseCanvas.setAttribute("width", this.chartWidth);
+        baseCanvas.setAttribute("height", this.chartHeight);
         baseCanvas.style.background = "white";
 
         // create the control elements that appear above the canvas
@@ -818,8 +822,6 @@ class PlotIOLab {
                 // if this is the first call after instantiating the class, 
                 // start with the data at calReadPtr (presumably 0)
                 if (this.datLast[0] < 0) {
-
-                    //this.drawPlotAxes(this.viewStack[0]);
 
                     let xd = calData[sensorID][calReadPtr[sensorID]][tr];
                     pix = this.viewStack[0].dataToPixel(td, xd);

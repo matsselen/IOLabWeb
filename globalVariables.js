@@ -30,8 +30,10 @@ var showCommands = false;
 var current_cmd = "none";
 
 // configuration stuff
-var fixedConfigList = new Array(50).fill(0);
-var sensorInfoList = new Array(30).fill(0);
+var maxSensorCode = 40;
+var maxConfigCode = 50;
+var fixedConfigList = new Array(maxConfigCode).fill(0);
+var sensorInfoList = new Array(maxSensorCode).fill(0);
 var current_config = "none";
 var current_config_code;
 

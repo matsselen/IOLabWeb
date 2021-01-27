@@ -10,14 +10,13 @@ function resetAcquisition() {
   lastFrame = -1;
   elapsedFrame = -1;
 
-  let maxSens = 30;
-  rawReadPtr = new Array(maxSens).fill(0);
-  calWritePtr = new Array(maxSens).fill(0);
-  calReadPtr = new Array(maxSens).fill(0);
+  rawReadPtr = new Array(maxSensorCode).fill(0);
+  calWritePtr = new Array(maxSensorCode).fill(0);
+  calReadPtr = new Array(maxSensorCode).fill(0);
 
   rawData = [];
   calData = [];
-  for (let i = 0; i < maxSens; i++) {
+  for (let i = 0; i < maxSensorCode; i++) {
     rawData.push([]);
     calData.push([]);
   }
@@ -400,11 +399,11 @@ function buildAndCalibrate() {
             let cal_aLL = (laDat - (raDat + laDat) / 2) / countsPerVolt;
             // calibrated chest leads
             let cref = (raDat + laDat + llDat) / 3;
-            let cal_C1 = (c1Dat - cref) / countsPerVolt;
-            let cal_C2 = (c2Dat - cref) / countsPerVolt;
-            let cal_C3 = (c3Dat - cref) / countsPerVolt;
+            let cal_V1 = (c1Dat - cref) / countsPerVolt;
+            let cal_V3 = (c2Dat - cref) / countsPerVolt;
+            let cal_V6 = (c3Dat - cref) / countsPerVolt;
 
-            calData[sensorID][calWritePtr[sensorID]++] = [tDat, cal_I, cal_II, cal_III, cal_aRA, cal_aLA, cal_aLL, cal_C1, cal_C2, cal_C3];
+            calData[sensorID][calWritePtr[sensorID]++] = [tDat, cal_I, cal_II, cal_III, cal_aRA, cal_aLA, cal_aLL, cal_V1, cal_V3, cal_V6];
           }
         }
       }

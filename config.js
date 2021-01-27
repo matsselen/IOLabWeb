@@ -33,6 +33,17 @@ var iolabConfig =
         { "sensorKey": 12, "sampleRate": 100 }
       ]
     },
+    // {
+    //   "code": 4,
+    //   "desc": "Mini-motion",
+    //   "highSpeed": false,
+    //   "frequencies": [100, 200],
+    //   "sensors": [
+    //     { "sensorKey": 1, "sampleRate": 200 },
+    //     { "sensorKey": 8, "sampleRate": 200 },
+    //     { "sensorKey": 9, "sampleRate": 100 }
+    //   ]
+    // },
     {
       "code": 4,
       "desc": "Mini-motion",
@@ -41,7 +52,9 @@ var iolabConfig =
       "sensors": [
         { "sensorKey": 1, "sampleRate": 200 },
         { "sensorKey": 8, "sampleRate": 200 },
-        { "sensorKey": 9, "sampleRate": 100 }
+        { "sensorKey": 15, "sampleRate": 100 },
+        { "sensorKey": 16, "sampleRate": 100 },
+        { "sensorKey": 17, "sampleRate": 100 }
       ]
     },
     {
@@ -269,18 +282,31 @@ var iolabConfig =
       "frequencies": [100, 200, 400],
       "sensors": [{ "sensorKey": 241, "sampleRate": 400 }]
     },
+    // {
+    //   "code": 48,
+    //   "desc": "ECG6",
+    //   "highSpeed": true,
+    //   "frequencies": [100, 200, 400],
+    //   "sensors": [{ "sensorKey": 27, "sampleRate": 400 }]
+    // },
     {
       "code": 48,
-      "desc": "ECG6",
-      "highSpeed": true,
-      "frequencies": [100, 200, 400],
-      "sensors": [{ "sensorKey": 27, "sampleRate": 400 }]
-    },
+      "desc": "ECG-split",
+      "sensors": [
+        { "sensorKey": 31, "sampleRate": 400 },
+        { "sensorKey": 32, "sampleRate": 400 },
+        { "sensorKey": 33, "sampleRate": 400 },
+        { "sensorKey": 34, "sampleRate": 400 },
+        { "sensorKey": 35, "sampleRate": 400 },
+        { "sensorKey": 36, "sampleRate": 400 },
+        { "sensorKey": 37, "sampleRate": 400 },
+        { "sensorKey": 38, "sampleRate": 400 },
+        { "sensorKey": 39, "sampleRate": 400 }
+      ]      
+    },    
     {
       "code": 49,
       "desc": "ECG6 (HS)",
-      "highSpeed": true,
-      "frequencies": [100, 200, 400],
       "sensors": [{ "sensorKey": 27, "sampleRate": 800 }]
     }
   ],
@@ -457,6 +483,33 @@ var iolabConfig =
       "scales": [0, 5],
       "autoScaleY": false
     },
+    {// calculated sensor (partly replaces sensor 9)
+      "code": 15,
+      "desc": "Wheel Position",
+      "shortDesc": "Position",
+      "legends": ["rᵧ"],
+      "pathColors": ["#BB0000"],
+      "scales": [-2, 2],
+      "unit": "m"
+    },
+    {// calculated sensor (partly replaces sensor 9)
+      "code": 16,
+      "desc": "Wheel Velocity",
+      "shortDesc": "Velocity",
+      "legends": ["vᵧ"],
+      "pathColors": ["#008800"],
+      "scales": [-3, 3],
+      "unit": "m/s"
+    },
+    {// calculated sensor (partly replaces sensor 9)
+      "code": 17,
+      "desc": "Wheel Acceleration",
+      "shortDesc": "Acceleration",
+      "legends": ["aᵧ"],
+      "pathColors": ["#0000BB"],
+      "scales": [-20, 20],
+      "unit": "m/s²"
+    },
     {
       "code": 21,
       "desc": "Analog 7",
@@ -507,22 +560,91 @@ var iolabConfig =
       "shortDesc": "ECG9",
       "unit": "mV",
       "legends": ["I", "II", "III", "aVR", "aVL", "aVF", "V1", "V3", "V6"],
-      "pathColors": [
-        "#819263",
-        "#3ca13b",
-        "#546f6f",
-        "#342fdd",
-        "#49a6ff",
-        "#515095",
-        "#c34947",
-        "#fa3430",
-        "#a73431"
-      ],
+      "pathColors": ["#819263","#3ca13b","#546f6f","#342fdd","#49a6ff","#515095","#c34947","#fa3430","#a73431"],
       "timeAverageIdx": 2,
       "scales": [-0.5, 0.5],
-      "minScalingRate": 5,
-      "autoScaleY": true
+    },
+    {
+      "code": 31,
+      "desc": "Electrocardiogram (I)",
+      "shortDesc": "(I)",
+      "unit": "mV",
+      "legends": ["I"],
+      "pathColors": ["#819263"],
+      "scales": [-0.5, 0.5],
+    },
+    {
+      "code": 32,
+      "desc": "Electrocardiogram (II)",
+      "shortDesc": "(II)",
+      "unit": "mV",
+      "legends": ["II"],
+      "pathColors": ["#3ca13b"],
+      "scales": [-0.5, 0.5],
+    },
+    {
+      "code": 33,
+      "desc": "Electrocardiogram (III)",
+      "shortDesc": "(III)",
+      "unit": "mV",
+      "legends": ["III"],
+      "pathColors": ["#546f6f"],
+      "scales": [-0.5, 0.5],
+    },
+    {
+      "code": 34,
+      "desc": "Electrocardiogram (aVR)",
+      "shortDesc": "(aVR)",
+      "unit": "mV",
+      "legends": ["aVR"],
+      "pathColors": ["#342fdd"],
+      "scales": [-0.5, 0.5],
+    },
+    {
+      "code": 35,
+      "desc": "Electrocardiogram (aVL)",
+      "shortDesc": "(aVL)",
+      "unit": "mV",
+      "legends": ["aVL"],
+      "pathColors": ["#49a6ff"],
+      "scales": [-0.5, 0.5],
+    },
+    {
+      "code": 36,
+      "desc": "Electrocardiogram (aVF)",
+      "shortDesc": "(aVF)",
+      "unit": "mV",
+      "legends": ["aVF"],
+      "pathColors": ["#515095"],
+      "scales": [-0.5, 0.5],
+    },
+    {
+      "code": 37,
+      "desc": "Electrocardiogram (V1)",
+      "shortDesc": "(V1)",
+      "unit": "mV",
+      "legends": ["V1"],
+      "pathColors": ["#c34947"],
+      "scales": [-0.5, 0.5],
     },    
+    {
+      "code": 38,
+      "desc": "Electrocardiogram (V2)",
+      "shortDesc": "(V2)",
+      "unit": "mV",
+      "legends": ["V2"],
+      "pathColors": ["#fa3430"],
+      "scales": [-0.5, 0.5],
+    },  
+    {
+      "code": 39,
+      "desc": "Electrocardiogram (V3)",
+      "shortDesc": "(V3)",
+      "unit": "mV",
+      "legends": ["V3"],
+      "pathColors": ["#a73431"],
+      "scales": [-0.5, 0.5],
+    },  
     {
       "code": 241,
       "desc": "Electrocardiogram (9-old)",
