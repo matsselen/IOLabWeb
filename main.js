@@ -97,7 +97,8 @@ async function clickSend() {
     }
     // create new plots
     sensorIDlist = fixedConfigList[current_config_code].sensList;
-    plotSet = new PlotSet(sensorIDlist, "plotContainer");
+    chartIDlist = fixedConfigList[current_config_code].chartList;
+    plotSet = new PlotSet(chartIDlist, "plotContainer");
   }
 }
 

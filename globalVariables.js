@@ -3,6 +3,7 @@
 
 // configuration information 
 var sensorIDlist = [];
+var chartIDlist = [];
 
 // run control
 var justRestarted = false;
@@ -33,7 +34,7 @@ var current_cmd = "none";
 var maxSensorCode = 40;
 var maxConfigCode = 50;
 var fixedConfigList = new Array(maxConfigCode).fill(0);
-var sensorInfoList = new Array(maxSensorCode).fill(0);
+var sensorInfoList  = new Array(maxSensorCode).fill(0);
 var current_config = "none";
 var current_config_code;
 

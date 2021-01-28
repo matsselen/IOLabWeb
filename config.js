@@ -12,14 +12,16 @@ var iolabConfig =
       "desc": "Gyroscope",
       "highSpeed": false,
       "frequencies": [100, 200, 400],
-      "sensors": [{ "sensorKey": 3, "sampleRate": 380 }]
+      "sensors": [{ "sensorKey": 3, "sampleRate": 380 }],
+      "chartList": [3]
     },
     {
       "code": 2,
       "desc": "Accelerometer",
       "highSpeed": false,
       "frequencies": [100, 200, 400],
-      "sensors": [{ "sensorKey": 1, "sampleRate": 400 }]
+      "sensors": [{ "sensorKey": 1, "sampleRate": 400 }],
+      "chartList": [1]
     },
     {
       "code": 3,
@@ -31,19 +33,9 @@ var iolabConfig =
         { "sensorKey": 2, "sampleRate": 80 },
         { "sensorKey": 3, "sampleRate": 95 },
         { "sensorKey": 12, "sampleRate": 100 }
-      ]
+      ],
+      "chartList": [1,2,3,12]
     },
-    // {
-    //   "code": 4,
-    //   "desc": "Mini-motion",
-    //   "highSpeed": false,
-    //   "frequencies": [100, 200],
-    //   "sensors": [
-    //     { "sensorKey": 1, "sampleRate": 200 },
-    //     { "sensorKey": 8, "sampleRate": 200 },
-    //     { "sensorKey": 9, "sampleRate": 100 }
-    //   ]
-    // },
     {
       "code": 4,
       "desc": "Mini-motion",
@@ -52,10 +44,9 @@ var iolabConfig =
       "sensors": [
         { "sensorKey": 1, "sampleRate": 200 },
         { "sensorKey": 8, "sampleRate": 200 },
-        { "sensorKey": 15, "sampleRate": 100 },
-        { "sensorKey": 16, "sampleRate": 100 },
-        { "sensorKey": 17, "sampleRate": 100 }
-      ]
+        { "sensorKey": 9, "sampleRate": 100 }
+      ],
+      "chartList": [1,8,15,16,17]
     },
     {
       "code": 5,
@@ -66,7 +57,8 @@ var iolabConfig =
         { "sensorKey": 1, "sampleRate": 100 },
         { "sensorKey": 3, "sampleRate": 95 },
         { "sensorKey": 8, "sampleRate": 100 }
-      ]
+      ],
+      "chartList": [1,3,8]
     },
     {
       "code": 6,
@@ -78,15 +70,16 @@ var iolabConfig =
         { "sensorKey": 7, "sampleRate": 400 },
         { "sensorKey": 11, "sampleRate": 50 },
         { "sensorKey": 26, "sampleRate": 50 }
-      ]
+      ],
+      "chartList": [4,7,11,26]
     },
-    {
-      "code": 7,
-      "desc": "ECG (requires plugin)",
-      "highSpeed": false,
-      "frequencies": [100, 200, 400],
-      "sensors": [{ "sensorKey": 10, "sampleRate": 400 }]
-    },
+    // {
+    //   "code": 7,
+    //   "desc": "ECG (requires plugin)",
+    //   "highSpeed": false,
+    //   "frequencies": [100, 200, 400],
+    //   "sensors": [{ "sensorKey": 10, "sampleRate": 400 }]
+    // },
     {
       "code": 8,
       "desc": "Header 3V",
@@ -98,14 +91,16 @@ var iolabConfig =
         { "sensorKey": 21, "sampleRate": 100 },
         { "sensorKey": 22, "sampleRate": 100 },
         { "sensorKey": 23, "sampleRate": 100 }
-      ]
+      ],
+      "chartList": [12,13,21,22,23]
     },
     {
       "code": 9,
       "desc": "Microphone",
       "highSpeed": false,
       "frequencies": [1200, 2400],
-      "sensors": [{ "sensorKey": 6, "sampleRate": 2400 }]
+      "sensors": [{ "sensorKey": 6, "sampleRate": 2400 }],
+      "chartList": [6]
     },
     {
       "code": 10,
@@ -115,14 +110,16 @@ var iolabConfig =
       "sensors": [
         { "sensorKey": 2, "sampleRate": 80 },
         { "sensorKey": 12, "sampleRate": 400 }
-      ]
+      ],
+      "chartList": [2,12]
     },
     {
       "code": 32,
       "desc": "Gyroscope (HS)",
       "highSpeed": true,
       "frequencies": [800],
-      "sensors": [{ "sensorKey": 3, "sampleRate": 760 }]
+      "sensors": [{ "sensorKey": 3, "sampleRate": 760 }],
+      "chartList": [3]
     },
     {
       "code": 12,
@@ -136,14 +133,16 @@ var iolabConfig =
         { "sensorKey": 21, "sampleRate": 100 },
         { "sensorKey": 22, "sampleRate": 100 },
         { "sensorKey": 23, "sampleRate": 100 }
-      ]
+      ],
+      "chartList": [12,13,21,22,23]
     },
     {
       "code": 33,
       "desc": "Accelerometer (HS)",
       "highSpeed": true,
       "frequencies": [800],
-      "sensors": [{ "sensorKey": 1, "sampleRate": 800 }]
+      "sensors": [{ "sensorKey": 1, "sampleRate": 800 }],
+      "chartList": [1]
     },
     {
       "code": 34,
@@ -154,7 +153,8 @@ var iolabConfig =
         { "sensorKey": 1, "sampleRate": 400 },
         { "sensorKey": 2, "sampleRate": 80 },
         { "sensorKey": 3, "sampleRate": 190 }
-      ]
+      ],
+      "chartList": [1,2,3]
     },
     {
       "code": 35,
@@ -166,7 +166,8 @@ var iolabConfig =
         { "sensorKey": 3, "sampleRate": 190 },
         { "sensorKey": 8, "sampleRate": 200 },
         { "sensorKey": 9, "sampleRate": 100 }
-      ]
+      ],
+      "chartList": [1,3,8,15,16,17]
     },
     {
       "code": 36,
@@ -178,7 +179,8 @@ var iolabConfig =
         { "sensorKey": 2, "sampleRate": 80 },
         { "sensorKey": 3, "sampleRate": 190 },
         { "sensorKey": 10, "sampleRate": 200 }
-      ]
+      ],
+      "chartList": [1,2,3,10]
     },
     {
       "code": 37,
@@ -189,7 +191,8 @@ var iolabConfig =
         { "sensorKey": 1, "sampleRate": 200 },
         { "sensorKey": 3, "sampleRate": 190 },
         { "sensorKey": 8, "sampleRate": 200 }
-      ]
+      ],
+      "chartList": [1,3,8]
     },
     {
       "code": 38,
@@ -208,21 +211,24 @@ var iolabConfig =
         { "sensorKey": 12, "sampleRate": 100 },
         { "sensorKey": 13, "sampleRate": 100 },
         { "sensorKey": 21, "sampleRate": 100 }
-      ]
+      ],
+      "chartList": [1,2,3,4,7,8,15,16,17,11,12,13,21]
     },
     {
       "code": 39,
       "desc": "Microphone (HS)",
       "highSpeed": true,
       "frequencies": [2400, 4800],
-      "sensors": [{ "sensorKey": 6, "sampleRate": 4800 }]
+      "sensors": [{ "sensorKey": 6, "sampleRate": 4800 }],
+      "chartList": [6]
     },
     {
       "code": 40,
       "desc": "Ambient Light (HS)",
       "highSpeed": true,
       "frequencies": [2400, 4800],
-      "sensors": [{ "sensorKey": 7, "sampleRate": 4800 }]
+      "sensors": [{ "sensorKey": 7, "sampleRate": 4800 }],
+      "chartList": [7]
     },
     {
       "code": 41,
@@ -232,7 +238,8 @@ var iolabConfig =
       "sensors": [
         { "sensorKey": 1, "sampleRate": 800 },
         { "sensorKey": 7, "sampleRate": 800 }
-      ]
+      ],
+      "chartList": [1,7]
     },
     {
       "code": 42,
@@ -242,7 +249,8 @@ var iolabConfig =
       "sensors": [
         { "sensorKey": 1, "sampleRate": 800 },
         { "sensorKey": 8, "sampleRate": 800 }
-      ]
+      ],
+      "chartList": [1,8]
     },
     {
       "code": 43,
@@ -252,62 +260,53 @@ var iolabConfig =
       "sensors": [
         { "sensorKey": 6, "sampleRate": 2400 },
         { "sensorKey": 7, "sampleRate": 2400 }
-      ]
+      ],
+      "chartList": [6,7]
     },
     {
       "code": 44,
       "desc": "Electrocardiograph (HS)",
       "highSpeed": true,
       "frequencies": [200, 400, 800],
-      "sensors": [{ "sensorKey": 10, "sampleRate": 800 }]
+      "sensors": [{ "sensorKey": 10, "sampleRate": 800 }],
+      "chartList": [10]
     },
     {
       "code": 45,
       "desc": "High Gain (HS)",
       "highSpeed": true,
       "frequencies": [2400, 4800],
-      "sensors": [{ "sensorKey": 12, "sampleRate": 4800 }]
+      "sensors": [{ "sensorKey": 12, "sampleRate": 4800 }],
+      "chartList": [12]
     },
     {
       "code": 46,
       "desc": "Force Gauge (HS)",
       "highSpeed": true,
       "frequencies": [2400, 4800],
-      "sensors": [{ "sensorKey": 8, "sampleRate": 4800 }]
-    },
-    {
-      "code": 47,
-      "desc": "ECG & Analog",
-      "highSpeed": true,
-      "frequencies": [100, 200, 400],
-      "sensors": [{ "sensorKey": 241, "sampleRate": 400 }]
+      "sensors": [{ "sensorKey": 8, "sampleRate": 4800 }],
+      "chartList": [8]
     },
     // {
-    //   "code": 48,
-    //   "desc": "ECG6",
+    //   "code": 47,
+    //   "desc": "ECG & Analog",
     //   "highSpeed": true,
     //   "frequencies": [100, 200, 400],
-    //   "sensors": [{ "sensorKey": 27, "sampleRate": 400 }]
+    //   "sensors": [{ "sensorKey": 241, "sampleRate": 400 }]
     // },
     {
       "code": 48,
-      "desc": "ECG-split",
-      "sensors": [
-        { "sensorKey": 31, "sampleRate": 400 },
-        { "sensorKey": 32, "sampleRate": 400 },
-        { "sensorKey": 33, "sampleRate": 400 },
-        { "sensorKey": 34, "sampleRate": 400 },
-        { "sensorKey": 35, "sampleRate": 400 },
-        { "sensorKey": 36, "sampleRate": 400 },
-        { "sensorKey": 37, "sampleRate": 400 },
-        { "sensorKey": 38, "sampleRate": 400 },
-        { "sensorKey": 39, "sampleRate": 400 }
-      ]      
-    },    
+      "desc": "ECG",
+      "highSpeed": true,
+      "frequencies": [100, 200, 400],
+      "sensors": [{ "sensorKey": 27, "sampleRate": 400 }],
+      "chartList": [31,32,33,34,35,36,37,38,39]
+    },
     {
       "code": 49,
       "desc": "ECG6 (HS)",
-      "sensors": [{ "sensorKey": 27, "sampleRate": 800 }]
+      "sensors": [{ "sensorKey": 27, "sampleRate": 800 }],
+      "chartList": [31,32,33,34,35,36,37,38,39]
     }
   ],
   "sensors": [
@@ -483,7 +482,7 @@ var iolabConfig =
       "scales": [0, 5],
       "autoScaleY": false
     },
-    {// calculated sensor (partly replaces sensor 9)
+    {// calculated sensor (derived from sensor 9)
       "code": 15,
       "desc": "Wheel Position",
       "shortDesc": "Position",
@@ -492,7 +491,7 @@ var iolabConfig =
       "scales": [-2, 2],
       "unit": "m"
     },
-    {// calculated sensor (partly replaces sensor 9)
+    {// calculated sensor (derived from sensor 9)
       "code": 16,
       "desc": "Wheel Velocity",
       "shortDesc": "Velocity",
@@ -501,7 +500,7 @@ var iolabConfig =
       "scales": [-3, 3],
       "unit": "m/s"
     },
-    {// calculated sensor (partly replaces sensor 9)
+    {// calculated sensor (derived from sensor 9)
       "code": 17,
       "desc": "Wheel Acceleration",
       "shortDesc": "Acceleration",
@@ -564,7 +563,7 @@ var iolabConfig =
       "timeAverageIdx": 2,
       "scales": [-0.5, 0.5],
     },
-    {
+    {// calculated sensor (derived from sensor 27)
       "code": 31,
       "desc": "Electrocardiogram (I)",
       "shortDesc": "(I)",
@@ -573,7 +572,7 @@ var iolabConfig =
       "pathColors": ["#819263"],
       "scales": [-0.5, 0.5],
     },
-    {
+    {// calculated sensor (derived from sensor 27)
       "code": 32,
       "desc": "Electrocardiogram (II)",
       "shortDesc": "(II)",
@@ -582,7 +581,7 @@ var iolabConfig =
       "pathColors": ["#3ca13b"],
       "scales": [-0.5, 0.5],
     },
-    {
+    {// calculated sensor (derived from sensor 27)
       "code": 33,
       "desc": "Electrocardiogram (III)",
       "shortDesc": "(III)",
@@ -591,7 +590,7 @@ var iolabConfig =
       "pathColors": ["#546f6f"],
       "scales": [-0.5, 0.5],
     },
-    {
+    {// calculated sensor (derived from sensor 27)
       "code": 34,
       "desc": "Electrocardiogram (aVR)",
       "shortDesc": "(aVR)",
@@ -600,7 +599,7 @@ var iolabConfig =
       "pathColors": ["#342fdd"],
       "scales": [-0.5, 0.5],
     },
-    {
+    {// calculated sensor (derived from sensor 27)
       "code": 35,
       "desc": "Electrocardiogram (aVL)",
       "shortDesc": "(aVL)",
@@ -609,7 +608,7 @@ var iolabConfig =
       "pathColors": ["#49a6ff"],
       "scales": [-0.5, 0.5],
     },
-    {
+    {// calculated sensor (derived from sensor 27)
       "code": 36,
       "desc": "Electrocardiogram (aVF)",
       "shortDesc": "(aVF)",
@@ -618,7 +617,7 @@ var iolabConfig =
       "pathColors": ["#515095"],
       "scales": [-0.5, 0.5],
     },
-    {
+    {// calculated sensor (derived from sensor 27)
       "code": 37,
       "desc": "Electrocardiogram (V1)",
       "shortDesc": "(V1)",
@@ -627,7 +626,7 @@ var iolabConfig =
       "pathColors": ["#c34947"],
       "scales": [-0.5, 0.5],
     },    
-    {
+    {// calculated sensor (derived from sensor 27)
       "code": 38,
       "desc": "Electrocardiogram (V2)",
       "shortDesc": "(V2)",
@@ -636,7 +635,7 @@ var iolabConfig =
       "pathColors": ["#fa3430"],
       "scales": [-0.5, 0.5],
     },  
-    {
+    {// calculated sensor (derived from sensor 27)
       "code": 39,
       "desc": "Electrocardiogram (V3)",
       "shortDesc": "(V3)",

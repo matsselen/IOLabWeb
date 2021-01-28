@@ -32,21 +32,22 @@ class PlotSet {
             this.sensorNum = sensorList[ind];
 
             // start by finding the "sensor" entry in config.js (var iolabConfig) that matches sensorNum
-            this.sensor = null;
-            for (let ind = 0; ind < iolabConfig.sensors.length; ind++) {
-                let sens = iolabConfig.sensors[ind];
-                if (sens.code == this.sensorNum) {
-                    this.sensor = sens;
-                    break;
-                }
-            }
+            this.sensor = sensorInfoList[this.sensorNum];
 
-            // make sure the sensor was found
-            if (this.sensor == null) {
-                console.log("in PlotSet: Didnt find sensor " + sensorNum.toString());
-            } else {
-                if (dbgInfo) console.log("In PlotSet: found " + this.sensor.desc);
-            }
+            // for (let ind = 0; ind < iolabConfig.sensors.length; ind++) {
+            //     let sens = iolabConfig.sensors[ind];
+            //     if (sens.code == this.sensorNum) {
+            //         this.sensor = sens;
+            //         break;
+            //     }
+            // }
+
+            // // make sure the sensor was found
+            // if (this.sensor == null) {
+            //     console.log("in PlotSet: Didnt find sensor " + sensorNum.toString());
+            // } else {
+            //     if (dbgInfo) console.log("In PlotSet: found " + this.sensor.desc);
+            // }
 
             // create the <div> element that will be the parent element for each sensors plot
             let sensDiv = document.createElement("div");
