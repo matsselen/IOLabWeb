@@ -389,21 +389,25 @@ function buildAndCalibrate() {
             // 2^12 counts = 3 volts. The minus sign fixes an sign inversion elsewhere.
             let countsPerVolt = -4096 / 3;
 
+            let calEcg = [];
             // calibrated simple leads
-            let cal_I = (laDat - raDat) / countsPerVolt;
-            let cal_II = (llDat - raDat) / countsPerVolt;
-            let cal_III = (llDat - laDat) / countsPerVolt;
+            calEcg.push( (laDat - raDat) / countsPerVolt ); // I
+            calEcg.push( (llDat - raDat) / countsPerVolt ); // II
+            calEcg.push( (llDat - laDat) / countsPerVolt ); // III
             // calibrated augmented leads
-            let cal_aRA = (raDat - (laDat + llDat) / 2) / countsPerVolt;
-            let cal_aLA = (laDat - (raDat + llDat) / 2) / countsPerVolt;
-            let cal_aLL = (laDat - (raDat + laDat) / 2) / countsPerVolt;
+            calEcg.push( (raDat - (laDat + llDat) / 2) / countsPerVolt ); // aRA
+            calEcg.push( (laDat - (raDat + llDat) / 2) / countsPerVolt ); // aLA
+            calEcg.push( (laDat - (raDat + laDat) / 2) / countsPerVolt ); // aLL
             // calibrated chest leads
             let cref = (raDat + laDat + llDat) / 3;
-            let cal_V1 = (c1Dat - cref) / countsPerVolt;
-            let cal_V3 = (c2Dat - cref) / countsPerVolt;
-            let cal_V6 = (c3Dat - cref) / countsPerVolt;
+            calEcg.push( (c1Dat - cref) / countsPerVolt ); // V1
+            calEcg.push( (c2Dat - cref) / countsPerVolt ); // V2
+            calEcg.push( (c3Dat - cref) / countsPerVolt ); // V3
 
-            calData[sensorID][calWritePtr[sensorID]++] = [tDat, cal_I, cal_II, cal_III, cal_aRA, cal_aLA, cal_aLL, cal_V1, cal_V3, cal_V6];
+            for (let i = 0; i < 9; i++) {
+              let s = i+31; // the ECG calibrated sensors are 31-39
+              calData[s][calWritePtr[s]++] = [tDat, calEcg[i]];
+            }
           }
         }
       }
