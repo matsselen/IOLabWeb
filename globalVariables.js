@@ -3,6 +3,7 @@
 
 // configuration information 
 var sensorIDlist = [];
+var chartIDlist = [];
 
 // run control
 var justRestarted = false;
@@ -23,15 +24,17 @@ var plotTimerID;
 var plotTimerMS = 50;
 
 // useful expert tools
-var dbgInfo = false;
+var dbgInfo = true;
 var showCommands = false;
 
 // the last IOLab command record selected
 var current_cmd = "none";
 
 // configuration stuff
-var fixedConfigList = new Array(50).fill(0);
-var sensorInfoList = new Array(250).fill(0);
+var maxSensorCode = 40;
+var maxConfigCode = 50;
+var fixedConfigList = new Array(maxConfigCode).fill(0);
+var sensorInfoList  = new Array(maxSensorCode).fill(0);
 var current_config = "none";
 var current_config_code;
 

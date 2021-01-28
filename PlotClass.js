@@ -32,21 +32,22 @@ class PlotSet {
             this.sensorNum = sensorList[ind];
 
             // start by finding the "sensor" entry in config.js (var iolabConfig) that matches sensorNum
-            this.sensor = null;
-            for (let ind = 0; ind < iolabConfig.sensors.length; ind++) {
-                let sens = iolabConfig.sensors[ind];
-                if (sens.code == this.sensorNum) {
-                    this.sensor = sens;
-                    break;
-                }
-            }
+            this.sensor = sensorInfoList[this.sensorNum];
 
-            // make sure the sensor was found
-            if (this.sensor == null) {
-                console.log("in PlotSet: Didnt find sensor " + sensorNum.toString());
-            } else {
-                if (dbgInfo) console.log("In PlotSet: found " + this.sensor.desc);
-            }
+            // for (let ind = 0; ind < iolabConfig.sensors.length; ind++) {
+            //     let sens = iolabConfig.sensors[ind];
+            //     if (sens.code == this.sensorNum) {
+            //         this.sensor = sens;
+            //         break;
+            //     }
+            // }
+
+            // // make sure the sensor was found
+            // if (this.sensor == null) {
+            //     console.log("in PlotSet: Didnt find sensor " + sensorNum.toString());
+            // } else {
+            //     if (dbgInfo) console.log("In PlotSet: found " + this.sensor.desc);
+            // }
 
             // create the <div> element that will be the parent element for each sensors plot
             let sensDiv = document.createElement("div");
@@ -57,8 +58,12 @@ class PlotSet {
             // append the plot for this sensor to the parent element
             this.parentElement.appendChild(sensDiv);
 
+            //adjust the height of the charts based on the number of charts
+            let chartHeight = 200;
+            if (sensorList.length > 5) chartHeight = 150;
+
             // create an IOLabPlot object on each plot element
-            this.plotObjectList.push(new PlotIOLab(this.sensorNum, sensorID));            
+            this.plotObjectList.push(new PlotIOLab(this.sensorNum, sensorID, chartHeight));            
             
             // create the checkbox to show/hide each sensor plot
             let cb = document.createElement("input");
@@ -310,10 +315,12 @@ class ViewPort {
 class PlotIOLab {
 
     // the constructor sets up a ploting area and its controls
-    constructor(sensorNum, parentName) {
+    constructor(sensorNum, parentName, chartHeight = 200, chartWidth = 700) {
 
         this.sensorNum = sensorNum;     // the number of the sensor being plotted
         this.parentName = parentName;   // the ID of the parent <div> block
+        this.chartHeight = chartHeight; // initial height of the chart in pixels
+        this.chartWidth = chartWidth;   // initial width of the chart in pixels
 
         let plotThis = this;            // save "this" to used in callback routines
 
@@ -373,9 +380,8 @@ class PlotIOLab {
         // create the base layer canvas and set its properties 
         let baseCanvas = document.createElement("canvas");
         baseCanvas.setAttribute("id", this.baseID);
-        baseCanvas.setAttribute("width", 700);
-        baseCanvas.setAttribute("height", 200);
-        //baseCanvas.style.border = "1px solid #4d4545";
+        baseCanvas.setAttribute("width", this.chartWidth);
+        baseCanvas.setAttribute("height", this.chartHeight);
         baseCanvas.style.background = "white";
 
         // create the control elements that appear above the canvas
@@ -817,8 +823,6 @@ class PlotIOLab {
                 // if this is the first call after instantiating the class, 
                 // start with the data at calReadPtr (presumably 0)
                 if (this.datLast[0] < 0) {
-
-                    //this.drawPlotAxes(this.viewStack[0]);
 
                     let xd = calData[sensorID][calReadPtr[sensorID]][tr];
                     pix = this.viewStack[0].dataToPixel(td, xd);

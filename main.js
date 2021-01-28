@@ -97,7 +97,8 @@ async function clickSend() {
     }
     // create new plots
     sensorIDlist = fixedConfigList[current_config_code].sensList;
-    plotSet = new PlotSet(sensorIDlist, "plotContainer");
+    chartIDlist = fixedConfigList[current_config_code].chartList;
+    plotSet = new PlotSet(chartIDlist, "plotContainer");
   }
 }
 
@@ -156,10 +157,10 @@ function plotNewData() {
 async function clickDebug() {
   console.log("Debug button clicked (put breakpoint here)");
   //window.dispatchEvent(new Event('resize'));
-  serialConnected = true;
-  updateSystemState();
-  // plotSet.reset();
-  // plotSet = null;
+  //serialConnected = true;
+  //updateSystemState();
+  //plotSet.reset();
+  //plotSet = null;
 
 }
 
