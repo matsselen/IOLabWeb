@@ -304,8 +304,7 @@ function processDataRecord(recStart, recLength) {
 }
 
 //======================================================================
-// the beginning of a set of routines to analyze and calibrate data
-// at the moment its rather crude, but you get the idea
+// analyze and calibrate data
 function buildAndCalibrate() {
 
   // loop over sensors
@@ -363,7 +362,12 @@ function buildAndCalibrate() {
       // advance raw data read pointer
       rawReadPtr[sensorID] = rawData[sensorID].length;
 
-      // for the ecg sensor
+    // for the wheel
+    } else if (sensorID == 9) {
+
+      
+
+    // for the ecg sensor
     } else if (sensorID == 27) {
 
       // loop over data packets that arrived since the last time

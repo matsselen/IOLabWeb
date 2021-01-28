@@ -370,7 +370,7 @@ var iolabConfig =
     {
       "code": 6,
       "desc": "Microphone",
-      "shortDesc": "Micro",
+      "shortDesc": "Microphone",
       "label": "Intensity",
       "unit": "",
       "legends": ["Intensity"],
@@ -443,7 +443,7 @@ var iolabConfig =
     {
       "code": 10,
       "desc": "Analog 1/2/3",
-      "shortDesc": "Ana 1/2/3",
+      "shortDesc": "A1/A2/A3",
       "label": "A",
       "unit": "V",
       "legends": ["A1", "A2", "A3"],
@@ -485,7 +485,7 @@ var iolabConfig =
     {// calculated sensor (derived from sensor 9)
       "code": 15,
       "desc": "Wheel Position",
-      "shortDesc": "Position",
+      "shortDesc": "Wheel (rᵧ)",
       "legends": ["rᵧ"],
       "pathColors": ["#BB0000"],
       "scales": [-2, 2],
@@ -494,7 +494,7 @@ var iolabConfig =
     {// calculated sensor (derived from sensor 9)
       "code": 16,
       "desc": "Wheel Velocity",
-      "shortDesc": "Velocity",
+      "shortDesc": "Wheel (vᵧ)",
       "legends": ["vᵧ"],
       "pathColors": ["#008800"],
       "scales": [-3, 3],
@@ -503,7 +503,7 @@ var iolabConfig =
     {// calculated sensor (derived from sensor 9)
       "code": 17,
       "desc": "Wheel Acceleration",
-      "shortDesc": "Acceleration",
+      "shortDesc": "Wheel (aᵧ)",
       "legends": ["aᵧ"],
       "pathColors": ["#0000BB"],
       "scales": [-20, 20],
@@ -512,7 +512,7 @@ var iolabConfig =
     {
       "code": 21,
       "desc": "Analog 7",
-      "shortDesc": "Ana7",
+      "shortDesc": "A7",
       "label": "A",
       "unit": "V",
       "legends": ["Voltage"],
@@ -523,7 +523,7 @@ var iolabConfig =
     {
       "code": 22,
       "desc": "Analog 8",
-      "shortDesc": "Ana8",
+      "shortDesc": "A8",
       "label": "A",
       "unit": "V",
       "legends": ["Voltage"],
@@ -534,7 +534,7 @@ var iolabConfig =
     {
       "code": 23,
       "desc": "Analog 9",
-      "shortDesc": "Ana9",
+      "shortDesc": "A9",
       "label": "A",
       "unit": "V",
       "legends": ["Voltage"],
@@ -556,7 +556,7 @@ var iolabConfig =
     {
       "code": 27,
       "desc": "Electrocardiogram (9)",
-      "shortDesc": "ECG9",
+      "shortDesc": "ECG",
       "unit": "mV",
       "legends": ["I", "II", "III", "aVR", "aVL", "aVF", "V1", "V3", "V6"],
       "pathColors": ["#819263","#3ca13b","#546f6f","#342fdd","#49a6ff","#515095","#c34947","#fa3430","#a73431"],
@@ -565,8 +565,8 @@ var iolabConfig =
     },
     {// calculated sensor (derived from sensor 27)
       "code": 31,
-      "desc": "Electrocardiogram (I)",
-      "shortDesc": "(I)",
+      "desc": "Electrocardiogram",
+      "shortDesc": "I",
       "unit": "mV",
       "legends": ["I"],
       "pathColors": ["#819263"],
@@ -574,8 +574,8 @@ var iolabConfig =
     },
     {// calculated sensor (derived from sensor 27)
       "code": 32,
-      "desc": "Electrocardiogram (II)",
-      "shortDesc": "(II)",
+      "desc": "Electrocardiogram",
+      "shortDesc": "II",
       "unit": "mV",
       "legends": ["II"],
       "pathColors": ["#3ca13b"],
@@ -583,8 +583,8 @@ var iolabConfig =
     },
     {// calculated sensor (derived from sensor 27)
       "code": 33,
-      "desc": "Electrocardiogram (III)",
-      "shortDesc": "(III)",
+      "desc": "Electrocardiogram",
+      "shortDesc": "III",
       "unit": "mV",
       "legends": ["III"],
       "pathColors": ["#546f6f"],
@@ -592,8 +592,8 @@ var iolabConfig =
     },
     {// calculated sensor (derived from sensor 27)
       "code": 34,
-      "desc": "Electrocardiogram (aVR)",
-      "shortDesc": "(aVR)",
+      "desc": "Electrocardiogram",
+      "shortDesc": "aVR",
       "unit": "mV",
       "legends": ["aVR"],
       "pathColors": ["#342fdd"],
@@ -601,8 +601,8 @@ var iolabConfig =
     },
     {// calculated sensor (derived from sensor 27)
       "code": 35,
-      "desc": "Electrocardiogram (aVL)",
-      "shortDesc": "(aVL)",
+      "desc": "Electrocardiogram",
+      "shortDesc": "aVL",
       "unit": "mV",
       "legends": ["aVL"],
       "pathColors": ["#49a6ff"],
@@ -610,8 +610,8 @@ var iolabConfig =
     },
     {// calculated sensor (derived from sensor 27)
       "code": 36,
-      "desc": "Electrocardiogram (aVF)",
-      "shortDesc": "(aVF)",
+      "desc": "Electrocardiogram",
+      "shortDesc": "aVF",
       "unit": "mV",
       "legends": ["aVF"],
       "pathColors": ["#515095"],
@@ -619,8 +619,8 @@ var iolabConfig =
     },
     {// calculated sensor (derived from sensor 27)
       "code": 37,
-      "desc": "Electrocardiogram (V1)",
-      "shortDesc": "(V1)",
+      "desc": "Electrocardiogram",
+      "shortDesc": "V1",
       "unit": "mV",
       "legends": ["V1"],
       "pathColors": ["#c34947"],
@@ -628,8 +628,8 @@ var iolabConfig =
     },    
     {// calculated sensor (derived from sensor 27)
       "code": 38,
-      "desc": "Electrocardiogram (V2)",
-      "shortDesc": "(V2)",
+      "desc": "Electrocardiogram",
+      "shortDesc": "V2",
       "unit": "mV",
       "legends": ["V2"],
       "pathColors": ["#fa3430"],
@@ -637,8 +637,8 @@ var iolabConfig =
     },  
     {// calculated sensor (derived from sensor 27)
       "code": 39,
-      "desc": "Electrocardiogram (V3)",
-      "shortDesc": "(V3)",
+      "desc": "Electrocardiogram",
+      "shortDesc": "V3",
       "unit": "mV",
       "legends": ["V3"],
       "pathColors": ["#a73431"],
