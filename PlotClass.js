@@ -629,7 +629,9 @@ class PlotIOLab {
         // draw and label the vertical gridlines
         for (let t = timeAxis[0]; t < vp.xMax; t += timeAxis[1]) {
             let pix = vp.dataToPixel(t, vp.yMin);
-            ctx.fillText(t.toFixed(timeAxis[2]), pix[0] - 3, pix[1] + 16);
+            let tickLabel = t.toFixed(timeAxis[2]);
+            let tickLabelWidth = ctx.measureText(tickLabel).width;
+            ctx.fillText(tickLabel, pix[0] - tickLabelWidth/2, pix[1] + 16);
             this.drawVline(ctx, vp, t, 1, '#cccccc', "");
             this.drawVline(ctx, vp, t, 1, '#000000', "-");
         }
@@ -640,7 +642,10 @@ class PlotIOLab {
         // draw and label the horizontal gridlines
         for (let y = dataAxis[0]; y < vp.yMax; y += dataAxis[1]) {
             let pix = vp.dataToPixel(vp.xMin, y);
-            ctx.fillText(y.toFixed(dataAxis[2]).padStart(4), pix[0] - 25, pix[1] + 3);
+            //let tickLabel = y.toFixed(dataAxis[2]).padStart(4);
+            let tickLabel = y.toFixed(dataAxis[2]);
+            let tickLabelWidth = ctx.measureText(tickLabel).width;
+            ctx.fillText(tickLabel, pix[0] - tickLabelWidth - 8, pix[1] + 3);
             this.drawHline(ctx, vp, y, 1, '#cccccc', "");
             this.drawHline(ctx, vp, y, 1, '#000000', "-");
         }
