@@ -45,9 +45,8 @@ class PlotSet {
 
             //adjust the height of the charts based on the number of charts
             let chartHeight = 200;
-            if (chartList.length > 2) chartHeight = 180;
-            if (chartList.length > 3) chartHeight = 150;
-            if (chartList.length > 5) chartHeight = 120;
+            //if (chartList.length > 3) chartHeight = 180;
+            //if (chartList.length > 8) chartHeight = 120;
 
             // create an IOLabPlot object on each plot element
             this.plotObjectList.push(new PlotIOLab(this.sensorNum, sensorID, chartHeight));            
