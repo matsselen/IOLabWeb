@@ -5,10 +5,10 @@
 'use strict';
 
 class PlotSet {
-    constructor(sensorList, parentName) {
+    constructor(chartList, parentName) {
 
         this.plotSetThis = this;        // save "this" to use in callback routines
-        this.sensorList = sensorList;   // list of sensor numbers (as defined in config.js)
+        this.chartList = chartList;     // list of chart sensor numbers (as defined in config.js)
         this.parentName = parentName;   // the name of the existing parent element
 
         this.plotObjectList = [];       // list of PlotIOLab insances (one for each sensor)
@@ -27,27 +27,12 @@ class PlotSet {
         this.parentElement.appendChild(document.createElement("p")); 
 
         // loop over sensors
-        for (let ind = 0; ind < sensorList.length; ind++) {
+        for (let ind = 0; ind < chartList.length; ind++) {
 
-            this.sensorNum = sensorList[ind];
+            this.sensorNum = chartList[ind];
 
             // start by finding the "sensor" entry in config.js (var iolabConfig) that matches sensorNum
             this.sensor = sensorInfoList[this.sensorNum];
-
-            // for (let ind = 0; ind < iolabConfig.sensors.length; ind++) {
-            //     let sens = iolabConfig.sensors[ind];
-            //     if (sens.code == this.sensorNum) {
-            //         this.sensor = sens;
-            //         break;
-            //     }
-            // }
-
-            // // make sure the sensor was found
-            // if (this.sensor == null) {
-            //     console.log("in PlotSet: Didnt find sensor " + sensorNum.toString());
-            // } else {
-            //     if (dbgInfo) console.log("In PlotSet: found " + this.sensor.desc);
-            // }
 
             // create the <div> element that will be the parent element for each sensors plot
             let sensDiv = document.createElement("div");
@@ -60,7 +45,9 @@ class PlotSet {
 
             //adjust the height of the charts based on the number of charts
             let chartHeight = 200;
-            if (sensorList.length > 5) chartHeight = 150;
+            if (chartList.length > 2) chartHeight = 180;
+            if (chartList.length > 3) chartHeight = 150;
+            if (chartList.length > 5) chartHeight = 120;
 
             // create an IOLabPlot object on each plot element
             this.plotObjectList.push(new PlotIOLab(this.sensorNum, sensorID, chartHeight));            
@@ -170,7 +157,7 @@ class ViewPort {
         this.yMax = yMax;                       // maximum data y value
         this.canvasElement = canvasElement;     // the base canvas of the plot
 
-        this.xAxisOffset = 30;                  // space (px) at the left used to draw y-axis labels
+        this.xAxisOffset = 40;                  // space (px) at the left used to draw y-axis labels
         this.yAxisOffset = 20;                  // space (px) at the bottom used to draw x-axis labels
 
         // derived values
@@ -357,10 +344,11 @@ class PlotIOLab {
         }
 
         // extract some useful info from the sensor object
-        this.plotName = this.sensor.desc;       // the name of the chart
-        this.axisTitles = this.sensor.legends;  // the trace labels
-        this.scales = this.sensor.scales;       // the initial y-axis scale range
-        this.baseID = this.sensor.shortDesc;    // the ID of the bottom layer (used for drawing axes)
+        this.plotName   = this.sensor.desc;      // the name of the chart
+        this.unit       = this.sensor.unit;      // the units of the measurement
+        this.axisTitles = this.sensor.legends;   // the trace labels
+        this.scales     = this.sensor.scales;    // the initial y-axis scale range
+        this.baseID     = this.sensor.shortDesc; // the ID of the bottom layer (used for drawing axes)
 
         // the number of traces is the same as the number of axis titles and 
         this.nTraces = this.axisTitles.length;
@@ -433,12 +421,15 @@ class PlotIOLab {
             cb.canvaslayer = this.layerIDlist[ind + 1];
 
             // create the axis labels before each checkbox
-            let axis = document.createTextNode("\xA0\xA0" + this.axisTitles[ind] + ":");
+            let axis = document.createTextNode("\xA0\xA0" + this.axisTitles[ind] + " (" + this.unit + "):");
 
             // add the labels and boxes to the control region
             controls.appendChild(axis);
             controls.appendChild(cb);
         }
+        let txt = document.createTextNode("\xA0\xA0 vs. time (s)");
+        controls.appendChild(txt);
+
 
         // Set up the viewport that will be used while the DAQ is running 
         this.runningDataView = new ViewPort(0, this.initialTimeSpan, this.scales[0], this.scales[1], this.baseElement);
@@ -601,7 +592,6 @@ class PlotIOLab {
     //======================================================================================================
     //======================================================================================================
     //======================================================================================================
-
     //===============================IOLabPlot Methods======================================================
 
     // clean up the DOM
@@ -626,7 +616,7 @@ class PlotIOLab {
         if (dbgInfo) console.log("In drawPlotAxes: ViewPort ", vp);
         let timeAxis = vp.pickTimeAxis();
 
-        // draw and label the vertical gridlines
+        // draw and label the vertical gridlines (time axis)
         for (let t = timeAxis[0]; t < vp.xMax; t += timeAxis[1]) {
             let pix = vp.dataToPixel(t, vp.yMin);
             let tickLabel = t.toFixed(timeAxis[2]);
@@ -636,13 +626,16 @@ class PlotIOLab {
             this.drawVline(ctx, vp, t, 1, '#000000', "-");
         }
 
+        // label the overall time axis
+        // let pix = vp.dataToPixel(vp.xMin+vp.xSpan/2, vp.yMin);
+        // ctx.fillText("t (sec)", pix[0], pix[1]+25);
+
         // y-axis: pick the starting data value, interval, and precision based on viewport
         let dataAxis = vp.pickDataAxis();
 
-        // draw and label the horizontal gridlines
+        // draw and label the horizontal gridlines (y-axis)
         for (let y = dataAxis[0]; y < vp.yMax; y += dataAxis[1]) {
             let pix = vp.dataToPixel(vp.xMin, y);
-            //let tickLabel = y.toFixed(dataAxis[2]).padStart(4);
             let tickLabel = y.toFixed(dataAxis[2]);
             let tickLabelWidth = ctx.measureText(tickLabel).width;
             ctx.fillText(tickLabel, pix[0] - tickLabelWidth - 8, pix[1] + 3);
@@ -650,6 +643,7 @@ class PlotIOLab {
             this.drawHline(ctx, vp, y, 1, '#000000', "-");
         }
 
+        // redraw axes lines and line at y=0
         this.drawHline(ctx, vp, vp.yMin, 1, '#000000', "<");
         this.drawVline(ctx, vp, vp.xMin, 1, '#000000', "<");
         this.drawHline(ctx, vp, 0, 1, '#000000', "");
