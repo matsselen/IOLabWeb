@@ -131,6 +131,10 @@ class PlotSet {
 
             let plot = this.plotObjectList[ind];
 
+            // recalibrate each time axis based on the number of samples and the elapsed time
+            plot.recalibrateTimes();
+
+            // display the data
             plot.mouseMode = "zoom";
             plot.displayStaticData();
         }
@@ -598,6 +602,10 @@ class PlotIOLab {
         while (this.parentElement.childNodes.length > 0) {
             this.parentElement.childNodes[0].remove();
           }
+    }
+
+    recalibrateTimes() {
+        console.log("In recalibrateTimes()");
     }
 
     // draw plot axes on the layer below the chart traces of ViewPort vp

@@ -110,6 +110,7 @@ async function clickStartStop() {
   if (!runningDAQ) {
     console.log("Start runnung");
 
+    // prepare all charts for acquisition
     plotSet.startAcquisition();
 
     // set the runningDAQ flag send a startData record to the system
@@ -131,6 +132,8 @@ async function clickStartStop() {
     runningDAQ = false;
     await sendRecord(getCommandRecord("stopData"));
     stopTime = performance.now();
+    lastRunTime = stopTime - startTime;
+    totalRunTime += lastRunTime;
 
     // stop updating the data plots
     clearInterval(plotTimerID);

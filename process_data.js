@@ -9,6 +9,11 @@ function resetAcquisition() {
   timeElapsed = 0;
   lastFrame = -1;
   elapsedFrame = -1;
+  startTime = 0;
+  stopTime = 0;
+  lastRunTime = 0;
+  totalRunTime = 0;
+
 
   rawReadPtr = new Array(maxSensorCode).fill(0);
   calWritePtr = new Array(maxSensorCode).fill(0);
@@ -362,12 +367,12 @@ function buildAndCalibrate() {
       // advance raw data read pointer
       rawReadPtr[sensorID] = rawData[sensorID].length;
 
-    // for the wheel
+      // for the wheel
     } else if (sensorID == 9) {
 
-      
 
-    // for the ecg sensor
+
+      // for the ecg sensor
     } else if (sensorID == 27) {
 
       // loop over data packets that arrived since the last time
@@ -395,27 +400,27 @@ function buildAndCalibrate() {
 
             let calEcg = [];
             // calibrated simple leads
-            calEcg.push( (laDat - raDat) / countsPerVolt ); // I
-            calEcg.push( (llDat - raDat) / countsPerVolt ); // II
-            calEcg.push( (llDat - laDat) / countsPerVolt ); // III
+            calEcg.push((laDat - raDat) / countsPerVolt); // I
+            calEcg.push((llDat - raDat) / countsPerVolt); // II
+            calEcg.push((llDat - laDat) / countsPerVolt); // III
             // calibrated augmented leads
-            calEcg.push( (raDat - (laDat + llDat) / 2) / countsPerVolt ); // aRA
-            calEcg.push( (laDat - (raDat + llDat) / 2) / countsPerVolt ); // aLA
-            calEcg.push( (laDat - (raDat + laDat) / 2) / countsPerVolt ); // aLL
+            calEcg.push((raDat - (laDat + llDat) / 2) / countsPerVolt); // aRA
+            calEcg.push((laDat - (raDat + llDat) / 2) / countsPerVolt); // aLA
+            calEcg.push((laDat - (raDat + laDat) / 2) / countsPerVolt); // aLL
             // calibrated chest leads
             let cref = (raDat + laDat + llDat) / 3;
-            calEcg.push( (c1Dat - cref) / countsPerVolt ); // V1
-            calEcg.push( (c2Dat - cref) / countsPerVolt ); // V2
-            calEcg.push( (c3Dat - cref) / countsPerVolt ); // V3
+            calEcg.push((c1Dat - cref) / countsPerVolt); // V1
+            calEcg.push((c2Dat - cref) / countsPerVolt); // V2
+            calEcg.push((c3Dat - cref) / countsPerVolt); // V3
 
             for (let i = 0; i < 9; i++) {
-              let s = i+31; // the ECG calibrated sensors are 31-39
+              let s = i + 31; // the ECG calibrated sensors are 31-39
               calData[s][calWritePtr[s]++] = [tDat, calEcg[i]];
             }
           }
         }
       }
-      
+
       // advance raw data read pointer
       rawReadPtr[sensorID] = rawData[sensorID].length;
     }

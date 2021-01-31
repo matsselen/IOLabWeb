@@ -14,6 +14,8 @@ var serialConnected = false;
 var remoteConnected = false;
 var startTime = 0;
 var stopTime = 0;
+var lastRunTime = 0;
+var totalRunTime = 0;
 
 // event timers
 var rawRecordTimerID;
