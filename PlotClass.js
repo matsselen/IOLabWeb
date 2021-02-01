@@ -5,10 +5,10 @@
 'use strict';
 
 class PlotSet {
-    constructor(chartList, parentName) {
+    constructor(fConfig, parentName) {
 
         this.plotSetThis = this;        // save "this" to use in callback routines
-        this.chartList = chartList;     // list of chart sensor numbers (as defined in config.js)
+        this.fConfig = fConfig;         // fixed configuration information
         this.parentName = parentName;   // the name of the existing parent element
 
         this.plotObjectList = [];       // list of PlotIOLab insances (one for each sensor)
@@ -25,6 +25,9 @@ class PlotSet {
         // add the control region to the page and put some vertical space below it
         this.parentElement.appendChild(controls);
         this.parentElement.appendChild(document.createElement("p"));
+
+        // get the list of charts for this configuration
+        let chartList = fConfig.chartList;
 
         // loop over sensors
         for (let ind = 0; ind < chartList.length; ind++) {
@@ -325,7 +328,7 @@ class PlotIOLab {
         this.viewStack = [];            // a stack of static viewports ([0] is always current)
         this.mouseMode = "zoom";        // different behaviors for zooming, panning, analysis, etc
 
-        //this.timePerSample = fixedConfigObject.
+        this.timePerSample = 0;         // initalize to somenting nuts so we will know if used impropery
 
         // this will hold (t,x,[y,z,...]) of last data point plotted 
         // start with [t] and we will add 0's for each trace further below
@@ -613,19 +616,19 @@ class PlotIOLab {
         let tLast0 = calData[this.sensorNum][datLength - 1][0];
 
         // figure out actual time per sample
-        let timePerSample = totalRunTime / datLength;
+        this.timePerSample = totalRunTime / datLength;
 
         // fix all of the time emasurements based on actual elapsed time
         let sampleTime = 0;
         for (let ind = 0; ind < datLength; ind++) {
             calData[this.sensorNum][ind][0] = sampleTime;
-            sampleTime += timePerSample;
+            sampleTime += this.timePerSample;
         }
 
         // debugging
         if (dbgInfo) {
             let tLast1 = calData[this.sensorNum][datLength - 1][0];
-            console.log("In recalibrateTimes() sensor:" + this.sensorNum + " timePerSample:" + timePerSample.toFixed(6) + " tLast0:" + tLast0.toFixed(4) + " tLast1:" + tLast1.toFixed(4));
+            console.log("In recalibrateTimes() sensor:" + this.sensorNum + " timePerSample:" + this.timePerSample.toFixed(6) + " tLast0:" + tLast0.toFixed(4) + " tLast1:" + tLast1.toFixed(4));
         }
     }
 
