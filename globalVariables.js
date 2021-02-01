@@ -1,6 +1,11 @@
 // Global variables for data acquisition
 'use strict';
 
+// serial port
+var port = null;
+var reader = null;
+var writer = null;
+
 // configuration information 
 var sensorIDlist = [];
 var chartIDlist = [];

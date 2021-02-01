@@ -6,43 +6,38 @@
 //var accPlotClass = null;
 var plotSet = null;
 
-let port = null;
-let reader = null;
-let writer = null;
-
-const butConnect = document.getElementById('butConnect');
-const butSend = document.getElementById('butSend');
-const butStartStop = document.getElementById('butStartStop');
-const butDebug = document.getElementById('butDebug');
+// some useflul handles
+const butConnect          = document.getElementById('butConnect');
+const butSend             = document.getElementById('butSend');
+const butStartStop        = document.getElementById('butStartStop');
+const butDebug            = document.getElementById('butDebug');
 const dongleStatusDisplay = document.getElementById('dongleStatusDisplay');
 const remoteStatusDisplay = document.getElementById('remoteStatusDisplay');
-const configSelect = document.getElementById('configSelect');
-const cmdPicker = document.getElementById('cmd-picker');
-
-const dataBoxTx = document.getElementById("dataBoxTx");
-const dataBoxRx = document.getElementById("dataBoxRx");
-
-const debugStuff = document.getElementById("debugStuff");
-const inputFile = document.getElementById("inputfile");
+const configSelect        = document.getElementById('configSelect');
+const cmdPicker           = document.getElementById('cmd-picker');
+const dataBoxTx           = document.getElementById("dataBoxTx");
+const dataBoxRx           = document.getElementById("dataBoxRx");
+const debugStuff          = document.getElementById("debugStuff");
+const inputFile           = document.getElementById("inputfile");
 
 // do this when the DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
 
-  // attach event listeners to the buttons
+  // See if web-serial supported by this browser ?
+  const notSupported = document.getElementById('notSupported');
+  notSupported.classList.toggle('hidden', 'serial' in navigator);
+
+  // attach event listeners to the buttons & controls on the main page
   butConnect.addEventListener('click', clickConnect);
   butSend.addEventListener('click', clickSend);
   butStartStop.addEventListener('click', clickStartStop);
   butDebug.addEventListener('click', clickDebug);
-
   inputFile.addEventListener("change", readInputFile);
 
+  // get things ready to rumble
   getIOLabConfigInfo();
   buildConfigPicker();
   buildCmdPicker();
-
-  // See if web-serial supported by this browser ?
-  const notSupported = document.getElementById('notSupported');
-  notSupported.classList.toggle('hidden', 'serial' in navigator);
 
   // create canvas stacks and layers for charts and set these up
   setupControls();
@@ -54,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 //============================================
-// when the connect/disconnect button is clicked 
+// event handler for connect/disconnect button  
 async function clickConnect() {
 
   // if we are already connected then disconnect
@@ -74,7 +69,7 @@ async function clickConnect() {
 }
 
 //============================================
-// when the send button is clicked 
+// event handler for Send/Configure button  
 async function clickSend() {
 
   // get the current command string
@@ -95,18 +90,22 @@ async function clickSend() {
       plotSet = null;
       resetAcquisition();
     }
-    // create new plots
+
+    // get the current fixed configuration 
     let fixedConfigObject = fixedConfigList[current_config_code];
+
+    // create a list of sensors to be used by the data processing code
     sensorIDlist = fixedConfigObject.sensList;
+
+    // create the required plot objects
     plotSet = new PlotSet(fixedConfigObject, "plotContainer");
   }
 }
 
 //============================================
-// when the Start/Stop button is clicked 
+// event handler for Start/Stop button 
 async function clickStartStop() {
 
-  
   if (!runningDAQ) {// start DAQ if we are not already running
     startRun();
   } else {// stop DAQ and plotting if we are running
@@ -117,18 +116,18 @@ async function clickStartStop() {
 
 
 //============================================
-// when the Debug button is clicked 
+// event handler for Debug button  
 async function clickDebug() {
+
   console.log("Debug button clicked (put breakpoint here)");
   //runForSeconds(2000);
   //window.dispatchEvent(new Event('resize'));
   //serialConnected = true;
-  updateSystemState();
+  //updateSystemState();
   //plotSet.reset();
   //plotSet = null;
 
 }
-
 
 //===============================================
 // update the look and content of the UI based on 
