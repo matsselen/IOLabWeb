@@ -33,6 +33,7 @@ var showCommands = false;
 var current_cmd = "none";
 
 // configuration stuff
+var fixedConfigObject = null; // holds the current fixed config info object
 var maxSensorCode = 40;
 var maxConfigCode = 50;
 var fixedConfigList = new Array(maxConfigCode).fill(0);

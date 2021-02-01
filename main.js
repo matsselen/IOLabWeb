@@ -96,9 +96,11 @@ async function clickSend() {
       resetAcquisition();
     }
     // create new plots
-    sensorIDlist = fixedConfigList[current_config_code].sensList;
+    fixedConfigObject = fixedConfigList[current_config_code];
+    sensorIDlist = fixedConfigObject.sensList;
     chartIDlist = fixedConfigList[current_config_code].chartList;
     plotSet = new PlotSet(chartIDlist, "plotContainer");
+    //plotSet = new PlotSet(chartIDlist, "plotContainer");
   }
 }
 
@@ -116,7 +118,6 @@ async function clickStartStop() {
     // set the runningDAQ flag send a startData record to the system
     runningDAQ = true;
     await sendRecord(getCommandRecord("startData"));
-    startTime = performance.now();
 
     // update the data plots every plotTimerMS ms
     plotTimerID = setInterval(plotNewData, plotTimerMS);
@@ -131,9 +132,6 @@ async function clickStartStop() {
     // clear the runningDAQ flag send a startData record to the system
     runningDAQ = false;
     await sendRecord(getCommandRecord("stopData"));
-    stopTime = performance.now();
-    lastRunTime = stopTime - startTime;
-    totalRunTime += lastRunTime;
 
     // stop updating the data plots
     clearInterval(plotTimerID);
@@ -172,7 +170,17 @@ async function clickDebug() {
 async function sendRecord(byteArray) {
   if (port != null) {
     dataBoxTx.innerHTML += byteArray + '\n';
+
+    if(byteArray[1]==0x21) {
+      stopTime = Date.now();
+      lastRunTime = (stopTime - startTime)/1000;
+      totalRunTime += lastRunTime;
+    }
     writer.write(byteArray.buffer);
+
+    if(byteArray[1]==0x20) {
+      startTime = Date.now();  
+    }
   } else {
     console.log("sendRecord: serial port is not open");
   }

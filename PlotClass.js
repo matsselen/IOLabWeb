@@ -325,6 +325,8 @@ class PlotIOLab {
         this.viewStack = [];            // a stack of static viewports ([0] is always current)
         this.mouseMode = "zoom";        // different behaviors for zooming, panning, analysis, etc
 
+        //this.timePerSample = fixedConfigObject.
+
         // this will hold (t,x,[y,z,...]) of last data point plotted 
         // start with [t] and we will add 0's for each trace further below
         this.datLast = [-1];
@@ -605,14 +607,26 @@ class PlotIOLab {
     }
 
     recalibrateTimes() {
-        console.log("In recalibrateTimes()");
 
-        // get the time of the last acquired data
+        // get the original time of the last acquired data
         let datLength = calData[this.sensorNum].length;
-        let timePerSample = totalRunTime/datLength;
-        
-        let tLast = calData[this.sensorNum][datLength - 1][0];
+        let tLast0 = calData[this.sensorNum][datLength - 1][0];
 
+        // figure out actual time per sample
+        let timePerSample = totalRunTime / datLength;
+
+        // fix all of the time emasurements based on actual elapsed time
+        let sampleTime = 0;
+        for (let ind = 0; ind < datLength; ind++) {
+            calData[this.sensorNum][ind][0] = sampleTime;
+            sampleTime += timePerSample;
+        }
+
+        // debugging
+        if (dbgInfo) {
+            let tLast1 = calData[this.sensorNum][datLength - 1][0];
+            console.log("In recalibrateTimes() sensor:" + this.sensorNum + " timePerSample:" + timePerSample.toFixed(6) + " tLast0:" + tLast0.toFixed(4) + " tLast1:" + tLast1.toFixed(4));
+        }
     }
 
     // draw plot axes on the layer below the chart traces of ViewPort vp
