@@ -24,7 +24,7 @@ class PlotSet {
 
         // add the control region to the page and put some vertical space below it
         this.parentElement.appendChild(controls);
-        this.parentElement.appendChild(document.createElement("p")); 
+        this.parentElement.appendChild(document.createElement("p"));
 
         // loop over sensors
         for (let ind = 0; ind < chartList.length; ind++) {
@@ -49,8 +49,8 @@ class PlotSet {
             //if (chartList.length > 8) chartHeight = 120;
 
             // create an IOLabPlot object on each plot element
-            this.plotObjectList.push(new PlotIOLab(this.sensorNum, sensorID, chartHeight));            
-            
+            this.plotObjectList.push(new PlotIOLab(this.sensorNum, sensorID, chartHeight));
+
             // create the checkbox to show/hide each sensor plot
             let cb = document.createElement("input");
             let cbID = "cb_" + sensorID;
@@ -58,7 +58,7 @@ class PlotSet {
 
             cb.setAttribute("id", cbID);
             cb.setAttribute("type", "checkbox");
-            
+
             // pay attention to when the box is checked or unchecekd
             cb.addEventListener("click", selectSensor);
 
@@ -106,7 +106,7 @@ class PlotSet {
         // clean up ourselves
         while (this.parentElement.childNodes.length > 0) {
             this.parentElement.childNodes[0].remove();
-          }
+        }
     }
 
     startAcquisition() {
@@ -347,11 +347,11 @@ class PlotIOLab {
         }
 
         // extract some useful info from the sensor object
-        this.plotName   = this.sensor.desc;      // the name of the chart
-        this.unit       = this.sensor.unit;      // the units of the measurement
+        this.plotName = this.sensor.desc;      // the name of the chart
+        this.unit = this.sensor.unit;      // the units of the measurement
         this.axisTitles = this.sensor.legends;   // the trace labels
-        this.scales     = this.sensor.scales;    // the initial y-axis scale range
-        this.baseID     = this.sensor.shortDesc; // the ID of the bottom layer (used for drawing axes)
+        this.scales = this.sensor.scales;    // the initial y-axis scale range
+        this.baseID = this.sensor.shortDesc; // the ID of the bottom layer (used for drawing axes)
 
         // the number of traces is the same as the number of axis titles and 
         this.nTraces = this.axisTitles.length;
@@ -601,11 +601,18 @@ class PlotIOLab {
     reset() {
         while (this.parentElement.childNodes.length > 0) {
             this.parentElement.childNodes[0].remove();
-          }
+        }
     }
 
     recalibrateTimes() {
         console.log("In recalibrateTimes()");
+
+        // get the time of the last acquired data
+        let datLength = calData[this.sensorNum].length;
+        let timePerSample = totalRunTime/datLength;
+        
+        let tLast = calData[this.sensorNum][datLength - 1][0];
+
     }
 
     // draw plot axes on the layer below the chart traces of ViewPort vp
@@ -628,7 +635,7 @@ class PlotIOLab {
             let pix = vp.dataToPixel(t, vp.yMin);
             let tickLabel = t.toFixed(timeAxis[2]);
             let tickLabelWidth = ctx.measureText(tickLabel).width;
-            ctx.fillText(tickLabel, pix[0] - tickLabelWidth/2, pix[1] + 16);
+            ctx.fillText(tickLabel, pix[0] - tickLabelWidth / 2, pix[1] + 16);
             this.drawVline(ctx, vp, t, 1, '#cccccc', "");
             this.drawVline(ctx, vp, t, 1, '#000000', "-");
         }
