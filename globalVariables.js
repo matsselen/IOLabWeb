@@ -1,6 +1,9 @@
 // Global variables for data acquisition
 'use strict';
 
+// testing
+var testInputArray=[];
+
 // serial port
 var port = null;
 var reader = null;

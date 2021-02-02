@@ -77,6 +77,7 @@ async function connectAndStart() {
     // Open the serial port
     console.log("Opening port");
     await port.open({ baudRate: 115200, baudrate: 115200 });
+    // yes - you need both if you want it to run on Chromebooks
 
     // Create a reader and a writer
     writer = port.writable.getWriter();
