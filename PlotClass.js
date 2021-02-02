@@ -613,22 +613,25 @@ class PlotIOLab {
 
         // get the original time of the last acquired data
         let datLength = calData[this.sensorNum].length;
-        let tLast0 = calData[this.sensorNum][datLength - 1][0];
 
-        // figure out actual time per sample
-        this.timePerSample = totalRunTime / datLength;
+        if (datLength > 100) { // do only if we have some data for this semsor
+            let tLast0 = calData[this.sensorNum][datLength - 1][0];
 
-        // fix all of the time emasurements based on actual elapsed time
-        let sampleTime = 0;
-        for (let ind = 0; ind < datLength; ind++) {
-            calData[this.sensorNum][ind][0] = sampleTime;
-            sampleTime += this.timePerSample;
-        }
+            // figure out actual time per sample
+            this.timePerSample = totalRunTime / datLength;
 
-        // debugging
-        if (dbgInfo) {
-            let tLast1 = calData[this.sensorNum][datLength - 1][0];
-            console.log("In recalibrateTimes() sensor:" + this.sensorNum + " timePerSample:" + this.timePerSample.toFixed(6) + " tLast0:" + tLast0.toFixed(4) + " tLast1:" + tLast1.toFixed(4));
+            // fix all of the time emasurements based on actual elapsed time
+            let sampleTime = 0;
+            for (let ind = 0; ind < datLength; ind++) {
+                calData[this.sensorNum][ind][0] = sampleTime;
+                sampleTime += this.timePerSample;
+            }
+
+            // debugging
+            if (dbgInfo) {
+                let tLast1 = calData[this.sensorNum][datLength - 1][0];
+                console.log("In recalibrateTimes() sensor:" + this.sensorNum + " timePerSample:" + this.timePerSample.toFixed(6) + " tLast0:" + tLast0.toFixed(4) + " tLast1:" + tLast1.toFixed(4));
+            }
         }
     }
 
