@@ -2,31 +2,30 @@
 
 // some test code for saving to a file
 function saveToFile() {
-    //var dataBlob = new Blob([document.getElementById("dataBoxRx").value], { type: "text/plain;charset=utf-8" });
-    //var dataBlob = new Blob([1,2,3,4,5,6,7,8,9,0], { type: "text/plain;charset=utf-8" });
-    var dataBlob = new Blob(rawData);
-    downloadData.href = window.URL.createObjectURL(dataBlob);
+    let dataBlob = new Blob([rxdata]);
+    downloadData.href = window.URL.createObjectURL(dataBlob), { type: "text/plain;charset=utf-8" };
     downloadData.download = "IOLab-data-test.txt";
 }
 
-function blobToFile(theBlob, fileName){
-    //A Blob() is almost a File() - it's just missing the two properties below which we will add
-    theBlob.lastModifiedDate = new Date();
-    theBlob.name = fileName;
-    return theBlob;
-}
-
-// some test code for reading from a file
+// code for reading back rxdata from a file
 async function readInputFile() {
+    //resetAcquisition();
     var frd = new FileReader;
     frd.readAsText(this.files[0]);
     frd.onload = function () {
-        parseFromFile(frd.result);
+         parseFromFile(frd.result);
     }
+
+    setTimeout(async function () {
+        writePointer = rxdata.length;
+        console.log("After reading input file writePointer="+writePointer);
+    }, 100);
+
+    
+    //plotSet.stopAcquisition();
 }
 
 // called by readInputFile
 function parseFromFile(fileContents) {
-    testInputArray = fileContents;
-    //document.getElementById("dataBoxRx").value = fileContents;
+    rxdata = fileContents.split(',').map(Number);
 }

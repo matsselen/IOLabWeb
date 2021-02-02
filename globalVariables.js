@@ -2,7 +2,7 @@
 'use strict';
 
 // testing
-var testInputArray=[];
+var tst;
 
 // serial port
 var port = null;

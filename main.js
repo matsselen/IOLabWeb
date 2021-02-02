@@ -120,10 +120,11 @@ async function clickStartStop() {
 async function clickDebug() {
 
   console.log("Debug button clicked (put breakpoint here)");
+  resetAcquisition();
   //runForSeconds(2000);
   //window.dispatchEvent(new Event('resize'));
   //serialConnected = true;
-  //updateSystemState();
+  updateSystemState();
   //plotSet.reset();
   //plotSet = null;
 

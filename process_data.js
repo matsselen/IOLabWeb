@@ -14,7 +14,6 @@ function resetAcquisition() {
   lastRunTime = 0;
   totalRunTime = 0;
 
-
   rawReadPtr = new Array(maxSensorCode).fill(0);
   calWritePtr = new Array(maxSensorCode).fill(0);
   calReadPtr = new Array(maxSensorCode).fill(0);
