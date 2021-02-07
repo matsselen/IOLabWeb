@@ -3,9 +3,6 @@
 //
 'use strict';
 
-//var accPlotClass = null;
-var plotSet = null;
-
 // some useflul handles
 const butConnect          = document.getElementById('butConnect');
 const butSend             = document.getElementById('butSend');

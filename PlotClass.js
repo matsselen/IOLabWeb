@@ -134,11 +134,20 @@ class PlotSet {
             // recalibrate each time axis based on the number of samples and the elapsed time
             plot.recalibrateTimes();
 
+        }
+    }
+
+    displayPlots() {
+        for (let ind = 0; ind < this.plotObjectList.length; ind++) {
+
+            let plot = this.plotObjectList[ind];
+
             // display the data
             plot.mouseMode = "zoom";
             plot.displayStaticData();
         }
     }
+
 
     plotRunningData() {
         for (let ind = 0; ind < this.plotObjectList.length; ind++) {

@@ -4,6 +4,9 @@
 // testing
 var tst;
 
+// plots
+var plotSet = null;
+
 // serial port
 var port = null;
 var reader = null;

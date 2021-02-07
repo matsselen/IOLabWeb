@@ -50,8 +50,9 @@ async function stopRun() {
     // stop updating the data plots
     clearInterval(plotTimerID);
 
-    // display static data
+    // do end of acquiaition stuff and display the plots
     plotSet.stopAcquisition();
+    plotSet.displayPlots();
 }
 
 // plots new data (called above)

@@ -22,9 +22,10 @@ async function readInputFile() {
     var frd = new FileReader;
     frd.readAsText(this.files[0]);
     frd.onload = function () {
-         parseFromFile(frd.result);
+        parseFromFile(frd.result);
     }
 
+    // wait 100 ms for shit to finish then get to work restoring the saved plots
     setTimeout(async function () {
         restoreAcquisition();
     }, 100);
@@ -37,10 +38,27 @@ function parseFromFile(fileContents) {
 }
 
 function restoreAcquisition() {
+
     console.log("In restoreAcquisition()");
+
     chartIDlist = calData[0];
     calData.shift();
-    //writePointer = rxdata.length;
+
+    for (let i = 0; i < maxSensorCode; i++) {
+        calWritePtr[i] = calData[i].length;
+    }
+
+    // remove any existing plots
+    if (plotSet != null) {
+        plotSet.reset();
+        plotSet = null;
+        resetAcquisition();
+    }
+
+    // create new plotSet and display the restored data
+    plotSet = new PlotSet(chartIDlist, "plotContainer");
+    plotSet.displayPlots();
+
 
 
 }
