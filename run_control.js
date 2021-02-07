@@ -210,7 +210,7 @@ async function sendRecord(byteArray) {
 
         if (byteArray[1] == 0x21) {
             stopTime = Date.now();
-            lastRunTime = (stopTime - startTime) / 1000;
+            lastRunTime = (stopTime - startTime);
             totalRunTime += lastRunTime;
         }
         writer.write(byteArray.buffer);

@@ -5,10 +5,10 @@
 'use strict';
 
 class PlotSet {
-    constructor(fConfig, parentName) {
+    constructor(chartList, parentName) {
 
         this.plotSetThis = this;        // save "this" to use in callback routines
-        this.fConfig = fConfig;         // fixed configuration information
+        this.chartList = chartList;     // list of charts to be created
         this.parentName = parentName;   // the name of the existing parent element
 
         this.plotObjectList = [];       // list of PlotIOLab insances (one for each sensor)
@@ -25,9 +25,6 @@ class PlotSet {
         // add the control region to the page and put some vertical space below it
         this.parentElement.appendChild(controls);
         this.parentElement.appendChild(document.createElement("p"));
-
-        // get the list of charts for this configuration
-        let chartList = fConfig.chartList;
 
         // loop over sensors
         for (let ind = 0; ind < chartList.length; ind++) {
@@ -617,8 +614,8 @@ class PlotIOLab {
         if (datLength > 100) { // do only if we have some data for this semsor
             let tLast0 = calData[this.sensorNum][datLength - 1][0];
 
-            // figure out actual time per sample
-            this.timePerSample = totalRunTime / datLength;
+            // figure out actual time per sample (divide by 1000 since totalRunTime is in ms)
+            this.timePerSample = totalRunTime / datLength / 1000;
 
             // fix all of the time emasurements based on actual elapsed time
             let sampleTime = 0;

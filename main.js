@@ -97,8 +97,11 @@ async function clickSend() {
     // create a list of sensors to be used by the data processing code
     sensorIDlist = fixedConfigObject.sensList;
 
+    // create a list of charts (by sensor ID) to be plotted
+    chartIDlist = fixedConfigObject.chartList;
+
     // create the required plot objects
-    plotSet = new PlotSet(fixedConfigObject, "plotContainer");
+    plotSet = new PlotSet(chartIDlist, "plotContainer");
   }
 }
 

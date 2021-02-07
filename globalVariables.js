@@ -20,9 +20,11 @@ var runningDAQ = false;
 var daqConfigured = false;
 var serialConnected = false;
 var remoteConnected = false;
+
+// timing info (ms)
 var startTime = 0;
-var stopTime = 0;
-var lastRunTime = 0;
+var stopTime = 0; 
+var lastRunTime = 0; 
 var totalRunTime = 0;
 
 // event timers
@@ -48,6 +50,7 @@ var fixedConfigList = new Array(maxConfigCode).fill(0);
 var sensorInfoList  = new Array(maxSensorCode).fill(0);
 var current_config = "none";
 var current_config_code;
+var currentFixedConfigObject;
 
 // stuff for processing raw records
 var ncalls = 0;
