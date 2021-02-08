@@ -3,16 +3,16 @@
 // some test code for saving to a file
 function saveToFile() {
 
-    // push the current chart list onto the bottom of the dalData array
+    // push the current fixed config object onto the bottom of the dalData array
     // then stringify this and put it in a blob
-    calData.unshift(chartIDlist);
+    calData.unshift(currentFCobject);    
     let jdata = JSON.stringify(calData);
     let dataBlob = new Blob([jdata]);
 
     // put calData back the way it was
     calData.shift();
 
-    // download the data
+    // save the data as a local download
     downloadData.href = window.URL.createObjectURL(dataBlob), { type: "text/plain;charset=utf-8" };
     downloadData.download = "IOLab-data-test.txt";
 }
@@ -41,9 +41,11 @@ function restoreAcquisition() {
 
     console.log("In restoreAcquisition()");
 
-    chartIDlist = calData[0];
+    // exctact the fixed config object and restore the calibrated data
+    currentFCobject = calData[0];
     calData.shift();
 
+    // restore the cal data write pointers
     for (let i = 0; i < maxSensorCode; i++) {
         calWritePtr[i] = calData[i].length;
     }
@@ -56,9 +58,8 @@ function restoreAcquisition() {
     }
 
     // create new plotSet and display the restored data
+    chartIDlist = currentFCobject.chartList;
     plotSet = new PlotSet(chartIDlist, "plotContainer");
     plotSet.displayPlots();
-
-
 
 }

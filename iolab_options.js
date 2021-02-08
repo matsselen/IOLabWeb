@@ -20,7 +20,7 @@ function getIOLabConfigInfo() {
     for (let ind = 0; ind < fc.sensors.length; ind++) {
       let skey = fc.sensors[ind].sensorKey;
       let srate = fc.sensors[ind].sampleRate;
-      longDesc += sensorInfoList[skey].shortDesc + '(' + srate.toString() + 'Hz) \n';
+      longDesc += sensorInfoList[skey].shortDesc + '(' + srate.toString() + 'Hz) ';
 
       sensList.push(skey);
       rateList.push(srate);

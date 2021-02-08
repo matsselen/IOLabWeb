@@ -90,6 +90,7 @@ async function clickSend() {
 
     // get the current fixed configuration 
     let fixedConfigObject = fixedConfigList[current_config_code];
+    currentFCobject = fixedConfigObject;
 
     // create a list of sensors to be used by the data processing code
     sensorIDlist = fixedConfigObject.sensList;

@@ -53,7 +53,7 @@ var fixedConfigList = new Array(maxConfigCode).fill(0);
 var sensorInfoList  = new Array(maxSensorCode).fill(0);
 var current_config = "none";
 var current_config_code;
-var currentFixedConfigObject;
+var currentFCobject;
 
 // stuff for processing raw records
 var ncalls = 0;
