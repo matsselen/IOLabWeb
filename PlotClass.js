@@ -107,6 +107,7 @@ class PlotSet {
         while (this.parentElement.childNodes.length > 0) {
             this.parentElement.childNodes[0].remove();
         }
+
     }
 
     startAcquisition() {

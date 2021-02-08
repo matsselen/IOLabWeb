@@ -3,9 +3,11 @@
 // some test code for saving to a file
 function saveToFile() {
 
+    
     // push the current fixed config object onto the bottom of the dalData array
     // then stringify this and put it in a blob
-    calData.unshift(currentFCobject);    
+
+    calData.unshift(currentFCobject);
     let jdata = JSON.stringify(calData);
     let dataBlob = new Blob([jdata]);
 
@@ -13,12 +15,25 @@ function saveToFile() {
     calData.shift();
 
     // figure out filename
-    d = new Date;
-    
+    let configDesc = "noconfig";
+    if (currentFCobject != null) {
+        configDesc = currentFCobject.desc;
+    }
+
+    let d = new Date();
+    let fName = "IOLab_" +
+        d.toDateString().substr(4, 3) + "-" +
+        d.toDateString().substr(8, 2) + "-" +
+        d.toDateString().substr(11, 4) + "_" +
+        d.toTimeString().substr(0, 2) + "." +
+        d.toTimeString().substr(3, 2) + "." +
+        d.toTimeString().substr(6, 2) + "_" + 
+        configDesc + ".json";
 
     // save the data as a local download
     downloadData.href = window.URL.createObjectURL(dataBlob), { type: "text/plain;charset=utf-8" };
-    downloadData.download = "IOLab-data-test.txt";
+    downloadData.download = fName;
+
 }
 
 // code for reading back rxdata from a file

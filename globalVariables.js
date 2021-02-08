@@ -12,10 +12,6 @@ var port = null;
 var reader = null;
 var writer = null;
 
-// configuration information 
-var sensorIDlist = [];
-var chartIDlist = [];
-
 // run control
 var justRestarted = false;
 var justTurnedOnRemote = false;
@@ -46,16 +42,19 @@ var showCommands = false;
 // the last IOLab command record selected
 var current_cmd = "none";
 
-// configuration stuff
+// configuration info
 var maxSensorCode = 40;
 var maxConfigCode = 50;
 var fixedConfigList = new Array(maxConfigCode).fill(0);
 var sensorInfoList  = new Array(maxSensorCode).fill(0);
 var current_config = "none";
 var current_config_code;
-var currentFCobject;
+var currentFCobject = null;
+var sensorIDlist = [];
+var chartIDlist = [];
 
-// stuff for processing raw records
+
+// keep track of raw data records
 var ncalls = 0;
 var n_rectype = new Array(250).fill(0);
 
