@@ -38,7 +38,7 @@ var iolabConfig =
     },
     {
       "code": 4,
-      "desc": "Mini-motion",
+      "desc": "Mini_Motion",
       "highSpeed": false,
       "frequencies": [100, 200],
       "sensors": [
@@ -82,7 +82,7 @@ var iolabConfig =
     // },
     {
       "code": 8,
-      "desc": "Header 3V",
+      "desc": "Header_3V",
       "highSpeed": false,
       "frequencies": [100, 200],
       "sensors": [
@@ -115,7 +115,7 @@ var iolabConfig =
     },
     {
       "code": 32,
-      "desc": "Gyroscope (HS)",
+      "desc": "Gyroscope_(HS)",
       "highSpeed": true,
       "frequencies": [800],
       "sensors": [{ "sensorKey": 3, "sampleRate": 760 }],
@@ -123,7 +123,7 @@ var iolabConfig =
     },
     {
       "code": 12,
-      "desc": "Header 3V3",
+      "desc": "Header_3V3",
       "highSpeed": false,
       "priority": 10,
       "frequencies": [100, 200],
@@ -138,7 +138,7 @@ var iolabConfig =
     },
     {
       "code": 33,
-      "desc": "Accelerometer (HS)",
+      "desc": "Accelerometer_(HS)",
       "highSpeed": true,
       "frequencies": [800],
       "sensors": [{ "sensorKey": 1, "sampleRate": 800 }],
@@ -146,7 +146,7 @@ var iolabConfig =
     },
     {
       "code": 34,
-      "desc": "Orientation (HS)",
+      "desc": "Orientation_(HS)",
       "highSpeed": true,
       "frequencies": [100, 200, 400],
       "sensors": [
@@ -184,7 +184,7 @@ var iolabConfig =
     },
     {
       "code": 37,
-      "desc": "Pendulum (HS)",
+      "desc": "Pendulum_(HS)",
       "highSpeed": true,
       "frequencies": [100, 200],
       "sensors": [
@@ -196,7 +196,7 @@ var iolabConfig =
     },
     {
       "code": 38,
-      "desc": "Kitchen Sink",
+      "desc": "Kitchen_Sink",
       "highSpeed": true,
       "frequencies": [100],
       "sensors": [
@@ -216,7 +216,7 @@ var iolabConfig =
     },
     {
       "code": 39,
-      "desc": "Microphone (HS)",
+      "desc": "Microphone_(HS)",
       "highSpeed": true,
       "frequencies": [2400, 4800],
       "sensors": [{ "sensorKey": 6, "sampleRate": 4800 }],
@@ -224,7 +224,7 @@ var iolabConfig =
     },
     {
       "code": 40,
-      "desc": "Ambient Light (HS)",
+      "desc": "Light_(HS)",
       "highSpeed": true,
       "frequencies": [2400, 4800],
       "sensors": [{ "sensorKey": 7, "sampleRate": 4800 }],
@@ -232,7 +232,7 @@ var iolabConfig =
     },
     {
       "code": 41,
-      "desc": "Ambient Light & Accel (HS)",
+      "desc": "Light_Accel_(HS)",
       "highSpeed": true,
       "frequencies": [200, 400, 800],
       "sensors": [
@@ -243,7 +243,7 @@ var iolabConfig =
     },
     {
       "code": 42,
-      "desc": "Force Gauge & Accel (HS)",
+      "desc": "Force_Accel_(HS)",
       "highSpeed": true,
       "frequencies": [200, 400, 800],
       "sensors": [
@@ -254,7 +254,7 @@ var iolabConfig =
     },
     {
       "code": 43,
-      "desc": "Ambient Light & Micro (HS)",
+      "desc": "Light_Microphone_(HS)",
       "highSpeed": true,
       "frequencies": [1200, 2400],
       "sensors": [
@@ -263,17 +263,17 @@ var iolabConfig =
       ],
       "chartList": [6,7]
     },
-    {
-      "code": 44,
-      "desc": "Electrocardiograph (HS)",
-      "highSpeed": true,
-      "frequencies": [200, 400, 800],
-      "sensors": [{ "sensorKey": 10, "sampleRate": 800 }],
-      "chartList": [10]
-    },
+    // {
+    //   "code": 44,
+    //   "desc": "ECG3_(HS)",
+    //   "highSpeed": true,
+    //   "frequencies": [200, 400, 800],
+    //   "sensors": [{ "sensorKey": 10, "sampleRate": 800 }],
+    //   "chartList": [10]
+    // },
     {
       "code": 45,
-      "desc": "High Gain (HS)",
+      "desc": "High_Gain_(HS)",
       "highSpeed": true,
       "frequencies": [2400, 4800],
       "sensors": [{ "sensorKey": 12, "sampleRate": 4800 }],
@@ -281,7 +281,7 @@ var iolabConfig =
     },
     {
       "code": 46,
-      "desc": "Force Gauge (HS)",
+      "desc": "Force_(HS)",
       "highSpeed": true,
       "frequencies": [2400, 4800],
       "sensors": [{ "sensorKey": 8, "sampleRate": 4800 }],
@@ -296,7 +296,7 @@ var iolabConfig =
     // },
     {
       "code": 48,
-      "desc": "ECG",
+      "desc": "ECG6",
       "highSpeed": true,
       "frequencies": [100, 200, 400],
       "sensors": [{ "sensorKey": 27, "sampleRate": 400 }],
@@ -304,7 +304,7 @@ var iolabConfig =
     },
     {
       "code": 49,
-      "desc": "ECG6 (HS)",
+      "desc": "ECG6_(HS)",
       "sensors": [{ "sensorKey": 27, "sampleRate": 800 }],
       "chartList": [31,32,33,34,35,36,37,38,39]
     }

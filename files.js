@@ -12,6 +12,10 @@ function saveToFile() {
     // put calData back the way it was
     calData.shift();
 
+    // figure out filename
+    d = new Date;
+    
+
     // save the data as a local download
     downloadData.href = window.URL.createObjectURL(dataBlob), { type: "text/plain;charset=utf-8" };
     downloadData.download = "IOLab-data-test.txt";
