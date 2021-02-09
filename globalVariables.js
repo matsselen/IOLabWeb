@@ -1,8 +1,8 @@
 // Global variables for data acquisition
 'use strict';
 
-// testing
-var tst;
+// application metadata (placeholder for now)
+var appMetaData = null;
 
 // plots
 var plotSet = null;

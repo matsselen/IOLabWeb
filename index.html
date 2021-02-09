@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-  <title>IOLab Web v0.5.7</title>
+  <title>IOLab Web v0.6.0</title>
   <meta charset="utf-8">
   <meta name="iolab" content="testing-w-web-serial">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -43,14 +43,21 @@
     <table>
       <tr>
         <td>
-          <p><button id="butConnect" type="button">Connect</button> &nbsp; &nbsp;
+          <p>
+            <button id="butConnect" type="button">Connect</button> &nbsp; &nbsp;
             <select id="cmd-picker"></select>&nbsp; &nbsp;
           </p>
         </td>
-        <td>Save and Restore</td>
         <td>
-          <p style="color: rgb(200,200,200); text-align: right; width: 300px;">Debug:<input id="debug_ck"
-              type="checkbox" checked="true"></p>
+          <p>
+            Save: <a href="" id="downloadData" onclick="saveToFile()" title="Download contents of Rx"
+              style="cursor: pointer;"><img src="dload.png" alt="[Save]" valign="bottom" width="24" height="24"></a>
+            Restore: <input type="file" accept=".iolab" size="20" name="inputfile" id="inputfile"></p>
+        </td>
+        <td>
+          <p style="color: rgb(200,200,200); text-align: right; width: 300px;">
+            Debug:<input id="debug_ck" type="checkbox" checked="true">
+          </p>
         </td>
       </tr>
     </table>
@@ -95,11 +102,6 @@
 
       <p> <button id="butDebug" type="button">Debug</button></p>
 
-      <p> Rx Download: <a href="" id="downloadData" onclick="saveToFile()" title="Download contents of Rx"
-          style="cursor: pointer;"><img src="dload.png" alt="[Save]" valign="bottom" width="24" height="24"></a>
-      </p>
-
-      <p>Rx Upload: <input type="file" accept=".iolab" size="20" name="inputfile" id="inputfile"></p>
     </div>
 
   </main>
