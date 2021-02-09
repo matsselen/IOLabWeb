@@ -3,7 +3,7 @@
 // some test code for saving to a file
 function saveToFile() {
 
-    
+
     // push the current fixed config object onto the bottom of the dalData array
     // then stringify this and put it in a blob
 
@@ -27,8 +27,8 @@ function saveToFile() {
         d.toDateString().substr(11, 4) + "_" +
         d.toTimeString().substr(0, 2) + "." +
         d.toTimeString().substr(3, 2) + "." +
-        d.toTimeString().substr(6, 2) + "_" + 
-        configDesc + ".json";
+        d.toTimeString().substr(6, 2) + "_" +
+        configDesc + ".iolab";
 
     // save the data as a local download
     downloadData.href = window.URL.createObjectURL(dataBlob), { type: "text/plain;charset=utf-8" };
@@ -76,9 +76,11 @@ function restoreAcquisition() {
         resetAcquisition();
     }
 
-    // create new plotSet and display the restored data
-    chartIDlist = currentFCobject.chartList;
-    plotSet = new PlotSet(chartIDlist, "plotContainer");
-    plotSet.displayPlots();
+    // if enough info is present create new plotSet and display the restored data
+    if (currentFCobject != null) {
+        chartIDlist = currentFCobject.chartList;
+        plotSet = new PlotSet(chartIDlist, "plotContainer");
+        plotSet.displayPlots();
+    }
 
 }
