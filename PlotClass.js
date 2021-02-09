@@ -353,7 +353,7 @@ class PlotIOLab {
         // the number of traces is the same as the number of axis titles and 
         this.nTraces = this.axisTitles.length;
 
-        // set the trace colors - creating a copy so we can add to it.
+        // copy the trace colors so we can add to it w/o messing up the original.
         this.layerColorList = Array.from(this.sensor.pathColors);
 
         // the bottom and top layers are black (axes and control)
