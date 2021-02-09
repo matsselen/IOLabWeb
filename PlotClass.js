@@ -341,22 +341,7 @@ class PlotIOLab {
         // start with [t] and we will add 0's for each trace further below
         this.datLast = [-1];
 
-        // start by finding the "sensor" entry in config.js (var iolabConfig) that matches sensorNum
-        this.sensor = null;
-        for (let ind = 0; ind < iolabConfig.sensors.length; ind++) {
-            let sens = iolabConfig.sensors[ind];
-            if (sens.code == sensorNum) {
-                this.sensor = sens;
-                break;
-            }
-        }
-
-        // make sure the sensor was found
-        if (this.sensor == null) {
-            console.log("in PlotIOLab: Didnt find sensor " + sensorNum.toString());
-        } else {
-            if (dbgInfo) console.log("In PlotIOLab building plot for sensor " + this.sensor.desc);
-        }
+        this.sensor = sensorInfoList[sensorNum];
 
         // extract some useful info from the sensor object
         this.plotName = this.sensor.desc;      // the name of the chart
@@ -368,14 +353,15 @@ class PlotIOLab {
         // the number of traces is the same as the number of axis titles and 
         this.nTraces = this.axisTitles.length;
 
-        // set the trace colors
-        this.layerColorList = this.sensor.pathColors;
+        // set the trace colors - creating a copy so we can add to it.
+        this.layerColorList = Array.from(this.sensor.pathColors);
 
         // the bottom and top layers are black (axes and control)
         this.layerColorList.push("#000000");
         this.layerColorList.unshift("#000000");
 
-        // add a 0 to the datLast array for each chart trace
+        // add a 0 to the datLast array for each chart trace since this is
+        // the data dimensionality we expect from the acquired records 
         for (let ind = 0; ind < this.nTraces; ind++) {
             this.datLast.push(0);
         }
