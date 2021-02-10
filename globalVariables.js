@@ -2,7 +2,7 @@
 'use strict';
 
 // application metadata (placeholder for now)
-var appMetaData = null;
+var appMetaData = {runSeconds: 0, date: null};
 
 // plots
 var plotSet = null;

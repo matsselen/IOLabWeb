@@ -4,11 +4,17 @@
 function saveToFile() {
 
 
+    let runSeconds = totalRunTime/1000;
+    let date = new Date();
+
+    appMetaData.runSeconds = runSeconds;
+    appMetaData.date = date;
+
     // push any metadata plus current fixed config object onto the bottom of the dalData array
     // then stringify this and put it in a blob
 
-    calData.unshift(appMetaData);
     calData.unshift(currentFCobject);
+    calData.unshift(appMetaData);
     let jdata = JSON.stringify(calData);
     let dataBlob = new Blob([jdata]);
 
@@ -21,17 +27,16 @@ function saveToFile() {
     if (currentFCobject != null) {
         configDesc = currentFCobject.desc;
     }
-    let seconds = totalRunTime/1000;
-    let d = new Date();
+
     let fName = "IOLab_" +
-        d.toDateString().substr(4, 3) + "-" +
-        d.toDateString().substr(8, 2) + "-" +
-        d.toDateString().substr(11, 4) + "_" +
-        d.toTimeString().substr(0, 2) + "." +
-        d.toTimeString().substr(3, 2) + "." +
-        d.toTimeString().substr(6, 2) + "_" +
+        date.toDateString().substr(4, 3) + "-" +
+        date.toDateString().substr(8, 2) + "-" +
+        date.toDateString().substr(11, 4) + "_" +
+        date.toTimeString().substr(0, 2) + "." +
+        date.toTimeString().substr(3, 2) + "." +
+        date.toTimeString().substr(6, 2) + "_" +
         configDesc + "_" +
-        seconds.toFixed(0)+"s.iolab";
+        runSeconds.toFixed(0)+"s.iolab";
 
     // save the data as a local download
     downloadData.href = window.URL.createObjectURL(dataBlob), { type: "text/plain;charset=utf-8" };
@@ -64,8 +69,8 @@ function restoreAcquisition() {
     console.log("In restoreAcquisition()");
 
     // exctact the fixed config object and restore the calibrated data
-    currentFCobject = calData[0];
-    appMetaData     = calData[1]
+    currentFCobject = calData[1];
+    appMetaData     = calData[0]
     calData.shift();
     calData.shift();
 
