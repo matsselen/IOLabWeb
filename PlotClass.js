@@ -17,6 +17,36 @@ class PlotSet {
         // find the parent element
         this.parentElement = document.getElementById(this.parentName);
 
+        // create the analysis elements that appear above the canvas
+        let analysis = document.createElement("div");
+
+        // place and control the zoom icon
+        let aZoom = document.createElement("a");
+        let zoomLink = document.createElement("img");
+        zoomLink.src = "images/zoom1.png";
+        zoomLink.width = "24";
+        zoomLink.style = "cursor:pointer";
+        aZoom.appendChild(zoomLink);
+        aZoom.title = "Click & drag to zoom, double click to undo";
+        aZoom.addEventListener("click", zoomClick);
+        analysis.appendChild(aZoom);
+
+        // place and control the pan icon
+        let aPan = document.createElement("a");
+        let panLink = document.createElement("img");
+        panLink.src = "images/pan1.png";
+        panLink.width = "24";
+        panLink.style = "cursor:pointer";
+        aPan.appendChild(panLink);
+        aPan.title = "Click/hold & drag to pan";
+        aPan.addEventListener("click", panClick);
+        analysis.appendChild(aPan);
+
+        // add the analysis region to the page and put some vertical space below it
+        this.parentElement.appendChild(analysis);
+        this.parentElement.appendChild(document.createElement("p"));
+
+
         // create the control elements that appear above the canvas
         let controls = document.createElement("div");
         let controlTitle = document.createTextNode("Sensors: \xA0\xA0");
@@ -30,8 +60,6 @@ class PlotSet {
         for (let ind = 0; ind < chartList.length; ind++) {
 
             this.sensorNum = chartList[ind];
-
-            // start by finding the "sensor" entry in config.js (var iolabConfig) that matches sensorNum
             this.sensor = sensorInfoList[this.sensorNum];
 
             // create the <div> element that will be the parent element for each sensors plot
@@ -45,8 +73,6 @@ class PlotSet {
 
             //adjust the height of the charts based on the number of charts
             let chartHeight = 200;
-            //if (chartList.length > 3) chartHeight = 180;
-            //if (chartList.length > 8) chartHeight = 120;
 
             // create an IOLabPlot object on each plot element
             this.plotObjectList.push(new PlotIOLab(this.sensorNum, sensorID, chartHeight));
@@ -92,8 +118,19 @@ class PlotSet {
             }
         }
 
-    };
+        function zoomClick() {
+            console.log("selecting zoom mode");
+            this.firstChild.src = "images/zoom1.png";
+            this.secondChild.src = "images/pan0.png";
+        }
 
+        function panClick() {
+            console.log("selecting pan mode");
+            this.firstChild.src = "images/zoom0.png";
+            this.secondChild.src = "images/pan1.png";
+
+        }
+    }
     // clean up the DOM
     reset() {
 
