@@ -22,7 +22,7 @@ class PlotSet {
 
         // place and control the zoom icon
         let aZoom = document.createElement("a");
-        let zoomLink = document.createElement("img");
+        var zoomLink = document.createElement("img");
         zoomLink.src = "images/zoom1.png";
         zoomLink.width = "24";
         zoomLink.style = "cursor:pointer";
@@ -33,14 +33,25 @@ class PlotSet {
 
         // place and control the pan icon
         let aPan = document.createElement("a");
-        let panLink = document.createElement("img");
-        panLink.src = "images/pan1.png";
+        var panLink = document.createElement("img");
+        panLink.src = "images/pan0.png";
         panLink.width = "24";
         panLink.style = "cursor:pointer";
         aPan.appendChild(panLink);
         aPan.title = "Click/hold & drag to pan";
         aPan.addEventListener("click", panClick);
         analysis.appendChild(aPan);
+
+        // place and control the analysis icon
+        let aAnal = document.createElement("a");
+        var anaLink = document.createElement("img");
+        anaLink.src = "images/ana0.png";
+        anaLink.width = "24";
+        anaLink.style = "cursor:pointer";
+        aAnal.appendChild(anaLink);
+        aAnal.title = "Click & drag to select region";
+        aAnal.addEventListener("click", anaClick);
+        analysis.appendChild(aAnal);
 
         // add the analysis region to the page and put some vertical space below it
         this.parentElement.appendChild(analysis);
@@ -119,17 +130,31 @@ class PlotSet {
         }
 
         function zoomClick() {
-            console.log("selecting zoom mode");
-            this.firstChild.src = "images/zoom1.png";
-            this.secondChild.src = "images/pan0.png";
-        }
+            if(dbgInfo) {
+                console.log("selecting zoom mode"); 
+            }
+            zoomLink.src = "images/zoom1.png";
+            panLink.src = "images/pan0.png";
+            anaLink.src = "images/ana0.png";        }
 
         function panClick() {
-            console.log("selecting pan mode");
-            this.firstChild.src = "images/zoom0.png";
-            this.secondChild.src = "images/pan1.png";
-
+            if(dbgInfo) {
+                console.log("selecting pan mode");
+            }
+            zoomLink.src = "images/zoom0.png";
+            panLink.src = "images/pan1.png";
+            anaLink.src = "images/ana0.png";
         }
+
+        function anaClick() {
+            if(dbgInfo) {
+                console.log("selecting analysis mode");
+            }
+            zoomLink.src = "images/zoom0.png";
+            panLink.src = "images/pan0.png";
+            anaLink.src = "images/ana1.png";
+        } 
+
     }
     // clean up the DOM
     reset() {
