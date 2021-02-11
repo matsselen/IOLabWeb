@@ -50,9 +50,13 @@ async function stopRun() {
     // stop updating the data plots
     clearInterval(plotTimerID);
 
-    // do end of acquiaition stuff and display the plots
-    plotSet.stopAcquisition();
-    plotSet.displayPlots();
+    // do end of acquisition stuff and display the plots
+    // (but wait 100 ms for the last data to trickle in)
+    setTimeout(async function () {
+        plotSet.stopAcquisition();
+        plotSet.displayPlots();
+    }, 100);
+
 }
 
 // plots new data (called above)

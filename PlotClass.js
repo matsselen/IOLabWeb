@@ -4,6 +4,7 @@
 
 'use strict';
 
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 class PlotSet {
     constructor(chartList, parentName) {
 
@@ -25,11 +26,11 @@ class PlotSet {
         let aZoom = document.createElement("a");
         var zoomLink = document.createElement("img");
         zoomLink.src = "images/zoom1.png";
-        zoomLink.width = "45";
+        zoomLink.width = "40";
         zoomLink.style = "cursor:pointer";
         zoomLink.style.paddingRight = "5px";
         aZoom.appendChild(zoomLink);
-        aZoom.title = "Click & drag to zoom, double click to undo";
+        aZoom.title = "Click & drag to zoom, click to undo, double-click to fit";
         aZoom.addEventListener("click", zoomClick);
         analysis.appendChild(aZoom);
 
@@ -37,7 +38,7 @@ class PlotSet {
         let aPan = document.createElement("a");
         var panLink = document.createElement("img");
         panLink.src = "images/pan0.png";
-        panLink.width = "45";
+        panLink.width = "40";
         panLink.style = "cursor:pointer";
         panLink.style.paddingRight = "5px";
         aPan.appendChild(panLink);
@@ -49,7 +50,7 @@ class PlotSet {
         let aAnal = document.createElement("a");
         var anaLink = document.createElement("img");
         anaLink.src = "images/ana0.png";
-        anaLink.width = "45";
+        anaLink.width = "40";
         anaLink.style = "cursor:pointer";
         anaLink.style.paddingRight = "5px";
         aAnal.appendChild(anaLink);
@@ -134,15 +135,16 @@ class PlotSet {
         }
 
         function zoomClick() {
-            if(dbgInfo) {
-                console.log("selecting zoom mode"); 
+            if (dbgInfo) {
+                console.log("selecting zoom mode");
             }
             zoomLink.src = "images/zoom1.png";
             panLink.src = "images/pan0.png";
-            anaLink.src = "images/ana0.png";        }
+            anaLink.src = "images/ana0.png";
+        }
 
         function panClick() {
-            if(dbgInfo) {
+            if (dbgInfo) {
                 console.log("selecting pan mode");
             }
             zoomLink.src = "images/zoom0.png";
@@ -151,13 +153,13 @@ class PlotSet {
         }
 
         function anaClick() {
-            if(dbgInfo) {
+            if (dbgInfo) {
                 console.log("selecting analysis mode");
             }
             zoomLink.src = "images/zoom0.png";
             panLink.src = "images/pan0.png";
             anaLink.src = "images/ana1.png";
-        } 
+        }
 
     }
     // clean up the DOM
@@ -225,9 +227,11 @@ class PlotSet {
 
 };
 
-// this class defines the data value range displayed on a chart in calibrated data units
-// and provides methods to maniplate data for plotting
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 class ViewPort {
+    // this class defines the data value range displayed on a chart in calibrated data units
+    // and provides methods to maniplate data for plotting
+
     constructor(xMin, xMax, yMin, yMax, canvasElement) {
         // passed values
         this.xMin = xMin;                       // minimum data x value
@@ -378,6 +382,7 @@ class ViewPort {
 
 };
 
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 class PlotIOLab {
 
     // the constructor sets up a ploting area and its controls
@@ -656,11 +661,8 @@ class PlotIOLab {
         }
 
     } // constructor
-    //======================================================================================================
-    //======================================================================================================
-    //======================================================================================================
-    //===============================IOLabPlot Methods======================================================
 
+    //===============================IOLabPlot Methods========================================
     // clean up the DOM
     reset() {
         while (this.parentElement.childNodes.length > 0) {
@@ -689,7 +691,11 @@ class PlotIOLab {
             // debugging
             if (dbgInfo) {
                 let tLast1 = calData[this.sensorNum][datLength - 1][0];
-                console.log("In recalibrateTimes() sensor:" + this.sensorNum + " timePerSample:" + this.timePerSample.toFixed(6) + " tLast0:" + tLast0.toFixed(4) + " tLast1:" + tLast1.toFixed(4));
+                console.log("In recalibrateTimes() sensor:" + this.sensorNum +
+                    " timePerSample:" + this.timePerSample.toFixed(6) +
+                    " tLast0:" + tLast0.toFixed(4) +
+                    " tLast1:" + tLast1.toFixed(4) +
+                    " length:" + datLength.toFixed(0));
             }
         }
     }
