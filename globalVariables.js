@@ -1,11 +1,13 @@
 // Global variables for data acquisition
 'use strict';
 
-// application metadata (placeholder for now)
+// application metadata (included with saved data)
 var appMetaData = {runSeconds: 0, date: null};
 
 // plots
 var plotSet = null;
+var commonCursorTime = null;
+var commonCursorMode = true;
 
 // serial port
 var port = null;
