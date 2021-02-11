@@ -12,8 +12,10 @@ class PlotSet {
         this.chartList = chartList;     // list of charts to be created
         this.parentName = parentName;   // the name of the existing parent element
 
-        this.plotObjectList = [];       // list of PlotIOLab insances (one for each sensor)
+        this.plotObjectList = [];       // list of PlotIOLab instances (one for each sensor)
         this.checkboxIDlist = [];       // a list of all checkbox ID's (one for each sensor)
+
+        this.mouseMode = "zoom";        // different behaviors for zooming, panning, analysis, etc
 
         // find the parent element
         this.parentElement = document.getElementById(this.parentName);
@@ -91,7 +93,7 @@ class PlotSet {
             let chartHeight = 200;
 
             // create an IOLabPlot object on each plot element
-            this.plotObjectList.push(new PlotIOLab(this.sensorNum, sensorID, chartHeight));
+            this.plotObjectList.push(new PlotIOLab(this, this.sensorNum, sensorID, chartHeight));
 
             // create the checkbox to show/hide each sensor plot
             let cb = document.createElement("input");
@@ -141,6 +143,7 @@ class PlotSet {
             zoomLink.src = "images/zoom1.png";
             panLink.src = "images/pan0.png";
             anaLink.src = "images/ana0.png";
+            this.mouseMode = "zoom";
         }
 
         function panClick() {
@@ -150,6 +153,7 @@ class PlotSet {
             zoomLink.src = "images/zoom0.png";
             panLink.src = "images/pan1.png";
             anaLink.src = "images/ana0.png";
+            this.mouseMode = "pan";
         }
 
         function anaClick() {
@@ -159,6 +163,7 @@ class PlotSet {
             zoomLink.src = "images/zoom0.png";
             panLink.src = "images/pan0.png";
             anaLink.src = "images/ana1.png";
+            this.mouseMode = "anal";
         }
 
     }
@@ -180,6 +185,8 @@ class PlotSet {
 
     startAcquisition() {
 
+        this.mouseMode = "";
+
         for (let ind = 0; ind < this.plotObjectList.length; ind++) {
 
             let plot = this.plotObjectList[ind];
@@ -189,7 +196,7 @@ class PlotSet {
                 plot.viewStack.shift();
             }
 
-            plot.mouseMode = "";
+            //plot.mouseMode = "";
             plot.drawPlotAxes(plot.viewStack[0]);
             plot.plotStaticData();
         }
@@ -207,12 +214,14 @@ class PlotSet {
     }
 
     displayPlots() {
+
+        this.mouseMode = "zoom";
         for (let ind = 0; ind < this.plotObjectList.length; ind++) {
 
             let plot = this.plotObjectList[ind];
 
             // display the data
-            plot.mouseMode = "zoom";
+            //plot.mouseMode = "zoom";
             plot.displayStaticData();
         }
     }
@@ -386,8 +395,9 @@ class ViewPort {
 class PlotIOLab {
 
     // the constructor sets up a ploting area and its controls
-    constructor(sensorNum, parentName, chartHeight = 200, chartWidth = 700) {
+    constructor(thisParent, sensorNum, parentName, chartHeight = 200, chartWidth = 700) {
 
+        this.thisParent = thisParent;   // this probably wont work
         this.sensorNum = sensorNum;     // the number of the sensor being plotted
         this.parentName = parentName;   // the ID of the parent <div> block
         this.chartHeight = chartHeight; // initial height of the chart in pixels
@@ -404,7 +414,7 @@ class PlotIOLab {
         this.initialTimeSpan = 10;      // the initial time axis range (seconds)
 
         this.viewStack = [];            // a stack of static viewports ([0] is always current)
-        this.mouseMode = "zoom";        // different behaviors for zooming, panning, analysis, etc
+        //this.mouseMode = "zoom";        // different behaviors for zooming, panning, analysis, etc
 
         this.timePerSample = 0;         // initalize to somenting nuts so we will know if used impropery
 
@@ -544,7 +554,7 @@ class PlotIOLab {
         let mousePtrX, mousePtrY;
 
         function dblclick(e) {
-            if (plotThis.mouseMode == "zoom") {
+            if (plotThis.thisParent.mouseMode == "zoom") {
                 // remove any static viewports from the stack
                 while (plotThis.viewStack.length > 1) {
                     plotThis.viewStack.shift();
@@ -555,7 +565,7 @@ class PlotIOLab {
         }
 
         function mouseDown(e) {
-            if (plotThis.mouseMode == "zoom") {
+            if (plotThis.thisParent.mouseMode == "zoom") {
                 selecting = true;
                 mousePtrX = e.offsetX;
                 mousePtrY = e.offsetY;
@@ -563,7 +573,7 @@ class PlotIOLab {
         }
 
         function mouseUp(e) {
-            if (plotThis.mouseMode == "zoom") {
+            if (plotThis.thisParent.mouseMode == "zoom") {
                 selecting = false;
 
                 if (mousePtrX != e.offsetX & mousePtrY != e.offsetY) {
@@ -602,7 +612,7 @@ class PlotIOLab {
 
         function mouseMove(e) {
             // draw selection box on control layer
-            if (plotThis.mouseMode == "zoom") {
+            if (plotThis.thisParent.mouseMode == "zoom") {
                 if (selecting) {
                     drawSelectionRect(mousePtrX, mousePtrY, e.offsetX, e.offsetY);
                 }
@@ -612,7 +622,7 @@ class PlotIOLab {
         }
 
         function mouseOut(e) {
-            if (plotThis.mouseMode == "zoom") {
+            if (plotThis.thisParent.mouseMode == "zoom") {
                 if (selecting) {
                     selecting = false;
                 }

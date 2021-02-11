@@ -92,12 +92,14 @@ function restoreAcquisition() {
         chartIDlist = currentFCobject.chartList;
         plotSet = new PlotSet(chartIDlist, "plotContainer");
 
-        // each new plot object has a default viewport that is not needed, so remove it
+        // each new plot object in the set we just created has a default viewport (0-10sec) 
+        // that is not needed when restoring old data, so remove these
         for (let ind = 0; ind < plotSet.plotObjectList.length; ind++) {
             let plot = plotSet.plotObjectList[ind];
             plot.viewStack.shift();
         }
 
+        // display the data we just loaded
         plotSet.displayPlots();
     }
 
