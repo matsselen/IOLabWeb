@@ -19,13 +19,15 @@ class PlotSet {
 
         // create the analysis elements that appear above the canvas
         let analysis = document.createElement("div");
+        analysis.style.paddingLeft = "5px";
 
         // place and control the zoom icon
         let aZoom = document.createElement("a");
         var zoomLink = document.createElement("img");
         zoomLink.src = "images/zoom1.png";
-        zoomLink.width = "24";
+        zoomLink.width = "45";
         zoomLink.style = "cursor:pointer";
+        zoomLink.style.paddingRight = "5px";
         aZoom.appendChild(zoomLink);
         aZoom.title = "Click & drag to zoom, double click to undo";
         aZoom.addEventListener("click", zoomClick);
@@ -35,8 +37,9 @@ class PlotSet {
         let aPan = document.createElement("a");
         var panLink = document.createElement("img");
         panLink.src = "images/pan0.png";
-        panLink.width = "24";
+        panLink.width = "45";
         panLink.style = "cursor:pointer";
+        panLink.style.paddingRight = "5px";
         aPan.appendChild(panLink);
         aPan.title = "Click/hold & drag to pan";
         aPan.addEventListener("click", panClick);
@@ -46,8 +49,9 @@ class PlotSet {
         let aAnal = document.createElement("a");
         var anaLink = document.createElement("img");
         anaLink.src = "images/ana0.png";
-        anaLink.width = "24";
+        anaLink.width = "45";
         anaLink.style = "cursor:pointer";
+        anaLink.style.paddingRight = "5px";
         aAnal.appendChild(anaLink);
         aAnal.title = "Click & drag to select region";
         aAnal.addEventListener("click", anaClick);
