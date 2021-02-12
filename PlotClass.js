@@ -8,7 +8,7 @@
 class PlotSet {
     constructor(chartList, parentName) {
 
-        this.plotSetThis = this;        // save "this" to use in callback routines
+        let plotSetThis = this;         // save "this" to use in callback routines
         this.chartList = chartList;     // list of charts to be created
         this.parentName = parentName;   // the name of the existing parent element
 
@@ -143,7 +143,7 @@ class PlotSet {
             zoomLink.src = "images/zoom1.png";
             panLink.src = "images/pan0.png";
             anaLink.src = "images/ana0.png";
-            this.mouseMode = "zoom";
+            plotSetThis.mouseMode = "zoom";
         }
 
         function panClick() {
@@ -153,7 +153,7 @@ class PlotSet {
             zoomLink.src = "images/zoom0.png";
             panLink.src = "images/pan1.png";
             anaLink.src = "images/ana0.png";
-            this.mouseMode = "pan";
+            plotSetThis.mouseMode = "pan";
         }
 
         function anaClick() {
@@ -163,7 +163,7 @@ class PlotSet {
             zoomLink.src = "images/zoom0.png";
             panLink.src = "images/pan0.png";
             anaLink.src = "images/ana1.png";
-            this.mouseMode = "anal";
+            plotSetThis.mouseMode = "anal";
         }
 
     }
@@ -196,7 +196,6 @@ class PlotSet {
                 plot.viewStack.shift();
             }
 
-            //plot.mouseMode = "";
             plot.drawPlotAxes(plot.viewStack[0]);
             plot.plotStaticData();
         }
@@ -221,7 +220,6 @@ class PlotSet {
             let plot = this.plotObjectList[ind];
 
             // display the data
-            //plot.mouseMode = "zoom";
             plot.displayStaticData();
         }
     }
@@ -414,7 +412,6 @@ class PlotIOLab {
         this.initialTimeSpan = 10;      // the initial time axis range (seconds)
 
         this.viewStack = [];            // a stack of static viewports ([0] is always current)
-        //this.mouseMode = "zoom";        // different behaviors for zooming, panning, analysis, etc
 
         this.timePerSample = 0;         // initalize to somenting nuts so we will know if used impropery
 
