@@ -44,20 +44,20 @@
       <tr>
         <td>
           <p>
-            <button id="butConnect" type="button">Connect</button> &nbsp; &nbsp;
+            <button id="butConnect" type="button" title="Make sure your dongle is plugged in and your remote is turned on">Connect</button> &nbsp; &nbsp;
             <select id="cmd-picker"></select>&nbsp; &nbsp;
           </p>
         </td>
         <td>
           <p>
-            Save Data: <a href="" id="downloadData" onclick="saveToFile()" title="Save This Acquisition"
+            Save Data: <a href="" id="downloadData" onclick="saveToFile()" title="Saved data can be emailed and restored on other computers."
               style="cursor: pointer;"><img src="images/dload.PNG" alt="[Save]" valign="bottom" width="24" height="24"></a>
               &nbsp; &nbsp;
             Restore Data: <input type="file" accept=".iolab" size="20" name="inputfile" id="inputfile"></p>
         </td>
         <td>
           <p style="color: rgb(200,200,200); text-align: right; width: 100px;">
-            Debug:<input id="debug_ck" type="checkbox" checked="true">
+            Debug:<input id="debug_ck" type="checkbox" checked="true" title="Displays additional information for experts">
           </p>
         </td>
       </tr>
@@ -66,7 +66,7 @@
     <div id="configSelect">
       <table>
         <tr>
-          <td><button id="butSend" type="button">Configure</button></td>
+          <td><button id="butSend" type="button" title="Loads your IOLab with the configuration selected below">Configure</button></td>
           <td></td>
         </tr>
         <tr>
@@ -74,7 +74,7 @@
             <label><select id="config-picker"
                 style="font: 12px Arial; width: 400px; word-wrap: break-word;"></select></label>
           </td>
-          <td>&nbsp;&nbsp;<button id="butStartStop" type="button">Start</button></td>
+          <td>&nbsp;&nbsp;<button id="butStartStop" type="button" title="Start or Stop an aquisition">Start</button></td>
         </tr>
       </table>
     </div>
