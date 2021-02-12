@@ -143,10 +143,10 @@ function updateSystemState() {
   }
 
   if (serialConnected) {
-    butConnect.textContent = "Disconnect Serial Port";
+    butConnect.textContent = "Disconnect Dongle";
     if (remoteConnected) configSelect.style.display = "block";
   } else {
-    butConnect.textContent = "Connect to Serial Port";
+    butConnect.textContent = "Connect to Dongle";
     configSelect.style.display = "none";
   }
 
@@ -160,7 +160,7 @@ function updateSystemState() {
   if (dongleID > 0) {
     dongleStatusDisplay.innerHTML = "0x" + dongleID.toString(16);
   } else {
-    dongleStatusDisplay.innerHTML = "none";
+    dongleStatusDisplay.innerHTML = "not connected";
   }
 
   if ((remote1ID > 0) && (remoteStatus[0])) {
@@ -171,7 +171,7 @@ function updateSystemState() {
   } else {
     remoteConnected = false;
     configSelect.style.display = "none";
-    remoteStatusDisplay.innerHTML = "none";
+    remoteStatusDisplay.innerHTML = "off";
   }
 
   if (daqConfigured) {

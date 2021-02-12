@@ -547,7 +547,9 @@ class PlotIOLab {
         }
 
         // various handlers for mouse events
-        let selecting = false;
+        let zooming = false;
+        let panning = false;
+        let analyzing = false;
         let mousePtrX, mousePtrY;
 
         function dblclick(e) {
@@ -563,15 +565,29 @@ class PlotIOLab {
 
         function mouseDown(e) {
             if (plotThis.thisParent.mouseMode == "zoom") {
-                selecting = true;
+                zooming = true;
                 mousePtrX = e.offsetX;
                 mousePtrY = e.offsetY;
             }
+
+            if (plotThis.thisParent.mouseMode == "pan") {
+                panning = true;
+                mousePtrX = e.offsetX;
+                mousePtrY = e.offsetY;
+            }
+
         }
 
         function mouseUp(e) {
+
+            if (plotThis.thisParent.mouseMode == "pan") {
+                panning = false;
+                // clear the selection vector
+                ctlDrawContext.clearRect(0, 0, plotThis.baseElement.width + 2, plotThis.baseElement.height + 2);
+            }
+
             if (plotThis.thisParent.mouseMode == "zoom") {
-                selecting = false;
+                zooming = false;
 
                 if (mousePtrX != e.offsetX & mousePtrY != e.offsetY) {
 
@@ -608,20 +624,27 @@ class PlotIOLab {
         }
 
         function mouseMove(e) {
-            // draw selection box on control layer
+            // draw selection box on control layer if we are zooming
             if (plotThis.thisParent.mouseMode == "zoom") {
-                if (selecting) {
+                if (zooming) {
                     drawSelectionRect(mousePtrX, mousePtrY, e.offsetX, e.offsetY);
                 }
             }
+            // draw selection box on control layer if we are zooming
+            if (plotThis.thisParent.mouseMode == "pan") {
+                if (panning) {
+                    drawSelectionVector(mousePtrX, mousePtrY, e.offsetX, e.offsetY);
+                }
+            }
+
             // put stuff on info layer
             drawInfo(e);
         }
 
         function mouseOut(e) {
             if (plotThis.thisParent.mouseMode == "zoom") {
-                if (selecting) {
-                    selecting = false;
+                if (zooming) {
+                    zooming = false;
                 }
             }
             drawInfo(e, "clear");
@@ -647,12 +670,44 @@ class PlotIOLab {
 
         }
 
+        // use when selecting a vector for some control function like panning
+        function drawSelectionVector(x1, y1, x2, y2) {
+
+            // start by clearing the rectangle
+            ctlDrawContext.clearRect(0, 0, plotThis.baseElement.width + 2, plotThis.baseElement.height + 2);
+
+            // draw a new vector unless points 1 and 2 are the same
+            if (x1 != x2 && y1 != y2) {
+
+                // draw a line
+                ctlDrawContext.strokeStyle = '#000000';
+                ctlDrawContext.lineWidth = 1;
+                ctlDrawContext.beginPath();
+                ctlDrawContext.moveTo(x1, y1);
+                ctlDrawContext.lineTo(x2, y2);
+                ctlDrawContext.stroke();
+
+                // draw a + an each end of the line
+                ctlDrawContext.lineWidth = 2;
+                ctlDrawContext.beginPath();
+                ctlDrawContext.moveTo(x1-5, y1);
+                ctlDrawContext.lineTo(x1+5, y1);
+                ctlDrawContext.moveTo(x1, y1-5);
+                ctlDrawContext.lineTo(x1, y1+5);
+                ctlDrawContext.moveTo(x2-5, y2);
+                ctlDrawContext.lineTo(x2+5, y2);
+                ctlDrawContext.moveTo(x2, y2-5);
+                ctlDrawContext.lineTo(x2, y2+5);
+                ctlDrawContext.stroke();  
+
+            }
+        }
+
         // use when selecting a rectangle for some control function like zooming
         function drawSelectionRect(x1, y1, x2, y2) {
 
             ctlDrawContext.strokeStyle = '#f2a241';
             ctlDrawContext.lineWidth = 1;
-
 
             // start by clearing the rectangle
             ctlDrawContext.clearRect(0, 0, plotThis.baseElement.width + 2, plotThis.baseElement.height + 2);
@@ -663,8 +718,6 @@ class PlotIOLab {
                 ctlDrawContext.rect(x1 + .5, y1 + .5, (x2 - x1), (y2 - y1));
                 ctlDrawContext.stroke();
             }
-
-
         }
 
     } // constructor
