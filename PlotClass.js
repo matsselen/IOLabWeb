@@ -546,7 +546,7 @@ class PlotIOLab {
             }
         }
 
-        // various handlers for mouse events
+        // various variables and handlers for mouse events
         let zooming = false;
         let panning = false;
         let analyzing = false;
@@ -554,8 +554,7 @@ class PlotIOLab {
 
         // when the left mouse button is double-clicked
         function dblclick(e) {
-            if ((plotThis.thisParent.mouseMode == "zoom") ||
-                (plotThis.thisParent.mouseMode == "pan")) {
+            if ((plotThis.thisParent.mouseMode == "zoom")||(plotThis.thisParent.mouseMode == "pan")){
                 // remove any static viewports from the stack
                 while (plotThis.viewStack.length > 1) {
                     plotThis.viewStack.shift();
@@ -582,16 +581,14 @@ class PlotIOLab {
             if (plotThis.thisParent.mouseMode == "anal") {
                 analyzing = true;
                 mousePtrX = e.offsetX;
-                mousePtrY = e.offsetY;            
+                mousePtrY = e.offsetY;
             }
         }
 
         // when the left mouse button is released
         function mouseUp(e) {
 
-            
-
-            if (plotThis.thisParent.mouseMode == "pan") {
+            if (panning) {
                 panning = false;
 
                 if (mousePtrX != e.offsetX & mousePtrY != e.offsetY) {
@@ -629,7 +626,7 @@ class PlotIOLab {
                 plotThis.plotStaticData();
             }
 
-            if (plotThis.thisParent.mouseMode == "zoom") {
+            if (zooming) {
                 zooming = false;
 
                 if (mousePtrX != e.offsetX & mousePtrY != e.offsetY) {
@@ -669,20 +666,24 @@ class PlotIOLab {
 
         // when the mouse moves over the chart
         function mouseMove(e) {
-            // draw selection box and cursor info on control layer if we are zooming
-            if (plotThis.thisParent.mouseMode == "zoom") {
-                if (zooming) {
-                    drawSelectionRect(mousePtrX, mousePtrY, e.offsetX, e.offsetY);
-                }
+
+            // put crosshairs and cursor info on control layer if we are in 
+            // zoom mode or pan mode
+            if ((plotThis.thisParent.mouseMode == "zoom") || (plotThis.thisParent.mouseMode == "pan")) {
                 drawCursorInfo(e);
             }
+            if (plotThis.thisParent.mouseMode == "anal") {
+                drawTimeAndData(e);
+            }            
 
-            // draw selection box and cursor info on control layer if we are zooming
-            if (plotThis.thisParent.mouseMode == "pan") {
-                if (panning) {
-                    drawSelectionVector(mousePtrX, mousePtrY, e.offsetX, e.offsetY);
-                }
-                drawCursorInfo(e);
+            // draw selection box if we are zooming
+            if (zooming) {
+                drawSelectionRect(mousePtrX, mousePtrY, e.offsetX, e.offsetY);
+            }
+
+            // draw displacement vector if we are panning
+            if (panning) {
+                drawSelectionVector(mousePtrX, mousePtrY, e.offsetX, e.offsetY);
             }
 
         }
@@ -695,7 +696,11 @@ class PlotIOLab {
             drawCursorInfo(e, "clear");
         }
 
-        // use when selecting a rectangle for some control function like zooming
+        // display vertical line at cursor and data for this time
+        function drawTimeAndData(e, mode = "") {
+        }
+
+        // display crosshair and cursor info
         function drawCursorInfo(e, mode = "") {
 
             // clear the canvas (and return if thats all we were supposed to do)
