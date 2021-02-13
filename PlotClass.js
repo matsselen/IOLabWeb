@@ -554,7 +554,8 @@ class PlotIOLab {
 
         // when the left mouse button is double-clicked
         function dblclick(e) {
-            if (plotThis.thisParent.mouseMode == "zoom") {
+            if ((plotThis.thisParent.mouseMode == "zoom") ||
+                (plotThis.thisParent.mouseMode == "pan")) {
                 // remove any static viewports from the stack
                 while (plotThis.viewStack.length > 1) {
                     plotThis.viewStack.shift();
@@ -578,10 +579,17 @@ class PlotIOLab {
                 mousePtrY = e.offsetY;
             }
 
+            if (plotThis.thisParent.mouseMode == "anal") {
+                analyzing = true;
+                mousePtrX = e.offsetX;
+                mousePtrY = e.offsetY;            
+            }
         }
 
         // when the left mouse button is released
         function mouseUp(e) {
+
+            
 
             if (plotThis.thisParent.mouseMode == "pan") {
                 panning = false;
