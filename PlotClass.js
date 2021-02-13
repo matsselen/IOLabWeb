@@ -260,6 +260,22 @@ class ViewPort {
     //=========================================================================================
     //======================ViewPort Methods===================================================
 
+    // shift the viewport by vector that points from (x0,y0) to (x1,y1)
+    shiftViewPixel(x1, y1, x2, y2) {
+
+        let p1 = this.pixelToData(x1, y1);
+        let p2 = this.pixelToData(x2, y2);
+
+        let dX = p2[0] - p1[0];
+        let dY = p2[1] - p1[1];
+
+        this.xMin += dX;
+        this.xMax += dX;
+        this.yMin += dY;
+        this.yMax += dY;
+
+    }
+
     // pick the optimum values for data-axis labels 
     // (basically some multiple of 1, 2, 5, 10 so that we get between 5 and 15 labels )
     pickDataAxis() {
@@ -582,8 +598,17 @@ class PlotIOLab {
 
             if (plotThis.thisParent.mouseMode == "pan") {
                 panning = false;
+
                 // clear the selection vector
                 ctlDrawContext.clearRect(0, 0, plotThis.baseElement.width + 2, plotThis.baseElement.height + 2);
+
+                if (mousePtrX != e.offsetX & mousePtrY != e.offsetY) {
+                    plotThis.viewStack[0].shiftViewPixel(mousePtrX, mousePtrY, e.offsetX, e.offsetY);
+                }
+
+                // draw the re-scaled axes
+                plotThis.drawPlotAxes(plotThis.viewStack[0]);
+                plotThis.plotStaticData();
             }
 
             if (plotThis.thisParent.mouseMode == "zoom") {
@@ -690,15 +715,15 @@ class PlotIOLab {
                 // draw a + an each end of the line
                 ctlDrawContext.lineWidth = 2;
                 ctlDrawContext.beginPath();
-                ctlDrawContext.moveTo(x1-5, y1);
-                ctlDrawContext.lineTo(x1+5, y1);
-                ctlDrawContext.moveTo(x1, y1-5);
-                ctlDrawContext.lineTo(x1, y1+5);
-                ctlDrawContext.moveTo(x2-5, y2);
-                ctlDrawContext.lineTo(x2+5, y2);
-                ctlDrawContext.moveTo(x2, y2-5);
-                ctlDrawContext.lineTo(x2, y2+5);
-                ctlDrawContext.stroke();  
+                ctlDrawContext.moveTo(x1 - 5, y1);
+                ctlDrawContext.lineTo(x1 + 5, y1);
+                ctlDrawContext.moveTo(x1, y1 - 5);
+                ctlDrawContext.lineTo(x1, y1 + 5);
+                ctlDrawContext.moveTo(x2 - 5, y2);
+                ctlDrawContext.lineTo(x2 + 5, y2);
+                ctlDrawContext.moveTo(x2, y2 - 5);
+                ctlDrawContext.lineTo(x2, y2 + 5);
+                ctlDrawContext.stroke();
 
             }
         }
