@@ -599,11 +599,34 @@ class PlotIOLab {
             if (plotThis.thisParent.mouseMode == "pan") {
                 panning = false;
 
-                // clear the selection vector
-                ctlDrawContext.clearRect(0, 0, plotThis.baseElement.width + 2, plotThis.baseElement.height + 2);
-
                 if (mousePtrX != e.offsetX & mousePtrY != e.offsetY) {
-                    plotThis.viewStack[0].shiftViewPixel(mousePtrX, mousePtrY, e.offsetX, e.offsetY);
+
+                    // clear the control layer 
+                    ctlDrawContext.clearRect(0, 0, plotThis.baseElement.width + 2, plotThis.baseElement.height + 2);
+
+                    // find out where we started and ended the selection
+                    let p1 = plotThis.viewStack[0].pixelToData(e.offsetX, e.offsetY);
+                    let p2 = plotThis.viewStack[0].pixelToData(mousePtrX, mousePtrY);
+
+                    // calculte the new viewport boundaries
+                    let xMin = plotThis.viewStack[0].xMin + p2[0] - p1[0];
+                    let xMax = plotThis.viewStack[0].xMax + p2[0] - p1[0];
+                    let yMin = plotThis.viewStack[0].yMin + p2[1] - p1[1];
+                    let yMax = plotThis.viewStack[0].yMax + p2[1] - p1[1];
+
+                    // create a new viewport       
+                    let selectedView = new ViewPort(xMin, xMax, yMin, yMax, plotThis.baseElement);
+
+                    // push the new viweport onto the bottom of the stack. 
+                    plotThis.viewStack.unshift(selectedView);
+
+
+                } else {
+                    // remove the current viweport from bottom of the stack and go back to the previous one. 
+                    // (though dont remove the last one - thats the DAQ view)
+                    if (plotThis.viewStack.length > 1) {
+                        plotThis.viewStack.shift();
+                    }
                 }
 
                 // draw the re-scaled axes
@@ -616,18 +639,20 @@ class PlotIOLab {
 
                 if (mousePtrX != e.offsetX & mousePtrY != e.offsetY) {
 
-                    // clear the selection box
+                    // clear the control layer 
                     ctlDrawContext.clearRect(0, 0, plotThis.baseElement.width + 2, plotThis.baseElement.height + 2);
 
+                    // find out where we started and ended the selection
                     let p1 = plotThis.viewStack[0].pixelToData(e.offsetX, e.offsetY);
                     let p2 = plotThis.viewStack[0].pixelToData(mousePtrX, mousePtrY);
 
+                    // calculte the new viewport boundaries
                     let xMin = Math.min(p1[0], p2[0]);
                     let xMax = Math.max(p1[0], p2[0]);
                     let yMin = Math.min(p1[1], p2[1]);
                     let yMax = Math.max(p1[1], p2[1]);
 
-                    // first create a viewport devined by the selected rectangle      
+                    // first create a viewport      
                     let selectedView = new ViewPort(xMin, xMax, yMin, yMax, plotThis.baseElement);
 
                     // push the new viweport onto the bottom of the stack. 
