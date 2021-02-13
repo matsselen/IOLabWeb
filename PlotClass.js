@@ -32,7 +32,7 @@ class PlotSet {
         zoomLink.style = "cursor:pointer";
         zoomLink.style.paddingRight = "5px";
         aZoom.appendChild(zoomLink);
-        aZoom.title = "Click & drag to zoom, click to undo, double-click to fit";
+        aZoom.title = "Click & drag to zoom, click to undo, double-click to reset";
         aZoom.addEventListener("click", zoomClick);
         analysis.appendChild(aZoom);
 
@@ -44,7 +44,7 @@ class PlotSet {
         panLink.style = "cursor:pointer";
         panLink.style.paddingRight = "5px";
         aPan.appendChild(panLink);
-        aPan.title = "Click/hold & drag to pan";
+        aPan.title = "Click & drag to pan, click to undo, double-click to reset";
         aPan.addEventListener("click", panClick);
         analysis.appendChild(aPan);
 
@@ -56,7 +56,7 @@ class PlotSet {
         anaLink.style = "cursor:pointer";
         anaLink.style.paddingRight = "5px";
         aAnal.appendChild(anaLink);
-        aAnal.title = "Click & drag to select region";
+        aAnal.title = "Click & drag to select analysis region";
         aAnal.addEventListener("click", anaClick);
         analysis.appendChild(aAnal);
 
@@ -568,6 +568,7 @@ class PlotIOLab {
         let analyzing = false;
         let mousePtrX, mousePtrY;
 
+        // when the left mouse button is double-clicked
         function dblclick(e) {
             if (plotThis.thisParent.mouseMode == "zoom") {
                 // remove any static viewports from the stack
@@ -579,6 +580,7 @@ class PlotIOLab {
             }
         }
 
+        // when the left mouse button is pressed
         function mouseDown(e) {
             if (plotThis.thisParent.mouseMode == "zoom") {
                 zooming = true;
@@ -594,6 +596,7 @@ class PlotIOLab {
 
         }
 
+        // when the left mouse button is released
         function mouseUp(e) {
 
             if (plotThis.thisParent.mouseMode == "pan") {
@@ -669,39 +672,39 @@ class PlotIOLab {
                 // draw the re-scaled axes
                 plotThis.drawPlotAxes(plotThis.viewStack[0]);
                 plotThis.plotStaticData();
-
             }
         }
 
+        // when the mouse moves over the chart
         function mouseMove(e) {
-            // draw selection box on control layer if we are zooming
+            // draw selection box and cursor info on control layer if we are zooming
             if (plotThis.thisParent.mouseMode == "zoom") {
                 if (zooming) {
                     drawSelectionRect(mousePtrX, mousePtrY, e.offsetX, e.offsetY);
                 }
+                drawCursorInfo(e);
             }
-            // draw selection box on control layer if we are zooming
+
+            // draw selection box and cursor info on control layer if we are zooming
             if (plotThis.thisParent.mouseMode == "pan") {
                 if (panning) {
                     drawSelectionVector(mousePtrX, mousePtrY, e.offsetX, e.offsetY);
                 }
+                drawCursorInfo(e);
             }
 
-            // put stuff on info layer
-            drawInfo(e);
         }
 
+        // when the mouse leaves the chart
         function mouseOut(e) {
-            if (plotThis.thisParent.mouseMode == "zoom") {
-                if (zooming) {
-                    zooming = false;
-                }
-            }
-            drawInfo(e, "clear");
+            zooming = false;
+            panning = false;
+            analyzing = false;
+            drawCursorInfo(e, "clear");
         }
 
         // use when selecting a rectangle for some control function like zooming
-        function drawInfo(e, mode = "") {
+        function drawCursorInfo(e, mode = "") {
 
             // clear the canvas (and return if thats all we were supposed to do)
             infoDrawContext.clearRect(0, 0, plotThis.baseElement.width + 2, plotThis.baseElement.height + 2);
