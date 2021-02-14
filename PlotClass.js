@@ -554,7 +554,7 @@ class PlotIOLab {
 
         // when the left mouse button is double-clicked
         function dblclick(e) {
-            if ((plotThis.thisParent.mouseMode == "zoom")||(plotThis.thisParent.mouseMode == "pan")){
+            if ((plotThis.thisParent.mouseMode == "zoom") || (plotThis.thisParent.mouseMode == "pan")) {
                 // remove any static viewports from the stack
                 while (plotThis.viewStack.length > 1) {
                     plotThis.viewStack.shift();
@@ -674,7 +674,7 @@ class PlotIOLab {
             }
             if (plotThis.thisParent.mouseMode == "anal") {
                 drawTimeAndData(e);
-            }            
+            }
 
             // draw selection box if we are zooming
             if (zooming) {
@@ -698,6 +698,37 @@ class PlotIOLab {
 
         // display vertical line at cursor and data for this time
         function drawTimeAndData(e, mode = "") {
+
+            // clear the canvas (and return if thats all we were supposed to do)
+            infoDrawContext.clearRect(0, 0, plotThis.baseElement.width + 2, plotThis.baseElement.height + 2);
+            if (mode == "clear") return;
+
+            // find mouse location in data coordinates
+            let mouseData = plotThis.viewStack[0].pixelToData(e.offsetX, e.offsetY);
+            commonCursorTime = mouseData[0];
+
+            // draw a vertical line at mouse location
+            plotThis.drawVline(infoDrawContext, plotThis.viewStack[0], commonCursorTime, 1, '#000000');
+
+            // if timePerSample is not initalized then something is wrong
+            if (plotThis.timePerSample == 0) {
+                console.log("In drawTimeAndData(): timePerSample in not set - Mats screwed up")
+                return;
+            }
+
+            // find the data index that corresponds to the selected time
+            let ind = Math.floor(commonCursorTime / plotThis.timePerSample);
+
+
+            // find the data value for each trace
+            for (let tr = 1; tr < plotThis.nTraces + 1; tr++) {
+                let dataPix = plotThis.viewStack[0].dataToPixel(commonCursorTime, calData[plotThis.sensorNum][ind][tr]);
+            }
+
+            infoDrawContext.font = "10px Arial";
+            let text = "(" + mouseData[0].toFixed(3) + "," + mouseData[1].toFixed(3) + ")";
+            infoDrawContext.fillText(text, e.offsetX + 1, e.offsetY - 1);
+
         }
 
         // display crosshair and cursor info
@@ -714,9 +745,9 @@ class PlotIOLab {
 
             infoDrawContext.font = "10px Arial";
             let text = "(" + e.offsetX.toFixed() + "," + e.offsetY.toFixed() + ")";
-            infoDrawContext.fillText(text, e.offsetX, e.offsetY - 10);
+            infoDrawContext.fillText(text, e.offsetX + 1, e.offsetY - 11);
             text = "(" + pix[0].toFixed(3) + "," + pix[1].toFixed(3) + ")";
-            infoDrawContext.fillText(text, e.offsetX, e.offsetY);
+            infoDrawContext.fillText(text, e.offsetX + 1, e.offsetY - 1);
 
         }
 
@@ -915,6 +946,12 @@ class PlotIOLab {
         } else {
             let tLast = calData[this.sensorNum][datLength - 1][0];
             tLast = parseInt(tLast + 1);
+
+            // if we are restoring an acquisition then timePerSample wont be set
+            // so in this case we figure it out and set it
+            if (this.timePerSample == 0) {
+                this.timePerSample = tLast/datLength;
+            }
 
 
             // first create a viewport that contains the entire time-range      
