@@ -723,10 +723,12 @@ class PlotIOLab {
             // find the data value for each trace
             for (let tr = 1; tr < plotThis.nTraces + 1; tr++) {
                 let dataPix = plotThis.viewStack[0].dataToPixel(commonCursorTime, calData[plotThis.sensorNum][ind][tr]);
-                infoDrawContext.strokeStyle = '#000000';
-                infoDrawContext.lineWidth = 1;
+                infoDrawContext.strokeStyle = plotThis.layerColorList[tr];
+                infoDrawContext.lineWidth = 0;
                 infoDrawContext.beginPath();
-                infoDrawContext.arc(dataPix[0], dataPix[1], 2, 0, 2 * Math.PI);
+                infoDrawContext.arc(dataPix[0], dataPix[1], 4, 0, 2 * Math.PI);
+                infoDrawContext.fillStyle = plotThis.layerColorList[tr]+'7f';
+                infoDrawContext.fill();
                 infoDrawContext.stroke();
    
             }
