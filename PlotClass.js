@@ -723,6 +723,12 @@ class PlotIOLab {
             // find the data value for each trace
             for (let tr = 1; tr < plotThis.nTraces + 1; tr++) {
                 let dataPix = plotThis.viewStack[0].dataToPixel(commonCursorTime, calData[plotThis.sensorNum][ind][tr]);
+                infoDrawContext.strokeStyle = '#000000';
+                infoDrawContext.lineWidth = 1;
+                infoDrawContext.beginPath();
+                infoDrawContext.arc(dataPix[0], dataPix[1], 2, 0, 2 * Math.PI);
+                infoDrawContext.stroke();
+   
             }
 
             infoDrawContext.font = "10px Arial";
@@ -944,13 +950,13 @@ class PlotIOLab {
             if (dbgInfo) console.log("In displayStaticData(): no data to display ");
 
         } else {
-            let tLast = calData[this.sensorNum][datLength - 1][0];
-            tLast = parseInt(tLast + 1);
+            let tLastFloat = calData[this.sensorNum][datLength - 1][0];
+            let tLast = parseInt(tLastFloat + 1);
 
             // if we are restoring an acquisition then timePerSample wont be set
             // so in this case we figure it out and set it
             if (this.timePerSample == 0) {
-                this.timePerSample = tLast/datLength;
+                this.timePerSample = tLastFloat/datLength;
             }
 
 
