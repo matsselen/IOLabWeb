@@ -407,6 +407,7 @@ class PlotIOLab {
         this.layerIDlist = [];          // a list of all canvas layer ID's
         this.layerElementList = [];     // save the element handles to save "getElementById" calls
         this.checkboxIDlist = [];       // a list of all checkbox ID's
+        this.traceEnabledList = [];     // true if a trace layer is visible. Note: counts from 0.
         this.chartLineWidth = 1;        // the width of the chart lines
 
         this.initialTimeSpan = 10;      // the initial time axis range (seconds)
@@ -487,6 +488,7 @@ class PlotIOLab {
             let cb = document.createElement("input");
             let cbID = this.baseID + "_cb" + ind.toString();
             this.checkboxIDlist.push(cbID);
+            this.traceEnabledList.push(true);
 
             cb.setAttribute("id", cbID);
             cb.setAttribute("type", "checkbox");
@@ -537,13 +539,21 @@ class PlotIOLab {
 
         // event handler for the layer selection checkboxes
         function selectLayer() {
-            if (dbgInfo) console.log("In Plot::selectLayer() ", this.id, this.canvaslayer, this.checked);
+
+            // figure out the layer by looking at the ID
+            let ind = parseInt(this.id.substr(this.id.length - 1, 1));
+            plotThis.traceEnabledList[ind] = this.checked;
 
             if (this.checked) {
                 document.getElementById(this.canvaslayer).style.display = "block";
             } else {
                 document.getElementById(this.canvaslayer).style.display = "none";
             }
+
+            if (dbgInfo) {
+                console.log("In Plot::selectLayer() ", this.id, this.canvaslayer, this.checked, plotThis.traceEnabledList);
+            }
+
         }
 
         // various variables and handlers for mouse events
@@ -720,17 +730,19 @@ class PlotIOLab {
             let ind = Math.floor(commonCursorTime / plotThis.timePerSample);
 
 
-            // find the data value for each trace
+            // find the data value for each visible trace
             for (let tr = 1; tr < plotThis.nTraces + 1; tr++) {
-                let dataPix = plotThis.viewStack[0].dataToPixel(commonCursorTime, calData[plotThis.sensorNum][ind][tr]);
-                infoDrawContext.strokeStyle = plotThis.layerColorList[tr];
-                infoDrawContext.lineWidth = 0;
-                infoDrawContext.beginPath();
-                infoDrawContext.arc(dataPix[0], dataPix[1], 4, 0, 2 * Math.PI);
-                infoDrawContext.fillStyle = plotThis.layerColorList[tr]+'7f';
-                infoDrawContext.fill();
-                infoDrawContext.stroke();
-   
+                if (plotThis.traceEnabledList[tr - 1]) {
+
+                    let dataPix = plotThis.viewStack[0].dataToPixel(commonCursorTime, calData[plotThis.sensorNum][ind][tr]);
+                    infoDrawContext.strokeStyle = plotThis.layerColorList[tr];
+                    infoDrawContext.lineWidth = 0;
+                    infoDrawContext.beginPath();
+                    infoDrawContext.arc(dataPix[0], dataPix[1], 4, 0, 2 * Math.PI);
+                    infoDrawContext.fillStyle = plotThis.layerColorList[tr] + '7f';
+                    infoDrawContext.fill();
+                    infoDrawContext.stroke();
+                }
             }
 
             infoDrawContext.font = "10px Arial";
@@ -958,7 +970,7 @@ class PlotIOLab {
             // if we are restoring an acquisition then timePerSample wont be set
             // so in this case we figure it out and set it
             if (this.timePerSample == 0) {
-                this.timePerSample = tLastFloat/datLength;
+                this.timePerSample = tLastFloat / datLength;
             }
 
 
