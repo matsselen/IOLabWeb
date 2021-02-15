@@ -467,14 +467,15 @@ class PlotIOLab {
 
         // create the canvas stack that will be used for displaying chart traces 
         // as well as the background grid and zoom controls
-        let canvasStack = new CanvasStack(this.baseID, this.nTraces + 4);
+        let canvasStack = new CanvasStack(this.baseID, this.nTraces + 5);
 
-        // create one overlay layer for each chart trace plus 2 additional layers
-        //      layer N+2:  top layer is for zooming & panning control
-        //      layer N+1:  top layer is for displaying cursor info
+        //                     Canvas layers
+        //      layer N+3:  zooming & panning control
+        //      layer N+2:  analysis results and highlighting
+        //      layer N+1:  cursor information
         //  layers 1 to N:  one layer for each of the N chart trace 
         //        layer 0:  bottom layer is for the axes
-        for (let ind = 0; ind < (this.axisTitles.length + 3); ind++) {
+        for (let ind = 0; ind < (this.axisTitles.length + 4); ind++) {
             let layerID = canvasStack.createLayer();
             this.layerIDlist.push(layerID);
             this.layerElementList.push(document.getElementById(layerID));
@@ -528,10 +529,13 @@ class PlotIOLab {
         ctlLayer.addEventListener("mouseout", mouseOut);
         ctlLayer.addEventListener("dblclick", dblclick);
 
-        // give a name to the second to last layer so we can draw on it
-        let infoLayer = this.layerElementList[this.layerElementList.length - 2];
+        // analysis results and highlighting layer
+        let analysisLayer = this.layerElementList[this.layerElementList.length - 2];
+        let analysisDrawContext = analysisLayer.getContext("2d");
+        
+        // cursor info layer
+        let infoLayer = this.layerElementList[this.layerElementList.length - 3];
         let infoDrawContext = infoLayer.getContext("2d");
-
 
 
         // =================================================================================
@@ -561,6 +565,11 @@ class PlotIOLab {
         let panning = false;
         let analyzing = false;
         let mousePtrX, mousePtrY;
+        let analTime1 = 0;
+        let analTime2 = 0;
+        let tStart = 0;
+        let tStop = 0;
+        let analyzedRegion = false;
 
         // when the left mouse button is double-clicked
         function dblclick(e) {
@@ -590,8 +599,8 @@ class PlotIOLab {
 
             if (plotThis.thisParent.mouseMode == "anal") {
                 analyzing = true;
-                mousePtrX = e.offsetX;
-                mousePtrY = e.offsetY;
+                analyzedRegion = false;
+                analTime1 = commonCursorTime;
             }
         }
 
@@ -675,6 +684,9 @@ class PlotIOLab {
 
             if (analyzing) {
                 analyzing = false;
+                analyzedRegion = true;
+                analTime2 = commonCursorTime;
+                drawSelectionAnalysis();
             }
         }
 
@@ -688,6 +700,7 @@ class PlotIOLab {
             }
             if (plotThis.thisParent.mouseMode == "anal") {
                 drawTimeAndData(e);
+                if(analyzedRegion && !analyzing)drawSelectionAnalysis();
             }
 
             // draw selection box if we are zooming
@@ -702,7 +715,8 @@ class PlotIOLab {
 
             // draw displacement vector if we are panning
             if (analyzing) {
-                drawSelectionAnalysis(mousePtrX, mousePtrY, e.offsetX, e.offsetY);
+                analTime2 = commonCursorTime;
+                drawSelectionAnalysis();
             }
 
         }
@@ -717,62 +731,58 @@ class PlotIOLab {
         }
 
         // use when selecting a rectangle for some control function like zooming
-        function drawSelectionAnalysis(x1, y1, x2, y2) {
+        function drawSelectionAnalysis() {
 
+            if (analTime1 < analTime2) {
+                tStart = analTime1;
+                tStop = analTime2;
+            } else {
+                tStart = analTime2;
+                tStop = analTime1;
+            }
 
             // start by clearing the rectangle
             ctlDrawContext.clearRect(0, 0, plotThis.baseElement.width + 2, plotThis.baseElement.height + 2);
 
-            // if we are analyzing and the mouse has moved horizontally from its starting point
-            if (analyzing && (x1 != x2)) {
+            plotThis.drawVline(infoDrawContext, plotThis.viewStack[0], tStart, 2, '#000000');
+            plotThis.drawVline(infoDrawContext, plotThis.viewStack[0], tStop, 2, '#000000');
 
-                let dat1 = plotThis.viewStack[0].pixelToData(x1, y1);
-                let dat2 = plotThis.viewStack[0].pixelToData(x2, y2);
+            infoDrawContext.fillStyle = '#000000';
+            let text = "∆t = " + Math.abs(tStop-tStart).toFixed(3) + "s";
+            infoDrawContext.fillText(text, 120, 15);
 
-                plotThis.drawVline(infoDrawContext, plotThis.viewStack[0], dat1[0], 2, '#000000');
-                plotThis.drawVline(infoDrawContext, plotThis.viewStack[0], dat2[0], 2, '#000000');
+            // find the data index that corresponds to the selected times
+            let ind1 = Math.floor(tStart / plotThis.timePerSample);
+            let ind2 = Math.floor(tStop / plotThis.timePerSample);
 
-                infoDrawContext.fillStyle = '#000000';
-                let text = "∆t = " + Math.abs(dat2[0] - dat1[0]).toFixed(3) + "s";
-                infoDrawContext.fillText(text, 120, 15);
+            // if we are starting to the left of the first data-point then use the first one
+            if (ind1 < 0) ind1 = 0;
 
-                // find the data index that corresponds to the selected times
-                let ind1 = Math.floor(dat1[0] / plotThis.timePerSample);
-                let ind2 = Math.floor(dat2[0] / plotThis.timePerSample);
+            // if we are ending to the right of the last data-point then use the last one
+            if (ind2 >= calData[plotThis.sensorNum].length) ind2 = calData[plotThis.sensorNum].length - 1;
 
-                // if we are to the right of the last data-point then use the last one
-                if (ind1 >= calData[plotThis.sensorNum].length) ind1 = calData[plotThis.sensorNum].length - 1;
-
-                // if we are to the left of the first data-point then use the last one
-                if (ind2 < 0) ind2 = 0;
-
-                // highlight the selected region for each visible trace
-                let zero1 = plotThis.viewStack[0].dataToPixel(dat1[0], 0);
-                let zero2 = plotThis.viewStack[0].dataToPixel(dat2[0], 0);
-                for (let tr = 1; tr < plotThis.nTraces + 1; tr++) {
-                    if (plotThis.traceEnabledList[tr - 1]) {
-                        //infoDrawContext.strokeStyle = plotThis.layerColorList[tr];
-                        infoDrawContext.strokeStyle = 'rgba(0,0,0,0)'; // transparent outline (cluge)
-                        infoDrawContext.lineWidth = 0;
-                        infoDrawContext.beginPath();
-                        infoDrawContext.moveTo(zero1[0], zero1[1]);
-                        for (let ind = ind1; ind < ind2 + 1; ind++) {
-                            let t = calData[plotThis.sensorNum][ind][0];
-                            let y = calData[plotThis.sensorNum][ind][tr];
-                            let p = plotThis.viewStack[0].dataToPixel(t,y);
-                            infoDrawContext.lineTo(p[0], p[1]);
-                        }
-                        infoDrawContext.lineTo(zero2[0], zero2[1]);
-                        infoDrawContext.fillStyle = plotThis.layerColorList[tr] + '3f';
-
-                        infoDrawContext.closePath();
-                        infoDrawContext.stroke();
-                        infoDrawContext.fill();
-    
+            // highlight the selected region for each visible trace
+            let zero1 = plotThis.viewStack[0].dataToPixel(tStart, 0);
+            let zero2 = plotThis.viewStack[0].dataToPixel(tStop, 0);
+            for (let tr = 1; tr < plotThis.nTraces + 1; tr++) {
+                if (plotThis.traceEnabledList[tr - 1]) {
+                    infoDrawContext.beginPath();
+                    infoDrawContext.moveTo(zero1[0], zero1[1]);
+                    for (let ind = ind1; ind < ind2; ind++) {
+                        let t = calData[plotThis.sensorNum][ind][0];
+                        let y = calData[plotThis.sensorNum][ind][tr];
+                        let p = plotThis.viewStack[0].dataToPixel(t, y);
+                        infoDrawContext.lineTo(p[0], p[1]);
                     }
-                }
+                    infoDrawContext.lineTo(zero2[0], zero2[1]);
+                    infoDrawContext.closePath();
+                    infoDrawContext.fillStyle = plotThis.layerColorList[tr] + '3f';
+                    infoDrawContext.fill();
 
+                }
             }
+
+
 
         }
 
@@ -795,6 +805,12 @@ class PlotIOLab {
 
             // find the data index that corresponds to the selected time
             let ind = Math.floor(commonCursorTime / plotThis.timePerSample);
+
+            // if we are past the first data-point then use the first one
+            if (ind < 0) {
+                ind = 0;
+                commonCursorTime = calData[plotThis.sensorNum][ind][0];
+            }
 
             // if we are past the last data-point then use the last one
             if (ind >= calData[plotThis.sensorNum].length) {
