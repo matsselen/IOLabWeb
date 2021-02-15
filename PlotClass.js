@@ -726,16 +726,51 @@ class PlotIOLab {
             // if we are analyzing and the mouse has moved horizontally from its starting point
             if (analyzing && (x1 != x2)) {
 
-                let pix1 = plotThis.viewStack[0].pixelToData(x1, y1);
-                let pix2 = plotThis.viewStack[0].pixelToData(x2, y2);
+                let dat1 = plotThis.viewStack[0].pixelToData(x1, y1);
+                let dat2 = plotThis.viewStack[0].pixelToData(x2, y2);
 
-                plotThis.drawVline(infoDrawContext, plotThis.viewStack[0], pix1[0], 2, '#000000');
-                plotThis.drawVline(infoDrawContext, plotThis.viewStack[0], pix2[0], 2, '#000000');
+                plotThis.drawVline(infoDrawContext, plotThis.viewStack[0], dat1[0], 2, '#000000');
+                plotThis.drawVline(infoDrawContext, plotThis.viewStack[0], dat2[0], 2, '#000000');
 
                 infoDrawContext.fillStyle = '#000000';
-                let text = "∆t = " + Math.abs(pix2[0] - pix1[0]).toFixed(3) + "s";
+                let text = "∆t = " + Math.abs(dat2[0] - dat1[0]).toFixed(3) + "s";
                 infoDrawContext.fillText(text, 120, 15);
 
+                // find the data index that corresponds to the selected times
+                let ind1 = Math.floor(dat1[0] / plotThis.timePerSample);
+                let ind2 = Math.floor(dat2[0] / plotThis.timePerSample);
+
+                // if we are to the right of the last data-point then use the last one
+                if (ind1 >= calData[plotThis.sensorNum].length) ind1 = calData[plotThis.sensorNum].length - 1;
+
+                // if we are to the left of the first data-point then use the last one
+                if (ind2 < 0) ind2 = 0;
+
+                // highlight the selected region for each visible trace
+                let zero1 = plotThis.viewStack[0].dataToPixel(dat1[0], 0);
+                let zero2 = plotThis.viewStack[0].dataToPixel(dat2[0], 0);
+                for (let tr = 1; tr < plotThis.nTraces + 1; tr++) {
+                    if (plotThis.traceEnabledList[tr - 1]) {
+                        //infoDrawContext.strokeStyle = plotThis.layerColorList[tr];
+                        infoDrawContext.strokeStyle = 'rgba(0,0,0,0)'; // transparent outline (cluge)
+                        infoDrawContext.lineWidth = 0;
+                        infoDrawContext.beginPath();
+                        infoDrawContext.moveTo(zero1[0], zero1[1]);
+                        for (let ind = ind1; ind < ind2 + 1; ind++) {
+                            let t = calData[plotThis.sensorNum][ind][0];
+                            let y = calData[plotThis.sensorNum][ind][tr];
+                            let p = plotThis.viewStack[0].dataToPixel(t,y);
+                            infoDrawContext.lineTo(p[0], p[1]);
+                        }
+                        infoDrawContext.lineTo(zero2[0], zero2[1]);
+                        infoDrawContext.fillStyle = plotThis.layerColorList[tr] + '3f';
+
+                        infoDrawContext.closePath();
+                        infoDrawContext.stroke();
+                        infoDrawContext.fill();
+    
+                    }
+                }
 
             }
 
