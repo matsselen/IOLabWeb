@@ -672,6 +672,10 @@ class PlotIOLab {
                 plotThis.drawPlotAxes(plotThis.viewStack[0]);
                 plotThis.plotStaticData();
             }
+
+            if (analyzing) {
+                analyzing = false;
+            }
         }
 
         // when the mouse moves over the chart
@@ -696,14 +700,45 @@ class PlotIOLab {
                 drawSelectionVector(mousePtrX, mousePtrY, e.offsetX, e.offsetY);
             }
 
+            // draw displacement vector if we are panning
+            if (analyzing) {
+                drawSelectionAnalysis(mousePtrX, mousePtrY, e.offsetX, e.offsetY);
+            }
+
         }
 
-        // when the mouse leaves the chart
+        // clean up when the mouse leaves the chart
         function mouseOut(e) {
             zooming = false;
             panning = false;
             analyzing = false;
-            drawCursorInfo(e, "clear");
+            infoDrawContext.clearRect(0, 0, plotThis.baseElement.width + 2, plotThis.baseElement.height + 2);
+            ctlDrawContext.clearRect(0, 0, plotThis.baseElement.width + 2, plotThis.baseElement.height + 2);
+        }
+
+        // use when selecting a rectangle for some control function like zooming
+        function drawSelectionAnalysis(x1, y1, x2, y2) {
+
+
+            // start by clearing the rectangle
+            ctlDrawContext.clearRect(0, 0, plotThis.baseElement.width + 2, plotThis.baseElement.height + 2);
+
+            // if we are analyzing and the mouse has moved horizontally from its starting point
+            if (analyzing && (x1 != x2)) {
+
+                let pix1 = plotThis.viewStack[0].pixelToData(x1, y1);
+                let pix2 = plotThis.viewStack[0].pixelToData(x2, y2);
+
+                plotThis.drawVline(infoDrawContext, plotThis.viewStack[0], pix1[0], 2, '#000000');
+                plotThis.drawVline(infoDrawContext, plotThis.viewStack[0], pix2[0], 2, '#000000');
+
+                infoDrawContext.fillStyle = '#000000';
+                let text = "∆t = " + Math.abs(pix2[0] - pix1[0]).toFixed(3) + "s";
+                infoDrawContext.fillText(text, 120, 15);
+
+
+            }
+
         }
 
         // display vertical line at cursor and data for this time
@@ -717,9 +752,6 @@ class PlotIOLab {
             let mouseData = plotThis.viewStack[0].pixelToData(e.offsetX, e.offsetY);
             commonCursorTime = mouseData[0];
 
-            // draw a vertical line at mouse location
-            plotThis.drawVline(infoDrawContext, plotThis.viewStack[0], commonCursorTime, 1, '#000000');
-
             // if timePerSample is not initalized then something is wrong
             if (plotThis.timePerSample == 0) {
                 console.log("In drawTimeAndData(): timePerSample in not set - Mats screwed up")
@@ -729,25 +761,47 @@ class PlotIOLab {
             // find the data index that corresponds to the selected time
             let ind = Math.floor(commonCursorTime / plotThis.timePerSample);
 
+            // if we are past the last data-point then use the last one
+            if (ind >= calData[plotThis.sensorNum].length) {
+                ind = calData[plotThis.sensorNum].length - 1;
+                commonCursorTime = calData[plotThis.sensorNum][ind][0];
+            }
 
-            // find the data value for each visible trace
+            // draw a vertical line at mouse location
+            plotThis.drawVline(infoDrawContext, plotThis.viewStack[0], commonCursorTime, 1, '#000000');
+
+
+            // put cursor time at top left corner of plot
+            infoDrawContext.font = "11px Arial";
+            infoDrawContext.fillStyle = '#000000';
+            let text = "t = " + commonCursorTime.toFixed(3) + "s";
+            infoDrawContext.fillText(text, 50, 15);
+
+
+            // find the data value at the cursor for each visible trace
+            let traceVoffset = 15;
             for (let tr = 1; tr < plotThis.nTraces + 1; tr++) {
                 if (plotThis.traceEnabledList[tr - 1]) {
 
-                    let dataPix = plotThis.viewStack[0].dataToPixel(commonCursorTime, calData[plotThis.sensorNum][ind][tr]);
-                    infoDrawContext.strokeStyle = plotThis.layerColorList[tr];
+                    let currentCursorData = calData[plotThis.sensorNum][ind][tr];
+                    let dataPix = plotThis.viewStack[0].dataToPixel(commonCursorTime, currentCursorData);
+                    //infoDrawContext.strokeStyle = plotThis.layerColorList[tr];
+                    infoDrawContext.strokeStyle = 'rgba(0,0,0,0)'; // transparent circle outline (cluge)
                     infoDrawContext.lineWidth = 0;
                     infoDrawContext.beginPath();
                     infoDrawContext.arc(dataPix[0], dataPix[1], 4, 0, 2 * Math.PI);
-                    infoDrawContext.fillStyle = plotThis.layerColorList[tr] + '7f';
+                    infoDrawContext.fillStyle = plotThis.layerColorList[tr] + '7f'; //fill-alpha = 0.5
                     infoDrawContext.fill();
                     infoDrawContext.stroke();
+
+                    // put data numbers at top left corner of plot
+                    infoDrawContext.fillStyle = plotThis.layerColorList[tr]; //fill-alpha = 1.0
+                    let text = plotThis.axisTitles[tr - 1] + " = " + currentCursorData.toFixed(3) + " " + plotThis.unit;
+                    traceVoffset += 11;
+                    infoDrawContext.fillText(text, 50, traceVoffset);
+
                 }
             }
-
-            infoDrawContext.font = "10px Arial";
-            let text = "(" + mouseData[0].toFixed(3) + "," + mouseData[1].toFixed(3) + ")";
-            infoDrawContext.fillText(text, e.offsetX + 1, e.offsetY - 1);
 
         }
 
