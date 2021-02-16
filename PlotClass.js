@@ -90,7 +90,7 @@ class PlotSet {
             this.parentElement.appendChild(sensDiv);
 
             //adjust the height of the charts based on the number of charts
-            let chartHeight = 200;
+            let chartHeight = 250;
 
             // create an IOLabPlot object on each plot element
             this.plotObjectList.push(new PlotIOLab(this, this.sensorNum, sensorID, chartHeight));
@@ -565,6 +565,7 @@ class PlotIOLab {
             } else {
                 document.getElementById(this.canvaslayer).style.display = "none";
             }
+            drawSelectionAnalysis();
 
             if (dbgInfo) {
                 console.log("In Plot::selectLayer() ", this.id, this.canvaslayer, this.checked, plotThis.traceEnabledList);
@@ -743,31 +744,31 @@ class PlotIOLab {
 
         }
 
-        function panViewport(x1, y1, x2, y2) {
-            if (x1 != x2 && y2 != y2) {
+        // function panViewport(x1, y1, x2, y2) {
+        //     if (x1 != x2 && y2 != y2) {
 
-                // // clear the control layer 
-                // ctlDrawContext.clearRect(0, 0, plotThis.baseElement.width + 2, plotThis.baseElement.height + 2);
+        //         // // clear the control layer 
+        //         // ctlDrawContext.clearRect(0, 0, plotThis.baseElement.width + 2, plotThis.baseElement.height + 2);
 
-                // find out where we started and ended the selection
-                let p1 = plotThis.viewStack[0].pixelToData(x1, y1);
-                let p2 = plotThis.viewStack[0].pixelToData(x2, y2);
+        //         // find out where we started and ended the selection
+        //         let p1 = plotThis.viewStack[0].pixelToData(x1, y1);
+        //         let p2 = plotThis.viewStack[0].pixelToData(x2, y2);
 
-                // calculte the new viewport boundaries
-                let xMin = plotThis.viewStack[0].xMin + p2[0] - p1[0];
-                let xMax = plotThis.viewStack[0].xMax + p2[0] - p1[0];
-                let yMin = plotThis.viewStack[0].yMin + p2[1] - p1[1];
-                let yMax = plotThis.viewStack[0].yMax + p2[1] - p1[1];
+        //         // calculte the new viewport boundaries
+        //         let xMin = plotThis.viewStack[0].xMin + p2[0] - p1[0];
+        //         let xMax = plotThis.viewStack[0].xMax + p2[0] - p1[0];
+        //         let yMin = plotThis.viewStack[0].yMin + p2[1] - p1[1];
+        //         let yMax = plotThis.viewStack[0].yMax + p2[1] - p1[1];
 
-                // create a new viewport       
-                let selectedView = new ViewPort(xMin, xMax, yMin, yMax, plotThis.baseElement);
+        //         // create a new viewport       
+        //         let selectedView = new ViewPort(xMin, xMax, yMin, yMax, plotThis.baseElement);
 
-                // push the new viweport onto the bottom of the stack. 
-                plotThis.viewStack.unshift(selectedView);
+        //         // push the new viweport onto the bottom of the stack. 
+        //         plotThis.viewStack.unshift(selectedView);
 
-            }
+        //     }
 
-        }
+        // }
 
         // clean up when the mouse leaves the chart
         function mouseOut(e) {
@@ -800,7 +801,7 @@ class PlotIOLab {
             analysisDrawContext.fillStyle = '#000000';
             analysisDrawContext.font = "12px Arial";
             let text = "∆t = " + Math.abs(tStop - tStart).toFixed(3) + "s";
-            analysisDrawContext.fillText(text, 120, 15);
+            analysisDrawContext.fillText(text, 200, 15);
 
             // find the data index that corresponds to the selected times
             let ind1 = Math.floor(tStart / plotThis.timePerSample);
@@ -827,7 +828,7 @@ class PlotIOLab {
                     analysisDrawContext.fillStyle = plotThis.layerColorList[tr];
                     let text = result.toString();
                     traceVoffset += 12;
-                    analysisDrawContext.fillText(text, 250, traceVoffset);
+                    analysisDrawContext.fillText(text, 200, traceVoffset);
 
                     analysisDrawContext.beginPath();
                     analysisDrawContext.moveTo(zero1[0], zero1[1]);
@@ -936,38 +937,38 @@ class PlotIOLab {
 
         }
 
-        // use when selecting a vector for some control function like panning
-        function drawSelectionVector(x1, y1, x2, y2) {
+        // // use when selecting a vector for some control function like panning
+        // function drawSelectionVector(x1, y1, x2, y2) {
 
-            // start by clearing the rectangle
-            ctlDrawContext.clearRect(0, 0, plotThis.baseElement.width + 2, plotThis.baseElement.height + 2);
+        //     // start by clearing the rectangle
+        //     ctlDrawContext.clearRect(0, 0, plotThis.baseElement.width + 2, plotThis.baseElement.height + 2);
 
-            // draw a new vector unless points 1 and 2 are the same
-            if (x1 != x2 && y1 != y2) {
+        //     // draw a new vector unless points 1 and 2 are the same
+        //     if (x1 != x2 && y1 != y2) {
 
-                // draw a line between the starting and ending points
-                ctlDrawContext.strokeStyle = '#000000';
-                ctlDrawContext.lineWidth = 1;
-                ctlDrawContext.beginPath();
-                ctlDrawContext.moveTo(x1, y1);
-                ctlDrawContext.lineTo(x2, y2);
-                ctlDrawContext.stroke();
+        //         // draw a line between the starting and ending points
+        //         ctlDrawContext.strokeStyle = '#000000';
+        //         ctlDrawContext.lineWidth = 1;
+        //         ctlDrawContext.beginPath();
+        //         ctlDrawContext.moveTo(x1, y1);
+        //         ctlDrawContext.lineTo(x2, y2);
+        //         ctlDrawContext.stroke();
 
-                // draw a + at each end of the line
-                ctlDrawContext.lineWidth = 2;
-                ctlDrawContext.beginPath();
-                ctlDrawContext.moveTo(x1 - 5, y1);
-                ctlDrawContext.lineTo(x1 + 5, y1);
-                ctlDrawContext.moveTo(x1, y1 - 5);
-                ctlDrawContext.lineTo(x1, y1 + 5);
-                ctlDrawContext.moveTo(x2 - 5, y2);
-                ctlDrawContext.lineTo(x2 + 5, y2);
-                ctlDrawContext.moveTo(x2, y2 - 5);
-                ctlDrawContext.lineTo(x2, y2 + 5);
-                ctlDrawContext.stroke();
+        //         // draw a + at each end of the line
+        //         ctlDrawContext.lineWidth = 2;
+        //         ctlDrawContext.beginPath();
+        //         ctlDrawContext.moveTo(x1 - 5, y1);
+        //         ctlDrawContext.lineTo(x1 + 5, y1);
+        //         ctlDrawContext.moveTo(x1, y1 - 5);
+        //         ctlDrawContext.lineTo(x1, y1 + 5);
+        //         ctlDrawContext.moveTo(x2 - 5, y2);
+        //         ctlDrawContext.lineTo(x2 + 5, y2);
+        //         ctlDrawContext.moveTo(x2, y2 - 5);
+        //         ctlDrawContext.lineTo(x2, y2 + 5);
+        //         ctlDrawContext.stroke();
 
-            }
-        }
+        //     }
+        // }
 
         // use when selecting a rectangle for some control function like zooming
         function drawSelectionRect(x1, y1, x2, y2) {
