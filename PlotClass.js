@@ -260,6 +260,18 @@ class ViewPort {
     //=========================================================================================
     //======================ViewPort Methods===================================================
 
+    // shift the current viewport by (dX, dY) pixels
+    shiftView(dxPix, dyPix) {
+
+        let dXdata = dxPix * this.xSpan / this.cWidth;
+        let dYdata = -dyPix * this.ySpan / this.cHeight;
+
+        this.xMin += dXdata;
+        this.xMax += dXdata;
+        this.yMin += dYdata;
+        this.yMax += dYdata;
+    }
+
     // pick the optimum values for data-axis labels 
     // (basically some multiple of 1, 2, 5, 10 so that we get between 5 and 15 labels )
     pickDataAxis() {
@@ -565,6 +577,7 @@ class PlotIOLab {
         let panning = false;
         let analyzing = false;
         let mousePtrX, mousePtrY;
+        let mousePtrXlast, mousePtrYlast;
         let analTime1 = 0;
         let analTime2 = 0;
         let tStart = 0;
@@ -579,6 +592,7 @@ class PlotIOLab {
                 }
                 // scale x-axis and plot all data
                 plotThis.displayStaticData();
+                drawSelectionAnalysis();
             }
             if (plotThis.thisParent.mouseMode == "anal") {
                 analTime1 = 0;
@@ -600,6 +614,16 @@ class PlotIOLab {
                 panning = true;
                 mousePtrX = e.offsetX;
                 mousePtrY = e.offsetY;
+                mousePtrXlast = e.offsetX;
+                mousePtrYlast = e.offsetY;
+                // make a copy of the current viewport and put it n the stack       
+                let copyView = new ViewPort(plotThis.viewStack[0].xMin, plotThis.viewStack[0].xMax,
+                    plotThis.viewStack[0].yMin, plotThis.viewStack[0].yMax, plotThis.viewStack[0].canvasElement);
+
+                // push the new viweport onto the bottom of the stack. 
+                plotThis.viewStack.unshift(copyView);
+
+
             }
 
             if (plotThis.thisParent.mouseMode == "anal") {
@@ -616,36 +640,17 @@ class PlotIOLab {
             if (panning) {
                 panning = false;
 
-                if (mousePtrX != e.offsetX && mousePtrY != e.offsetY) {
-
-                    // clear the control layer 
-                    ctlDrawContext.clearRect(0, 0, plotThis.baseElement.width + 2, plotThis.baseElement.height + 2);
-
-                    // find out where we started and ended the selection
-                    let p1 = plotThis.viewStack[0].pixelToData(e.offsetX, e.offsetY);
-                    let p2 = plotThis.viewStack[0].pixelToData(mousePtrX, mousePtrY);
-
-                    // calculte the new viewport boundaries
-                    let xMin = plotThis.viewStack[0].xMin + p2[0] - p1[0];
-                    let xMax = plotThis.viewStack[0].xMax + p2[0] - p1[0];
-                    let yMin = plotThis.viewStack[0].yMin + p2[1] - p1[1];
-                    let yMax = plotThis.viewStack[0].yMax + p2[1] - p1[1];
-
-                    // create a new viewport       
-                    let selectedView = new ViewPort(xMin, xMax, yMin, yMax, plotThis.baseElement);
-
-                    // push the new viweport onto the bottom of the stack. 
-                    plotThis.viewStack.unshift(selectedView);
-
-
-                } else {
+                if (mousePtrX == e.offsetX && mousePtrY == e.offsetY) {
                     // remove the current viweport from bottom of the stack and go back to the previous one. 
+                    // we do this twice since the mouse-down event created a copy of the previos view
                     // (though dont remove the last one - thats the DAQ view)
                     if (plotThis.viewStack.length > 1) {
                         plotThis.viewStack.shift();
                     }
+                    if (plotThis.viewStack.length > 1) {
+                        plotThis.viewStack.shift();
+                    }
                 }
-
                 // draw with the panned axes
                 plotThis.drawPlotAxes(plotThis.viewStack[0]);
                 plotThis.plotStaticData();
@@ -655,7 +660,7 @@ class PlotIOLab {
             if (zooming) {
                 zooming = false;
 
-                if (mousePtrX != e.offsetX && mousePtrY != e.offsetY) {
+                if (mousePtrX != e.offsetX || mousePtrY != e.offsetY) {
 
                     // clear the control layer 
                     ctlDrawContext.clearRect(0, 0, plotThis.baseElement.width + 2, plotThis.baseElement.height + 2);
@@ -692,7 +697,7 @@ class PlotIOLab {
 
             if (analyzing) {
                 analyzing = false;
-                if ((mousePtrX != e.offsetX) && (mousePtrY != e.offsetY)) {
+                if ((mousePtrX != e.offsetX) || (mousePtrY != e.offsetY)) {
                     analTime2 = commonCursorTime;
                     drawSelectionAnalysis();
                 }
@@ -718,13 +723,48 @@ class PlotIOLab {
 
             // draw displacement vector if we are panning
             if (panning) {
-                drawSelectionVector(mousePtrX, mousePtrY, e.offsetX, e.offsetY);
+                //drawSelectionVector(mousePtrX, mousePtrY, e.offsetX, e.offsetY);
+                //panViewport(e.offsetX, e.offsetY, mousePtrX, mousePtrY);
+                plotThis.viewStack[0].shiftView(mousePtrXlast - e.offsetX, mousePtrYlast - e.offsetY);
+                mousePtrXlast = e.offsetX;
+                mousePtrYlast = e.offsetY;
+
+                // draw the panned chart
+                plotThis.drawPlotAxes(plotThis.viewStack[0]);
+                plotThis.plotStaticData();
+                drawSelectionAnalysis();
             }
 
             // draw displacement vector if we are panning
             if (analyzing) {
                 analTime2 = commonCursorTime;
                 drawSelectionAnalysis();
+            }
+
+        }
+
+        function panViewport(x1, y1, x2, y2) {
+            if (x1 != x2 && y2 != y2) {
+
+                // // clear the control layer 
+                // ctlDrawContext.clearRect(0, 0, plotThis.baseElement.width + 2, plotThis.baseElement.height + 2);
+
+                // find out where we started and ended the selection
+                let p1 = plotThis.viewStack[0].pixelToData(x1, y1);
+                let p2 = plotThis.viewStack[0].pixelToData(x2, y2);
+
+                // calculte the new viewport boundaries
+                let xMin = plotThis.viewStack[0].xMin + p2[0] - p1[0];
+                let xMax = plotThis.viewStack[0].xMax + p2[0] - p1[0];
+                let yMin = plotThis.viewStack[0].yMin + p2[1] - p1[1];
+                let yMax = plotThis.viewStack[0].yMax + p2[1] - p1[1];
+
+                // create a new viewport       
+                let selectedView = new ViewPort(xMin, xMax, yMin, yMax, plotThis.baseElement);
+
+                // push the new viweport onto the bottom of the stack. 
+                plotThis.viewStack.unshift(selectedView);
+
             }
 
         }
@@ -787,7 +827,7 @@ class PlotIOLab {
                     analysisDrawContext.fillStyle = plotThis.layerColorList[tr];
                     let text = result.toString();
                     traceVoffset += 12;
-                    analysisDrawContext.fillText(text, 250, traceVoffset);                    
+                    analysisDrawContext.fillText(text, 250, traceVoffset);
 
                     analysisDrawContext.beginPath();
                     analysisDrawContext.moveTo(zero1[0], zero1[1]);
@@ -1155,15 +1195,21 @@ class PlotIOLab {
         let inPort = false;
         let pix = [];
 
+        // only plot the visible part
+        let ind1 = Math.floor(this.viewStack[0].xMin / this.timePerSample);
+        if (ind1 < 0) ind1 = 0;
+        let ind2 = Math.floor(this.viewStack[0].xMax / this.timePerSample);
+        if (ind2 > calData[sensorID].length) ind2 = calData[sensorID].length;
+
         // loop over data
-        for (let ind = 0; ind < calData[sensorID].length; ind++) {
+        for (let ind = ind1; ind < ind2; ind++) {
 
             let tplot = calData[sensorID][ind][0]; // the current time coordinate
 
             // don't bother plottint to the right of the viewport
-            if (tplot > this.viewStack[0].xMax) {
-                break;
-            }
+            // if (tplot > this.viewStack[0].xMax) {
+            //     break;
+            // }
 
             // find the first dataploint at the leftmost edge of the viewport 
             // and start the line these
