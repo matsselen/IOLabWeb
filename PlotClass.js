@@ -773,10 +773,22 @@ class PlotIOLab {
             if (ind2 >= calData[plotThis.sensorNum].length) ind2 = calData[plotThis.sensorNum].length - 1;
 
             // highlight the selected region for each visible trace
+            let traceVoffset = 15;
             let zero1 = plotThis.viewStack[0].dataToPixel(tStart, 0);
             let zero2 = plotThis.viewStack[0].dataToPixel(tStop, 0);
             for (let tr = 1; tr < plotThis.nTraces + 1; tr++) {
                 if (plotThis.traceEnabledList[tr - 1]) {
+
+                    // calculate statistics
+                    // [mean, sigma, slope, area, n, rsq] 
+                    let result = plotThis.analyzeData(plotThis.sensorNum, tr, ind1, ind2);
+
+                    // put data numbers at top left corner of plot
+                    analysisDrawContext.fillStyle = plotThis.layerColorList[tr];
+                    let text = result.toString();
+                    traceVoffset += 12;
+                    analysisDrawContext.fillText(text, 250, traceVoffset);                    
+
                     analysisDrawContext.beginPath();
                     analysisDrawContext.moveTo(zero1[0], zero1[1]);
                     for (let ind = ind1; ind < ind2; ind++) {
@@ -791,6 +803,7 @@ class PlotIOLab {
                     analysisDrawContext.fill();
                 }
             }
+
         }
 
         // display vertical line at cursor and data for this time
@@ -936,6 +949,20 @@ class PlotIOLab {
     } // constructor
 
     //===============================IOLabPlot Methods========================================
+
+    // analyze selected data
+    analyzeData(sensor, trace, startIndex, stopIndex) {
+
+        let mean = sensor;
+        let sigma = trace;
+        let slope = startIndex;
+        let area = stopIndex;
+        let n = stopIndex - startIndex;
+        let rsq = 1 / n;
+
+        return [mean, sigma, slope, area, n, rsq];
+    }
+
     // clean up the DOM
     reset() {
         while (this.parentElement.childNodes.length > 0) {
