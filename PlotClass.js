@@ -741,58 +741,56 @@ class PlotIOLab {
         // use when selecting a rectangle for some control function like zooming
         function drawSelectionAnalysis() {
 
-            //if (analyzing) {
+            if (analTime1 <= analTime2) {
+                tStart = analTime1;
+                tStop = analTime2;
+            } else {
+                tStart = analTime2;
+                tStop = analTime1;
+            }
 
-                if (analTime1 <= analTime2) {
-                    tStart = analTime1;
-                    tStop = analTime2;
-                } else {
-                    tStart = analTime2;
-                    tStop = analTime1;
-                }
+            // start by clearing the rectangle
+            analysisDrawContext.clearRect(0, 0, plotThis.baseElement.width + 2, plotThis.baseElement.height + 2);
 
-                // start by clearing the rectangle
-                analysisDrawContext.clearRect(0, 0, plotThis.baseElement.width + 2, plotThis.baseElement.height + 2);
+            if (tStop == tStart) return;
 
-                if (tStop == tStart) return;
+            plotThis.drawVline(analysisDrawContext, plotThis.viewStack[0], tStart, 1, '#000000');
+            plotThis.drawVline(analysisDrawContext, plotThis.viewStack[0], tStop, 1, '#000000');
 
-                plotThis.drawVline(analysisDrawContext, plotThis.viewStack[0], tStart, 2, '#000000');
-                plotThis.drawVline(analysisDrawContext, plotThis.viewStack[0], tStop, 2, '#000000');
+            analysisDrawContext.fillStyle = '#000000';
+            analysisDrawContext.font = "12px Arial";
+            let text = "∆t = " + Math.abs(tStop - tStart).toFixed(3) + "s";
+            analysisDrawContext.fillText(text, 120, 15);
 
-                analysisDrawContext.fillStyle = '#000000';
-                let text = "∆t = " + Math.abs(tStop - tStart).toFixed(3) + "s";
-                analysisDrawContext.fillText(text, 120, 15);
+            // find the data index that corresponds to the selected times
+            let ind1 = Math.floor(tStart / plotThis.timePerSample);
+            let ind2 = Math.floor(tStop / plotThis.timePerSample);
 
-                // find the data index that corresponds to the selected times
-                let ind1 = Math.floor(tStart / plotThis.timePerSample);
-                let ind2 = Math.floor(tStop / plotThis.timePerSample);
+            // if we are starting to the left of the first data-point then use the first one
+            if (ind1 < 0) ind1 = 0;
 
-                // if we are starting to the left of the first data-point then use the first one
-                if (ind1 < 0) ind1 = 0;
+            // if we are ending to the right of the last data-point then use the last one
+            if (ind2 >= calData[plotThis.sensorNum].length) ind2 = calData[plotThis.sensorNum].length - 1;
 
-                // if we are ending to the right of the last data-point then use the last one
-                if (ind2 >= calData[plotThis.sensorNum].length) ind2 = calData[plotThis.sensorNum].length - 1;
-
-                // highlight the selected region for each visible trace
-                let zero1 = plotThis.viewStack[0].dataToPixel(tStart, 0);
-                let zero2 = plotThis.viewStack[0].dataToPixel(tStop, 0);
-                for (let tr = 1; tr < plotThis.nTraces + 1; tr++) {
-                    if (plotThis.traceEnabledList[tr - 1]) {
-                        analysisDrawContext.beginPath();
-                        analysisDrawContext.moveTo(zero1[0], zero1[1]);
-                        for (let ind = ind1; ind < ind2; ind++) {
-                            let t = calData[plotThis.sensorNum][ind][0];
-                            let y = calData[plotThis.sensorNum][ind][tr];
-                            let p = plotThis.viewStack[0].dataToPixel(t, y);
-                            analysisDrawContext.lineTo(p[0], p[1]);
-                        }
-                        analysisDrawContext.lineTo(zero2[0], zero2[1]);
-                        analysisDrawContext.closePath();
-                        analysisDrawContext.fillStyle = plotThis.layerColorList[tr] + '3f';
-                        analysisDrawContext.fill();
+            // highlight the selected region for each visible trace
+            let zero1 = plotThis.viewStack[0].dataToPixel(tStart, 0);
+            let zero2 = plotThis.viewStack[0].dataToPixel(tStop, 0);
+            for (let tr = 1; tr < plotThis.nTraces + 1; tr++) {
+                if (plotThis.traceEnabledList[tr - 1]) {
+                    analysisDrawContext.beginPath();
+                    analysisDrawContext.moveTo(zero1[0], zero1[1]);
+                    for (let ind = ind1; ind < ind2; ind++) {
+                        let t = calData[plotThis.sensorNum][ind][0];
+                        let y = calData[plotThis.sensorNum][ind][tr];
+                        let p = plotThis.viewStack[0].dataToPixel(t, y);
+                        analysisDrawContext.lineTo(p[0], p[1]);
                     }
+                    analysisDrawContext.lineTo(zero2[0], zero2[1]);
+                    analysisDrawContext.closePath();
+                    analysisDrawContext.fillStyle = plotThis.layerColorList[tr] + '3f';
+                    analysisDrawContext.fill();
                 }
-            //}
+            }
         }
 
         // display vertical line at cursor and data for this time
@@ -832,7 +830,7 @@ class PlotIOLab {
 
 
             // put cursor time at top left corner of plot
-            infoDrawContext.font = "11px Arial";
+            infoDrawContext.font = "12px Arial";
             infoDrawContext.fillStyle = '#000000';
             let text = "t = " + commonCursorTime.toFixed(3) + "s";
             infoDrawContext.fillText(text, 50, 15);
@@ -857,7 +855,7 @@ class PlotIOLab {
                     // put data numbers at top left corner of plot
                     infoDrawContext.fillStyle = plotThis.layerColorList[tr]; //fill-alpha = 1.0
                     let text = plotThis.axisTitles[tr - 1] + " = " + currentCursorData.toFixed(3) + " " + plotThis.unit;
-                    traceVoffset += 11;
+                    traceVoffset += 12;
                     infoDrawContext.fillText(text, 50, traceVoffset);
 
                 }
