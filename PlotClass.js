@@ -807,7 +807,9 @@ class PlotIOLab {
 
                     // put data numbers at top left corner of plot
                     analysisDrawContext.fillStyle = plotThis.layerColorList[tr];
-                    let text = "u = "+st.mean.toFixed(4) + " s = "+st.sigma.toFixed(4) + " a = "+st.area.toFixed(2);
+                    let text = "n=" + st.N.toFixed(0) + " μ="+st.mean.toFixed(4) + " σ="+st.sigma.toFixed(4) + 
+                               " a=" + st.area.toFixed(2) + " m=" + st.slope.toFixed(2) + " b=" + st.intercept.toFixed(2) +
+                               " r=" + st.rxy.toFixed(3);
                     traceVoffset += 12;
                     analysisDrawContext.fillText(text, 200, traceVoffset);
 
