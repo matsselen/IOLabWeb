@@ -1,6 +1,8 @@
 // 
-// These classes are used for plotting
-//
+// This code are used for plotting
+//      class PlotSet
+//      class ViewPort
+//      class PlotIOLab
 
 'use strict';
 
@@ -794,7 +796,7 @@ class PlotIOLab {
 
                     // calculate statistics
                     // [mean, sigma, slope, area, n, rsq] 
-                    let result = plotThis.analyzeData(plotThis.sensorNum, tr, ind1, ind2);
+                    let result = plotThis.dataStats(plotThis.sensorNum, tr, ind1, ind2);
 
                     // put data numbers at top left corner of plot
                     analysisDrawContext.fillStyle = plotThis.layerColorList[tr];
@@ -931,7 +933,7 @@ class PlotIOLab {
     //===============================IOLabPlot Methods========================================
 
     // analyze selected data
-    analyzeData(sensor, trace, startIndex, stopIndex) {
+    dataStats(sensor, trace, startIndex, stopIndex) {
 
         let mean = sensor;
         let sigma = trace;
