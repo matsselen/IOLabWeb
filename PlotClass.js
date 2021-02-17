@@ -422,6 +422,7 @@ class PlotIOLab {
         this.layerElementList = [];     // save the element handles to save "getElementById" calls
         this.checkboxIDlist = [];       // a list of all checkbox ID's
         this.traceEnabledList = [];     // true if a trace layer is visible. Note: counts from 0.
+        this.analObjectList = [0];      // one analysis object for each trace (count from 1)
         this.chartLineWidth = 1;        // the width of the chart lines
 
         this.initialTimeSpan = 10;      // the initial time axis range (seconds)
@@ -495,7 +496,8 @@ class PlotIOLab {
             this.layerElementList.push(document.getElementById(layerID));
         }
 
-        // create a checkbox for each component of the sensor data
+        // create a checkbox for each component of the sensor data - and - 
+        // create a data analysis object for each component of the sensor data
         for (let ind = 0; ind < this.axisTitles.length; ind++) {
 
             // create the checkbox and set its attributes
@@ -522,6 +524,11 @@ class PlotIOLab {
             // add the labels and boxes to the control region
             controls.appendChild(axis);
             controls.appendChild(cb);
+
+            // create a data analysis object for each trace
+            let stat = new StatsIOLab (this.sensorNum, ind+1);
+            this.analObjectList.push(stat);
+
         }
         let txt = document.createTextNode("\xA0\xA0 vs. time (s)");
         controls.appendChild(txt);
@@ -795,12 +802,12 @@ class PlotIOLab {
                 if (plotThis.traceEnabledList[tr - 1]) {
 
                     // calculate statistics
-                    // [mean, sigma, slope, area, n, rsq] 
-                    let result = plotThis.dataStats(plotThis.sensorNum, tr, ind1, ind2);
+                    let st =  plotThis.analObjectList[tr];
+                    st.calcStats(ind1,ind2);
 
                     // put data numbers at top left corner of plot
                     analysisDrawContext.fillStyle = plotThis.layerColorList[tr];
-                    let text = result.toString();
+                    let text = "u = "+st.mean.toFixed(4) + " s = "+st.sigma.toFixed(4) + " a = "+st.area.toFixed(2);
                     traceVoffset += 12;
                     analysisDrawContext.fillText(text, 200, traceVoffset);
 
@@ -931,19 +938,6 @@ class PlotIOLab {
     } // constructor
 
     //===============================IOLabPlot Methods========================================
-
-    // analyze selected data
-    dataStats(sensor, trace, startIndex, stopIndex) {
-
-        let mean = sensor;
-        let sigma = trace;
-        let slope = startIndex;
-        let area = stopIndex;
-        let n = stopIndex - startIndex;
-        let rsq = 1 / n;
-
-        return [mean, sigma, slope, area, n, rsq];
-    }
 
     // clean up the DOM
     reset() {
