@@ -771,10 +771,26 @@ class PlotIOLab {
                 tStop = analTime1;
             }
 
-            // start by clearing the rectangle
-            analysisDrawContext.clearRect(0, 0, plotThis.baseElement.width + 2, plotThis.baseElement.height + 2);
+            // find the data indeces that corresponds to the selected times
+            //let ind1 = Math.floor(tStart / plotThis.timePerSample);
+            //let ind2 = Math.floor(tStop / plotThis.timePerSample);
+            let ind1 = Math.round(tStart / plotThis.timePerSample);
+            let ind2 = Math.round(tStop / plotThis.timePerSample);
+
+            // if we are starting to the left of the first data-point then use the first one
+            if (ind1 < 0) ind1 = 0;
+
+            // if we are ending to the right of the last data-point then use the last one
+            if (ind2 > calData[plotThis.sensorNum].length - 2) ind2 = calData[plotThis.sensorNum].length - 2;
+
+            // recalculate the start & stop times so that they correspond to actual samples
+            tStart = calData[plotThis.sensorNum][ind1][0];
+            tStop = calData[plotThis.sensorNum][ind2][0];
 
             if (tStop == tStart) return;
+
+            // clear old stuff
+            analysisDrawContext.clearRect(0, 0, plotThis.baseElement.width + 2, plotThis.baseElement.height + 2);
 
             plotThis.drawVline(analysisDrawContext, plotThis.viewStack[0], tStart, 1, '#000000');
             plotThis.drawVline(analysisDrawContext, plotThis.viewStack[0], tStop, 1, '#000000');
@@ -783,16 +799,6 @@ class PlotIOLab {
             analysisDrawContext.font = "12px Arial";
             let text = "∆t = " + Math.abs(tStop - tStart).toFixed(3) + "s";
             analysisDrawContext.fillText(text, 200, 15);
-
-            // find the data index that corresponds to the selected times
-            let ind1 = Math.floor(tStart / plotThis.timePerSample);
-            let ind2 = Math.floor(tStop / plotThis.timePerSample);
-
-            // if we are starting to the left of the first data-point then use the first one
-            if (ind1 < 0) ind1 = 0;
-
-            // if we are ending to the right of the last data-point then use the last one
-            if (ind2 >= calData[plotThis.sensorNum].length) ind2 = calData[plotThis.sensorNum].length - 1;
 
             // highlight the selected region for each visible trace
             let traceVoffset = 15;
@@ -807,7 +813,7 @@ class PlotIOLab {
 
                     // put data numbers at top left corner of plot
                     analysisDrawContext.fillStyle = plotThis.layerColorList[tr];
-                    let text = "n=" + st.N.toFixed(0) + " μ="+st.mean.toFixed(4) + " σ="+st.sigma.toFixed(4) + 
+                    let text = "n=" + st.n.toFixed(0) + " μ="+st.mean.toFixed(4) + " σ="+st.sigma.toFixed(4) + 
                                " a=" + st.area.toFixed(2) + " m=" + st.slope.toFixed(2) + " b=" + st.intercept.toFixed(2) +
                                " r=" + st.rxy.toFixed(3);
                     traceVoffset += 12;
@@ -815,7 +821,7 @@ class PlotIOLab {
 
                     analysisDrawContext.beginPath();
                     analysisDrawContext.moveTo(zero1[0], zero1[1]);
-                    for (let ind = ind1; ind < ind2; ind++) {
+                    for (let ind = ind1; ind <= ind2; ind++) {
                         let t = calData[plotThis.sensorNum][ind][0];
                         let y = calData[plotThis.sensorNum][ind][tr];
                         let p = plotThis.viewStack[0].dataToPixel(t, y);
@@ -848,7 +854,8 @@ class PlotIOLab {
             }
 
             // find the data index that corresponds to the selected time
-            let ind = Math.floor(commonCursorTime / plotThis.timePerSample);
+            //let ind = Math.floor(commonCursorTime / plotThis.timePerSample);
+            let ind = Math.round(commonCursorTime / plotThis.timePerSample);
 
             // if we are past the first data-point then use the first one
             if (ind < 0) {
@@ -862,14 +869,17 @@ class PlotIOLab {
                 commonCursorTime = calData[plotThis.sensorNum][ind][0];
             }
 
-            // draw a vertical line at mouse location
-            plotThis.drawVline(infoDrawContext, plotThis.viewStack[0], commonCursorTime, 1, '#000000');
+            // find the time of the current index (i.e. the actual sample time)
+            let plotCursorTime = calData[plotThis.sensorNum][ind][0];
+
+            // draw a vertical line at the sample time
+            plotThis.drawVline(infoDrawContext, plotThis.viewStack[0], plotCursorTime, 1, '#000000');
 
 
             // put cursor time at top left corner of plot
             infoDrawContext.font = "12px Arial";
             infoDrawContext.fillStyle = '#000000';
-            let text = "t = " + commonCursorTime.toFixed(3) + "s";
+            let text = "t = " + plotCursorTime.toFixed(3) + "s";
             infoDrawContext.fillText(text, 50, 15);
 
 
@@ -879,7 +889,7 @@ class PlotIOLab {
                 if (plotThis.traceEnabledList[tr - 1]) {
 
                     let currentCursorData = calData[plotThis.sensorNum][ind][tr];
-                    let dataPix = plotThis.viewStack[0].dataToPixel(commonCursorTime, currentCursorData);
+                    let dataPix = plotThis.viewStack[0].dataToPixel(plotCursorTime, currentCursorData);
                     //infoDrawContext.strokeStyle = plotThis.layerColorList[tr];
                     infoDrawContext.strokeStyle = 'rgba(0,0,0,0)'; // transparent circle outline (cluge)
                     infoDrawContext.lineWidth = 0;
@@ -913,9 +923,9 @@ class PlotIOLab {
             plotThis.drawVline(infoDrawContext, plotThis.viewStack[0], pix[0], 1, '#f2a241');
 
             infoDrawContext.font = "10px Arial";
-            let text = "(" + e.offsetX.toFixed() + "," + e.offsetY.toFixed() + ")";
-            infoDrawContext.fillText(text, e.offsetX + 1, e.offsetY - 11);
-            text = "(" + pix[0].toFixed(3) + "," + pix[1].toFixed(3) + ")";
+            //let text = "(" + e.offsetX.toFixed() + "," + e.offsetY.toFixed() + ")";
+            //infoDrawContext.fillText(text, e.offsetX + 1, e.offsetY - 11);
+            let text = "(" + pix[0].toFixed(3) + "," + pix[1].toFixed(3) + ")";
             infoDrawContext.fillText(text, e.offsetX + 1, e.offsetY - 1);
 
         }

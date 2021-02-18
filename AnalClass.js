@@ -16,7 +16,7 @@ class StatsIOLab {
         this.Sy = 0;
         this.Syy = 0;
         this.Sxy = 0;
-        this.N = 0;
+        this.n = 0;
 
         this.mean = 0;
         this.sigma = 0;
@@ -36,7 +36,7 @@ class StatsIOLab {
         if (indFirst != this.indFirstCalc || indLast != this.indLastCalc) {
             this.zeroSums();
 
-            for (let ind = indFirst; ind < indLast; ind++) {
+            for (let ind = indFirst; ind <= indLast; ind++) {
                 let x = calData[this.sensor][ind][0];
                 let y = calData[this.sensor][ind][this.trace];
                 this.Sx  += x;
@@ -44,14 +44,14 @@ class StatsIOLab {
                 this.Sy  += y;
                 this.Syy += y*y;
                 this.Sxy += x*y;
-                this.N   += 1;
+                this.n   += 1;
             }
 
-            let aveX  = this.Sx/this.N;
-            let aveXX = this.Sxx/this.N;
-            let aveY  = this.Sy/this.N;
-            let aveYY = this.Syy/this.N;
-            let aveXY = this.Sxy/this.N;
+            let aveX  = this.Sx/this.n;
+            let aveXX = this.Sxx/this.n;
+            let aveY  = this.Sy/this.n;
+            let aveYY = this.Syy/this.n;
+            let aveXY = this.Sxy/this.n;
 
             let sigX = Math.pow((aveXX - aveX*aveX),0.5);
             let sigY = Math.pow((aveYY - aveY*aveY),0.5);
@@ -78,6 +78,6 @@ class StatsIOLab {
         this.Sy = 0;
         this.Syy = 0;
         this.Sxy = 0;
-        this.N = 0;
+        this.n = 0;
     }
 }
