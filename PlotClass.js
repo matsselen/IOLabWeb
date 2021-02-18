@@ -295,8 +295,9 @@ class ViewPort {
                 if (this.ySpan / interval > minTicks) {
                     // this is a good interval so find lowest tick label
                     let start = parseInt(this.yMin / interval + 1) * interval;
-                    if (this.yMin < 0) start -= interval;
+                    if (this.yMin < -interval) start -= interval;
                     let precision = Math.max(exp - 2, 0);
+                    //console.log("start=",start," interval=",interval)
                     //if (dbgInfo) console.log("In pickDataAxis() base, exp, start, interval, precision ", base[b], exp, start, interval, precision);
                     return ([start, interval, precision]);
                 }
@@ -526,7 +527,7 @@ class PlotIOLab {
             controls.appendChild(cb);
 
             // create a data analysis object for each trace
-            let stat = new StatsIOLab (this.sensorNum, ind+1);
+            let stat = new StatsIOLab(this.sensorNum, ind + 1);
             this.analObjectList.push(stat);
 
         }
@@ -763,6 +764,7 @@ class PlotIOLab {
         // use when selecting a rectangle for some control function like zooming
         function drawSelectionAnalysis() {
 
+            // make sure tStart <= tStop
             if (analTime1 <= analTime2) {
                 tStart = analTime1;
                 tStop = analTime2;
@@ -771,69 +773,95 @@ class PlotIOLab {
                 tStop = analTime1;
             }
 
+            // the size of all layers is the same as the bottom one
+            let cWidth = plotThis.layerElementList[0].width;
+            let cHeight = plotThis.layerElementList[0].height;
+
             // find the data indeces that corresponds to the selected times
-            //let ind1 = Math.floor(tStart / plotThis.timePerSample);
-            //let ind2 = Math.floor(tStop / plotThis.timePerSample);
-            let ind1 = Math.round(tStart / plotThis.timePerSample);
-            let ind2 = Math.round(tStop / plotThis.timePerSample);
+            let indStart = Math.round(tStart / plotThis.timePerSample);
+            let indStop = Math.round(tStop / plotThis.timePerSample);
 
-            // if we are starting to the left of the first data-point then use the first one
-            if (ind1 < 0) ind1 = 0;
+            // make sure these correspond to existing array elements
+            if (indStart < 0) indStart = 0;
+            if (indStop > calData[plotThis.sensorNum].length - 1) indStop = calData[plotThis.sensorNum].length - 1;
 
-            // if we are ending to the right of the last data-point then use the last one
-            if (ind2 > calData[plotThis.sensorNum].length - 2) ind2 = calData[plotThis.sensorNum].length - 2;
+            // redo the start & stop times so that they correspond to actual samples
+            tStart = calData[plotThis.sensorNum][indStart][0];
+            tStop = calData[plotThis.sensorNum][indStop][0];
 
-            // recalculate the start & stop times so that they correspond to actual samples
-            tStart = calData[plotThis.sensorNum][ind1][0];
-            tStop = calData[plotThis.sensorNum][ind2][0];
+            // find the theoretical indeces for the left and right side of the viewport
+            let indLeftVP = Math.round(plotThis.viewStack[0].xMin / plotThis.timePerSample)-1;
+            let indRightVP = Math.round(plotThis.viewStack[0].xMax / plotThis.timePerSample);
 
-            if (tStop == tStart) return;
+            // find the actual left and right indeces if the region to highlight
+            // so we dont try to highlightoutside the chart and/or data boundaries
+            let indLeft = Math.max(indLeftVP, indStart);
+            let indRight = Math.min(indRightVP, indStop);
+
+            // find the actual times for the left and tight edges of the highlighting
+            let tLeft = calData[plotThis.sensorNum][indLeft][0];
+            let tRight = calData[plotThis.sensorNum][indRight][0];
 
             // clear old stuff
             analysisDrawContext.clearRect(0, 0, plotThis.baseElement.width + 2, plotThis.baseElement.height + 2);
 
-            plotThis.drawVline(analysisDrawContext, plotThis.viewStack[0], tStart, 1, '#000000');
-            plotThis.drawVline(analysisDrawContext, plotThis.viewStack[0], tStop, 1, '#000000');
+            // if there is no interval to draw then return
+            if (tStop == tStart) return;
+
+
+            if (tStart >= plotThis.viewStack[0].xMin && tStart <= plotThis.viewStack[0].xMax) {
+                plotThis.drawVline(analysisDrawContext, plotThis.viewStack[0], tStart, 1, '#000000');
+            }
+
+            if (tStop >= plotThis.viewStack[0].xMin && tStop <= plotThis.viewStack[0].xMax) {
+                plotThis.drawVline(analysisDrawContext, plotThis.viewStack[0], tStop, 1, '#000000');
+            }
 
             analysisDrawContext.fillStyle = '#000000';
             analysisDrawContext.font = "12px Arial";
             let text = "∆t = " + Math.abs(tStop - tStart).toFixed(3) + "s";
             analysisDrawContext.fillText(text, 200, 15);
 
+            // find the starting and ending 
+            let zeroLeft = plotThis.viewStack[0].dataToPixel(tLeft, 0);
+            let zeroRight = plotThis.viewStack[0].dataToPixel(tRight, 0);
+
             // highlight the selected region for each visible trace
             let traceVoffset = 15;
-            let zero1 = plotThis.viewStack[0].dataToPixel(tStart, 0);
-            let zero2 = plotThis.viewStack[0].dataToPixel(tStop, 0);
             for (let tr = 1; tr < plotThis.nTraces + 1; tr++) {
                 if (plotThis.traceEnabledList[tr - 1]) {
 
                     // calculate statistics
-                    let st =  plotThis.analObjectList[tr];
-                    st.calcStats(ind1,ind2);
+                    let st = plotThis.analObjectList[tr];
+                    st.calcStats(indStart, indStop);
 
                     // put data numbers at top left corner of plot
                     analysisDrawContext.fillStyle = plotThis.layerColorList[tr];
-                    let text = "n=" + st.n.toFixed(0) + " μ="+st.mean.toFixed(4) + " σ="+st.sigma.toFixed(4) + 
-                               " a=" + st.area.toFixed(2) + " m=" + st.slope.toFixed(2) + " b=" + st.intercept.toFixed(2) +
-                               " r=" + st.rxy.toFixed(3);
+                    let text = "n=" + st.n.toFixed(0) + " μ=" + st.mean.toFixed(4) + "±" + st.stderr.toFixed(4) + " σ=" + st.sigma.toFixed(4) +
+                        " a=" + st.area.toFixed(2) + " m=" + st.slope.toFixed(2) + " b=" + st.intercept.toFixed(2) +
+                        " r=" + st.rxy.toFixed(3);
                     traceVoffset += 12;
                     analysisDrawContext.fillText(text, 200, traceVoffset);
 
-                    analysisDrawContext.beginPath();
-                    analysisDrawContext.moveTo(zero1[0], zero1[1]);
-                    for (let ind = ind1; ind <= ind2; ind++) {
-                        let t = calData[plotThis.sensorNum][ind][0];
-                        let y = calData[plotThis.sensorNum][ind][tr];
-                        let p = plotThis.viewStack[0].dataToPixel(t, y);
-                        analysisDrawContext.lineTo(p[0], p[1]);
+                    if (indRight > indLeft) {
+                        analysisDrawContext.beginPath();
+                        analysisDrawContext.moveTo(zeroLeft[0], zeroLeft[1]);
+                        for (let ind = indLeft; ind <= indRight; ind++) {
+                            let t = calData[plotThis.sensorNum][ind][0];
+                            let y = calData[plotThis.sensorNum][ind][tr];
+                            let p = plotThis.viewStack[0].dataToPixel(t, y);
+                            analysisDrawContext.lineTo(p[0], p[1]);
+                        }
+                        analysisDrawContext.lineTo(zeroRight[0], zeroRight[1]);
+                        analysisDrawContext.closePath();
+                        analysisDrawContext.fillStyle = plotThis.layerColorList[tr] + '3f';
+                        analysisDrawContext.fill();
                     }
-                    analysisDrawContext.lineTo(zero2[0], zero2[1]);
-                    analysisDrawContext.closePath();
-                    analysisDrawContext.fillStyle = plotThis.layerColorList[tr] + '3f';
-                    analysisDrawContext.fill();
                 }
             }
-
+            // clean up any spills (i.e. any highlighting over the axis labels)
+            analysisDrawContext.clearRect(0, cHeight - plotThis.viewStack[0].yAxisOffset, cWidth, plotThis.viewStack[0].yAxisOffset);
+            analysisDrawContext.clearRect(0, 0, plotThis.viewStack[0].xAxisOffset, cHeight);
         }
 
         // display vertical line at cursor and data for this time
@@ -1000,7 +1028,7 @@ class PlotIOLab {
         ctx.clearRect(0, 0, this.baseElement.width + 2, this.baseElement.height + 2);
 
         // x-axis: pick the starting time, interval, and precision based on viewport
-        if (dbgInfo) console.log("In drawPlotAxes: ViewPort ", vp);
+        //if (dbgInfo) console.log("In drawPlotAxes: ViewPort ", vp);
         let timeAxis = vp.pickTimeAxis();
 
         // draw and label the vertical gridlines (time axis)
@@ -1033,7 +1061,7 @@ class PlotIOLab {
         // redraw axes lines and line at y=0
         this.drawHline(ctx, vp, vp.yMin, 1, '#000000', "<");
         this.drawVline(ctx, vp, vp.xMin, 1, '#000000', "<");
-        this.drawHline(ctx, vp, 0, 1, '#000000', "");
+        if (vp.containsYdata(0))this.drawHline(ctx, vp, 0, 1, '#000000', "");
     }
 
     // draws a vertical line at y = yDat on context ctx reference to viewport vp 
@@ -1140,13 +1168,13 @@ class PlotIOLab {
         contextList[0].clearRect(0, 0, cWidth, cHeight);
         this.drawPlotAxes(this.viewStack[0]);
 
-        let inPort = false;
+        let first = true;
         let pix = [];
 
         // only plot the visible part
-        let ind1 = Math.floor(this.viewStack[0].xMin / this.timePerSample);
+        let ind1 = Math.floor(this.viewStack[0].xMin / this.timePerSample)-2;
         if (ind1 < 0) ind1 = 0;
-        let ind2 = Math.floor(this.viewStack[0].xMax / this.timePerSample);
+        let ind2 = Math.floor(this.viewStack[0].xMax / this.timePerSample)+2;
         if (ind2 > calData[sensorID].length) ind2 = calData[sensorID].length;
 
         // loop over data
@@ -1156,8 +1184,8 @@ class PlotIOLab {
 
             // find the first dataploint at the leftmost edge of the viewport 
             // and start the line these
-            if (!inPort && tplot >= this.viewStack[0].xMin) {
-                inPort = true;
+            if (first) {
+                first = false;
                 for (let tr = 1; tr < this.nTraces + 1; tr++) {
                     contextList[tr].clearRect(0, 0, cWidth, cHeight);
                     pix = this.viewStack[0].dataToPixel(tplot, calData[sensorID][ind][tr]);
@@ -1173,10 +1201,11 @@ class PlotIOLab {
             }
         }
 
-        // finish each of the lines and clear the part of each canvas that overlaps with the x-axis labels (cluge)
+        // finish each of the lines and clear the part of each canvas that overlaps with the x and y-axis labels (cluge)
         for (let tr = 1; tr < this.nTraces + 1; tr++) {
             contextList[tr].stroke();
             contextList[tr].clearRect(0, cHeight - this.viewStack[0].yAxisOffset, cWidth, this.viewStack[0].yAxisOffset);
+            contextList[tr].clearRect(0, 0, this.viewStack[0].xAxisOffset, cHeight);
         }
 
     } // plotStaticData

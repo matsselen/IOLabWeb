@@ -19,6 +19,7 @@ class StatsIOLab {
         this.n = 0;
 
         this.mean = 0;
+        this.stderr = 0;
         this.sigma = 0;
         this.slope = 0;
         this.intercept = 0;
@@ -58,6 +59,7 @@ class StatsIOLab {
             let covXY = aveXY - aveX*aveY;
 
             this.mean = aveY;
+            this.stderr = sigY/Math.pow(this.n,0.5);
             this.sigma = sigY;
             this.slope = covXY/(sigX*sigX);
             this.intercept = aveY - this.slope*aveX;
