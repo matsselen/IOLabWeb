@@ -16,8 +16,10 @@ class PlotSet {
 
         this.plotObjectList = [];       // list of PlotIOLab instances (one for each sensor)
         this.checkboxIDlist = [];       // a list of all checkbox ID's (one for each sensor)
+        this.sensorCBlist = [];         // sensor checkboxes
 
         this.mouseMode = "zoom";        // different behaviors for zooming, panning, analysis, etc
+        this.linkMode = false;          // if true then horisontal axes of charts are linked
 
         // find the parent element
         this.parentElement = document.getElementById(this.parentName);
@@ -61,6 +63,18 @@ class PlotSet {
         aAnal.title = "Click & drag to select analysis region";
         aAnal.addEventListener("click", anaClick);
         analysis.appendChild(aAnal);
+
+        // place and control the chart-link icon
+        let aLink = document.createElement("a");
+        var linkLink = document.createElement("img");
+        linkLink.src = "images/link0.png";
+        linkLink.width = "40";
+        linkLink.style = "cursor:pointer";
+        linkLink.style.paddingRight = "5px";
+        aLink.appendChild(linkLink);
+        aLink.title = "Link charts";
+        aLink.addEventListener("click", linkClick);
+        analysis.appendChild(aLink);
 
         // add the analysis region to the page and put some vertical space below it
         this.parentElement.appendChild(analysis);
@@ -121,6 +135,7 @@ class PlotSet {
             // hide the plots for now
             sensDiv.style.display = "none";
             cb.checked = false;
+            this.sensorCBlist.push(cb);
 
         }
 
@@ -168,6 +183,18 @@ class PlotSet {
             plotSetThis.mouseMode = "anal";
         }
 
+        function linkClick() {
+            if (dbgInfo) {
+                console.log("selecting link mode");
+            }
+            if (plotSetThis.linkMode) {
+                linkLink.src = "images/link0.png";
+                plotSetThis.linkMode = false;
+            } else {
+                linkLink.src = "images/link1.png";
+                plotSetThis.linkMode = true;
+            }
+        }
     }
     // clean up the DOM
     reset() {
@@ -724,7 +751,13 @@ class PlotIOLab {
                 drawCursorInfo(e);
             }
             if (plotThis.thisParent.mouseMode == "anal") {
-                drawTimeAndData(e);
+                if (plotSet.linkMode) {
+                    for (let ind = 0; ind < plotSet.plotObjectList.length; ind++) {
+                        plotSet.plotObjectList[ind].drawTimeAndData(e);
+                    }
+                } else {
+                    drawTimeAndData(e);
+                }
             }
 
             // draw selection box if we are zooming
@@ -732,7 +765,7 @@ class PlotIOLab {
                 drawSelectionRect(mousePtrX, mousePtrY, e.offsetX, e.offsetY);
             }
 
-            // draw displacement vector if we are panning
+            // shift the viewport if we are panning
             if (panning) {
                 plotThis.viewStack[0].shiftView(mousePtrXlast - e.offsetX, mousePtrYlast - e.offsetY);
                 mousePtrXlast = e.offsetX;
@@ -790,7 +823,7 @@ class PlotIOLab {
             tStop = calData[plotThis.sensorNum][indStop][0];
 
             // find the theoretical indeces for the left and right side of the viewport
-            let indLeftVP = Math.round(plotThis.viewStack[0].xMin / plotThis.timePerSample)-1;
+            let indLeftVP = Math.round(plotThis.viewStack[0].xMin / plotThis.timePerSample) - 1;
             let indRightVP = Math.round(plotThis.viewStack[0].xMax / plotThis.timePerSample);
 
             // find the actual left and right indeces if the region to highlight
@@ -979,6 +1012,10 @@ class PlotIOLab {
 
     //===============================IOLabPlot Methods========================================
 
+
+    matsTest() {
+        console.log("Hi Mats - ",this.sensorNum);
+    }
     // clean up the DOM
     reset() {
         while (this.parentElement.childNodes.length > 0) {
@@ -1061,7 +1098,7 @@ class PlotIOLab {
         // redraw axes lines and line at y=0
         this.drawHline(ctx, vp, vp.yMin, 1, '#000000', "<");
         this.drawVline(ctx, vp, vp.xMin, 1, '#000000', "<");
-        if (vp.containsYdata(0))this.drawHline(ctx, vp, 0, 1, '#000000', "");
+        if (vp.containsYdata(0)) this.drawHline(ctx, vp, 0, 1, '#000000', "");
     }
 
     // draws a vertical line at y = yDat on context ctx reference to viewport vp 
@@ -1172,9 +1209,9 @@ class PlotIOLab {
         let pix = [];
 
         // only plot the visible part
-        let ind1 = Math.floor(this.viewStack[0].xMin / this.timePerSample)-2;
+        let ind1 = Math.floor(this.viewStack[0].xMin / this.timePerSample) - 2;
         if (ind1 < 0) ind1 = 0;
-        let ind2 = Math.floor(this.viewStack[0].xMax / this.timePerSample)+2;
+        let ind2 = Math.floor(this.viewStack[0].xMax / this.timePerSample) + 2;
         if (ind2 > calData[sensorID].length) ind2 = calData[sensorID].length;
 
         // loop over data
