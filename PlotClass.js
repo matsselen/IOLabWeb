@@ -753,7 +753,8 @@ class PlotIOLab {
             if (plotThis.thisParent.mouseMode == "anal") {
                 if (plotSet.linkMode) {
                     for (let ind = 0; ind < plotSet.plotObjectList.length; ind++) {
-                        plotSet.plotObjectList[ind].drawTimeAndData(e);
+                        //plotSet.plotObjectList[ind].drawTimeAndData(e);
+                        plotSet.plotObjectList[ind].matsTest(e);
                     }
                 } else {
                     drawTimeAndData(e);
@@ -1013,8 +1014,9 @@ class PlotIOLab {
     //===============================IOLabPlot Methods========================================
 
 
-    matsTest() {
-        console.log("Hi Mats - ",this.sensorNum);
+    matsTest(e) {
+        console.log("Hi Mats");
+        console.log(e);
     }
     // clean up the DOM
     reset() {
