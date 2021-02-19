@@ -751,6 +751,8 @@ class PlotIOLab {
                 drawCursorInfo(e);
             }
             if (plotThis.thisParent.mouseMode == "anal") {
+                plotThis.matsTest(e);
+                //matsTest(e);
                 if (plotSet.linkMode) {
                     for (let ind = 0; ind < plotSet.plotObjectList.length; ind++) {
                         //plotSet.plotObjectList[ind].drawTimeAndData(e);
@@ -1015,8 +1017,9 @@ class PlotIOLab {
 
 
     matsTest(e) {
-        console.log("Hi Mats");
-        console.log(e);
+        let x = e.offsetX
+        let n = this.sensorNum;
+        console.log("Hi Mats n,x: ",n,x);
     }
     // clean up the DOM
     reset() {
