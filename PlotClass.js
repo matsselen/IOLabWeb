@@ -874,8 +874,8 @@ class PlotIOLab {
         if (indStop > calData[this.sensorNum].length - 1) indStop = calData[this.sensorNum].length - 1;
 
         // redo the start & stop times so that they correspond to actual samples
-        tStart = calData[this.sensorNum][indStart][0];
-        tStop = calData[this.sensorNum][indStop][0];
+        let tStartLocal = calData[this.sensorNum][indStart][0];
+        let tStopLocal = calData[this.sensorNum][indStop][0];
 
         // find the theoretical indeces for the left and right side of the viewport
         let indLeftVP = Math.round(this.viewStack[0].xMin / this.timePerSample) - 1;
@@ -894,20 +894,20 @@ class PlotIOLab {
         analysisDrawContext.clearRect(0, 0, this.baseElement.width + 2, this.baseElement.height + 2);
 
         // if there is no interval to draw then return
-        if (tStop == tStart) return;
+        if (tStopLocal == tStartLocal) return;
 
 
-        if (tStart >= this.viewStack[0].xMin && tStart <= this.viewStack[0].xMax) {
-            this.drawVline(analysisDrawContext, this.viewStack[0], tStart, 1, '#000000');
+        if (tStartLocal >= this.viewStack[0].xMin && tStartLocal <= this.viewStack[0].xMax) {
+            this.drawVline(analysisDrawContext, this.viewStack[0], tStartLocal, 1, '#000000');
         }
 
-        if (tStop >= this.viewStack[0].xMin && tStop <= this.viewStack[0].xMax) {
-            this.drawVline(analysisDrawContext, this.viewStack[0], tStop, 1, '#000000');
+        if (tStopLocal >= this.viewStack[0].xMin && tStopLocal <= this.viewStack[0].xMax) {
+            this.drawVline(analysisDrawContext, this.viewStack[0], tStopLocal, 1, '#000000');
         }
 
         analysisDrawContext.fillStyle = '#000000';
         analysisDrawContext.font = "12px Arial";
-        let text = "∆t = " + Math.abs(tStop - tStart).toFixed(3) + "s";
+        let text = "∆t = " + Math.abs(tStopLocal - tStartLocal).toFixed(3) + "s";
         analysisDrawContext.fillText(text, 200, 15);
 
         // find the starting and ending 
