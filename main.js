@@ -121,6 +121,7 @@ async function clickStartStop() {
 async function clickDebug() {
 
   console.log("Debug button clicked (put breakpoint here)");
+  //location.reload();
   //resetAcquisition();
   //runForSeconds(2000);
   //window.dispatchEvent(new Event('resize'));
