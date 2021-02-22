@@ -963,10 +963,6 @@ class PlotIOLab {
         infoDrawContext.clearRect(0, 0, this.baseElement.width + 2, this.baseElement.height + 2);
         if (mode == "clear") return;
 
-        // // find mouse location in data coordinates
-        // let mouseData = this.viewStack[0].pixelToData(e.offsetX, e.offsetY);
-        // commonCursorTime = mouseData[0];
-
         // if timePerSample is not initalized then something is wrong
         if (this.timePerSample == 0) {
             console.log("In drawTimeAndData(): timePerSample in not set - Mats screwed up")
@@ -979,13 +975,11 @@ class PlotIOLab {
         // if we are past the first data-point then use the first one
         if (ind < 0) {
             ind = 0;
-            commonCursorTime = calData[this.sensorNum][ind][0];
         }
 
         // if we are past the last data-point then use the last one
         if (ind >= calData[this.sensorNum].length) {
             ind = calData[this.sensorNum].length - 1;
-            commonCursorTime = calData[this.sensorNum][ind][0];
         }
 
         // find the time of the current index (i.e. the actual sample time)
