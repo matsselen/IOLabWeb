@@ -750,14 +750,8 @@ class PlotIOLab {
                 // find mouse location in data coordinates
                 let mouseData = plotThis.viewStack[0].pixelToData(e.offsetX, e.offsetY);
                 commonCursorTime = mouseData[0];
+                plotThis.drawTimeAndData();
 
-                if (plotSet.linkMode) {
-                    for (let ind = 0; ind < plotSet.plotObjectList.length; ind++) {
-                        plotSet.plotObjectList[ind].drawTimeAndDataMethod();
-                    }
-                } else {
-                    plotThis.drawTimeAndDataMethod();
-                }
             }
 
             // draw selection box if we are zooming
@@ -851,6 +845,16 @@ class PlotIOLab {
             this.drawSelectionAnalysisMethod();
         }
 
+    }
+
+    drawTimeAndData() {
+        if (plotSet.linkMode) {
+            for (let ind = 0; ind < plotSet.plotObjectList.length; ind++) {
+                plotSet.plotObjectList[ind].drawTimeAndDataMethod();
+            }
+        } else {
+            plotThis.drawTimeAndDataMethod();
+        }
     }
 
     // use when selecting a rectangle for some control function like zooming
@@ -965,7 +969,7 @@ class PlotIOLab {
 
         // if timePerSample is not initalized then something is wrong
         if (this.timePerSample == 0) {
-            console.log("In drawTimeAndData(): timePerSample in not set - Mats screwed up")
+            console.log("In drawTimeAndDataMethod(): timePerSample in not set - Mats screwed up")
             return;
         }
 
