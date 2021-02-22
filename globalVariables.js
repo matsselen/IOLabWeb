@@ -8,6 +8,10 @@ var appMetaData = {runSeconds: 0, date: null};
 var plotSet = null;
 var commonCursorTime = null;
 var commonCursorMode = true;
+var analTime1 = 0;
+var analTime2 = 0;
+var tStart = 0;
+var tStop = 0;
 
 // serial port
 var port = null;
