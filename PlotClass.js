@@ -413,8 +413,6 @@ class ViewPort {
     dataToPixelAxes(tDat, yDat, ctx) {
         let xPix = this.xAxisOffset + ((tDat - this.xMin) / this.xSpan) * this.cWidth;
         let yPix = this.cHeight - ((yDat - this.yMin) / this.ySpan) * this.cHeight;
-        //let xPix = this.xAxisOffset + ((tDat - this.xMin) / this.xSpan) * (this.cWidth - this.xAxisOffset);
-        //let yPix = this.cHeight - this.yAxisOffset - ((yDat - this.yMin) / this.ySpan) * (this.cHeight - this.yAxisOffset);
         if (ctx.lineWidth % 2 != 0) { // if the linewidth is an odd integer (like 1)
             return [parseInt(xPix) + 0.5, parseInt(yPix) + 0.5];
         } else {
@@ -602,7 +600,7 @@ class PlotIOLab {
             } else {
                 document.getElementById(this.canvaslayer).style.display = "none";
             }
-            drawSelectionAnalysis();
+            plotThis.drawSelectionAnalysis();
 
             if (dbgInfo) {
                 console.log("In Plot::selectLayer() ", this.id, this.canvaslayer, this.checked, plotThis.traceEnabledList);
@@ -616,10 +614,6 @@ class PlotIOLab {
         let analyzing = false;
         let mousePtrX, mousePtrY;
         let mousePtrXlast, mousePtrYlast;
-        let analTime1 = 0;
-        let analTime2 = 0;
-        let tStart = 0;
-        let tStop = 0;
 
         // when the left mouse button is double-clicked
         function dblclick(e) {
@@ -630,13 +624,14 @@ class PlotIOLab {
                 }
                 // scale x-axis and plot all data
                 plotThis.displayStaticData();
-                drawSelectionAnalysis();
+                plotThis.drawSelectionAnalysis();
             }
             if (plotThis.thisParent.mouseMode == "anal") {
                 analTime1 = 0;
                 analTime2 = 0;
-                drawSelectionAnalysis();
-                //analysisDrawContext.clearRect(0, 0, plotThis.baseElement.width + 2, plotThis.baseElement.height + 2);
+                tStart = 0;
+                tStop = 0;
+                plotThis.drawSelectionAnalysis();
             }
         }
 
@@ -692,7 +687,7 @@ class PlotIOLab {
                 // draw with the panned axes
                 plotThis.drawPlotAxes(plotThis.viewStack[0]);
                 plotThis.plotStaticData();
-                drawSelectionAnalysis();
+                plotThis.drawSelectionAnalysis();
             }
 
             if (zooming) {
@@ -730,14 +725,14 @@ class PlotIOLab {
                 // draw the zoomed axes
                 plotThis.drawPlotAxes(plotThis.viewStack[0]);
                 plotThis.plotStaticData();
-                drawSelectionAnalysis();
+                plotThis.drawSelectionAnalysis();
             }
 
             if (analyzing) {
                 analyzing = false;
                 if ((mousePtrX != e.offsetX) || (mousePtrY != e.offsetY)) {
                     analTime2 = commonCursorTime;
-                    drawSelectionAnalysis();
+                    plotThis.drawSelectionAnalysis();
                 }
             }
         }
@@ -751,15 +746,17 @@ class PlotIOLab {
                 drawCursorInfo(e);
             }
             if (plotThis.thisParent.mouseMode == "anal") {
-                plotThis.matsTest(e);
-                //matsTest(e);
+
+                // find mouse location in data coordinates
+                let mouseData = plotThis.viewStack[0].pixelToData(e.offsetX, e.offsetY);
+                commonCursorTime = mouseData[0];
+
                 if (plotSet.linkMode) {
                     for (let ind = 0; ind < plotSet.plotObjectList.length; ind++) {
-                        //plotSet.plotObjectList[ind].drawTimeAndData(e);
-                        plotSet.plotObjectList[ind].matsTest(e);
+                        plotSet.plotObjectList[ind].drawTimeAndDataMethod();
                     }
                 } else {
-                    drawTimeAndData(e);
+                    plotThis.drawTimeAndDataMethod();
                 }
             }
 
@@ -777,13 +774,21 @@ class PlotIOLab {
                 // draw the panned chart
                 plotThis.drawPlotAxes(plotThis.viewStack[0]);
                 plotThis.plotStaticData();
-                drawSelectionAnalysis();
+                plotThis.drawSelectionAnalysis();
             }
 
             // draw displacement vector if we are panning
             if (analyzing) {
                 analTime2 = commonCursorTime;
-                drawSelectionAnalysis();
+                // make sure tStart <= tStop
+                if (analTime1 <= analTime2) {
+                    tStart = analTime1;
+                    tStop = analTime2;
+                } else {
+                    tStart = analTime2;
+                    tStop = analTime1;
+                }
+                plotThis.drawSelectionAnalysis();
             }
 
         }
@@ -797,184 +802,8 @@ class PlotIOLab {
             ctlDrawContext.clearRect(0, 0, plotThis.baseElement.width + 2, plotThis.baseElement.height + 2);
         }
 
-        // use when selecting a rectangle for some control function like zooming
-        function drawSelectionAnalysis() {
-
-            // make sure tStart <= tStop
-            if (analTime1 <= analTime2) {
-                tStart = analTime1;
-                tStop = analTime2;
-            } else {
-                tStart = analTime2;
-                tStop = analTime1;
-            }
-
-            // the size of all layers is the same as the bottom one
-            let cWidth = plotThis.layerElementList[0].width;
-            let cHeight = plotThis.layerElementList[0].height;
-
-            // find the data indeces that corresponds to the selected times
-            let indStart = Math.round(tStart / plotThis.timePerSample);
-            let indStop = Math.round(tStop / plotThis.timePerSample);
-
-            // make sure these correspond to existing array elements
-            if (indStart < 0) indStart = 0;
-            if (indStop > calData[plotThis.sensorNum].length - 1) indStop = calData[plotThis.sensorNum].length - 1;
-
-            // redo the start & stop times so that they correspond to actual samples
-            tStart = calData[plotThis.sensorNum][indStart][0];
-            tStop = calData[plotThis.sensorNum][indStop][0];
-
-            // find the theoretical indeces for the left and right side of the viewport
-            let indLeftVP = Math.round(plotThis.viewStack[0].xMin / plotThis.timePerSample) - 1;
-            let indRightVP = Math.round(plotThis.viewStack[0].xMax / plotThis.timePerSample);
-
-            // find the actual left and right indeces if the region to highlight
-            // so we dont try to highlightoutside the chart and/or data boundaries
-            let indLeft = Math.max(indLeftVP, indStart);
-            let indRight = Math.min(indRightVP, indStop);
-
-            // find the actual times for the left and tight edges of the highlighting
-            let tLeft = calData[plotThis.sensorNum][indLeft][0];
-            let tRight = calData[plotThis.sensorNum][indRight][0];
-
-            // clear old stuff
-            analysisDrawContext.clearRect(0, 0, plotThis.baseElement.width + 2, plotThis.baseElement.height + 2);
-
-            // if there is no interval to draw then return
-            if (tStop == tStart) return;
-
-
-            if (tStart >= plotThis.viewStack[0].xMin && tStart <= plotThis.viewStack[0].xMax) {
-                plotThis.drawVline(analysisDrawContext, plotThis.viewStack[0], tStart, 1, '#000000');
-            }
-
-            if (tStop >= plotThis.viewStack[0].xMin && tStop <= plotThis.viewStack[0].xMax) {
-                plotThis.drawVline(analysisDrawContext, plotThis.viewStack[0], tStop, 1, '#000000');
-            }
-
-            analysisDrawContext.fillStyle = '#000000';
-            analysisDrawContext.font = "12px Arial";
-            let text = "∆t = " + Math.abs(tStop - tStart).toFixed(3) + "s";
-            analysisDrawContext.fillText(text, 200, 15);
-
-            // find the starting and ending 
-            let zeroLeft = plotThis.viewStack[0].dataToPixel(tLeft, 0);
-            let zeroRight = plotThis.viewStack[0].dataToPixel(tRight, 0);
-
-            // highlight the selected region for each visible trace
-            let traceVoffset = 15;
-            for (let tr = 1; tr < plotThis.nTraces + 1; tr++) {
-                if (plotThis.traceEnabledList[tr - 1]) {
-
-                    // calculate statistics
-                    let st = plotThis.analObjectList[tr];
-                    st.calcStats(indStart, indStop);
-
-                    // put data numbers at top left corner of plot
-                    analysisDrawContext.fillStyle = plotThis.layerColorList[tr];
-                    let text = "n=" + st.n.toFixed(0) + " μ=" + st.mean.toFixed(4) + "±" + st.stderr.toFixed(4) + " σ=" + st.sigma.toFixed(4) +
-                        " a=" + st.area.toFixed(2) + " m=" + st.slope.toFixed(2) + " b=" + st.intercept.toFixed(2) +
-                        " r=" + st.rxy.toFixed(3);
-                    traceVoffset += 12;
-                    analysisDrawContext.fillText(text, 200, traceVoffset);
-
-                    if (indRight > indLeft) {
-                        analysisDrawContext.beginPath();
-                        analysisDrawContext.moveTo(zeroLeft[0], zeroLeft[1]);
-                        for (let ind = indLeft; ind <= indRight; ind++) {
-                            let t = calData[plotThis.sensorNum][ind][0];
-                            let y = calData[plotThis.sensorNum][ind][tr];
-                            let p = plotThis.viewStack[0].dataToPixel(t, y);
-                            analysisDrawContext.lineTo(p[0], p[1]);
-                        }
-                        analysisDrawContext.lineTo(zeroRight[0], zeroRight[1]);
-                        analysisDrawContext.closePath();
-                        analysisDrawContext.fillStyle = plotThis.layerColorList[tr] + '3f';
-                        analysisDrawContext.fill();
-                    }
-                }
-            }
-            // clean up any spills (i.e. any highlighting over the axis labels)
-            analysisDrawContext.clearRect(0, cHeight - plotThis.viewStack[0].yAxisOffset, cWidth, plotThis.viewStack[0].yAxisOffset);
-            analysisDrawContext.clearRect(0, 0, plotThis.viewStack[0].xAxisOffset, cHeight);
-        }
-
-        // display vertical line at cursor and data for this time
-        function drawTimeAndData(e, mode = "") {
-
-            // clear the canvas (and return if thats all we were supposed to do)
-            infoDrawContext.clearRect(0, 0, plotThis.baseElement.width + 2, plotThis.baseElement.height + 2);
-            if (mode == "clear") return;
-
-            // find mouse location in data coordinates
-            let mouseData = plotThis.viewStack[0].pixelToData(e.offsetX, e.offsetY);
-            commonCursorTime = mouseData[0];
-
-            // if timePerSample is not initalized then something is wrong
-            if (plotThis.timePerSample == 0) {
-                console.log("In drawTimeAndData(): timePerSample in not set - Mats screwed up")
-                return;
-            }
-
-            // find the data index that corresponds to the selected time
-            //let ind = Math.floor(commonCursorTime / plotThis.timePerSample);
-            let ind = Math.round(commonCursorTime / plotThis.timePerSample);
-
-            // if we are past the first data-point then use the first one
-            if (ind < 0) {
-                ind = 0;
-                commonCursorTime = calData[plotThis.sensorNum][ind][0];
-            }
-
-            // if we are past the last data-point then use the last one
-            if (ind >= calData[plotThis.sensorNum].length) {
-                ind = calData[plotThis.sensorNum].length - 1;
-                commonCursorTime = calData[plotThis.sensorNum][ind][0];
-            }
-
-            // find the time of the current index (i.e. the actual sample time)
-            let plotCursorTime = calData[plotThis.sensorNum][ind][0];
-
-            // draw a vertical line at the sample time
-            plotThis.drawVline(infoDrawContext, plotThis.viewStack[0], plotCursorTime, 1, '#000000');
-
-
-            // put cursor time at top left corner of plot
-            infoDrawContext.font = "12px Arial";
-            infoDrawContext.fillStyle = '#000000';
-            let text = "t = " + plotCursorTime.toFixed(3) + "s";
-            infoDrawContext.fillText(text, 50, 15);
-
-
-            // find the data value at the cursor for each visible trace
-            let traceVoffset = 15;
-            for (let tr = 1; tr < plotThis.nTraces + 1; tr++) {
-                if (plotThis.traceEnabledList[tr - 1]) {
-
-                    let currentCursorData = calData[plotThis.sensorNum][ind][tr];
-                    let dataPix = plotThis.viewStack[0].dataToPixel(plotCursorTime, currentCursorData);
-                    //infoDrawContext.strokeStyle = plotThis.layerColorList[tr];
-                    infoDrawContext.strokeStyle = 'rgba(0,0,0,0)'; // transparent circle outline (cluge)
-                    infoDrawContext.lineWidth = 0;
-                    infoDrawContext.beginPath();
-                    infoDrawContext.arc(dataPix[0], dataPix[1], 4, 0, 2 * Math.PI);
-                    infoDrawContext.fillStyle = plotThis.layerColorList[tr] + '7f'; //fill-alpha = 0.5
-                    infoDrawContext.fill();
-                    infoDrawContext.stroke();
-
-                    // put data numbers at top left corner of plot
-                    infoDrawContext.fillStyle = plotThis.layerColorList[tr]; //fill-alpha = 1.0
-                    let text = plotThis.axisTitles[tr - 1] + " = " + currentCursorData.toFixed(3) + " " + plotThis.unit;
-                    traceVoffset += 12;
-                    infoDrawContext.fillText(text, 50, traceVoffset);
-
-                }
-            }
-
-        }
-
         // display crosshair and cursor info
+
         function drawCursorInfo(e, mode = "") {
 
             // clear the canvas (and return if thats all we were supposed to do)
@@ -987,8 +816,6 @@ class PlotIOLab {
             plotThis.drawVline(infoDrawContext, plotThis.viewStack[0], pix[0], 1, '#f2a241');
 
             infoDrawContext.font = "10px Arial";
-            //let text = "(" + e.offsetX.toFixed() + "," + e.offsetY.toFixed() + ")";
-            //infoDrawContext.fillText(text, e.offsetX + 1, e.offsetY - 11);
             let text = "(" + pix[0].toFixed(3) + "," + pix[1].toFixed(3) + ")";
             infoDrawContext.fillText(text, e.offsetX + 1, e.offsetY - 1);
 
@@ -1015,11 +842,197 @@ class PlotIOLab {
 
     //===============================IOLabPlot Methods========================================
 
+    drawSelectionAnalysis() {
+        if (plotSet.linkMode) {
+            for (let ind = 0; ind < plotSet.plotObjectList.length; ind++) {
+                plotSet.plotObjectList[ind].drawSelectionAnalysisMethod();
+            }
+        } else {
+            this.drawSelectionAnalysisMethod();
+        }
+
+    }
+
+    // use when selecting a rectangle for some control function like zooming
+    drawSelectionAnalysisMethod() {
+
+        // analysis info layer
+        let analysisLayer = this.layerElementList[this.layerElementList.length - 2];
+        let analysisDrawContext = analysisLayer.getContext("2d");
+
+
+        // the size of all layers is the same as the bottom one
+        let cWidth = this.layerElementList[0].width;
+        let cHeight = this.layerElementList[0].height;
+
+        // find the data indeces that corresponds to the selected times
+        let indStart = Math.floor(tStart / this.timePerSample);
+        let indStop = Math.floor(tStop / this.timePerSample);
+
+        // make sure these correspond to existing array elements
+        if (indStart < 0) indStart = 0;
+        if (indStop > calData[this.sensorNum].length - 1) indStop = calData[this.sensorNum].length - 1;
+
+        // redo the start & stop times so that they correspond to actual samples
+        tStart = calData[this.sensorNum][indStart][0];
+        tStop = calData[this.sensorNum][indStop][0];
+
+        // find the theoretical indeces for the left and right side of the viewport
+        let indLeftVP = Math.round(this.viewStack[0].xMin / this.timePerSample) - 1;
+        let indRightVP = Math.round(this.viewStack[0].xMax / this.timePerSample);
+
+        // find the actual left and right indeces if the region to highlight
+        // so we dont try to highlightoutside the chart and/or data boundaries
+        let indLeft = Math.max(indLeftVP, indStart);
+        let indRight = Math.min(indRightVP, indStop);
+
+        // find the actual times for the left and tight edges of the highlighting
+        let tLeft = calData[this.sensorNum][indLeft][0];
+        let tRight = calData[this.sensorNum][indRight][0];
+
+        // clear old stuff
+        analysisDrawContext.clearRect(0, 0, this.baseElement.width + 2, this.baseElement.height + 2);
+
+        // if there is no interval to draw then return
+        if (tStop == tStart) return;
+
+
+        if (tStart >= this.viewStack[0].xMin && tStart <= this.viewStack[0].xMax) {
+            this.drawVline(analysisDrawContext, this.viewStack[0], tStart, 1, '#000000');
+        }
+
+        if (tStop >= this.viewStack[0].xMin && tStop <= this.viewStack[0].xMax) {
+            this.drawVline(analysisDrawContext, this.viewStack[0], tStop, 1, '#000000');
+        }
+
+        analysisDrawContext.fillStyle = '#000000';
+        analysisDrawContext.font = "12px Arial";
+        let text = "∆t = " + Math.abs(tStop - tStart).toFixed(3) + "s";
+        analysisDrawContext.fillText(text, 200, 15);
+
+        // find the starting and ending 
+        let zeroLeft = this.viewStack[0].dataToPixel(tLeft, 0);
+        let zeroRight = this.viewStack[0].dataToPixel(tRight, 0);
+
+        // highlight the selected region for each visible trace
+        let traceVoffset = 15;
+        for (let tr = 1; tr < this.nTraces + 1; tr++) {
+            if (this.traceEnabledList[tr - 1]) {
+
+                // calculate statistics
+                let st = this.analObjectList[tr];
+                st.calcStats(indStart, indStop);
+
+                // put data numbers at top left corner of plot
+                analysisDrawContext.fillStyle = this.layerColorList[tr];
+                let text = "n=" + st.n.toFixed(0) + " μ=" + st.mean.toFixed(4) + "±" + st.stderr.toFixed(4) + " σ=" + st.sigma.toFixed(4) +
+                    " a=" + st.area.toFixed(2) + " m=" + st.slope.toFixed(2) + " b=" + st.intercept.toFixed(2) +
+                    " r=" + st.rxy.toFixed(3);
+                traceVoffset += 12;
+                analysisDrawContext.fillText(text, 200, traceVoffset);
+
+                if (indRight > indLeft) {
+                    analysisDrawContext.beginPath();
+                    analysisDrawContext.moveTo(zeroLeft[0], zeroLeft[1]);
+                    for (let ind = indLeft; ind <= indRight; ind++) {
+                        let t = calData[this.sensorNum][ind][0];
+                        let y = calData[this.sensorNum][ind][tr];
+                        let p = this.viewStack[0].dataToPixel(t, y);
+                        analysisDrawContext.lineTo(p[0], p[1]);
+                    }
+                    analysisDrawContext.lineTo(zeroRight[0], zeroRight[1]);
+                    analysisDrawContext.closePath();
+                    analysisDrawContext.fillStyle = this.layerColorList[tr] + '3f';
+                    analysisDrawContext.fill();
+                }
+            }
+        }
+        // clean up any spills (i.e. any highlighting over the axis labels)
+        analysisDrawContext.clearRect(0, cHeight - this.viewStack[0].yAxisOffset, cWidth, this.viewStack[0].yAxisOffset);
+        analysisDrawContext.clearRect(0, 0, this.viewStack[0].xAxisOffset, cHeight);
+    }
+
+    // display vertical line at cursor and data for this time
+    drawTimeAndDataMethod(mode = "") {
+
+        // cursor info layer
+        let infoLayer = this.layerElementList[this.layerElementList.length - 3];
+        let infoDrawContext = infoLayer.getContext("2d");
+
+        // clear the canvas (and return if thats all we were supposed to do)
+        infoDrawContext.clearRect(0, 0, this.baseElement.width + 2, this.baseElement.height + 2);
+        if (mode == "clear") return;
+
+        // // find mouse location in data coordinates
+        // let mouseData = this.viewStack[0].pixelToData(e.offsetX, e.offsetY);
+        // commonCursorTime = mouseData[0];
+
+        // if timePerSample is not initalized then something is wrong
+        if (this.timePerSample == 0) {
+            console.log("In drawTimeAndData(): timePerSample in not set - Mats screwed up")
+            return;
+        }
+
+        // find the data index that corresponds to the selected time
+        let ind = Math.round(commonCursorTime / this.timePerSample);
+
+        // if we are past the first data-point then use the first one
+        if (ind < 0) {
+            ind = 0;
+            commonCursorTime = calData[this.sensorNum][ind][0];
+        }
+
+        // if we are past the last data-point then use the last one
+        if (ind >= calData[this.sensorNum].length) {
+            ind = calData[this.sensorNum].length - 1;
+            commonCursorTime = calData[this.sensorNum][ind][0];
+        }
+
+        // find the time of the current index (i.e. the actual sample time)
+        let plotCursorTime = calData[this.sensorNum][ind][0];
+
+        // draw a vertical line at the sample time
+        this.drawVline(infoDrawContext, this.viewStack[0], plotCursorTime, 1, '#000000');
+
+
+        // put cursor time at top left corner of plot
+        infoDrawContext.font = "12px Arial";
+        infoDrawContext.fillStyle = '#000000';
+        let text = "t = " + plotCursorTime.toFixed(3) + "s";
+        infoDrawContext.fillText(text, 50, 15);
+
+
+        // find the data value at the cursor for each visible trace
+        let traceVoffset = 15;
+        for (let tr = 1; tr < this.nTraces + 1; tr++) {
+            if (this.traceEnabledList[tr - 1]) {
+
+                let currentCursorData = calData[this.sensorNum][ind][tr];
+                let dataPix = this.viewStack[0].dataToPixel(plotCursorTime, currentCursorData);
+                infoDrawContext.strokeStyle = 'rgba(0,0,0,0)'; // transparent circle outline (cluge)
+                infoDrawContext.lineWidth = 0;
+                infoDrawContext.beginPath();
+                infoDrawContext.arc(dataPix[0], dataPix[1], 4, 0, 2 * Math.PI);
+                infoDrawContext.fillStyle = this.layerColorList[tr] + '7f'; //fill-alpha = 0.5
+                infoDrawContext.fill();
+                infoDrawContext.stroke();
+
+                // put data numbers at top left corner of plot
+                infoDrawContext.fillStyle = this.layerColorList[tr]; //fill-alpha = 1.0
+                let text = this.axisTitles[tr - 1] + " = " + currentCursorData.toFixed(3) + " " + this.unit;
+                traceVoffset += 12;
+                infoDrawContext.fillText(text, 50, traceVoffset);
+
+            }
+        }
+
+    }
+
 
     matsTest(e) {
         let x = e.offsetX
         let n = this.sensorNum;
-        console.log("Hi Mats n,x: ",n,x);
+        console.log("Hi Mats n,x: ", n, x);
     }
     // clean up the DOM
     reset() {
@@ -1070,7 +1083,6 @@ class PlotIOLab {
         ctx.clearRect(0, 0, this.baseElement.width + 2, this.baseElement.height + 2);
 
         // x-axis: pick the starting time, interval, and precision based on viewport
-        //if (dbgInfo) console.log("In drawPlotAxes: ViewPort ", vp);
         let timeAxis = vp.pickTimeAxis();
 
         // draw and label the vertical gridlines (time axis)
@@ -1082,10 +1094,6 @@ class PlotIOLab {
             this.drawVline(ctx, vp, t, 1, '#cccccc', "");
             this.drawVline(ctx, vp, t, 1, '#000000', "-");
         }
-
-        // label the overall time axis
-        // let pix = vp.dataToPixel(vp.xMin+vp.xSpan/2, vp.yMin);
-        // ctx.fillText("t (sec)", pix[0], pix[1]+25);
 
         // y-axis: pick the starting data value, interval, and precision based on viewport
         let dataAxis = vp.pickDataAxis();
