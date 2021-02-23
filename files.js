@@ -1,12 +1,17 @@
 'use strict';
 
-// play with cookies
+// play with cookies (just learning at this point)
 
-function setCookie(cname, cvalue, exdays) {
+function setCookie(cname, cvalue, exminutes) {
     var d = new Date();
-    d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+    console.log("Now:"+d.toGMTString());
+    //d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+    d.setTime(d.getTime() + (exminutes * 60 * 1000));
     var expires = "expires=" + d.toGMTString();
-    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+    var ctxt = cname + "=" + cvalue + ";" + expires + ";path=/";
+    console.log("in setCookie():"+ctxt);
+    document.cookie = ctxt;
+    //document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
 }
 
 function getCookie(cname) {
@@ -30,7 +35,8 @@ function checkCookie() {
     if (user != "") {
         alert("Welcome again " + user);
     } else {
-        user = prompt("Please enter your name:", "");
+        //user = prompt("Please enter your name:", "");
+        user = "mats";
         if (user != "" && user != null) {
             setCookie("username", user, 30);
         }

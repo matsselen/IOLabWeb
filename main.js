@@ -121,6 +121,10 @@ async function clickStartStop() {
 async function clickDebug() {
 
   console.log("Debug button clicked (put breakpoint here)");
+  //checkCookie();
+  //setCookie("iolabcal", "mats", 10);
+  //let cfetched = getCookie("iolabcal");
+  //console.log("fetched cookie:"+cfetched);
   //location.reload();
   //resetAcquisition();
   //runForSeconds(2000);
