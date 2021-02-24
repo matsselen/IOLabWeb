@@ -1,10 +1,50 @@
 'use strict';
 
-// some test code for saving to a file
+// play with cookies (just learning at this point)
+
+function setCookie(cname, cvalue, exhours) {
+    var d = new Date();
+    console.log("setCookie() called:"+d.toGMTString());
+    d.setTime(d.getTime() + (exhours * 60 * 60 * 1000));
+    var expires = "expires=" + d.toGMTString();
+    var ctxt = cname + "=" + cvalue + ";" + expires + ";path=/";
+    console.log("setCookie():"+ctxt);
+    document.cookie = ctxt;
+}
+
+function getCookie(cname) {
+    var name = cname + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    var ca = decodedCookie.split(';');
+    for (var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "cookie " + cname + " not found";
+}
+
+function checkCookie() {
+    var user = getCookie("username");
+    if (user != "") {
+        alert("Welcome again " + user);
+    } else {
+        user = prompt("Please enter your name:", "");
+        if (user != "" && user != null) {
+            setCookie("username", user, 30);
+        }
+    }
+}
+
+// save to a file
 function saveToFile() {
 
 
-    let runSeconds = totalRunTime/1000;
+    let runSeconds = totalRunTime / 1000;
     let date = new Date();
 
     appMetaData.runSeconds = runSeconds;
@@ -36,7 +76,7 @@ function saveToFile() {
         date.toTimeString().substr(3, 2) + "." +
         date.toTimeString().substr(6, 2) + "_" +
         configDesc + "_" +
-        runSeconds.toFixed(0)+"s.iolab";
+        runSeconds.toFixed(0) + "s.iolab";
 
     // save the data as a local download
     downloadData.href = window.URL.createObjectURL(dataBlob), { type: "text/plain;charset=utf-8" };
@@ -70,7 +110,7 @@ function restoreAcquisition() {
 
     // exctact the fixed config object and restore the calibrated data
     currentFCobject = calData[1];
-    appMetaData     = calData[0]
+    appMetaData = calData[0]
     calData.shift();
     calData.shift();
 
