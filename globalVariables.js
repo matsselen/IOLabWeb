@@ -44,6 +44,7 @@ var fixedRunTimerID;
 // useful expert tools
 var dbgInfo = true;
 var showCommands = false;
+var nDebug = 0;
 
 // the last IOLab command record selected
 var current_cmd = "none";

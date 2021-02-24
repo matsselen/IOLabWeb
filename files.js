@@ -2,16 +2,14 @@
 
 // play with cookies (just learning at this point)
 
-function setCookie(cname, cvalue, exminutes) {
+function setCookie(cname, cvalue, exhours) {
     var d = new Date();
-    console.log("Now:"+d.toGMTString());
-    //d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
-    d.setTime(d.getTime() + (exminutes * 60 * 1000));
+    console.log("setCookie() called:"+d.toGMTString());
+    d.setTime(d.getTime() + (exhours * 60 * 60 * 1000));
     var expires = "expires=" + d.toGMTString();
     var ctxt = cname + "=" + cvalue + ";" + expires + ";path=/";
-    console.log("in setCookie():"+ctxt);
+    console.log("setCookie():"+ctxt);
     document.cookie = ctxt;
-    //document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
 }
 
 function getCookie(cname) {
@@ -27,7 +25,7 @@ function getCookie(cname) {
             return c.substring(name.length, c.length);
         }
     }
-    return "";
+    return "cookie " + cname + " not found";
 }
 
 function checkCookie() {
@@ -35,8 +33,7 @@ function checkCookie() {
     if (user != "") {
         alert("Welcome again " + user);
     } else {
-        //user = prompt("Please enter your name:", "");
-        user = "mats";
+        user = prompt("Please enter your name:", "");
         if (user != "" && user != null) {
             setCookie("username", user, 30);
         }

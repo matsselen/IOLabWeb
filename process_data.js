@@ -366,10 +366,41 @@ function buildAndCalibrate() {
       // advance raw data read pointer
       rawReadPtr[sensorID] = rawData[sensorID].length;
 
-      // for the wheel
+      // for the wheel sensor
     } else if (sensorID == 9) {
 
 
+      // // loop over data packets that arrived since the last time
+      // for (let ind = rawReadPtr[sensorID]; ind < rawData[sensorID].length; ind++) {
+
+      //   let nbytes = rawData[sensorID][ind][2].length;
+      //   if (nbytes % 12 != 0) {
+      //     console.log(" bytecount not a multiple of 12");
+      //   } else {
+
+      //     // loop over the data samples in each packet
+      //     let nsamples = nbytes / 12;
+      //     for (let i = 0; i < nsamples; i++) {
+      //       let j = i * 12;
+      //       let raDat = (0xf & rawData[sensorID][ind][2][j]) << 8 | rawData[sensorID][ind][2][j + 1];
+      //       let laDat = (0xf & rawData[sensorID][ind][2][j + 2]) << 8 | rawData[sensorID][ind][2][j + 3];
+      //       let llDat = (0xf & rawData[sensorID][ind][2][j + 4]) << 8 | rawData[sensorID][ind][2][j + 5];
+      //       let c1Dat = (0xf & rawData[sensorID][ind][2][j + 6]) << 8 | rawData[sensorID][ind][2][j + 7];
+      //       let c2Dat = (0xf & rawData[sensorID][ind][2][j + 8]) << 8 | rawData[sensorID][ind][2][j + 9];
+      //       let c3Dat = (0xf & rawData[sensorID][ind][2][j + 10]) << 8 | rawData[sensorID][ind][2][j + 11];
+      //       let tDat = (rawData[sensorID][ind][0][0] + i / nsamples) * 0.010;
+
+
+      //       for (let i = 0; i < 9; i++) {
+      //         let s = i + 31; // the ECG calibrated sensors are 31-39
+      //         calData[s][calWritePtr[s]++] = [tDat, calEcg[i]];
+      //       }
+      //     }
+      //   }
+      // }
+
+      // // advance raw data read pointer
+      // rawReadPtr[sensorID] = rawData[sensorID].length;
 
       // for the ecg sensor
     } else if (sensorID == 27) {
@@ -422,7 +453,7 @@ function buildAndCalibrate() {
 
       // advance raw data read pointer
       rawReadPtr[sensorID] = rawData[sensorID].length;
-    }
+    } //ecg
 
   }//sensor loop
 

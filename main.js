@@ -4,18 +4,18 @@
 'use strict';
 
 // some useflul handles
-const butConnect          = document.getElementById('butConnect');
-const butSend             = document.getElementById('butSend');
-const butStartStop        = document.getElementById('butStartStop');
-const butDebug            = document.getElementById('butDebug');
+const butConnect = document.getElementById('butConnect');
+const butSend = document.getElementById('butSend');
+const butStartStop = document.getElementById('butStartStop');
+const butDebug = document.getElementById('butDebug');
 const dongleStatusDisplay = document.getElementById('dongleStatusDisplay');
 const remoteStatusDisplay = document.getElementById('remoteStatusDisplay');
-const configSelect        = document.getElementById('configSelect');
-const cmdPicker           = document.getElementById('cmd-picker');
-const dataBoxTx           = document.getElementById("dataBoxTx");
-const dataBoxRx           = document.getElementById("dataBoxRx");
-const debugStuff          = document.getElementById("debugStuff");
-const inputFile           = document.getElementById("inputfile");
+const configSelect = document.getElementById('configSelect');
+const cmdPicker = document.getElementById('cmd-picker');
+const dataBoxTx = document.getElementById("dataBoxTx");
+const dataBoxRx = document.getElementById("dataBoxRx");
+const debugStuff = document.getElementById("debugStuff");
+const inputFile = document.getElementById("inputfile");
 
 // do this when the DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
@@ -121,6 +121,14 @@ async function clickStartStop() {
 async function clickDebug() {
 
   console.log("Debug button clicked (put breakpoint here)");
+  if (nDebug == 0) {
+    setCookie("calTest", "1.1,2.2,3.3,4.4,5.5,6.6", 1);
+  } else {
+    let ctst = getCookie("calTest");
+    console.log("getCookie returns "+ctst);
+  }
+  nDebug++;
+
   //checkCookie();
   //setCookie("iolabcal", "mats", 10);
   //let cfetched = getCookie("iolabcal");

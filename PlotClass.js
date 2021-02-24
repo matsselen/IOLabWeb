@@ -853,7 +853,7 @@ class PlotIOLab {
                 plotSet.plotObjectList[ind].drawTimeAndDataMethod();
             }
         } else {
-            plotThis.drawTimeAndDataMethod();
+            this.drawTimeAndDataMethod();
         }
     }
 
