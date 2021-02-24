@@ -546,9 +546,14 @@ class PlotIOLab {
 
             // create the axis labels before each checkbox
             let axis = document.createTextNode("\xA0\xA0" + this.axisTitles[ind] + " (" + this.unit + "):");
+            
+            // put the axis label in a <span> element so we can set the color of the text
+            let axisContainer =  document.createElement("span");
+            axisContainer.style.color = this.layerColorList[ind+1];
+            axisContainer.appendChild(axis);
 
             // add the labels and boxes to the control region
-            controls.appendChild(axis);
+            controls.appendChild(axisContainer);
             controls.appendChild(cb);
 
             // create a data analysis object for each trace
