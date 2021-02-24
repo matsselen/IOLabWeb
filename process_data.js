@@ -25,6 +25,11 @@ function resetAcquisition() {
     calData.push([]);
   }
 
+  
+  rWheel = 0;
+  vWheel = 0;
+  aWheel = 0;
+
 }
 
 //====================================================================
@@ -369,38 +374,37 @@ function buildAndCalibrate() {
       // for the wheel sensor
     } else if (sensorID == 9) {
 
+      // loop over data packets that arrived since the last time
+      for (let ind = rawReadPtr[sensorID]; ind < rawData[sensorID].length; ind++) {
 
-      // // loop over data packets that arrived since the last time
-      // for (let ind = rawReadPtr[sensorID]; ind < rawData[sensorID].length; ind++) {
+        let nbytes = rawData[sensorID][ind][2].length;
+        if (nbytes % 2 != 0) {
+          console.log(" bytecount not a multiple of 2");
+        } else {
 
-      //   let nbytes = rawData[sensorID][ind][2].length;
-      //   if (nbytes % 12 != 0) {
-      //     console.log(" bytecount not a multiple of 12");
-      //   } else {
+          // loop over the data samples in each packet
+          let nsamples = nbytes / 2;
+          for (let i = 0; i < nsamples; i++) {
+            let j = i * 2;
+            let wDatRaw = rawData[sensorID][ind][2][j] << 8 | rawData[sensorID][ind][2][j + 1];
+            let tDat = (rawData[sensorID][ind][0][0] + i / nsamples) * 0.010;
 
-      //     // loop over the data samples in each packet
-      //     let nsamples = nbytes / 12;
-      //     for (let i = 0; i < nsamples; i++) {
-      //       let j = i * 12;
-      //       let raDat = (0xf & rawData[sensorID][ind][2][j]) << 8 | rawData[sensorID][ind][2][j + 1];
-      //       let laDat = (0xf & rawData[sensorID][ind][2][j + 2]) << 8 | rawData[sensorID][ind][2][j + 3];
-      //       let llDat = (0xf & rawData[sensorID][ind][2][j + 4]) << 8 | rawData[sensorID][ind][2][j + 5];
-      //       let c1Dat = (0xf & rawData[sensorID][ind][2][j + 6]) << 8 | rawData[sensorID][ind][2][j + 7];
-      //       let c2Dat = (0xf & rawData[sensorID][ind][2][j + 8]) << 8 | rawData[sensorID][ind][2][j + 9];
-      //       let c3Dat = (0xf & rawData[sensorID][ind][2][j + 10]) << 8 | rawData[sensorID][ind][2][j + 11];
-      //       let tDat = (rawData[sensorID][ind][0][0] + i / nsamples) * 0.010;
+            let wDat = calWheel(wDatRaw); // change encoder reading (signed 2s comp int) into signed int
+            rWheel += wDat*0.001;  // each tick is 1mm = 0.001m. 
+            vWheel = wDat*0.1;     // (wDat counts/tick)*(.001 m/count)*(100 ticks/s) = wDat*.001*100 m/s
+            aWheel = 0;
 
+            // the wheel r/v/a are chart sensors 15/16/17
+            calData[15][calWritePtr[15]++] = [tDat, rWheel];
+            calData[16][calWritePtr[16]++] = [tDat, vWheel];
+            calData[17][calWritePtr[17]++] = [tDat, aWheel];
+            
+          }
+        }
+      }
 
-      //       for (let i = 0; i < 9; i++) {
-      //         let s = i + 31; // the ECG calibrated sensors are 31-39
-      //         calData[s][calWritePtr[s]++] = [tDat, calEcg[i]];
-      //       }
-      //     }
-      //   }
-      // }
-
-      // // advance raw data read pointer
-      // rawReadPtr[sensorID] = rawData[sensorID].length;
+      // advance raw data read pointer
+      rawReadPtr[sensorID] = rawData[sensorID].length;
 
       // for the ecg sensor
     } else if (sensorID == 27) {
@@ -457,6 +461,18 @@ function buildAndCalibrate() {
 
   }//sensor loop
 
+}
+
+// turn 16 bit twos complement signed int into signed int. Each count is 1 mm.
+function calWheel(n) {
+  if (n > 0x7fff) {
+    let r1 = ~n;
+    let r2 = r1 & 0xffff;
+    let r3 = -1 * (r2 + 1);
+    return r3;
+  } else {
+    return n;
+  }
 }
 
 // turn 16 bit twos complement signed int into signed int and pretend-calibrate 
