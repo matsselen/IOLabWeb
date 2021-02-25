@@ -396,8 +396,8 @@ function buildAndCalibrate() {
             vWheel = wDat*0.1;     // (wDat counts/tick)*(.001 m/count)*(100 ticks/s) = wDat*.001*100 m/s
             aWheel = 0;
 
-            // if there are at least nBefore points before this one then smooth the velocity meaasurement 
-            // and calculate a crude acceleration value
+            // if there are at least nBefore points before this one then average the velocity meaasurement 
+            // and calculate a crude acceleration value by finding the slope of the velocity
             let nBefore = 8;
             if(calWritePtr[9] > nBefore) {
               let Sx = 0;
