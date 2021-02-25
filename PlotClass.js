@@ -844,7 +844,7 @@ class PlotIOLab {
     drawSelectionAnalysis() {
         if (plotSet.linkMode) {
             for (let ind = 0; ind < plotSet.plotObjectList.length; ind++) {
-                if (plotSet.checkboxIDlist[ind]) {
+                if (plotSet.sensorCBlist[ind].checked) {
                     plotSet.plotObjectList[ind].drawSelectionAnalysisMethod();
                 }
             }
@@ -857,7 +857,9 @@ class PlotIOLab {
     drawTimeAndData() {
         if (plotSet.linkMode) {
             for (let ind = 0; ind < plotSet.plotObjectList.length; ind++) {
-                plotSet.plotObjectList[ind].drawTimeAndDataMethod();
+                if (plotSet.sensorCBlist[ind].checked) {
+                    plotSet.plotObjectList[ind].drawTimeAndDataMethod();
+                }
             }
         } else {
             this.drawTimeAndDataMethod();
