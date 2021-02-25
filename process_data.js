@@ -25,7 +25,7 @@ function resetAcquisition() {
     calData.push([]);
   }
 
-  
+  // wheel stuff
   rWheel = 0;
   vWheel = 0;
   aWheel = 0;
@@ -390,11 +390,41 @@ function buildAndCalibrate() {
             let tDat = (rawData[sensorID][ind][0][0] + i / nsamples) * 0.010;
 
             let wDat = calWheel(wDatRaw); // change encoder reading (signed 2s comp int) into signed int
+            calData[9][calWritePtr[9]++] = [tDat, wDat]; // save semi-raw wheel data 
+
             rWheel += wDat*0.001;  // each tick is 1mm = 0.001m. 
             vWheel = wDat*0.1;     // (wDat counts/tick)*(.001 m/count)*(100 ticks/s) = wDat*.001*100 m/s
             aWheel = 0;
 
-            // the wheel r/v/a are chart sensors 15/16/17
+            // if there are at least nBefore points before this one then smooth the velocity meaasurement 
+            // and calculate a crude acceleration value
+            let nBefore = 8;
+            if(calWritePtr[9] > nBefore) {
+              let Sx = 0;
+              let Sxx = 0;
+              let Sy = 0;
+              let Sxy = 0;
+              let n = 0;    
+              for (let ind = calWritePtr[9] - nBefore; ind < calWritePtr[9]; ind++) {
+                let x = calData[9][ind][0];
+                let y = calData[9][ind][1];
+                Sx  += x;
+                Sxx += x*x;
+                Sy  += y;
+                Sxy += x*y;
+                n   += 1;                
+              }
+              let aveX  = Sx/n;
+              let aveXX = Sxx/n;
+              let aveY  = Sy/n;
+              let aveXY = Sxy/n;
+  
+              vWheel = 0.10*aveY;
+              aWheel = 0.10*(aveXY - aveX*aveY)/(aveXX - aveX*aveX);
+            
+            }
+
+            // save semi-processed wheel data (the wheel r/v/a charts are 15/16/17)
             calData[15][calWritePtr[15]++] = [tDat, rWheel];
             calData[16][calWritePtr[16]++] = [tDat, vWheel];
             calData[17][calWritePtr[17]++] = [tDat, aWheel];
