@@ -844,7 +844,9 @@ class PlotIOLab {
     drawSelectionAnalysis() {
         if (plotSet.linkMode) {
             for (let ind = 0; ind < plotSet.plotObjectList.length; ind++) {
-                plotSet.plotObjectList[ind].drawSelectionAnalysisMethod();
+                if (plotSet.sensorCBlist[ind].checked) {
+                    plotSet.plotObjectList[ind].drawSelectionAnalysisMethod();
+                }
             }
         } else {
             this.drawSelectionAnalysisMethod();
@@ -855,7 +857,9 @@ class PlotIOLab {
     drawTimeAndData() {
         if (plotSet.linkMode) {
             for (let ind = 0; ind < plotSet.plotObjectList.length; ind++) {
-                plotSet.plotObjectList[ind].drawTimeAndDataMethod();
+                if (plotSet.sensorCBlist[ind].checked) {
+                    plotSet.plotObjectList[ind].drawTimeAndDataMethod();
+                }
             }
         } else {
             this.drawTimeAndDataMethod();
@@ -974,7 +978,7 @@ class PlotIOLab {
 
         // if timePerSample is not initalized then something is wrong
         if (this.timePerSample == 0) {
-            console.log("In drawTimeAndDataMethod(): timePerSample in not set - Mats screwed up")
+            console.log("In drawTimeAndDataMethod(): sensor "+this.sensorNum.toString()+" timePerSample in not set - Mats screwed up");
             return;
         }
 

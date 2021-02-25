@@ -136,3 +136,8 @@ var rawReadPtr = null;
 var calData = null;
 var calWritePtr = null;
 var calReadPtr = null;
+
+// wheel data
+var rWheel = 0;
+var vWheel = 0;
+var aWheel = 0;
