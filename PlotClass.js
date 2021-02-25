@@ -844,7 +844,9 @@ class PlotIOLab {
     drawSelectionAnalysis() {
         if (plotSet.linkMode) {
             for (let ind = 0; ind < plotSet.plotObjectList.length; ind++) {
-                plotSet.plotObjectList[ind].drawSelectionAnalysisMethod();
+                if (plotSet.checkboxIDlist[ind]) {
+                    plotSet.plotObjectList[ind].drawSelectionAnalysisMethod();
+                }
             }
         } else {
             this.drawSelectionAnalysisMethod();
@@ -974,7 +976,7 @@ class PlotIOLab {
 
         // if timePerSample is not initalized then something is wrong
         if (this.timePerSample == 0) {
-            console.log("In drawTimeAndDataMethod(): timePerSample in not set - Mats screwed up")
+            console.log("In drawTimeAndDataMethod(): sensor "+this.sensorNum.toString()+" timePerSample in not set - Mats screwed up");
             return;
         }
 
