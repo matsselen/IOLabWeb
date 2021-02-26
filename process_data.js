@@ -330,7 +330,7 @@ function buildAndCalibrate() {
 
         let nbytes = rawData[sensorID][ind][2].length;
         if (nbytes % 6 != 0) {
-          console.log(" bytecount not a multiple of 6");
+          console.log("sensor "+sensorID.toString()+" bytecount not a multiple of 6");
         } else {
 
           // loop over the data samples in each packet
@@ -371,6 +371,35 @@ function buildAndCalibrate() {
       // advance raw data read pointer
       rawReadPtr[sensorID] = rawData[sensorID].length;
 
+      // for the force sensor
+    } else if (sensorID == 8) {
+
+      // loop over data packets that arrived since the last time
+      for (let ind = rawReadPtr[sensorID]; ind < rawData[sensorID].length; ind++) {
+
+        let nbytes = rawData[sensorID][ind][2].length;
+        if (nbytes % 2 != 0) {
+          console.log(" force bytecount not a multiple of 2");
+        } else {
+
+          // loop over the data samples in each packet
+          let nsamples = nbytes / 2;
+          for (let i = 0; i < nsamples; i++) {
+            let j = i * 2;
+            let fRaw = rawData[sensorID][ind][2][j] << 8 | rawData[sensorID][ind][2][j + 1];
+            let fDat = calForce(fRaw);
+            let tDat = (rawData[sensorID][ind][0][0] + i / nsamples) * 0.010;
+
+            // save calibrated force data
+            calData[sensorID][calWritePtr[sensorID]++] = [tDat, fDat];
+
+          }
+        }
+      }
+
+      // advance raw data read pointer
+      rawReadPtr[sensorID] = rawData[sensorID].length;
+
       // for the wheel sensor
     } else if (sensorID == 9) {
 
@@ -379,7 +408,7 @@ function buildAndCalibrate() {
 
         let nbytes = rawData[sensorID][ind][2].length;
         if (nbytes % 2 != 0) {
-          console.log(" bytecount not a multiple of 2");
+          console.log(" wheel bytecount not a multiple of 2");
         } else {
 
           // loop over the data samples in each packet
@@ -447,7 +476,7 @@ function buildAndCalibrate() {
 
         let nbytes = rawData[sensorID][ind][2].length;
         if (nbytes % 12 != 0) {
-          console.log(" bytecount not a multiple of 12");
+          console.log(" ECG bytecount not a multiple of 12");
         } else {
 
           // loop over the data samples in each packet
@@ -611,4 +640,8 @@ function calMag(n) {
 
 function calGyro(n) {
   return n / 815;
+}
+
+function calForce(n) {
+  return (n - 200) / 1000;
 }
