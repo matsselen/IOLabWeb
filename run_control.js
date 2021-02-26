@@ -53,6 +53,7 @@ async function stopRun() {
     // do end of acquisition stuff and display the plots
     // (but wait 100 ms for the last data to trickle in)
     setTimeout(async function () {
+        reProcess();
         plotSet.stopAcquisition();
         plotSet.displayPlots();
     }, 100);

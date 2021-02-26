@@ -313,7 +313,7 @@ function processDataRecord(recStart, recLength) {
 }
 
 //======================================================================
-// analyze and calibrate data
+// analyze and calibrate data from each sensor being read out
 function buildAndCalibrate() {
 
   // loop over sensors
@@ -344,24 +344,24 @@ function buildAndCalibrate() {
 
             // accelerometer
             if (sensorID == 1) {
-              let calx = calAccel(xDat);
-              let caly = calAccel(yDat);
-              let calz = calAccel(zDat);
+              let calx = calAccel(tc2int(xDat));
+              let caly = calAccel(tc2int(yDat));
+              let calz = calAccel(tc2int(zDat));
               // accdelerometer is turned on PCB so x = -y and y = x
               calData[sensorID][calWritePtr[sensorID]++] = [tDat, -caly, calx, calz];
 
               // magnetometer
             } else if (sensorID == 2) {
-              let calx = calMag(xDat);
-              let caly = calMag(yDat);
-              let calz = calMag(zDat);
+              let calx = calMag(tc2int(xDat));
+              let caly = calMag(tc2int(yDat));
+              let calz = calMag(tc2int(zDat));
               calData[sensorID][calWritePtr[sensorID]++] = [tDat, caly, calx, calz];
 
               // gyroscope
             } else if (sensorID == 3) {
-              let calx = calGyro(xDat);
-              let caly = calGyro(yDat);
-              let calz = calGyro(zDat);
+              let calx = calGyro(tc2int(xDat));
+              let caly = calGyro(tc2int(yDat));
+              let calz = calGyro(tc2int(zDat));
               calData[sensorID][calWritePtr[sensorID]++] = [tDat, caly, calx, calz];
             }
           }//sample loop
@@ -389,7 +389,7 @@ function buildAndCalibrate() {
             let wDatRaw = rawData[sensorID][ind][2][j] << 8 | rawData[sensorID][ind][2][j + 1];
             let tDat = (rawData[sensorID][ind][0][0] + i / nsamples) * 0.010;
 
-            let wDat = calWheel(wDatRaw); // change encoder reading (signed 2s comp int) into signed int
+            let wDat = tc2int(wDatRaw); // change encoder reading (signed 2s comp int) into signed int
 
             // save semi-raw wheel data using the actual sensor number of the wheel - just because we can
             // (as opposed to the derived sensor numbers for x, v, a)
@@ -494,10 +494,102 @@ function buildAndCalibrate() {
 
   }//sensor loop
 
-}
+} //buildAndCalibrate()
 
-// turn 16 bit twos complement signed int into signed int. Each count is 1 mm.
-function calWheel(n) {
+//======================================================================
+// reprocess data at the end of an acquisition (as needed)
+function reProcess() {
+
+  // loop over sensors
+  for (let s = 0; s < sensorIDlist.length; s++) {
+
+    let sensorID = sensorIDlist[s];
+
+    // for the wheel sensor
+    if (sensorID == 9) {
+
+      // wingV and wingA are the number of points on either side of the current one to include when 
+      // calculating the velocity and acceleration resprctively (total points = 2*wing+1)
+      let wingV = 2;
+      let wingA = 4;
+
+      // dont bother unless we have enough data
+      let nData = calData[sensorID].length;
+      if(nData < 3*wingA) {
+        console.log("In reProcess(): Not enough wheel data to reprocess")
+        return;
+      }
+
+      if (dbgInfo) {
+        console.log("In reProcess() nData (wheel) is "+nData.toString());
+      }
+
+      rWheel = 0;
+      for (let i = 0; i < nData; i++) {
+
+        let tDat = calData[sensorID][i][0];
+        let wDat = calData[sensorID][i][1];
+
+        // integrate to find position
+        rWheel += wDat * 0.001;  // each tick is 1mm = 0.001m. 
+        calData[15][i] = [tDat, rWheel];
+
+        // first calculate the average velocity 
+        // adjust the range of points to analyze if we are close to either end of the data array
+        let iMin = Math.max(0, i - wingV);
+        let iMax = Math.min(iMin + 1 + 2*wingV, nData);
+
+        let Sy = 0;
+        let n = 0;
+
+        // accumulate the sums needed to find the average
+        for (let i = iMin; i < iMax; i++) {
+          Sy += calData[sensorID][i][1];
+          n ++;
+        }
+
+        // find the average velocity
+        vWheel = 0.10*Sy/n;
+        calData[16][i] = [tDat, vWheel];
+
+        // now calculate the slope to find the acceleration 
+        // adjust the range of points to analyze if we are close to either end of the data array
+        iMin = Math.max(0, i - wingA);
+        iMax = Math.min(iMin + 1 + 2*wingA, nData);  
+
+        let Sx = 0;
+        let Sxx = 0;
+        let Sxy = 0;
+        n = 0;
+        Sy = 0;
+
+        // accumulate the sums needed to find the best-fit slope
+        for (let i = iMin; i < iMax; i++) {
+          let x = calData[sensorID][i][0];
+          let y = calData[sensorID][i][1];
+          Sx += x;
+          Sxx += x * x;
+          Sy += y;
+          Sxy += x * y;
+          n += 1;
+        }
+        let aveX = Sx / n;
+        let aveXX = Sxx / n;
+        let aveY = Sy / n;
+        let aveXY = Sxy / n;
+
+        // find the acceleration
+        aWheel = 0.10 * (aveXY - aveX * aveY) / (aveXX - aveX * aveX);
+        calData[17][i] = [tDat, aWheel];
+
+      } // datapoints
+    } // wheel
+  } // sensor loop
+} // reProcess()
+
+
+// turn 16 bit twos complement signed int into signed int. 
+function tc2int(n) {
   if (n > 0x7fff) {
     let r1 = ~n;
     let r2 = r1 & 0xffff;
@@ -508,36 +600,15 @@ function calWheel(n) {
   }
 }
 
-// turn 16 bit twos complement signed int into signed int and pretend-calibrate 
+// placeholder calibration functions 
 function calAccel(n) {
-  if (n > 0x7fff) {
-    let r1 = ~n;
-    let r2 = r1 & 0xffff;
-    let r3 = -1 * (r2 + 1);
-    return 9.81 * r3 / 8080;
-  } else {
-    return 9.81 * n / 8080;
-  }
+  return 9.81 * n / 8080;
 }
 
 function calMag(n) {
-  if (n > 0x7fff) {
-    let r1 = ~n;
-    let r2 = r1 & 0xffff;
-    let r3 = -1 * (r2 + 1);
-    return (r3 + 500) / 50;
-  } else {
-    return (n + 500) / 50;
-  }
+  return (n + 500) / 50;
 }
 
 function calGyro(n) {
-  if (n > 0x7fff) {
-    let r1 = ~n;
-    let r2 = r1 & 0xffff;
-    let r3 = -1 * (r2 + 1);
-    return r3 / 815;
-  } else {
-    return n / 815;
-  }
+  return n / 815;
 }

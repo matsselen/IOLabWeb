@@ -1173,7 +1173,7 @@ class PlotIOLab {
         let datLength = calData[this.sensorNum].length;
 
         if (datLength < 1) {
-            if (dbgInfo) console.log("In displayStaticData(): no data to display ");
+            if (dbgInfo) console.log("In displayStaticData(): no data to display for sensor "+this.sensorNum.toString());
 
         } else {
             let tLastFloat = calData[this.sensorNum][datLength - 1][0];
