@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-  <title>IOLab Web v0.7.11</title>
+  <title>IOLab Web v0.7.20</title>
   <meta charset="utf-8">
   <meta name="iolab" content="testing-w-web-serial">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -27,39 +27,44 @@
 <body>
   <header class="header">
     <h1>
-      <label> <span id="iolabWeb" title="Version 0.7.11"> <i><b>iOLabWeb</b></i></span> </label> &nbsp;&nbsp; | &nbsp;&nbsp;
-      <label> Dongle: <span id="dongleStatusDisplay" title="Plug in dongle and click on connect button">not connected </span> </label> &nbsp;&nbsp; | &nbsp;&nbsp;
+      <label> <span id="iolabWeb" title="Version 0.7.20"> <i><b>iOLabWeb</b></i></span> </label> &nbsp;&nbsp; |
+      &nbsp;&nbsp;
+      <label> Dongle: <span id="dongleStatusDisplay" title="Plug in dongle and click on connect button">not connected
+        </span> </label> &nbsp;&nbsp; | &nbsp;&nbsp;
       <label> Remote: <span id="remoteStatusDisplay" title="Power up the iOLab remote">off</span> </label>
     </h1>
   </header>
 
-  <main class="main">
+  <div id="notSupported" class="hidden">
+    Sorry, <b>Web Serial</b> is not supported on this device, make sure you're
+    running Chrome 78 or later and have enabled the<br />
+    <code>#enable-experimental-web-platform-features</code> flag in
+    <code>chrome://flags</code>
+  </div>
 
-    <div id="notSupported" class="hidden">
-      Sorry, <b>Web Serial</b> is not supported on this device, make sure you're
-      running Chrome 78 or later and have enabled the<br />
-      <code>#enable-experimental-web-platform-features</code> flag in
-      <code>chrome://flags</code>
-    </div>
+  <div class="topcontrol">
 
     <table>
       <tr>
         <td>
           <p>
-            <button id="butConnect" type="button" title="Make sure your dongle is plugged in and your remote is turned on">Connect</button> &nbsp; &nbsp;
+            <button id="butConnect" type="button"
+              title="Make sure your dongle is plugged in and your remote is turned on">Connect</button> &nbsp; &nbsp;
             <select id="cmd-picker"></select>&nbsp; &nbsp;
           </p>
         </td>
         <td>
           <p>
-            Save Data: <a href="" id="downloadData" onclick="saveToFile()" title="Saved data can be shared and restored on this or other computers."
-              style="cursor: pointer;"><img src="images/dload.PNG" alt="[Save]" valign="bottom" width="24" height="24"></a>
-              &nbsp; &nbsp;
+            Save Data: <a href="" id="downloadData" onclick="saveToFile()"
+              title="Saved data can be shared and restored on this or other computers." style="cursor: pointer;"><img
+                src="images/dload.PNG" alt="[Save]" valign="bottom" width="24" height="24"></a>
+            &nbsp; &nbsp;
             Restore Data: <input type="file" accept=".iolab" size="20" name="inputfile" id="inputfile"></p>
         </td>
         <td>
           <p style="color: rgb(200,200,200); text-align: right; width: 100px;">
-            Debug:<input id="debug_ck" type="checkbox" checked="true" title="Displays additional information for experts">
+            Debug:<input id="debug_ck" type="checkbox" checked="true"
+              title="Displays additional information for experts">
           </p>
         </td>
       </tr>
@@ -68,7 +73,8 @@
     <div id="configSelect">
       <table>
         <tr>
-          <td><button id="butSend" type="button" title="Loads your IOLab with the configuration selected below">Configure</button></td>
+          <td><button id="butSend" type="button"
+              title="Loads your IOLab with the configuration selected below">Configure</button></td>
           <td></td>
         </tr>
         <tr>
@@ -76,38 +82,40 @@
             <label><select id="config-picker"
                 style="font: 12px Arial; width: 400px; word-wrap: break-word;"></select></label>
           </td>
-          <td>&nbsp;&nbsp;<button id="butStartStop" type="button" title="Start or Stop an aquisition">Start</button></td>
+          <td>&nbsp;&nbsp;<button id="butStartStop" type="button" title="Start or Stop an aquisition">Start</button>
+          </td>
         </tr>
       </table>
     </div>
 
-    <br />
-    <div id="plotContainer" style="position:relative">
+  </div>
+
+  <div id="controlContainer" class="control"></div>
+
+  <div id="plotContainer" class="charts"></div>
+
+  <!-- For Debugging -->
+  <div id="debugStuff">
+
+    <div id="textAreaContainer">
+      <table>
+        <tr>
+          <td>Tx:</td>
+          <td>Rx:</td>
+        </tr>
+        <tr>
+          <td><textarea id="dataBoxTx" rows="10" cols="30"
+              style="overflow:scroll; resize:horizontal; min-width:200px;"></textarea></td>
+          <td><textarea id="dataBoxRx" rows="10" cols="60"
+              style="overflow:scroll; resize:horizontal; min-width:200px;"></textarea></td>
+        </tr>
+      </table>
     </div>
 
-    <!-- For Debugging -->
-    <div id="debugStuff">
+    <p> <button id="butDebug" type="button">Debug</button></p>
 
-      <div id="textAreaContainer">
-        <table>
-          <tr>
-            <td>Tx:</td>
-            <td>Rx:</td>
-          </tr>
-          <tr>
-            <td><textarea id="dataBoxTx" rows="10" cols="30"
-                style="overflow:scroll; resize:horizontal; min-width:200px;"></textarea></td>
-            <td><textarea id="dataBoxRx" rows="10" cols="60"
-                style="overflow:scroll; resize:horizontal; min-width:200px;"></textarea></td>
-          </tr>
-        </table>
-      </div>
+  </div>
 
-      <p> <button id="butDebug" type="button">Debug</button></p>
-
-    </div>
-
-  </main>
 </body>
 
 </html>

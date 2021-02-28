@@ -99,7 +99,7 @@ async function clickSend() {
     chartIDlist = fixedConfigObject.chartList;
 
     // create the required plot objects
-    plotSet = new PlotSet(chartIDlist, "plotContainer");
+    plotSet = new PlotSet(chartIDlist, "plotContainer", "controlContainer");
   }
 }
 
