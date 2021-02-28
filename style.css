@@ -76,6 +76,11 @@ body {
   padding: 0px 0px 0px 10px;
 }
 
+select {
+  font: 12px Arial; 
+  width: 400px; 
+  word-wrap: break-word;
+}
 
 .hidden {
   display: none;
