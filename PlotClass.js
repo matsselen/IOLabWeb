@@ -8,11 +8,12 @@
 
 //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 class PlotSet {
-    constructor(chartList, parentName) {
+    constructor(chartList, chartContainer, controlContainer) {
 
         let plotSetThis = this;         // save "this" to use in callback routines
         this.chartList = chartList;     // list of charts to be created
-        this.parentName = parentName;   // the name of the existing parent element
+        this.chartContainer = chartContainer;       // the name of the existing chart container
+        this.controlContainer = controlContainer;   // the name of the existing control container
 
         this.plotObjectList = [];       // list of PlotIOLab instances (one for each sensor)
         this.checkboxIDlist = [];       // a list of all checkbox ID's (one for each sensor)
@@ -21,8 +22,11 @@ class PlotSet {
         this.mouseMode = "zoom";        // different behaviors for zooming, panning, analysis, etc
         this.linkMode = false;          // if true then horisontal axes of charts are linked
 
-        // find the parent element
-        this.parentElement = document.getElementById(this.parentName);
+        // find the chart container element
+        this.chartElement = document.getElementById(this.chartContainer);
+
+        // find the control container element
+        this.controlElement = document.getElementById(this.controlContainer);
 
         // create the analysis elements that appear above the canvas
         let analysis = document.createElement("div");
@@ -77,8 +81,8 @@ class PlotSet {
         analysis.appendChild(aLink);
 
         // add the analysis region to the page and put some vertical space below it
-        this.parentElement.appendChild(analysis);
-        this.parentElement.appendChild(document.createElement("p"));
+        this.controlElement.appendChild(analysis);
+        this.controlElement.appendChild(document.createElement("p"));
 
 
         // create the control elements that appear above the canvas
@@ -87,8 +91,8 @@ class PlotSet {
         controls.appendChild(controlTitle);
 
         // add the control region to the page and put some vertical space below it
-        this.parentElement.appendChild(controls);
-        this.parentElement.appendChild(document.createElement("p"));
+        this.controlElement.appendChild(controls);
+        //this.controlElement.appendChild(document.createElement("p"));
 
         // loop over sensors
         for (let ind = 0; ind < chartList.length; ind++) {
@@ -103,7 +107,7 @@ class PlotSet {
             sensDiv.style.position = "relative";
 
             // append the plot for this sensor to the parent element
-            this.parentElement.appendChild(sensDiv);
+            this.chartElement.appendChild(sensDiv);
 
             //adjust the height of the charts based on the number of charts
             let chartHeight = 250;
@@ -206,7 +210,7 @@ class PlotSet {
         }
 
         // clean up ourselves
-        while (this.parentElement.childNodes.length > 0) {
+        while (this.chartElement.childNodes.length > 0) {
             this.parentElement.childNodes[0].remove();
         }
 
