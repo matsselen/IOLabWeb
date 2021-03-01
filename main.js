@@ -120,14 +120,14 @@ async function clickStartStop() {
 // event handler for Debug button  
 async function clickDebug() {
 
-  console.log("Debug button clicked (put breakpoint here)");
-  if (nDebug == 0) {
-    setCookie("calTest", "1.1,2.2,3.3,4.4,5.5,6.6", 1);
-  } else {
-    let ctst = getCookie("calTest");
-    console.log("getCookie returns "+ctst);
-  }
-  nDebug++;
+  // console.log("Debug button clicked (put breakpoint here)");
+  // if (nDebug == 0) {
+  //   setCookie("calTest", "1.1,2.2,3.3,4.4,5.5,6.6", 1);
+  // } else {
+  //   let ctst = getCookie("calTest");
+  //   console.log("getCookie returns "+ctst);
+  // }
+  // nDebug++;
 
   //checkCookie();
   //setCookie("iolabcal", "mats", 10);
@@ -137,7 +137,8 @@ async function clickDebug() {
   //resetAcquisition();
   //runForSeconds(2000);
   //window.dispatchEvent(new Event('resize'));
-  //serialConnected = true;
+  //serialConnected = !serialConnecteds;
+  //remoteConnected = !remoteConnected;
   //updateSystemState();
   //plotSet.reset();
   //plotSet = null;
