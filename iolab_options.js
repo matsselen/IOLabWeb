@@ -170,12 +170,14 @@ function buildConfigPicker() {
   //configPicker.selectedIndex = 13; // default to accelerometer
   configPicker.selectedIndex = 12; // high speed orientation
   current_config = configPicker.options[configPicker.selectedIndex].value;
+  configPicker.title = current_config;
   current_config_code = iolabConfig.fixedConfigurations[configPicker.selectedIndex]["code"];
   document.getElementById('config-picker').style.visibility = "hidden";
 
   configPicker.onchange = function () {
     current_config = configPicker.options[configPicker.selectedIndex].value;
     current_config_code = iolabConfig.fixedConfigurations[configPicker.selectedIndex]["code"];
+    configPicker.title = current_config;
 
   };
 }

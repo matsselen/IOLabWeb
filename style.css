@@ -79,7 +79,9 @@ body {
 select {
   font: 12px Arial; 
   width: 400px; 
-  word-wrap: break-word;
+  padding: 0px 0px 0px 0px;
+  /* line-height: 12px; */
+  /* word-wrap: break-word; */
 }
 
 .hidden {
