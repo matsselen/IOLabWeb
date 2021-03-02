@@ -76,13 +76,11 @@ body {
   padding: 0px 0px 0px 10px;
 }
 
-select {
-  font: 12px Arial; 
-  width: 400px; 
-  padding: 0px 0px 0px 0px;
-  /* line-height: 12px; */
-  /* word-wrap: break-word; */
-}
+.selection {
+  /* font: 1.2em 13px/5 Arial;  */
+  font-size: 14px;
+  width: 500px;
+} 
 
 .hidden {
   display: none;
