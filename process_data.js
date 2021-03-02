@@ -330,7 +330,7 @@ function buildAndCalibrate() {
 
         let nbytes = rawData[sensorID][ind][2].length;
         if (nbytes % 6 != 0) {
-          console.log("sensor "+sensorID.toString()+" bytecount not a multiple of 6");
+          console.log("sensor " + sensorID.toString() + " bytecount not a multiple of 6");
         } else {
 
           // loop over the data samples in each packet
@@ -370,9 +370,10 @@ function buildAndCalibrate() {
 
       // advance raw data read pointer
       rawReadPtr[sensorID] = rawData[sensorID].length;
+    } // acc/mag/gyro
 
-      // for the force sensor
-    } else if (sensorID == 8) {
+    // for the force sensor    
+    else if (sensorID == 8) {
 
       // loop over data packets that arrived since the last time
       for (let ind = rawReadPtr[sensorID]; ind < rawData[sensorID].length; ind++) {
@@ -396,12 +397,12 @@ function buildAndCalibrate() {
           }
         }
       }
-
       // advance raw data read pointer
       rawReadPtr[sensorID] = rawData[sensorID].length;
+    } // force
 
-      // for the wheel sensor
-    } else if (sensorID == 9) {
+    // for the wheel sensor
+    else if (sensorID == 9) {
 
       // loop over data packets that arrived since the last time
       for (let ind = rawReadPtr[sensorID]; ind < rawData[sensorID].length; ind++) {
@@ -464,12 +465,86 @@ function buildAndCalibrate() {
           }
         }
       }
+      // advance raw data read pointer
+      rawReadPtr[sensorID] = rawData[sensorID].length;
+    }// wheel
+
+    // High Gain sensor
+    else if (sensorID == 12) {
+
+      // 2^12 counts = Vref/gain volts = 3V/1200
+      // 4096 counts = 0.0025V = 2.5 mV
+      // 1mv = 1638.4 counts
+      let countsPerMillivolt = 1638.4;
+
+      // loop over data packets that arrived since the last time
+      for (let ind = rawReadPtr[sensorID]; ind < rawData[sensorID].length; ind++) {
+
+        let nbytes = rawData[sensorID][ind][2].length;
+        if (nbytes % 2 != 0) {
+          console.log("High Gain bytecount not a multiple of 2");
+        } else {
+
+          // loop over the data samples in each packet
+          let nsamples = nbytes / 2;
+          for (let i = 0; i < nsamples; i++) {
+            let j = i * 2;
+            let aDat = (0xf & rawData[sensorID][ind][2][j]) << 8 | rawData[sensorID][ind][2][j + 1];
+            let tDat = (rawData[sensorID][ind][0][0] + i / nsamples) * 0.010;
+
+            // calibrated voltage in mV
+            let calHGmv = (aDat - 2048) / countsPerMillivolt;
+
+            calData[sensorID][calWritePtr[sensorID]++] = [tDat, calHGmv];
+          }
+        }
+      }
 
       // advance raw data read pointer
       rawReadPtr[sensorID] = rawData[sensorID].length;
+    } // High Gain
 
-      // for the ecg sensor
-    } else if (sensorID == 27) {
+    // A7/A8/A9 sensors
+    else if ((sensorID == 21) || (sensorID == 22) || (sensorID == 23)) {
+
+      // configuration 12 has a 3.3V reference for A7/8/9
+      let vref = 3;
+      if (current_config_code == 12) {
+        vref = 3.3;
+      }
+
+      // 2^12 counts = vref volts. 
+      let countsPerVolt = 4096 / vref;
+
+      // loop over data packets that arrived since the last time
+      for (let ind = rawReadPtr[sensorID]; ind < rawData[sensorID].length; ind++) {
+
+        let nbytes = rawData[sensorID][ind][2].length;
+        if (nbytes % 2 != 0) {
+          console.log("Analog sensor " + sensorID.toString() + " bytecount not a multiple of 2");
+        } else {
+
+          // loop over the data samples in each packet
+          let nsamples = nbytes / 2;
+          for (let i = 0; i < nsamples; i++) {
+            let j = i * 2;
+            let aDat = (0xf & rawData[sensorID][ind][2][j]) << 8 | rawData[sensorID][ind][2][j + 1];
+            let tDat = (rawData[sensorID][ind][0][0] + i / nsamples) * 0.010;
+
+            // calibrated ovltage
+            let calAnalog = aDat / countsPerVolt;
+
+            calData[sensorID][calWritePtr[sensorID]++] = [tDat, calAnalog];
+          }
+        }
+      }
+
+      // advance raw data read pointer
+      rawReadPtr[sensorID] = rawData[sensorID].length;
+    } // A7/8/9
+
+    // for the ecg sensor
+    else if (sensorID == 27) {
 
       // loop over data packets that arrived since the last time
       for (let ind = rawReadPtr[sensorID]; ind < rawData[sensorID].length; ind++) {
@@ -519,7 +594,8 @@ function buildAndCalibrate() {
 
       // advance raw data read pointer
       rawReadPtr[sensorID] = rawData[sensorID].length;
-    } //ecg
+    }
+
 
   }//sensor loop
 
@@ -544,13 +620,13 @@ function reProcess() {
 
       // dont bother unless we have enough data
       let nData = calData[sensorID].length;
-      if(nData < 3*wingA) {
+      if (nData < 3 * wingA) {
         console.log("In reProcess(): Not enough wheel data to reprocess")
         return;
       }
 
       if (dbgInfo) {
-        console.log("In reProcess() nData (wheel) is "+nData.toString());
+        console.log("In reProcess() nData (wheel) is " + nData.toString());
       }
 
       rWheel = 0;
@@ -566,7 +642,7 @@ function reProcess() {
         // first calculate the average velocity 
         // adjust the range of points to analyze if we are close to either end of the data array
         let iMin = Math.max(0, i - wingV);
-        let iMax = Math.min(iMin + 1 + 2*wingV, nData);
+        let iMax = Math.min(iMin + 1 + 2 * wingV, nData);
 
         let Sy = 0;
         let n = 0;
@@ -574,17 +650,17 @@ function reProcess() {
         // accumulate the sums needed to find the average
         for (let i = iMin; i < iMax; i++) {
           Sy += calData[sensorID][i][1];
-          n ++;
+          n++;
         }
 
         // find the average velocity
-        vWheel = 0.10*Sy/n;
+        vWheel = 0.10 * Sy / n;
         calData[16][i] = [tDat, vWheel];
 
         // now calculate the slope to find the acceleration 
         // adjust the range of points to analyze if we are close to either end of the data array
         iMin = Math.max(0, i - wingA);
-        iMax = Math.min(iMin + 1 + 2*wingA, nData);  
+        iMax = Math.min(iMin + 1 + 2 * wingA, nData);
 
         let Sx = 0;
         let Sxx = 0;

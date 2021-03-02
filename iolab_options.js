@@ -16,11 +16,13 @@ function getIOLabConfigInfo() {
 
     let sensList = [];
     let rateList = [];
-    let longDesc = fc.code.toString()+": ";
+    let longDesc = fc.code.toString() + " [" + fc.desc + "] ";
+    let longDesc2 = "";
     for (let ind = 0; ind < fc.sensors.length; ind++) {
       let skey = fc.sensors[ind].sensorKey;
       let srate = fc.sensors[ind].sampleRate;
-      longDesc += sensorInfoList[skey].shortDesc + '(' + srate.toString() + 'Hz) ';
+      longDesc2 += sensorInfoList[skey].shortDesc + '(' + srate.toString() + 'Hz)+';
+      longDesc += sensorInfoList[skey].shortDesc + '(' + srate.toString() + ')+';
 
       sensList.push(skey);
       rateList.push(srate);
@@ -28,7 +30,8 @@ function getIOLabConfigInfo() {
 
     fc.sensList = sensList;
     fc.rateList = rateList;
-    fc.longDesc = longDesc
+    fc.longDesc = longDesc.slice(0, -1);
+    fc.longDesc2 = longDesc2.slice(0, -1);
 
 
     fixedConfigList[fc.code] = fc;
@@ -155,7 +158,9 @@ function buildCmdPicker() {
 function buildConfigPicker() {
 
   var configPicker = document.getElementById('config-picker');
-  var configOption;
+  var configOption = document.createElement('option');
+  configOption.value = configOption.innerText = "--- Select Configuration ---";
+  configPicker.appendChild(configOption);
 
   for (let i = 0; i < iolabConfig.fixedConfigurations.length; i++) {
     configOption = document.createElement('option');
@@ -168,16 +173,25 @@ function buildConfigPicker() {
 
   //configPicker.selectedIndex = 17; // default to "kitchen sink"
   //configPicker.selectedIndex = 13; // default to accelerometer
-  configPicker.selectedIndex = 12; // high speed orientation
+  configPicker.selectedIndex = 0;
   current_config = configPicker.options[configPicker.selectedIndex].value;
-  configPicker.title = current_config;
-  current_config_code = iolabConfig.fixedConfigurations[configPicker.selectedIndex]["code"];
+  current_config_code = -1;
+
   document.getElementById('config-picker').style.visibility = "hidden";
 
   configPicker.onchange = function () {
+    console.log("selecting config-picker index ", configPicker.selectedIndex);
     current_config = configPicker.options[configPicker.selectedIndex].value;
-    current_config_code = iolabConfig.fixedConfigurations[configPicker.selectedIndex]["code"];
-    configPicker.title = current_config;
+    daqConfigured = false;
 
-  };
+    if (configPicker.selectedIndex == 0) {
+      current_config_code = -1;
+      configPicker.title = "Select Configuration";
+    } else {
+      current_config_code = iolabConfig.fixedConfigurations[configPicker.selectedIndex-1]["code"];
+      configPicker.title = fixedConfigList[current_config_code].longDesc2;
+    }
+    updateSystemState();
+  }
+  
 }

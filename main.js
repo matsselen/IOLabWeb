@@ -36,6 +36,8 @@ document.addEventListener('DOMContentLoaded', () => {
   buildConfigPicker();
   buildCmdPicker();
 
+
+
   // create canvas stacks and layers for charts and set these up
   setupControls();
   resetAcquisition();
@@ -70,6 +72,8 @@ async function clickConnect() {
 async function clickSend() {
 
   // get the current command string
+  if (current_config_code == -1) return;
+
   let byteArray = getCommandRecord(current_cmd);
   console.log(byteArray);
   await sendRecord(byteArray);

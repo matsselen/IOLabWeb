@@ -209,11 +209,13 @@ class PlotSet {
             this.plotObjectList.shift();
         }
 
-        // clean up ourselves
+        //clean up ourselves
         while (this.chartElement.childNodes.length > 0) {
-            this.parentElement.childNodes[0].remove();
+            this.chartElement.childNodes[0].remove();
         }
-
+        while (this.controlElement.childNodes.length > 0) {
+            this.controlElement.childNodes[0].remove();
+        }
     }
 
     startAcquisition() {

@@ -38,7 +38,7 @@ var iolabConfig =
     },
     {
       "code": 4,
-      "desc": "Mini_Motion",
+      "desc": "Mini Motion",
       "highSpeed": false,
       "frequencies": [100, 200],
       "sensors": [
@@ -82,17 +82,18 @@ var iolabConfig =
     // },
     {
       "code": 8,
-      "desc": "Header_3V",
+      "desc": "Header 3V",
       "highSpeed": false,
       "frequencies": [100, 200],
       "sensors": [
         { "sensorKey": 12, "sampleRate": 200 },
-        { "sensorKey": 13, "sampleRate": 100 },
+        //{ "sensorKey": 13, "sampleRate": 100 },
         { "sensorKey": 21, "sampleRate": 100 },
         { "sensorKey": 22, "sampleRate": 100 },
         { "sensorKey": 23, "sampleRate": 100 }
       ],
-      "chartList": [12,13,21,22,23]
+      //"chartList": [12,13,21,22,23]
+      "chartList": [12,21,22,23]
     },
     {
       "code": 9,
@@ -115,7 +116,7 @@ var iolabConfig =
     },
     {
       "code": 32,
-      "desc": "Gyroscope_(HS)",
+      "desc": "Gyroscope HS",
       "highSpeed": true,
       "frequencies": [800],
       "sensors": [{ "sensorKey": 3, "sampleRate": 760 }],
@@ -123,22 +124,23 @@ var iolabConfig =
     },
     {
       "code": 12,
-      "desc": "Header_3V3",
+      "desc": "Header 3V3",
       "highSpeed": false,
       "priority": 10,
       "frequencies": [100, 200],
       "sensors": [
         { "sensorKey": 12, "sampleRate": 200 },
-        { "sensorKey": 13, "sampleRate": 100 },
+        //{ "sensorKey": 13, "sampleRate": 100 },
         { "sensorKey": 21, "sampleRate": 100 },
         { "sensorKey": 22, "sampleRate": 100 },
         { "sensorKey": 23, "sampleRate": 100 }
       ],
-      "chartList": [12,13,21,22,23]
+      //"chartList": [12,13,21,22,23]
+      "chartList": [12,21,22,23]
     },
     {
       "code": 33,
-      "desc": "Accelerometer_(HS)",
+      "desc": "Accelerometer HS",
       "highSpeed": true,
       "frequencies": [800],
       "sensors": [{ "sensorKey": 1, "sampleRate": 800 }],
@@ -146,7 +148,7 @@ var iolabConfig =
     },
     {
       "code": 34,
-      "desc": "Orientation_(HS)",
+      "desc": "Orientation HS",
       "highSpeed": true,
       "frequencies": [100, 200, 400],
       "sensors": [
@@ -184,7 +186,7 @@ var iolabConfig =
     },
     {
       "code": 37,
-      "desc": "Pendulum_(HS)",
+      "desc": "Pendulum HS",
       "highSpeed": true,
       "frequencies": [100, 200],
       "sensors": [
@@ -196,7 +198,7 @@ var iolabConfig =
     },
     {
       "code": 38,
-      "desc": "Kitchen_Sink",
+      "desc": "Kitchen Sink",
       "highSpeed": true,
       "frequencies": [100],
       "sensors": [
@@ -209,14 +211,15 @@ var iolabConfig =
         { "sensorKey": 9, "sampleRate": 100 },
         { "sensorKey": 11, "sampleRate": 100 },
         { "sensorKey": 12, "sampleRate": 100 },
-        { "sensorKey": 13, "sampleRate": 100 },
+        //{ "sensorKey": 13, "sampleRate": 100 },
         { "sensorKey": 21, "sampleRate": 100 }
       ],
-      "chartList": [1,2,3,4,7,8,15,16,17,11,12,13,21]
+      //"chartList": [1,2,3,4,7,8,15,16,17,11,12,13,21]
+      "chartList": [1,2,3,4,7,8,15,16,17,11,12,21]
     },
     {
       "code": 39,
-      "desc": "Microphone_(HS)",
+      "desc": "Microphone HS",
       "highSpeed": true,
       "frequencies": [2400, 4800],
       "sensors": [{ "sensorKey": 6, "sampleRate": 4800 }],
@@ -224,7 +227,7 @@ var iolabConfig =
     },
     {
       "code": 40,
-      "desc": "Light_(HS)",
+      "desc": "Light HS",
       "highSpeed": true,
       "frequencies": [2400, 4800],
       "sensors": [{ "sensorKey": 7, "sampleRate": 4800 }],
@@ -232,7 +235,7 @@ var iolabConfig =
     },
     {
       "code": 41,
-      "desc": "Light_Accel_(HS)",
+      "desc": "Light Accel HS",
       "highSpeed": true,
       "frequencies": [200, 400, 800],
       "sensors": [
@@ -243,7 +246,7 @@ var iolabConfig =
     },
     {
       "code": 42,
-      "desc": "Force_Accel_(HS)",
+      "desc": "Force Accel HS",
       "highSpeed": true,
       "frequencies": [200, 400, 800],
       "sensors": [
@@ -254,7 +257,7 @@ var iolabConfig =
     },
     {
       "code": 43,
-      "desc": "Light_Microphone_(HS)",
+      "desc": "Light Microphone HS",
       "highSpeed": true,
       "frequencies": [1200, 2400],
       "sensors": [
@@ -263,17 +266,17 @@ var iolabConfig =
       ],
       "chartList": [6,7]
     },
-    // {
-    //   "code": 44,
-    //   "desc": "ECG3_(HS)",
-    //   "highSpeed": true,
-    //   "frequencies": [200, 400, 800],
-    //   "sensors": [{ "sensorKey": 10, "sampleRate": 800 }],
-    //   "chartList": [10]
-    // },
+    {
+      "code": 44,
+      "desc": "A1 A2 A3",
+      "highSpeed": true,
+      "frequencies": [200, 400, 800],
+      "sensors": [{ "sensorKey": 10, "sampleRate": 800 }],
+      "chartList": [10]
+    },
     {
       "code": 45,
-      "desc": "High_Gain_(HS)",
+      "desc": "High Gain HS",
       "highSpeed": true,
       "frequencies": [2400, 4800],
       "sensors": [{ "sensorKey": 12, "sampleRate": 4800 }],
@@ -281,7 +284,7 @@ var iolabConfig =
     },
     {
       "code": 46,
-      "desc": "Force_(HS)",
+      "desc": "Force HS",
       "highSpeed": true,
       "frequencies": [2400, 4800],
       "sensors": [{ "sensorKey": 8, "sampleRate": 4800 }],
@@ -304,7 +307,7 @@ var iolabConfig =
     },
     {
       "code": 49,
-      "desc": "ECG6_(HS)",
+      "desc": "ECG6 HS",
       "sensors": [{ "sensorKey": 27, "sampleRate": 800 }],
       "chartList": [31,32,33,34,35,36,37,38,39]
     }
@@ -470,7 +473,7 @@ var iolabConfig =
       "unit": "mV",
       "legends": ["Voltage"],
       "pathColors": ["#0000BB"],
-      "scales": [-1, 1],
+      "scales": [-1.5, 1.5],
       "autoScaleY": false
     },
     {
