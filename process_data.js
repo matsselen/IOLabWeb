@@ -391,7 +391,7 @@ function buildAndCalibrate() {
             let tDat = (rawData[sensorID][ind][0][0] + i / nsamples) * 0.010;
 
             // save calibrated force data
-            calData[sensorID][calWritePtr[sensorID]++] = [tDat, mCal];
+            calData[sensorID][calWritePtr[sensorID]++] = [tDat, mDat / 500];
 
           }
         }
@@ -419,7 +419,7 @@ function buildAndCalibrate() {
             let tDat = (rawData[sensorID][ind][0][0] + i / nsamples) * 0.010;
 
             // save calibrated force data
-            calData[sensorID][calWritePtr[sensorID]++] = [tDat, lCal];
+            calData[sensorID][calWritePtr[sensorID]++] = [tDat, lDat / 500];
 
           }
         }
@@ -524,6 +524,39 @@ function buildAndCalibrate() {
       // advance raw data read pointer
       rawReadPtr[sensorID] = rawData[sensorID].length;
     }// wheel
+
+    // Battery
+    else if (sensorID == 11) {
+
+      // Vbat = counts*3V*2/4095
+      let countsPerVolt = 4095 / 2 / 3;
+
+      // loop over data packets that arrived since the last time
+      for (let ind = rawReadPtr[sensorID]; ind < rawData[sensorID].length; ind++) {
+
+        let nbytes = rawData[sensorID][ind][2].length;
+        if (nbytes % 2 != 0) {
+          console.log("battery bytecount not a multiple of 2");
+        } else {
+
+          // loop over the data samples in each packet
+          let nsamples = nbytes / 2;
+          for (let i = 0; i < nsamples; i++) {
+            let j = i * 2;
+            let aDat = (0xf & rawData[sensorID][ind][2][j]) << 8 | rawData[sensorID][ind][2][j + 1];
+            let tDat = (rawData[sensorID][ind][0][0] + i / nsamples) * 0.010;
+
+            // calibrated voltage in mV
+            let calBat = aDat / countsPerVolt;
+
+            calData[sensorID][calWritePtr[sensorID]++] = [tDat, calBat];
+          }
+        }
+      }
+
+      // advance raw data read pointer
+      rawReadPtr[sensorID] = rawData[sensorID].length;
+    } // battery
 
     // High Gain sensor
     else if (sensorID == 12) {
