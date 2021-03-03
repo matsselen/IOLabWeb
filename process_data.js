@@ -372,6 +372,62 @@ function buildAndCalibrate() {
       rawReadPtr[sensorID] = rawData[sensorID].length;
     } // acc/mag/gyro
 
+    // for the microphone     
+    else if (sensorID == 6) {
+
+      // loop over data packets that arrived since the last time
+      for (let ind = rawReadPtr[sensorID]; ind < rawData[sensorID].length; ind++) {
+
+        let nbytes = rawData[sensorID][ind][2].length;
+        if (nbytes % 2 != 0) {
+          console.log(" microphone bytecount not a multiple of 2");
+        } else {
+
+          // loop over the data samples in each packet
+          let nsamples = nbytes / 2;
+          for (let i = 0; i < nsamples; i++) {
+            let j = i * 2;
+            let mDat = rawData[sensorID][ind][2][j] << 8 | rawData[sensorID][ind][2][j + 1];
+            let tDat = (rawData[sensorID][ind][0][0] + i / nsamples) * 0.010;
+
+            // save calibrated force data
+            calData[sensorID][calWritePtr[sensorID]++] = [tDat, mCal];
+
+          }
+        }
+      }
+      // advance raw data read pointer
+      rawReadPtr[sensorID] = rawData[sensorID].length;
+    } // microphone    
+
+    // for the light sensor    
+    else if (sensorID == 7) {
+
+      // loop over data packets that arrived since the last time
+      for (let ind = rawReadPtr[sensorID]; ind < rawData[sensorID].length; ind++) {
+
+        let nbytes = rawData[sensorID][ind][2].length;
+        if (nbytes % 2 != 0) {
+          console.log(" light bytecount not a multiple of 2");
+        } else {
+
+          // loop over the data samples in each packet
+          let nsamples = nbytes / 2;
+          for (let i = 0; i < nsamples; i++) {
+            let j = i * 2;
+            let lDat = rawData[sensorID][ind][2][j] << 8 | rawData[sensorID][ind][2][j + 1];
+            let tDat = (rawData[sensorID][ind][0][0] + i / nsamples) * 0.010;
+
+            // save calibrated force data
+            calData[sensorID][calWritePtr[sensorID]++] = [tDat, lCal];
+
+          }
+        }
+      }
+      // advance raw data read pointer
+      rawReadPtr[sensorID] = rawData[sensorID].length;
+    } // light
+
     // for the force sensor    
     else if (sensorID == 8) {
 
