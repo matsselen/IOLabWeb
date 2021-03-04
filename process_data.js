@@ -561,10 +561,10 @@ function buildAndCalibrate() {
     // High Gain sensor
     else if (sensorID == 12) {
 
-      // 2^12 counts = Vref/gain volts = 3V/1200
-      // 4096 counts = 0.0025V = 2.5 mV
-      // 1mv = 1638.4 counts
-      let countsPerMillivolt = 1638.4;
+      // 2^12 counts = Vref/gain volts = 3V/1400
+      // 4095 counts = 0.0025V = 2.1429 mV
+      // 1mv = 1911.0 counts
+      let countsPerMillivolt = 1911.0;
 
       // loop over data packets that arrived since the last time
       for (let ind = rawReadPtr[sensorID]; ind < rawData[sensorID].length; ind++) {
