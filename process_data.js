@@ -196,9 +196,12 @@ function processGetCalibration(recStart, recLength) {
         rawBarometerB1 = (rxdata[recStart + 5] << 8) + rxdata[recStart + 6];
         rawBarometerB2 = (rxdata[recStart + 7] << 8) + rxdata[recStart + 8];
         rawBarometerC12 = (rxdata[recStart + 9] << 8) + rxdata[recStart + 10];
+        console.log("Barometer calibration constants: A0=0x" + rawBarometerA0.toString(16) +
+        " B1=0x" + rawBarometerB1.toString(16) + " B2=0x" + rawBarometerB2.toString(16) + 
+        " C12=0x" + rawBarometerC12.toString(16) );
 
       } else {
-        console.log("wrong number of barometer calibration bytes: ", ncalbytes);
+        console.log("Wrong number of barometer calibration bytes: ", ncalbytes);
       }
     }
 
@@ -207,9 +210,10 @@ function processGetCalibration(recStart, recLength) {
       if (ncalbytes == 4) {
         rawThermometerC85 = (rxdata[recStart + 3] << 8) + rxdata[recStart + 4];
         rawThermometerC30 = (rxdata[recStart + 5] << 8) + rxdata[recStart + 6];
-
+        console.log("Thermometer calibration constants: C85=0x" + rawThermometerC85.toString(16) +
+        " C30=0x" + rawThermometerC30.toString(16) );
       } else {
-        console.log("wrong number of thermometer calibration bytes: ", ncalbytes);
+        console.log("Wrong number of thermometer calibration bytes: ", ncalbytes);
       }
     }
 

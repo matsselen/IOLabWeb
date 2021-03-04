@@ -191,7 +191,10 @@ async function readLoop() {
                     rxdata[writePointer++] = value[i];
                 }
                 // write Rx control records to Rx box (but not async data records)
-                if (!runningDAQ && value[0] == 2) { dataBoxRx.innerHTML += value + '\n'; }
+                //if (!runningDAQ) { dataBoxRx.innerHTML += value + '\n'; }
+                if (showCommands) { 
+                    dataBoxRx.innerHTML += value + '\n'; 
+                }
             }
 
             if (done) {
@@ -228,4 +231,3 @@ async function sendRecord(byteArray) {
         console.log("sendRecord: serial port is not open");
     }
 }
-
