@@ -104,6 +104,9 @@ var lengthArray = [[],[]];
 var lengthBySensor;
 var nGetPacketConfig = 0;
 
+// thermometer and barometert calibration
+var nGetCalibration = 0;
+
 // these hold the fixed configuration info
 var fixedConfig = [0,0];
 var iolabConfigIndex;

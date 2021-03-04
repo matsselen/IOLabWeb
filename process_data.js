@@ -90,6 +90,10 @@ function extractRecords() {
             nGetPacketConfig++;
             processGetPacketConfig(readPointer + 3, payloadBytes);
           }
+          if (recType == 0x29) { // Get Thermometer or Barometer Calibration
+            nGetCalibration++;
+            processGetCalibration(readPointer + 3, payloadBytes);
+          }          
           if (recType == 0x2A) { // Get Remote Status
             nGetRemoteStatus++;
             processGetRemoteStatus(readPointer + 3, payloadBytes);
@@ -174,6 +178,11 @@ function processGetPacketConfig(recStart, recLength) {
   } else {
     console.log("invalid remote in GetPacketConfig record: " + remote);
   }
+}
+
+// Process responses to the Get Calibration commands
+function processGetCalibration() {
+
 }
 
 // Process responses to the Get Fixed Config command
