@@ -93,7 +93,7 @@ function extractRecords() {
           if (recType == 0x29) { // Get Thermometer or Barometer Calibration
             nGetCalibration++;
             processGetCalibration(readPointer + 3, payloadBytes);
-          }          
+          }
           if (recType == 0x2A) { // Get Remote Status
             nGetRemoteStatus++;
             processGetRemoteStatus(readPointer + 3, payloadBytes);
@@ -181,8 +181,47 @@ function processGetPacketConfig(recStart, recLength) {
 }
 
 // Process responses to the Get Calibration commands
-function processGetCalibration() {
+function processGetCalibration(recStart, recLength) {
 
+  let remote = rxdata[recStart] - 1;
+  if (remote == 0 || remote == 1) {
+    let calsensor = rxdata[recStart + 1];
+    let ncalbytes = rxdata[recStart + 2];
+
+    // barometer calibration
+    if (calsensor == 4) {
+      
+      if (ncalbytes == 8) {
+        rawBarometerA0 = (rxdata[recStart + 3] << 8) + rxdata[recStart + 4];
+        rawBarometerB1 = (rxdata[recStart + 5] << 8) + rxdata[recStart + 6];
+        rawBarometerB2 = (rxdata[recStart + 7] << 8) + rxdata[recStart + 8];
+        rawBarometerC12 = (rxdata[recStart + 9] << 8) + rxdata[recStart + 10];
+
+      } else {
+        console.log("wrong number of barometer calibration bytes: ", ncalbytes);
+      }
+    }
+
+    // thermometer calibration
+    else if (calsensor == 26) {
+      if (ncalbytes == 4) {
+        rawThermometerC85 = (rxdata[recStart + 3] << 8) + rxdata[recStart + 4];
+        rawThermometerC30 = (rxdata[recStart + 5] << 8) + rxdata[recStart + 6];
+
+      } else {
+        console.log("wrong number of thermometer calibration bytes: ", ncalbytes);
+      }
+    }
+
+    // oopsie - sensor not recognized
+    else {
+      console.log("invalid sensor in processGetCalibration: ", calsensor);
+    }
+
+  } else {
+    console.log("invalid remote in processGetCalibration: ", remote);
+  }
+  updateSystemState();
 }
 
 // Process responses to the Get Fixed Config command

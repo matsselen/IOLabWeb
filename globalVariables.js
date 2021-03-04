@@ -106,6 +106,13 @@ var nGetPacketConfig = 0;
 
 // thermometer and barometert calibration
 var nGetCalibration = 0;
+var rawBarometerA0 = 0;
+var rawBarometerB1 = 0;
+var rawBarometerB2 = 0;
+var rawBarometerC12 = 0;
+var rawThermometerC85 = 0;
+var rawThermometerC30 = 0;
+
 
 // these hold the fixed configuration info
 var fixedConfig = [0,0];
