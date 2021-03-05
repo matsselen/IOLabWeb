@@ -424,6 +424,42 @@ function buildAndCalibrate() {
       rawReadPtr[sensorID] = rawData[sensorID].length;
     } // acc/mag/gyro
 
+    // for the barometer     
+    else if (sensorID == 4) {
+
+      // loop over data packets that arrived since the last time
+      for (let ind = rawReadPtr[sensorID]; ind < rawData[sensorID].length; ind++) {
+
+        let nbytes = rawData[sensorID][ind][2].length;
+        if (nbytes % 4 != 0) {
+          console.log(" barometer bytecount not a multiple of 4");
+        } else {
+
+          // loop over the data samples in each packet
+          let nsamples = nbytes / 4;
+          for (let i = 0; i < nsamples; i++) {
+            let j = i * 4;
+            let bDatP = rawData[sensorID][ind][2][j] << 8 | rawData[sensorID][ind][2][j + 1];
+            let bDatT = rawData[sensorID][ind][2][j+2] << 8 | rawData[sensorID][ind][2][j + 3];
+            let tDat = (rawData[sensorID][ind][0][0] + i / nsamples) * 0.010;
+
+            // the data are 10 bit unsigned integers, left aligned, so shift right 6 bits & mask
+            bDatP = (bDatP >> 6) & 0x3ff;
+            bDatT = (bDatT >> 6) & 0x3ff;
+
+            // find calibrated barometric pressure
+            let bCalDat = calBarometer(bDatP, bDatT);
+
+            // save calibrated force data
+            calData[sensorID][calWritePtr[sensorID]++] = [tDat, bCalDat];
+
+          }
+        }
+      }
+      // advance raw data read pointer
+      rawReadPtr[sensorID] = rawData[sensorID].length;
+    } // barometer    
+
     // for the microphone     
     else if (sensorID == 6) {
 
@@ -684,6 +720,42 @@ function buildAndCalibrate() {
       rawReadPtr[sensorID] = rawData[sensorID].length;
     } // A7/8/9
 
+    // for the thermometer     
+    else if (sensorID == 26) {
+
+      // loop over data packets that arrived since the last time
+      for (let ind = rawReadPtr[sensorID]; ind < rawData[sensorID].length; ind++) {
+
+        let nbytes = rawData[sensorID][ind][2].length;
+        if (nbytes % 4 != 0) {
+          console.log(" thermometer bytecount not a multiple of 4");
+        } else {
+
+          // loop over the data samples in each packet
+          let nsamples = nbytes / 4;
+          for (let i = 0; i < nsamples; i++) {
+            let j = i * 4;
+            let ovsTemp = rawData[sensorID][ind][2][j] << 24 | rawData[sensorID][ind][2][j + 1] << 16 | rawData[sensorID][ind][2][j+2] << 8 | rawData[sensorID][ind][2][j + 3];
+            let tDat = (rawData[sensorID][ind][0][0] + i / nsamples) * 0.010;
+
+            // the temperature are oversampled at 400 Hz and the readout rate of fixed config 6 is 50 Hz
+            // so we need to divide this number by 400/50 = 8
+            let tempCounts = ovsTemp/8;
+
+
+            // find calibrated barometric pressure
+            let tempCal = 30 + (tempCounts - rawThermometerC30)*(85-30)/(rawThermometerC85-rawThermometerC30);
+
+            // save calibrated force data
+            calData[sensorID][calWritePtr[sensorID]++] = [tDat, tempCal];
+
+          }
+        }
+      }
+      // advance raw data read pointer
+      rawReadPtr[sensorID] = rawData[sensorID].length;
+    } // barometer    
+
     // for the ecg sensor
     else if (sensorID == 27) {
 
@@ -861,4 +933,8 @@ function calGyro(n) {
 
 function calForce(n) {
   return (n - 200) / 1000;
+}
+
+function calBarometer(pDat, tDat) {
+
 }

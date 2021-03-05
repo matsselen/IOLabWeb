@@ -104,12 +104,16 @@ var lengthArray = [[],[]];
 var lengthBySensor;
 var nGetPacketConfig = 0;
 
-// thermometer and barometert calibration
+// barometert calibration
 var nGetCalibration = 0;
 var rawBarometerA0 = 0;
 var rawBarometerB1 = 0;
 var rawBarometerB2 = 0;
 var rawBarometerC12 = 0;
+var calA0, calB1, calB2, calC12;
+var baromConstCalculated = false;
+
+// thermometer calibration
 var rawThermometerC85 = 0;
 var rawThermometerC30 = 0;
 
