@@ -1,3 +1,7 @@
+// MIT License
+// Copyright (c) 2021 Mats Selen
+// ---------------------------------
+
 'use strict';
 
 // Associate event handlers with the checkboxes that control display

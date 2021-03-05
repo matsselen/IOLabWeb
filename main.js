@@ -1,5 +1,9 @@
+// MIT License
+// Copyright (c) 2021 Mats Selen
+// ---------------------------------
+
 //
-// Code for playing around with IOLab using the Web Serial API
+// Main code for playing around with IOLab using the Web Serial API
 //
 'use strict';
 

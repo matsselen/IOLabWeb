@@ -1,4 +1,7 @@
-// 
+// MIT License
+// Copyright (c) 2021 Mats Selen
+// ---------------------------------
+
 // This code are used for data nalysis
 //      class StatsIOLab
 
@@ -32,6 +35,7 @@ class StatsIOLab {
 
     }
 
+    // calculates various statistics
     calcStats(indFirst, indLast) {
 
         if (indFirst != this.indFirstCalc || indLast != this.indLastCalc) {

@@ -1,6 +1,7 @@
-//
-// Move some of the run control stuff in there
-//
+// MIT License
+// Copyright (c) 2021 Mats Selen
+// ---------------------------------
+
 'use strict';
 
 //============================================================

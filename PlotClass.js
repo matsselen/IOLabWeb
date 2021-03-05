@@ -1,5 +1,9 @@
+// MIT License
+// Copyright (c) 2021 Mats Selen
+// ---------------------------------
+
 // 
-// This code are used for plotting
+// This code are used for plotting IOLab data
 //      class PlotSet
 //      class ViewPort
 //      class PlotIOLab

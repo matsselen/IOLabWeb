@@ -1,3 +1,7 @@
+// MIT License
+// Copyright (c) 2021 Mats Selen
+// ---------------------------------
+
 // Global variables for data acquisition
 'use strict';
 

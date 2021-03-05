@@ -1,3 +1,8 @@
+// MIT License
+// Copyright (c) 2021 Mats Selen
+// ---------------------------------
+
+'use strict';
 async function getBarometerThermometerCalibration() {
 
 

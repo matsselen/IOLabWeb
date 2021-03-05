@@ -1,3 +1,7 @@
+// MIT License
+// Copyright (c) 2021 Mats Selen
+// ---------------------------------
+
 'use strict';
 //====================================================================
 // Call this to clear and reset the acquisition 

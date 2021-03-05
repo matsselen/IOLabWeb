@@ -1,3 +1,7 @@
+// MIT License
+// Copyright (c) 2021 Mats Selen
+// ---------------------------------
+
 var iolabConfig =
 {
   "version": "1.1.0",

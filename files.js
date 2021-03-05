@@ -1,3 +1,7 @@
+// MIT License
+// Copyright (c) 2021 Mats Selen
+// ---------------------------------
+
 'use strict';
 
 // play with cookies (just learning at this point)
