@@ -72,7 +72,7 @@ async function clickConnect() {
 async function clickSend() {
 
   // get the current command string
-  if (current_config_code == -1) return;
+  if ((current_cmd == "setFixedConfig")&&(current_config_code == -1)) return;
 
   let byteArray = getCommandRecord(current_cmd);
   console.log(byteArray);
@@ -210,12 +210,14 @@ function updateSystemState() {
 
     // try to fetch the status of the remote
     setTimeout(async function () {
+      // get remote status
       let byteArray = getCommandRecord("getRemoteStatus");
       console.log(byteArray);
-      await sendRecord(byteArray);
-    }, 100);
+      await sendRecord(byteArray);     
 
+    }, 100);
   }
+
 }
 
 

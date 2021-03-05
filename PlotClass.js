@@ -595,6 +595,10 @@ class PlotIOLab {
         let infoLayer = this.layerElementList[this.layerElementList.length - 3];
         let infoDrawContext = infoLayer.getContext("2d");
 
+        // if this involves the thermometer or barometer sensors then fetch their calibration constants
+        if (sensorNum == 4) {
+            getBarometerThermometerCalibration();
+        }
 
         // =================================================================================
         // IOLabPlot Constructor functions and event handlers

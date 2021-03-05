@@ -73,6 +73,14 @@ function getCommandRecord(command, remoteID, payload) {
     remoteID = 1;
     byteArray = new Uint8Array([0x02, 0x28, 0x01, remoteID, 0x0A]);
 
+  } else if (command == "getBarometerCalibration") {
+    remoteID = 1;
+    byteArray = new Uint8Array([0x02, 0x29, 0x02, remoteID, 4, 0x0A]);
+
+  } else if (command == "getThermometerCalibration") {
+    remoteID = 1;
+    byteArray = new Uint8Array([0x02, 0x29, 0x02, remoteID, 26, 0x0A]);
+
   } else if (command == "startData") {
     byteArray = new Uint8Array([0x02, 0x20, 0x00, 0x0A]);
 
@@ -127,6 +135,14 @@ function buildCmdPicker() {
 
   cmdOption = document.createElement('option');
   cmdOption.value = cmdOption.innerText = "getRemoteStatus";
+  cmdPicker.appendChild(cmdOption);
+
+  cmdOption = document.createElement('option');
+  cmdOption.value = cmdOption.innerText = "getBarometerCalibration";
+  cmdPicker.appendChild(cmdOption);
+
+  cmdOption = document.createElement('option');
+  cmdOption.value = cmdOption.innerText = "getThermometerCalibration";
   cmdPicker.appendChild(cmdOption);
 
   cmdOption = document.createElement('option');
