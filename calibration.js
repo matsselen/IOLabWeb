@@ -3,6 +3,34 @@
 // ---------------------------------
 
 'use strict';
+
+
+function setCalCookie(cname, cvalue, exhours) {
+    var d = new Date();
+    console.log("setCalCookie() called:"+d.toGMTString());
+    d.setTime(d.getTime() + (exhours * 60 * 60 * 1000));
+    var expires = "expires=" + d.toGMTString();
+    var ctxt = cname + "=" + cvalue + ";" + expires + ";path=/";
+    console.log("setCalCookie():"+ctxt);
+    document.cookie = ctxt;
+}
+
+function getCalCookies(cname) {
+    var name = cname + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    var ca = decodedCookie.split(';');
+    for (var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "cookie " + cname + " not found";
+}
+
 async function getBarometerThermometerCalibration() {
 
 

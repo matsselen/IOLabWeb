@@ -138,7 +138,10 @@ async function clickDebug() {
   // nDebug++;
 
   //checkCookie();
-  //setCookie("iolabcal", "mats", 10);
+  setCookie("iolabcal", "141136, 1, 6, -111.82, 833.41, -66.75, 829.33, -8.61, 832.22", 10);
+  setCookie("iolabcal", "141136, 2, 6, -1367.16, 9.625, 1159.81, 1159.81, 1000.43, 9.6", 10);
+  setCookie("iolabcal", "141136, 3, 6, -1.38, 815, 12.39, 815, 10.68, 815", 10);
+  setCookie("iolabcal", "141136, 8, 2, 101.98, -59.74", 10);
   //let cfetched = getCookie("iolabcal");
   //console.log("fetched cookie:"+cfetched);
   //location.reload();
