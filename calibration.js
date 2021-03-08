@@ -10,11 +10,16 @@ var calMagConst = [[-1367.16, 9.625, 1159.81, 1159.81, 1000.43, 9.6], [0, 10, 0,
 var calGyroConst = [[-1.38, 815, 12.39, 815, 10.68, 815], [0, 815, 0, 815, 0, 815]]; // [remote][values]
 var calForceConst = [[101.98, -59.74], [0, -60]]; // [remote][values]
 
+// var calAccelConst = [[],[]];
+// var calMagConst = [[],[]];
+// var calGyroConst = [[],[]];
+// var calForceConst = [[],[]];
+
 function setCalCookieTest () {
-    setCalCookie(remote1ID, 1, calAccel[0] );
-    setCalCookie(remote1ID, 2, calMag[0] );
-    setCalCookie(remote1ID, 3, calGyro[0] );
-    setCalCookie(remote1ID, 8, calForce[0] );
+    setCalCookie(remote1ID, 1, calAccelConst[0] );
+    setCalCookie(remote1ID, 2, calMagConst[0] );
+    setCalCookie(remote1ID, 3, calGyroConst[0] );
+    setCalCookie(remote1ID, 8, calForceConst[0] );
 }
 
 function setCalCookie(remoteID, sensorNum, calArray) {
@@ -37,10 +42,10 @@ function setCalCookie(remoteID, sensorNum, calArray) {
     for (let ind = 0; ind < calArray.length; ind++) {
         values += "," + calArray[ind].toString();
     }
-    values += "]"
+    values += "]";
 
     // construct the cookie contents in the form "name=value; expires=expirationTime; path"
-    let cookieText = "iolabcal=" + values + ";" + "expires=" + expirationTime + ";path=/";
+    let cookieText = "iolabcal_"+ sensorNum.toString()+"_" + remoteID.toString() + "=" + values + ";" + "expires=" + expirationTime + ";path=/";
     console.log("setCalCookie(): " + cookieText);
 
     // create the cookie
