@@ -400,24 +400,24 @@ function buildAndCalibrate() {
 
             // accelerometer
             if (sensorID == 1) {
-              let calx = calAccel(tc2int(xDat));
-              let caly = calAccel(tc2int(yDat));
-              let calz = calAccel(tc2int(zDat));
+              let calx = calAccelData(tc2int(xDat));
+              let caly = calAccelData(tc2int(yDat));
+              let calz = calAccelData(tc2int(zDat));
               // accdelerometer is turned on PCB so x = -y and y = x
               calData[sensorID][calWritePtr[sensorID]++] = [tDat, -caly, calx, calz];
 
               // magnetometer
             } else if (sensorID == 2) {
-              let calx = calMag(tc2int(xDat));
-              let caly = calMag(tc2int(yDat));
-              let calz = calMag(tc2int(zDat));
+              let calx = calMagData(tc2int(xDat));
+              let caly = calMagData(tc2int(yDat));
+              let calz = calMagData(tc2int(zDat));
               calData[sensorID][calWritePtr[sensorID]++] = [tDat, caly, calx, calz];
 
               // gyroscope
             } else if (sensorID == 3) {
-              let calx = calGyro(tc2int(xDat));
-              let caly = calGyro(tc2int(yDat));
-              let calz = calGyro(tc2int(zDat));
+              let calx = calGyroData(tc2int(xDat));
+              let caly = calGyroData(tc2int(yDat));
+              let calz = calGyroData(tc2int(zDat));
               calData[sensorID][calWritePtr[sensorID]++] = [tDat, caly, calx, calz];
             }
           }//sample loop
@@ -452,7 +452,7 @@ function buildAndCalibrate() {
             bDatT = (bDatT >> 6) & 0x3ff;
 
             // find calibrated barometric pressure
-            let bCalDat = calBarometer(bDatP, bDatT);
+            let bCalDat = calBaromData(bDatP, bDatT);
 
             // save calibrated force data
             calData[sensorID][calWritePtr[sensorID]++] = [tDat, bCalDat];
@@ -536,7 +536,7 @@ function buildAndCalibrate() {
           for (let i = 0; i < nsamples; i++) {
             let j = i * 2;
             let fRaw = rawData[sensorID][ind][2][j] << 8 | rawData[sensorID][ind][2][j + 1];
-            let fDat = calForce(fRaw);
+            let fDat = calForceData(fRaw);
             let tDat = (rawData[sensorID][ind][0][0] + i / nsamples) * 0.010;
 
             // save calibrated force data
@@ -923,22 +923,18 @@ function tc2int(n) {
 }
 
 // placeholder calibration functions 
-function calAccel(n) {
+function calAccelData(n) {
   return 9.81 * n / 8080;
 }
 
-function calMag(n) {
+function calMagData(n) {
   return (n + 500) / 50;
 }
 
-function calGyro(n) {
+function calGyroData(n) {
   return n / 815;
 }
 
-function calForce(n) {
+function calForceData(n) {
   return (n - 200) / 1000;
-}
-
-function calBarometer(pDat, tDat) {
-
 }

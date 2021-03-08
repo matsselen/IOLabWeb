@@ -4,10 +4,18 @@
 
 'use strict';
 
-setCalCookie("iolabcal", "141136, 1, 6, -111.82, 833.41, -66.75, 829.33, -8.61, 832.22", 10);
-setCalCookie("iolabcal", "141136, 2, 6, -1367.16, 9.625, 1159.81, 1159.81, 1000.43, 9.6", 10);
-setCalCookie("iolabcal", "141136, 3, 6, -1.38, 815, 12.39, 815, 10.68, 815", 10);
-setCalCookie("iolabcal", "141136, 8, 2, 101.98, -59.74", 10);
+
+var calAccelConst = [[-111.82, 833.41, -66.75, 829.33, -8.61, 832.22], [0, 830, 0, 830, 0, 830]]; // [remote][values]
+var calMagConst = [[-1367.16, 9.625, 1159.81, 1159.81, 1000.43, 9.6], [0, 10, 0, 10, 0, 10]]; // [remote][values]
+var calGyroConst = [[-1.38, 815, 12.39, 815, 10.68, 815], [0, 815, 0, 815, 0, 815]]; // [remote][values]
+var calForceConst = [[101.98, -59.74], [0, -60]]; // [remote][values]
+
+function setCalCookieTest () {
+    setCalCookie(remote1ID, 1, calAccel[0] );
+    setCalCookie(remote1ID, 2, calMag[0] );
+    setCalCookie(remote1ID, 3, calGyro[0] );
+    setCalCookie(remote1ID, 8, calForce[0] );
+}
 
 function setCalCookie(remoteID, sensorNum, calArray) {
 
@@ -15,17 +23,17 @@ function setCalCookie(remoteID, sensorNum, calArray) {
 
     // the time now
     let d = new Date();
-    console.log("setCalCookie() called:"+d.toGMTString());
+    console.log("setCalCookie() called:" + d.toGMTString());
 
     // figure out the expiration time
     let now = d.getTime();
-    d.setTime(now + expireHours*60*60*1000);
+    d.setTime(now + expireHours * 60 * 60 * 1000);
     let expirationTime = d.toGMTString();
 
-    
-    // assemble the values to save in the cookie
-    let values = "[" + now.toString() + "," + remoteID.toString() + "," + sensorNum.toString()
 
+    // assemble the values to save in the cookie
+    // [timestamp, sensorID, sensorNumber, offset1, scale1, offset2, scale2,...]
+    let values = "[" + now.toString() + "," + remoteID.toString() + "," + sensorNum.toString()
     for (let ind = 0; ind < calArray.length; ind++) {
         values += "," + calArray[ind].toString();
     }
@@ -33,7 +41,7 @@ function setCalCookie(remoteID, sensorNum, calArray) {
 
     // construct the cookie contents in the form "name=value; expires=expirationTime; path"
     let cookieText = "iolabcal=" + values + ";" + "expires=" + expirationTime + ";path=/";
-    console.log("setCalCookie(): "+cookieText);
+    console.log("setCalCookie(): " + cookieText);
 
     // create the cookie
     document.cookie = cookieText;
@@ -109,7 +117,7 @@ function calcBarometerConstants() {
 
     let c12 = tc2int(rawBarometerC12);
     let signC12 = Math.sign(c12);
-    let absC12 = Math.abs(c12)>>2;
+    let absC12 = Math.abs(c12) >> 2;
 
     // decode the integer and fractional parts and put it all together
     let integerA0 = (absA0 >> 3);
@@ -135,7 +143,7 @@ function calcBarometerConstants() {
 }
 
 // caluclate absolute pressure in kPa
-function calBarometer(pDat, tDat) {
+function calBaromData(pDat, tDat) {
     // the first time through calculate calibrations constants
     if (!baromConstCalculated) {
         calcBarometerConstants();

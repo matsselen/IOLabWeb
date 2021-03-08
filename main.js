@@ -136,6 +136,7 @@ async function clickDebug() {
   //   console.log("getCookie returns "+ctst);
   // }
   // nDebug++;
+  setCalCookieTest();
 
   //checkCookie();
   // setCookie("iolabcal", "141136, 1, 6, -111.82, 833.41, -66.75, 829.33, -8.61, 832.22", 10);
