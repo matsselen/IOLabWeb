@@ -12,7 +12,7 @@ var calForceConst = [[],[]];
 
 var calAccelConstDefault = [-190, 833, -93, 830, 0, 832]; 
 var calMagConstDefault = [-1382, 9.0, 1180, 9.9, 1019, 9.1]; 
-var calGyroConstDefault = [-2, 940, -14, 940, -14, 940]; 
+var calGyroConstDefault = [0, 807, 20, 833, 13, 825]; 
 var calForceConstDefault = [2147, -58.2]; 
 
 // this holds the calibration constants fetched from browser cookies
@@ -20,6 +20,14 @@ var calArrayList = null;
 
 // if we havent fetched the calibrations yet
 var notFetchedCal = [true, true];
+
+// set cookies via server
+function setCalCookieTest () {
+    setCalCookie(remote1ID, 1, [-190, 833, -93, 830, 0, 832] );
+    setCalCookie(remote1ID, 2, [-1382, 9.0, 1180, 9.9, 1019, 9.1] );
+    setCalCookie(remote1ID, 3, [0, 807, 20, 833, 13, 825] );
+    setCalCookie(remote1ID, 8, [2147, -58.2] );   
+}
 
 // see if any of the calibration values found in cookies can be used for the current remotes.
 function setCalValues(remoteNumber, remoteID) {  // remoteNumber = 0,1 and remoteID is 24 bit ID
@@ -77,12 +85,6 @@ function setCalValues(remoteNumber, remoteID) {  // remoteNumber = 0,1 and remot
 
 }
 
-function setCalCookieTest () {
-    setCalCookie(remote1ID, 1, [-190, 833, -93, 830, 0, 832] );
-    setCalCookie(remote1ID, 2, [-1382, 9.0, 1180, 9.9, 1019, 9.1] );
-    setCalCookie(remote1ID, 3, [-2, 940, -14, 940, -14, 940] );
-    setCalCookie(remote1ID, 8, [2147, -58.2] );   
-}
 
 // this creates a cookie on the client browser to hold the calibration values in "calArray" for 
 // sensor "sensorNum" on remote having "remoteID"
