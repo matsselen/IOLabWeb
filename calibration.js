@@ -10,10 +10,10 @@ var calMagConst = [[],[]];
 var calGyroConst = [[],[]];
 var calForceConst = [[],[]]; 
 
-var calAccelConstDefault = [0, 830, 0, 830, 0, 830]; 
-var calMagConstDefault = [0, 10, 0, 10, 0, 10]; 
-var calGyroConstDefault = [0, 815, 0, 815, 0, 815]; 
-var calForceConstDefault = [0, -60]; 
+var calAccelConstDefault = [-190, 833, -93, 830, 0, 832]; 
+var calMagConstDefault = [-1382, 9.0, 1180, 9.9, 1019, 9.1]; 
+var calGyroConstDefault = [-2, 940, -14, 940, -14, 940]; 
+var calForceConstDefault = [2147, -58.2]; 
 
 // this holds the calibration constants fetched from browser cookies
 var calArrayList = null;
@@ -78,10 +78,10 @@ function setCalValues(remoteNumber, remoteID) {  // remoteNumber = 0,1 and remot
 }
 
 function setCalCookieTest () {
-    setCalCookie(remote1ID, 1, calAccelConst[0] );
-    setCalCookie(remote1ID, 2, calMagConst[0] );
-    setCalCookie(remote1ID, 3, calGyroConst[0] );
-    setCalCookie(remote1ID, 8, calForceConst[0] );   
+    setCalCookie(remote1ID, 1, [-190, 833, -93, 830, 0, 832] );
+    setCalCookie(remote1ID, 2, [-1382, 9.0, 1180, 9.9, 1019, 9.1] );
+    setCalCookie(remote1ID, 3, [-2, 940, -14, 940, -14, 940] );
+    setCalCookie(remote1ID, 8, [2147, -58.2] );   
 }
 
 // this creates a cookie on the client browser to hold the calibration values in "calArray" for 
@@ -236,6 +236,29 @@ function calBaromData(pDat, tDat) {
 }
 
 // calibration functions 
-function testXYZ(x,y,z) {
-    return ([2*x, 2*y, 2*z]);
+// assume remote r=0 for now
+function calAccelXYZ(x,y,z,r=0) {
+    let cx = (x-calAccelConst[r][0])/calAccelConst[r][1];
+    let cy = (y-calAccelConst[r][2])/calAccelConst[r][3];
+    let cz = (z-calAccelConst[r][4])/calAccelConst[r][5];
+    return ([cx, cy, cz]);
+}
+
+function calMagXYZ(x,y,z,r=0) {
+    let cx = (x-calMagConst[r][0])/calMagConst[r][1];
+    let cy = (y-calMagConst[r][2])/calMagConst[r][3];
+    let cz = (z-calMagConst[r][4])/calMagConst[r][5];
+    return ([cx, cy, cz]);
+}
+
+function calGyroXYZ(x,y,z,r=0) {
+    let cx = (x-calGyroConst[r][0])/calGyroConst[r][1];
+    let cy = (y-calGyroConst[r][2])/calGyroConst[r][3];
+    let cz = (z-calGyroConst[r][4])/calGyroConst[r][5];
+    return ([cx, cy, cz]);
+}
+
+function calForceY(y,r=0) {
+    let cy= (y-calForceConst[r][0])/calForceConst[r][1];
+    return (cy);
 }

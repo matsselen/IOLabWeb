@@ -132,6 +132,7 @@ async function clickStartStop() {
 async function clickDebug() {
 
   console.log("Debug button clicked (put breakpoint here)");
+  //setCalCookieTest();
 
   //location.reload();
   //resetAcquisition();

@@ -357,6 +357,7 @@ function processDataRecord(recStart, recLength) {
       }
 
       // Build data packet
+      //let dataPacket = [[remote, elapsedFrame, rfstat, rssi], [sens, ovfl], dataList];
       let dataPacket = [[elapsedFrame, rfstat, rssi], [sens, ovfl], dataList];
 
       // push the data onto a 2D raw data array indexed by sensor ID.
@@ -383,6 +384,11 @@ function buildAndCalibrate() {
 
       // loop over data packets that arrived since the last time
       for (let ind = rawReadPtr[sensorID]; ind < rawData[sensorID].length; ind++) {
+        // let remote = rawData[sensorID][ind][0][0];
+        // if (remote < 0 || remote > 1) {
+        //   console.log("In buildAndCalibrate(): bad remote "+remote.toString());
+        //   return;
+        // }
 
         let nbytes = rawData[sensorID][ind][2].length;
         if (nbytes % 6 != 0) {
@@ -400,28 +406,34 @@ function buildAndCalibrate() {
 
             // accelerometer
             if (sensorID == 1) {
-              let calx = calAccelData(tc2int(xDat));
-              let caly = calAccelData(tc2int(yDat));
-              let calz = calAccelData(tc2int(zDat));
-              calData[sensorID][calWritePtr[sensorID]++] = [tDat, -caly, calx, calz];
+              // let calx = calAccelData(tc2int(xDat));
+              // let caly = calAccelData(tc2int(yDat));
+              // let calz = calAccelData(tc2int(zDat));
+              // calData[sensorID][calWritePtr[sensorID]++] = [tDat, -caly, calx, calz];
 
               // accdelerometer is turned on PCB so x = -y and y = x
-              // let calXYZ = calAccelXYZ(-tc2int(yDat),tc2int(xDat),tc2int(zDat));
-              // calData[sensorID][calWritePtr[sensorID]++] = [tDat, calXYZ[0], calXYZ[1], calXYZ[2]];
+              let calXYZ = calAccelXYZ(-tc2int(yDat),tc2int(xDat),tc2int(zDat));
+              calData[sensorID][calWritePtr[sensorID]++] = [tDat, calXYZ[0], calXYZ[1], calXYZ[2]];
 
               // magnetometer
             } else if (sensorID == 2) {
-              let calx = calMagData(tc2int(xDat));
-              let caly = calMagData(tc2int(yDat));
-              let calz = calMagData(tc2int(zDat));
-              calData[sensorID][calWritePtr[sensorID]++] = [tDat, caly, calx, calz];
+              // let calx = calMagData(tc2int(xDat));
+              // let caly = calMagData(tc2int(yDat));
+              // let calz = calMagData(tc2int(zDat));
+              // calData[sensorID][calWritePtr[sensorID]++] = [tDat, calx, caly, calz];
+
+              let calXYZ = calMagXYZ(-tc2int(xDat),-tc2int(yDat),-tc2int(zDat));
+              calData[sensorID][calWritePtr[sensorID]++] = [tDat, calXYZ[0], calXYZ[1], calXYZ[2]];    
 
               // gyroscope
             } else if (sensorID == 3) {
-              let calx = calGyroData(tc2int(xDat));
-              let caly = calGyroData(tc2int(yDat));
-              let calz = calGyroData(tc2int(zDat));
-              calData[sensorID][calWritePtr[sensorID]++] = [tDat, caly, calx, calz];
+              // let calx = calGyroData(tc2int(xDat));
+              // let caly = calGyroData(tc2int(yDat));
+              // let calz = calGyroData(tc2int(zDat));
+              // calData[sensorID][calWritePtr[sensorID]++] = [tDat, caly, calx, calz];
+
+              let calXYZ = calGyroXYZ(-tc2int(yDat),tc2int(xDat),tc2int(zDat));
+              calData[sensorID][calWritePtr[sensorID]++] = [tDat, calXYZ[0], calXYZ[1], calXYZ[2]];                
             }
           }//sample loop
         }
@@ -539,7 +551,7 @@ function buildAndCalibrate() {
           for (let i = 0; i < nsamples; i++) {
             let j = i * 2;
             let fRaw = rawData[sensorID][ind][2][j] << 8 | rawData[sensorID][ind][2][j + 1];
-            let fDat = calForceData(fRaw);
+            let fDat = calForceY(fRaw);
             let tDat = (rawData[sensorID][ind][0][0] + i / nsamples) * 0.010;
 
             // save calibrated force data
@@ -925,19 +937,19 @@ function tc2int(n) {
   }
 }
 
-// // placeholder calibration functions 
-function calAccelData(n) {
-  return 9.81 * n / 8080;
-}
+// // // placeholder calibration functions 
+// function calAccelData(n) {
+//   return 9.81 * n / 8080;
+// }
 
-function calMagData(n) {
-  return (n + 500) / 50;
-}
+// function calMagData(n) {
+//   return (n + 500) / 50;
+// }
 
-function calGyroData(n) {
-  return n / 815;
-}
+// function calGyroData(n) {
+//   return n / 815;
+// }
 
-function calForceData(n) {
-  return (n - 200) / 1000;
-}
+// function calForceData(n) {
+//   return (n - 200) / 1000;
+// }
