@@ -18,7 +18,7 @@ function resetAcquisition() {
   lastRunTime = 0;
   totalRunTime = 0;
 
-  rawReadPtr = new Array(maxSensorCode).fill(0);
+  rawReadPtr = new Array(maxSensorCode).fill(0); 
   calWritePtr = new Array(maxSensorCode).fill(0);
   calReadPtr = new Array(maxSensorCode).fill(0);
 
@@ -377,6 +377,7 @@ function buildAndCalibrate() {
   for (let s = 0; s < sensorIDlist.length; s++) {
 
     let sensorID = sensorIDlist[s];
+    let sensorRate = sensorRateList[s];
 
     // the accelerometer, magnetometer, and gyroscope have the same data formats
     // six bytes per sample: [x_hi, x_lo, y_hi, y_lo, z_hi, z_lo]

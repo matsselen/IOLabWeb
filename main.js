@@ -103,8 +103,9 @@ async function clickSend() {
     let fixedConfigObject = fixedConfigList[current_config_code];
     currentFCobject = fixedConfigObject;
 
-    // create a list of sensors to be used by the data processing code
+    // create a list of sensors to be used by the data processing code and keep track of sample rates
     sensorIDlist = fixedConfigObject.sensList;
+    sensorRateList = fixedConfigObject.rateList;
 
     // create a list of charts (by sensor ID) to be plotted
     chartIDlist = fixedConfigObject.chartList;
