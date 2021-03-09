@@ -403,8 +403,11 @@ function buildAndCalibrate() {
               let calx = calAccelData(tc2int(xDat));
               let caly = calAccelData(tc2int(yDat));
               let calz = calAccelData(tc2int(zDat));
-              // accdelerometer is turned on PCB so x = -y and y = x
               calData[sensorID][calWritePtr[sensorID]++] = [tDat, -caly, calx, calz];
+
+              // accdelerometer is turned on PCB so x = -y and y = x
+              // let calXYZ = calAccelXYZ(-tc2int(yDat),tc2int(xDat),tc2int(zDat));
+              // calData[sensorID][calWritePtr[sensorID]++] = [tDat, calXYZ[0], calXYZ[1], calXYZ[2]];
 
               // magnetometer
             } else if (sensorID == 2) {
@@ -922,7 +925,7 @@ function tc2int(n) {
   }
 }
 
-// placeholder calibration functions 
+// // placeholder calibration functions 
 function calAccelData(n) {
   return 9.81 * n / 8080;
 }

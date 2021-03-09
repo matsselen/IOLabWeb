@@ -43,9 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // fetch any existing calibrations from browser cookies
   calArrayList = [];
   getCalCookies();
-
-  // get the cal values needed by the current remotes, if they exist.
-  setCalValues();
+  console.log(calArrayList);
 
   // create canvas stacks and layers for charts and set these up
   setupControls();
@@ -183,7 +181,13 @@ function updateSystemState() {
     remoteStatusDisplay.innerHTML = "0x" + remote1ID.toString(16) +
       " (" + remoteVoltage[0].toFixed(2) + " V)";
     remoteConnected = true;
+    // get the cal values needed by this remote, if they exist (just remote 1 [0] for now)
+    if (notFetchedCal[0]) {
+      notFetchedCal[0] = false;
+      setCalValues(0,remote1ID);
+    }
     configSelect.style.display = "block";
+
   } else {
     remoteConnected = false;
     configSelect.style.display = "none";

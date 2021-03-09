@@ -18,7 +18,62 @@ var calForceConstDefault = [0, -60];
 // this holds the calibration constants fetched from browser cookies
 var calArrayList = null;
 
-function setCalValues() {
+// if we havent fetched the calibrations yet
+var notFetchedCal = [true, true];
+
+// see if any of the calibration values found in cookies can be used for the current remotes.
+function setCalValues(remoteNumber, remoteID) {  // remoteNumber = 0,1 and remoteID is 24 bit ID
+
+    // make sure remoteNumber is valid
+    if (remoteNumber < 0 || remoteNumber > 1) {
+        console.log("In setCalValues(): Bad remote ",remoteNumber);
+        return;      
+    }
+
+    // start by setting valuse to the crappy defalut in case we can find anytnign better
+    console.log("In setCalValues(): Setting default calibration values for remote ",remoteNumber);
+    calAccelConst[remoteNumber] = calAccelConstDefault;
+    calMagConst[remoteNumber]   = calMagConstDefault;
+    calGyroConst[remoteNumber]  = calGyroConstDefault;
+    calForceConst[remoteNumber] = calForceConstDefault;
+
+    // first see if we found any calibration cookies - if not return
+    if (calArrayList.length == 0) {
+        console.log("In setCalValues(): No cookie calibration values found");
+        return;
+    }
+
+    // loop over calArrayList and see if any of the entries match the current remote(s)
+    for (let ind = 0; ind < calArrayList.length; ind ++) {
+
+        let entry = calArrayList[ind];
+        if (entry[1] == remoteID) {
+            
+            if (entry[2] == 1) { // accelerometer
+                for (let i = 0; i < 6; i++) { calAccelConst[remoteNumber][i] = entry[i+4]; }
+                console.log("accelerometer calibrations set for remote " + 
+                remoteNumber.toString() + " remoteID " + remoteID.toString(), calAccelConst);
+            }
+
+            if (entry[2] == 2) { // magnetometer
+                for (let i = 0; i < 6; i++) { calMagConst[remoteNumber][i] = entry[i+4]; }
+                console.log("magnetometer calibrations set for remote " + 
+                remoteNumber.toString() + " remoteID " + remoteID.toString(), calMagConst);
+            }
+
+            if (entry[2] == 3) { // gyroscope
+                for (let i = 0; i < 6; i++) { calGyroConst[remoteNumber][i] = entry[i+4]; }
+                console.log("gyroscope calibrations set for remote " + 
+                remoteNumber.toString() + " remoteID " + remoteID.toString(), calGyroConst);
+            }
+
+            if (entry[2] == 8) { // force
+                for (let i = 0; i < 2; i++) { calForceConst[remoteNumber][i] = entry[i+4]; }
+                console.log("force probe calibrations set for remote " + 
+                remoteNumber.toString() + " remoteID " + remoteID.toString(), calForceConst);
+            }
+        }
+    }
 
 }
 
@@ -180,4 +235,7 @@ function calBaromData(pDat, tDat) {
 
 }
 
-
+// calibration functions 
+function testXYZ(x,y,z) {
+    return ([2*x, 2*y, 2*z]);
+}
