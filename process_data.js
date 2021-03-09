@@ -406,32 +406,19 @@ function buildAndCalibrate() {
 
             // accelerometer
             if (sensorID == 1) {
-              // let calx = calAccelData(tc2int(xDat));
-              // let caly = calAccelData(tc2int(yDat));
-              // let calz = calAccelData(tc2int(zDat));
-              // calData[sensorID][calWritePtr[sensorID]++] = [tDat, -caly, calx, calz];
-
               // accdelerometer is turned on PCB so x = -y and y = x
               let calXYZ = calAccelXYZ(-tc2int(yDat),tc2int(xDat),tc2int(zDat));
               calData[sensorID][calWritePtr[sensorID]++] = [tDat, calXYZ[0], calXYZ[1], calXYZ[2]];
 
               // magnetometer
             } else if (sensorID == 2) {
-              // let calx = calMagData(tc2int(xDat));
-              // let caly = calMagData(tc2int(yDat));
-              // let calz = calMagData(tc2int(zDat));
-              // calData[sensorID][calWritePtr[sensorID]++] = [tDat, calx, caly, calz];
-
+              // swap signs to make things easier
               let calXYZ = calMagXYZ(-tc2int(xDat),-tc2int(yDat),-tc2int(zDat));
               calData[sensorID][calWritePtr[sensorID]++] = [tDat, calXYZ[0], calXYZ[1], calXYZ[2]];    
 
               // gyroscope
             } else if (sensorID == 3) {
-              // let calx = calGyroData(tc2int(xDat));
-              // let caly = calGyroData(tc2int(yDat));
-              // let calz = calGyroData(tc2int(zDat));
-              // calData[sensorID][calWritePtr[sensorID]++] = [tDat, caly, calx, calz];
-
+              // gyro is turned on PCB so x = -y and y = x
               let calXYZ = calGyroXYZ(-tc2int(yDat),tc2int(xDat),tc2int(zDat));
               calData[sensorID][calWritePtr[sensorID]++] = [tDat, calXYZ[0], calXYZ[1], calXYZ[2]];                
             }
