@@ -40,7 +40,12 @@ document.addEventListener('DOMContentLoaded', () => {
   buildConfigPicker();
   buildCmdPicker();
 
+  // fetch any existing calibrations from browser cookies
+  calArrayList = [];
+  getCalCookies();
 
+  // get the cal values needed by the current remotes, if they exist.
+  setCalValues();
 
   // create canvas stacks and layers for charts and set these up
   setupControls();
@@ -128,23 +133,8 @@ async function clickStartStop() {
 // event handler for Debug button  
 async function clickDebug() {
 
-  // console.log("Debug button clicked (put breakpoint here)");
-  // if (nDebug == 0) {
-  //   setCookie("calTest", "1.1,2.2,3.3,4.4,5.5,6.6", 1);
-  // } else {
-  //   let ctst = getCookie("calTest");
-  //   console.log("getCookie returns "+ctst);
-  // }
-  // nDebug++;
-  setCalCookieTest();
+  console.log("Debug button clicked (put breakpoint here)");
 
-  //checkCookie();
-  // setCookie("iolabcal", "141136, 1, 6, -111.82, 833.41, -66.75, 829.33, -8.61, 832.22", 10);
-  // setCookie("iolabcal", "141136, 2, 6, -1367.16, 9.625, 1159.81, 1159.81, 1000.43, 9.6", 10);
-  // setCookie("iolabcal", "141136, 3, 6, -1.38, 815, 12.39, 815, 10.68, 815", 10);
-  // setCookie("iolabcal", "141136, 8, 2, 101.98, -59.74", 10);
-  //let cfetched = getCookie("iolabcal");
-  //console.log("fetched cookie:"+cfetched);
   //location.reload();
   //resetAcquisition();
   //runForSeconds(2000);

@@ -4,27 +4,36 @@
 
 'use strict';
 
+// calibration constant defaults (better than notning): [remote][values]
+var calAccelConst = [[],[]]; 
+var calMagConst = [[],[]]; 
+var calGyroConst = [[],[]];
+var calForceConst = [[],[]]; 
 
-var calAccelConst = [[-111.82, 833.41, -66.75, 829.33, -8.61, 832.22], [0, 830, 0, 830, 0, 830]]; // [remote][values]
-var calMagConst = [[-1367.16, 9.625, 1159.81, 1159.81, 1000.43, 9.6], [0, 10, 0, 10, 0, 10]]; // [remote][values]
-var calGyroConst = [[-1.38, 815, 12.39, 815, 10.68, 815], [0, 815, 0, 815, 0, 815]]; // [remote][values]
-var calForceConst = [[101.98, -59.74], [0, -60]]; // [remote][values]
+var calAccelConstDefault = [0, 830, 0, 830, 0, 830]; 
+var calMagConstDefault = [0, 10, 0, 10, 0, 10]; 
+var calGyroConstDefault = [0, 815, 0, 815, 0, 815]; 
+var calForceConstDefault = [0, -60]; 
 
-// var calAccelConst = [[],[]];
-// var calMagConst = [[],[]];
-// var calGyroConst = [[],[]];
-// var calForceConst = [[],[]];
+// this holds the calibration constants fetched from browser cookies
+var calArrayList = null;
+
+function setCalValues() {
+
+}
 
 function setCalCookieTest () {
     setCalCookie(remote1ID, 1, calAccelConst[0] );
     setCalCookie(remote1ID, 2, calMagConst[0] );
     setCalCookie(remote1ID, 3, calGyroConst[0] );
-    setCalCookie(remote1ID, 8, calForceConst[0] );
+    setCalCookie(remote1ID, 8, calForceConst[0] );   
 }
 
+// this creates a cookie on the client browser to hold the calibration values in "calArray" for 
+// sensor "sensorNum" on remote having "remoteID"
 function setCalCookie(remoteID, sensorNum, calArray) {
 
-    let expireHours = 1; //how many hours in the future this cookie expires
+    let expireHours = 4380; // expires in 6 months
 
     // the time now
     let d = new Date();
@@ -38,7 +47,7 @@ function setCalCookie(remoteID, sensorNum, calArray) {
 
     // assemble the values to save in the cookie
     // [timestamp, sensorID, sensorNumber, offset1, scale1, offset2, scale2,...]
-    let values = "[" + now.toString() + "," + remoteID.toString() + "," + sensorNum.toString()
+    let values = "[" + now.toString() + "," + remoteID.toString() + "," + sensorNum.toString() + "," + calArray.length.toString()
     for (let ind = 0; ind < calArray.length; ind++) {
         values += "," + calArray[ind].toString();
     }
@@ -52,22 +61,31 @@ function setCalCookie(remoteID, sensorNum, calArray) {
     document.cookie = cookieText;
 }
 
-function getCalCookies(cname) {
-    var name = cname + "=";
-    var decodedCookie = decodeURIComponent(document.cookie);
-    var ca = decodedCookie.split(';');
-    for (var i = 0; i < ca.length; i++) {
-        var c = ca[i];
-        while (c.charAt(0) == ' ') {
-            c = c.substring(1);
-        }
-        if (c.indexOf(name) == 0) {
-            return c.substring(name.length, c.length);
+// this fetches any calibration data that has been stored in cookies by the client browser
+function getCalCookies() {
+
+    let cookieList = decodeURIComponent(document.cookie).split(';');
+    
+    for (let ind = 0; ind < cookieList.length; ind++) {
+        let c = cookieList[ind];
+
+        if (c.indexOf("iolabcal_") > -1) {
+            let i1 = c.indexOf("[");
+            let i2 = c.indexOf("]")+1;
+            let str = c.substring(i1,i2);
+            let a = JSON.parse(str);
+            // consistency check
+            if (a[3] == a.length - 4) {
+                calArrayList.push(a);
+                console.log("found ",a);
+            } else {
+                console.log("Inconsistent calibration cookie: "+a);
+            }
         }
     }
-    return "cookie " + cname + " not found";
 }
 
+// fetch the barometer and thermometer calibration constants from the current remote 1
 async function getBarometerThermometerCalibration() {
 
 
@@ -147,7 +165,7 @@ function calcBarometerConstants() {
     console.log("Barometer A0 B1 B2 C12", calA0, calB1, calB2, calC12);
 }
 
-// caluclate absolute pressure in kPa
+// calculate absolute pressure in kPa using the calibration constants exctracted above
 function calBaromData(pDat, tDat) {
     // the first time through calculate calibrations constants
     if (!baromConstCalculated) {
