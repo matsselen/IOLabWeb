@@ -62,6 +62,7 @@ var current_config = "none";
 var current_config_code;
 var currentFCobject = null;
 var sensorIDlist = [];
+var sensorRateList = [];
 var chartIDlist = [];
 
 

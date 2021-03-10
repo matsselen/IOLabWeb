@@ -235,6 +235,11 @@ class PlotSet {
                 plot.viewStack.shift();
             }
 
+            // let lastIndex = calData[plot.sensorNum].length-1;
+            // if(lastIndex > 0) { 
+            //     plot.datLast[0] = calData[plot.sensorNum][lastIndex][0]; 
+            // }
+            
             plot.drawPlotAxes(plot.viewStack[0]);
             plot.plotStaticData();
         }

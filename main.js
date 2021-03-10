@@ -40,7 +40,10 @@ document.addEventListener('DOMContentLoaded', () => {
   buildConfigPicker();
   buildCmdPicker();
 
-
+  // fetch any existing calibrations from browser cookies
+  calArrayList = [];
+  getCalCookies();
+  console.log(calArrayList);
 
   // create canvas stacks and layers for charts and set these up
   setupControls();
@@ -100,8 +103,9 @@ async function clickSend() {
     let fixedConfigObject = fixedConfigList[current_config_code];
     currentFCobject = fixedConfigObject;
 
-    // create a list of sensors to be used by the data processing code
+    // create a list of sensors to be used by the data processing code and keep track of sample rates
     sensorIDlist = fixedConfigObject.sensList;
+    sensorRateList = fixedConfigObject.rateList;
 
     // create a list of charts (by sensor ID) to be plotted
     chartIDlist = fixedConfigObject.chartList;
@@ -128,19 +132,9 @@ async function clickStartStop() {
 // event handler for Debug button  
 async function clickDebug() {
 
-  // console.log("Debug button clicked (put breakpoint here)");
-  // if (nDebug == 0) {
-  //   setCookie("calTest", "1.1,2.2,3.3,4.4,5.5,6.6", 1);
-  // } else {
-  //   let ctst = getCookie("calTest");
-  //   console.log("getCookie returns "+ctst);
-  // }
-  // nDebug++;
+  console.log("Debug button clicked (put breakpoint here)");
+  //setCalCookieTest();
 
-  //checkCookie();
-  //setCookie("iolabcal", "mats", 10);
-  //let cfetched = getCookie("iolabcal");
-  //console.log("fetched cookie:"+cfetched);
   //location.reload();
   //resetAcquisition();
   //runForSeconds(2000);
@@ -189,7 +183,13 @@ function updateSystemState() {
     remoteStatusDisplay.innerHTML = "0x" + remote1ID.toString(16) +
       " (" + remoteVoltage[0].toFixed(2) + " V)";
     remoteConnected = true;
+    // get the cal values needed by this remote, if they exist (just remote 1 [0] for now)
+    if (notFetchedCal[0]) {
+      notFetchedCal[0] = false;
+      setCalValues(0,remote1ID);
+    }
     configSelect.style.display = "block";
+
   } else {
     remoteConnected = false;
     configSelect.style.display = "none";

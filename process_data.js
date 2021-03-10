@@ -194,15 +194,15 @@ function processGetCalibration(recStart, recLength) {
 
     // barometer calibration
     if (calsensor == 4) {
-      
+
       if (ncalbytes == 8) {
         rawBarometerA0 = (rxdata[recStart + 3] << 8) + rxdata[recStart + 4];
         rawBarometerB1 = (rxdata[recStart + 5] << 8) + rxdata[recStart + 6];
         rawBarometerB2 = (rxdata[recStart + 7] << 8) + rxdata[recStart + 8];
         rawBarometerC12 = (rxdata[recStart + 9] << 8) + rxdata[recStart + 10];
         console.log("Barometer calibration constants: A0=0x" + rawBarometerA0.toString(16) +
-        " B1=0x" + rawBarometerB1.toString(16) + " B2=0x" + rawBarometerB2.toString(16) + 
-        " C12=0x" + rawBarometerC12.toString(16) );
+          " B1=0x" + rawBarometerB1.toString(16) + " B2=0x" + rawBarometerB2.toString(16) +
+          " C12=0x" + rawBarometerC12.toString(16));
 
       } else {
         console.log("Wrong number of barometer calibration bytes: ", ncalbytes);
@@ -215,7 +215,7 @@ function processGetCalibration(recStart, recLength) {
         rawThermometerC85 = (rxdata[recStart + 3] << 8) + rxdata[recStart + 4];
         rawThermometerC30 = (rxdata[recStart + 5] << 8) + rxdata[recStart + 6];
         console.log("Thermometer calibration constants: C85=0x" + rawThermometerC85.toString(16) +
-        " C30=0x" + rawThermometerC30.toString(16) );
+          " C30=0x" + rawThermometerC30.toString(16));
       } else {
         console.log("Wrong number of thermometer calibration bytes: ", ncalbytes);
       }
@@ -357,6 +357,7 @@ function processDataRecord(recStart, recLength) {
       }
 
       // Build data packet
+      //let dataPacket = [[remote, elapsedFrame, rfstat, rssi], [sens, ovfl], dataList];
       let dataPacket = [[elapsedFrame, rfstat, rssi], [sens, ovfl], dataList];
 
       // push the data onto a 2D raw data array indexed by sensor ID.
@@ -376,6 +377,14 @@ function buildAndCalibrate() {
   for (let s = 0; s < sensorIDlist.length; s++) {
 
     let sensorID = sensorIDlist[s];
+    let sensorRate = sensorRateList[s];
+
+    // for figuring out the time of each sample
+    let samplePeriod = 1 / sensorRate;
+    let tLast = 0; // if this is the first sample for this sensor
+    if (calWritePtr[sensorID] > 0) { // of this is not the first
+      tLast = calData[sensorID][calWritePtr[sensorID] - 1][0];
+    }
 
     // the accelerometer, magnetometer, and gyroscope have the same data formats
     // six bytes per sample: [x_hi, x_lo, y_hi, y_lo, z_hi, z_lo]
@@ -396,30 +405,24 @@ function buildAndCalibrate() {
             let xDat = rawData[sensorID][ind][2][j] << 8 | rawData[sensorID][ind][2][j + 1];
             let yDat = rawData[sensorID][ind][2][j + 2] << 8 | rawData[sensorID][ind][2][j + 3];
             let zDat = rawData[sensorID][ind][2][j + 4] << 8 | rawData[sensorID][ind][2][j + 5];
-            let tDat = (rawData[sensorID][ind][0][0] + i / nsamples) * 0.010;
-
-            // accelerometer
-            if (sensorID == 1) {
-              let calx = calAccel(tc2int(xDat));
-              let caly = calAccel(tc2int(yDat));
-              let calz = calAccel(tc2int(zDat));
+            let tDat = tLast + samplePeriod;
+            tLast = tDat;
+            
+            let calXYZ = [];
+            if (sensorID == 1) { // accelerometer
               // accdelerometer is turned on PCB so x = -y and y = x
-              calData[sensorID][calWritePtr[sensorID]++] = [tDat, -caly, calx, calz];
+              calXYZ = calAccelXYZ(-tc2int(yDat), tc2int(xDat), tc2int(zDat));
 
-              // magnetometer
-            } else if (sensorID == 2) {
-              let calx = calMag(tc2int(xDat));
-              let caly = calMag(tc2int(yDat));
-              let calz = calMag(tc2int(zDat));
-              calData[sensorID][calWritePtr[sensorID]++] = [tDat, caly, calx, calz];
+            } else if (sensorID == 2) { // magnetometer
+              // swap signs to make calibration more natural
+              calXYZ = calMagXYZ(-tc2int(xDat), -tc2int(yDat), -tc2int(zDat));
 
-              // gyroscope
-            } else if (sensorID == 3) {
-              let calx = calGyro(tc2int(xDat));
-              let caly = calGyro(tc2int(yDat));
-              let calz = calGyro(tc2int(zDat));
-              calData[sensorID][calWritePtr[sensorID]++] = [tDat, caly, calx, calz];
+            } else if (sensorID == 3) { // gyroscope
+              // gyro is turned on PCB so x = -y and y = x
+              calXYZ = calGyroXYZ(-tc2int(yDat), tc2int(xDat), tc2int(zDat));
             }
+            calData[sensorID][calWritePtr[sensorID]++] = [tDat, calXYZ[0], calXYZ[1], calXYZ[2]];
+
           }//sample loop
         }
       }//data packet loop
@@ -430,6 +433,7 @@ function buildAndCalibrate() {
 
     // for the barometer     
     else if (sensorID == 4) {
+
 
       // loop over data packets that arrived since the last time
       for (let ind = rawReadPtr[sensorID]; ind < rawData[sensorID].length; ind++) {
@@ -444,15 +448,16 @@ function buildAndCalibrate() {
           for (let i = 0; i < nsamples; i++) {
             let j = i * 4;
             let bDatP = rawData[sensorID][ind][2][j] << 8 | rawData[sensorID][ind][2][j + 1];
-            let bDatT = rawData[sensorID][ind][2][j+2] << 8 | rawData[sensorID][ind][2][j + 3];
-            let tDat = (rawData[sensorID][ind][0][0] + i / nsamples) * 0.010;
+            let bDatT = rawData[sensorID][ind][2][j + 2] << 8 | rawData[sensorID][ind][2][j + 3];
+            let tDat = tLast + samplePeriod;
+            tLast = tDat;
 
             // the data are 10 bit unsigned integers, left aligned, so shift right 6 bits & mask
             bDatP = (bDatP >> 6) & 0x3ff;
             bDatT = (bDatT >> 6) & 0x3ff;
 
             // find calibrated barometric pressure
-            let bCalDat = calBarometer(bDatP, bDatT);
+            let bCalDat = calBaromData(bDatP, bDatT);
 
             // save calibrated force data
             calData[sensorID][calWritePtr[sensorID]++] = [tDat, bCalDat];
@@ -480,7 +485,9 @@ function buildAndCalibrate() {
           for (let i = 0; i < nsamples; i++) {
             let j = i * 2;
             let mDat = rawData[sensorID][ind][2][j] << 8 | rawData[sensorID][ind][2][j + 1];
-            let tDat = (rawData[sensorID][ind][0][0] + i / nsamples) * 0.010;
+            let tDat = tLast + samplePeriod;
+            tLast = tDat;
+            
 
             // save calibrated force data
             calData[sensorID][calWritePtr[sensorID]++] = [tDat, mDat / 500];
@@ -508,7 +515,9 @@ function buildAndCalibrate() {
           for (let i = 0; i < nsamples; i++) {
             let j = i * 2;
             let lDat = rawData[sensorID][ind][2][j] << 8 | rawData[sensorID][ind][2][j + 1];
-            let tDat = (rawData[sensorID][ind][0][0] + i / nsamples) * 0.010;
+            let tDat = tLast + samplePeriod;
+            tLast = tDat;
+            
 
             // save calibrated force data
             calData[sensorID][calWritePtr[sensorID]++] = [tDat, lDat / 500];
@@ -536,8 +545,10 @@ function buildAndCalibrate() {
           for (let i = 0; i < nsamples; i++) {
             let j = i * 2;
             let fRaw = rawData[sensorID][ind][2][j] << 8 | rawData[sensorID][ind][2][j + 1];
-            let fDat = calForce(fRaw);
-            let tDat = (rawData[sensorID][ind][0][0] + i / nsamples) * 0.010;
+            let fDat = calForceY(fRaw);
+            let tDat = tLast + samplePeriod;
+            tLast = tDat;
+            
 
             // save calibrated force data
             calData[sensorID][calWritePtr[sensorID]++] = [tDat, fDat];
@@ -565,7 +576,9 @@ function buildAndCalibrate() {
           for (let i = 0; i < nsamples; i++) {
             let j = i * 2;
             let wDatRaw = rawData[sensorID][ind][2][j] << 8 | rawData[sensorID][ind][2][j + 1];
-            let tDat = (rawData[sensorID][ind][0][0] + i / nsamples) * 0.010;
+            let tDat = tLast + samplePeriod;
+            tLast = tDat;
+            
 
             let wDat = tc2int(wDatRaw); // change encoder reading (signed 2s comp int) into signed int
 
@@ -636,7 +649,9 @@ function buildAndCalibrate() {
           for (let i = 0; i < nsamples; i++) {
             let j = i * 2;
             let aDat = (0xf & rawData[sensorID][ind][2][j]) << 8 | rawData[sensorID][ind][2][j + 1];
-            let tDat = (rawData[sensorID][ind][0][0] + i / nsamples) * 0.010;
+            let tDat = tLast + samplePeriod;
+            tLast = tDat;
+            
 
             // calibrated voltage in mV
             let calBat = aDat / countsPerVolt;
@@ -671,7 +686,9 @@ function buildAndCalibrate() {
           for (let i = 0; i < nsamples; i++) {
             let j = i * 2;
             let aDat = (0xf & rawData[sensorID][ind][2][j]) << 8 | rawData[sensorID][ind][2][j + 1];
-            let tDat = (rawData[sensorID][ind][0][0] + i / nsamples) * 0.010;
+            let tDat = tLast + samplePeriod;
+            tLast = tDat;
+            
 
             // calibrated voltage in mV
             let calHGmv = (aDat - 2048) / countsPerMillivolt;
@@ -710,7 +727,9 @@ function buildAndCalibrate() {
           for (let i = 0; i < nsamples; i++) {
             let j = i * 2;
             let aDat = (0xf & rawData[sensorID][ind][2][j]) << 8 | rawData[sensorID][ind][2][j + 1];
-            let tDat = (rawData[sensorID][ind][0][0] + i / nsamples) * 0.010;
+            let tDat = tLast + samplePeriod;
+            tLast = tDat;
+            
 
             // calibrated ovltage
             let calAnalog = aDat / countsPerVolt;
@@ -739,16 +758,17 @@ function buildAndCalibrate() {
           let nsamples = nbytes / 4;
           for (let i = 0; i < nsamples; i++) {
             let j = i * 4;
-            let ovsTemp = rawData[sensorID][ind][2][j] << 24 | rawData[sensorID][ind][2][j + 1] << 16 | rawData[sensorID][ind][2][j+2] << 8 | rawData[sensorID][ind][2][j + 3];
-            let tDat = (rawData[sensorID][ind][0][0] + i / nsamples) * 0.010;
-
+            let ovsTemp = rawData[sensorID][ind][2][j] << 24 | rawData[sensorID][ind][2][j + 1] << 16 | rawData[sensorID][ind][2][j + 2] << 8 | rawData[sensorID][ind][2][j + 3];
+            let tDat = tLast + samplePeriod;
+            tLast = tDat;
+            
             // the temperature are oversampled at 400 Hz and the readout rate of fixed config 6 is 50 Hz
             // so we need to divide this number by 400/50 = 8
-            let tempCounts = ovsTemp/8;
+            let tempCounts = ovsTemp / 8;
 
 
             // find calibrated barometric pressure
-            let tempCal = 30 + (tempCounts - rawThermometerC30)*(85-30)/(rawThermometerC85-rawThermometerC30);
+            let tempCal = 30 + (tempCounts - rawThermometerC30) * (85 - 30) / (rawThermometerC85 - rawThermometerC30);
 
             // save calibrated force data
             calData[sensorID][calWritePtr[sensorID]++] = [tDat, tempCal];
@@ -781,7 +801,10 @@ function buildAndCalibrate() {
             let c1Dat = (0xf & rawData[sensorID][ind][2][j + 6]) << 8 | rawData[sensorID][ind][2][j + 7];
             let c2Dat = (0xf & rawData[sensorID][ind][2][j + 8]) << 8 | rawData[sensorID][ind][2][j + 9];
             let c3Dat = (0xf & rawData[sensorID][ind][2][j + 10]) << 8 | rawData[sensorID][ind][2][j + 11];
-            let tDat = (rawData[sensorID][ind][0][0] + i / nsamples) * 0.010;
+            //let tDat = (rawData[sensorID][ind][0][0] + i / nsamples) * 0.010;
+            let tDat = tLast + samplePeriod;
+            tLast = tDat;
+            
 
             // 2^12 counts = 3 volts. The minus sign fixes an sign inversion elsewhere.
             let countsPerVolt = -4096 / 3;
@@ -922,23 +945,19 @@ function tc2int(n) {
   }
 }
 
-// placeholder calibration functions 
-function calAccel(n) {
-  return 9.81 * n / 8080;
-}
+// // // placeholder calibration functions 
+// function calAccelData(n) {
+//   return 9.81 * n / 8080;
+// }
 
-function calMag(n) {
-  return (n + 500) / 50;
-}
+// function calMagData(n) {
+//   return (n + 500) / 50;
+// }
 
-function calGyro(n) {
-  return n / 815;
-}
+// function calGyroData(n) {
+//   return n / 815;
+// }
 
-function calForce(n) {
-  return (n - 200) / 1000;
-}
-
-function calBarometer(pDat, tDat) {
-
-}
+// function calForceData(n) {
+//   return (n - 200) / 1000;
+// }
