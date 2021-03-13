@@ -21,8 +21,39 @@ const dataBoxRx = document.getElementById("dataBoxRx");
 const debugStuff = document.getElementById("debugStuff");
 const inputFile = document.getElementById("inputfile");
 
+// modal test
+// Get the modal
+var modal = document.getElementById("myModal");
+
+// Get the button that opens the modal
+var btn = document.getElementById("myBtn");
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+
+
 // do this when the DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
+
+  // modal test
+
+  // When the user clicks the button, open the modal 
+  btn.onclick = function () {
+    modal.style.display = "block";
+  }
+
+  // When the user clicks on <span> (x), close the modal
+  span.onclick = function () {
+    modal.style.display = "none";
+  }
+
+  // When the user clicks anywhere outside of the modal, close it
+  window.onclick = function (event) {
+    if (event.target == modal) {
+      modal.style.display = "none";
+    }
+  }
+
 
   // See if web-serial supported by this browser ?
   const notSupported = document.getElementById('notSupported');
@@ -79,7 +110,7 @@ async function clickConnect() {
 async function clickSend() {
 
   // get the current command string
-  if ((current_cmd == "setFixedConfig")&&(current_config_code == -1)) return;
+  if ((current_cmd == "setFixedConfig") && (current_config_code == -1)) return;
 
   let byteArray = getCommandRecord(current_cmd);
   console.log(byteArray);
@@ -186,7 +217,7 @@ function updateSystemState() {
     // get the cal values needed by this remote, if they exist (just remote 1 [0] for now)
     if (notFetchedCal[0]) {
       notFetchedCal[0] = false;
-      setCalValues(0,remote1ID);
+      setCalValues(0, remote1ID);
     }
     configSelect.style.display = "block";
 
@@ -217,7 +248,7 @@ function updateSystemState() {
       // get remote status
       let byteArray = getCommandRecord("getRemoteStatus");
       console.log(byteArray);
-      await sendRecord(byteArray);     
+      await sendRecord(byteArray);
 
     }, 100);
   }
