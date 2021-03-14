@@ -5,15 +5,15 @@
 'use strict';
 
 // calibration constant defaults (better than notning): [remote][values]
-var calAccelConst = [[],[]]; 
-var calMagConst = [[],[]]; 
-var calGyroConst = [[],[]];
-var calForceConst = [[],[]]; 
+var calAccelConst = [[], []];
+var calMagConst = [[], []];
+var calGyroConst = [[], []];
+var calForceConst = [[], []];
 
-var calAccelConstDefault = [-190, 833, -93, 830, 0, 832]; 
-var calMagConstDefault = [-1382, 9.0, 1180, 9.9, 1019, 9.1]; 
-var calGyroConstDefault = [0, 807, 20, 833, 13, 825]; 
-var calForceConstDefault = [2147, -58.2]; 
+var calAccelConstDefault = [-190, 833, -93, 830, 0, 832];
+var calMagConstDefault = [-1382, 9.0, 1180, 9.9, 1019, 9.1];
+var calGyroConstDefault = [0, 807, 20, 833, 13, 825];
+var calForceConstDefault = [2147, -58.2];
 
 // this holds the calibration constants fetched from browser cookies
 var calArrayList = null;
@@ -21,12 +21,25 @@ var calArrayList = null;
 // if we havent fetched the calibrations yet
 var notFetchedCal = [true, true];
 
+// calibration setup (evolving)
+function calibrationSetup() {
+
+    // fetch any existing calibrations from browser cookies
+    calArrayList = [];
+    getCalCookies();
+    console.log(calArrayList);
+
+    // set up the calibration modal
+    
+
+}
+
 // set cookies via server
-function setCalCookieTest () {
-    setCalCookie(remote1ID, 1, [-190, 833, -93, 830, 0, 832] );
-    setCalCookie(remote1ID, 2, [-1382, 9.0, 1180, 9.9, 1019, 9.1] );
-    setCalCookie(remote1ID, 3, [0, 807, 20, 833, 13, 825] );
-    setCalCookie(remote1ID, 8, [2147, -58.2] );   
+function setCalCookieTest() {
+    setCalCookie(remote1ID, 1, [-190, 833, -93, 830, 0, 832]);
+    setCalCookie(remote1ID, 2, [-1382, 9.0, 1180, 9.9, 1019, 9.1]);
+    setCalCookie(remote1ID, 3, [0, 807, 20, 833, 13, 825]);
+    setCalCookie(remote1ID, 8, [2147, -58.2]);
 }
 
 // see if any of the calibration values found in cookies can be used for the current remotes.
@@ -34,15 +47,15 @@ function setCalValues(remoteNumber, remoteID) {  // remoteNumber = 0,1 and remot
 
     // make sure remoteNumber is valid
     if (remoteNumber < 0 || remoteNumber > 1) {
-        console.log("In setCalValues(): Bad remote ",remoteNumber);
-        return;      
+        console.log("In setCalValues(): Bad remote ", remoteNumber);
+        return;
     }
 
     // start by setting valuse to the crappy defalut in case we can find anytnign better
-    console.log("In setCalValues(): Setting default calibration values for remote ",remoteNumber);
+    console.log("In setCalValues(): Setting default calibration values for remote ", remoteNumber);
     calAccelConst[remoteNumber] = calAccelConstDefault;
-    calMagConst[remoteNumber]   = calMagConstDefault;
-    calGyroConst[remoteNumber]  = calGyroConstDefault;
+    calMagConst[remoteNumber] = calMagConstDefault;
+    calGyroConst[remoteNumber] = calGyroConstDefault;
     calForceConst[remoteNumber] = calForceConstDefault;
 
     // first see if we found any calibration cookies - if not return
@@ -52,33 +65,33 @@ function setCalValues(remoteNumber, remoteID) {  // remoteNumber = 0,1 and remot
     }
 
     // loop over calArrayList and see if any of the entries match the current remote(s)
-    for (let ind = 0; ind < calArrayList.length; ind ++) {
+    for (let ind = 0; ind < calArrayList.length; ind++) {
 
         let entry = calArrayList[ind];
         if (entry[1] == remoteID) {
-            
+
             if (entry[2] == 1) { // accelerometer
-                for (let i = 0; i < 6; i++) { calAccelConst[remoteNumber][i] = entry[i+4]; }
-                console.log("accelerometer calibrations set for remote " + 
-                remoteNumber.toString() + " remoteID " + remoteID.toString(), calAccelConst);
+                for (let i = 0; i < 6; i++) { calAccelConst[remoteNumber][i] = entry[i + 4]; }
+                console.log("accelerometer calibrations set for remote " +
+                    remoteNumber.toString() + " remoteID " + remoteID.toString(), calAccelConst);
             }
 
             if (entry[2] == 2) { // magnetometer
-                for (let i = 0; i < 6; i++) { calMagConst[remoteNumber][i] = entry[i+4]; }
-                console.log("magnetometer calibrations set for remote " + 
-                remoteNumber.toString() + " remoteID " + remoteID.toString(), calMagConst);
+                for (let i = 0; i < 6; i++) { calMagConst[remoteNumber][i] = entry[i + 4]; }
+                console.log("magnetometer calibrations set for remote " +
+                    remoteNumber.toString() + " remoteID " + remoteID.toString(), calMagConst);
             }
 
             if (entry[2] == 3) { // gyroscope
-                for (let i = 0; i < 6; i++) { calGyroConst[remoteNumber][i] = entry[i+4]; }
-                console.log("gyroscope calibrations set for remote " + 
-                remoteNumber.toString() + " remoteID " + remoteID.toString(), calGyroConst);
+                for (let i = 0; i < 6; i++) { calGyroConst[remoteNumber][i] = entry[i + 4]; }
+                console.log("gyroscope calibrations set for remote " +
+                    remoteNumber.toString() + " remoteID " + remoteID.toString(), calGyroConst);
             }
 
             if (entry[2] == 8) { // force
-                for (let i = 0; i < 2; i++) { calForceConst[remoteNumber][i] = entry[i+4]; }
-                console.log("force probe calibrations set for remote " + 
-                remoteNumber.toString() + " remoteID " + remoteID.toString(), calForceConst);
+                for (let i = 0; i < 2; i++) { calForceConst[remoteNumber][i] = entry[i + 4]; }
+                console.log("force probe calibrations set for remote " +
+                    remoteNumber.toString() + " remoteID " + remoteID.toString(), calForceConst);
             }
         }
     }
@@ -111,7 +124,7 @@ function setCalCookie(remoteID, sensorNum, calArray) {
     values += "]";
 
     // construct the cookie contents in the form "name=value; expires=expirationTime; path"
-    let cookieText = "iolabcal_"+ sensorNum.toString()+"_" + remoteID.toString() + "=" + values + ";" + "expires=" + expirationTime + ";path=/";
+    let cookieText = "iolabcal_" + sensorNum.toString() + "_" + remoteID.toString() + "=" + values + ";" + "expires=" + expirationTime + ";path=/";
     console.log("setCalCookie(): " + cookieText);
 
     // create the cookie
@@ -122,21 +135,21 @@ function setCalCookie(remoteID, sensorNum, calArray) {
 function getCalCookies() {
 
     let cookieList = decodeURIComponent(document.cookie).split(';');
-    
+
     for (let ind = 0; ind < cookieList.length; ind++) {
         let c = cookieList[ind];
 
         if (c.indexOf("iolabcal_") > -1) {
             let i1 = c.indexOf("[");
-            let i2 = c.indexOf("]")+1;
-            let str = c.substring(i1,i2);
+            let i2 = c.indexOf("]") + 1;
+            let str = c.substring(i1, i2);
             let a = JSON.parse(str);
             // consistency check
             if (a[3] == a.length - 4) {
                 calArrayList.push(a);
-                console.log("found ",a);
+                console.log("found ", a);
             } else {
-                console.log("Inconsistent calibration cookie: "+a);
+                console.log("Inconsistent calibration cookie: " + a);
             }
         }
     }
@@ -239,28 +252,28 @@ function calBaromData(pDat, tDat) {
 
 // calibration functions 
 // assume remote r=0 for now
-function calAccelXYZ(x,y,z,r=0) {
-    let cx = (x-calAccelConst[r][0])/calAccelConst[r][1];
-    let cy = (y-calAccelConst[r][2])/calAccelConst[r][3];
-    let cz = (z-calAccelConst[r][4])/calAccelConst[r][5];
+function calAccelXYZ(x, y, z, r = 0) {
+    let cx = (x - calAccelConst[r][0]) / calAccelConst[r][1];
+    let cy = (y - calAccelConst[r][2]) / calAccelConst[r][3];
+    let cz = (z - calAccelConst[r][4]) / calAccelConst[r][5];
     return ([cx, cy, cz]);
 }
 
-function calMagXYZ(x,y,z,r=0) {
-    let cx = (x-calMagConst[r][0])/calMagConst[r][1];
-    let cy = (y-calMagConst[r][2])/calMagConst[r][3];
-    let cz = (z-calMagConst[r][4])/calMagConst[r][5];
+function calMagXYZ(x, y, z, r = 0) {
+    let cx = (x - calMagConst[r][0]) / calMagConst[r][1];
+    let cy = (y - calMagConst[r][2]) / calMagConst[r][3];
+    let cz = (z - calMagConst[r][4]) / calMagConst[r][5];
     return ([cx, cy, cz]);
 }
 
-function calGyroXYZ(x,y,z,r=0) {
-    let cx = (x-calGyroConst[r][0])/calGyroConst[r][1];
-    let cy = (y-calGyroConst[r][2])/calGyroConst[r][3];
-    let cz = (z-calGyroConst[r][4])/calGyroConst[r][5];
+function calGyroXYZ(x, y, z, r = 0) {
+    let cx = (x - calGyroConst[r][0]) / calGyroConst[r][1];
+    let cy = (y - calGyroConst[r][2]) / calGyroConst[r][3];
+    let cz = (z - calGyroConst[r][4]) / calGyroConst[r][5];
     return ([cx, cy, cz]);
 }
 
-function calForceY(y,r=0) {
-    let cy= (y-calForceConst[r][0])/calForceConst[r][1];
+function calForceY(y, r = 0) {
+    let cy = (y - calForceConst[r][0]) / calForceConst[r][1];
     return (cy);
 }

@@ -21,39 +21,13 @@ const dataBoxRx = document.getElementById("dataBoxRx");
 const debugStuff = document.getElementById("debugStuff");
 const inputFile = document.getElementById("inputfile");
 
-// modal test
-// Get the modal
-var modal = document.getElementById("calModal");
-
-// Get the button that opens the modal
-var btn = document.getElementById("calBtn");
-
-// Get the <span> element that closes the modal
-var span = document.getElementsByClassName("closeCal")[0];
-
+// calibration modal stuff
+const modal = document.getElementById("calModal");
+const calButton = document.getElementById("calBtn");
+const ccspan = document.getElementsByClassName("closeCal")[0];
 
 // do this when the DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-
-  // modal test
-
-  // When the user clicks the button, open the modal 
-  btn.onclick = function () {
-    modal.style.display = "block";
-  }
-
-  // When the user clicks on <span> (x), close the modal
-  span.onclick = function () {
-    modal.style.display = "none";
-  }
-
-  // When the user clicks anywhere outside of the modal, close it
-  window.onclick = function (event) {
-    if (event.target == modal) {
-      modal.style.display = "none";
-    }
-  }
-
 
   // See if web-serial supported by this browser ?
   const notSupported = document.getElementById('notSupported');
@@ -66,15 +40,18 @@ document.addEventListener('DOMContentLoaded', () => {
   butDebug.addEventListener('click', clickDebug);
   inputFile.addEventListener("change", readInputFile);
 
+  // calibration modal stuff
+  calButton.onclick = function () { modal.style.display = "block"; }
+  ccspan.onclick = function () { modal.style.display = "none"; }
+  //window.onclick = function (event) { if (event.target == modal) { modal.style.display = "none"; } }
+
   // get things ready to rumble
   getIOLabConfigInfo();
   buildConfigPicker();
   buildCmdPicker();
 
-  // fetch any existing calibrations from browser cookies
-  calArrayList = [];
-  getCalCookies();
-  console.log(calArrayList);
+  // calibration setup
+  calibrationSetup ();
 
   // create canvas stacks and layers for charts and set these up
   setupControls();
