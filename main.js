@@ -23,13 +23,13 @@ const inputFile = document.getElementById("inputfile");
 
 // modal test
 // Get the modal
-var modal = document.getElementById("myModal");
+var modal = document.getElementById("calModal");
 
 // Get the button that opens the modal
-var btn = document.getElementById("myBtn");
+var btn = document.getElementById("calBtn");
 
 // Get the <span> element that closes the modal
-var span = document.getElementsByClassName("close")[0];
+var span = document.getElementsByClassName("closeCal")[0];
 
 
 // do this when the DOM is loaded
