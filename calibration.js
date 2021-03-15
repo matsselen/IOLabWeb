@@ -30,10 +30,28 @@ function calibrationSetup() {
     console.log(calArrayList);
 
     // set up the calibration modal
-    
+    let aCal1 = document.createElement("a");
+    var cal1Link = document.createElement("img");
+    cal1Link.src = "images/ana0.png";
+    cal1Link.width = "200";
+    cal1Link.style = "cursor:pointer";
+    cal1Link.style.paddingRight = "5px";
+    aCal1.appendChild(cal1Link);
+    aCal1.title = "Caltest1";
+    aCal1.addEventListener("click", cal1Click);
+    analysis.appendChild(aCal1);
 
 }
 
+function cal1Click() {
+    if (dbgInfo) {
+        console.log("cal1Click");
+    }
+    zoomLink.src = "images/zoom0.png";
+    panLink.src = "images/pan0.png";
+    anaLink.src = "images/ana1.png";
+    plotSetThis.mouseMode = "anal";
+}
 // set cookies via server
 function setCalCookieTest() {
     setCalCookie(remote1ID, 1, [-190, 833, -93, 830, 0, 832]);

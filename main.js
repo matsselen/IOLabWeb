@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
   buildCmdPicker();
 
   // calibration setup
-  calibrationSetup ();
+  calibrationSetup();
 
   // create canvas stacks and layers for charts and set these up
   setupControls();
