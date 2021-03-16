@@ -21,6 +21,12 @@ var calArrayList = null;
 // if we havent fetched the calibrations yet
 var notFetchedCal = [true, true];
 
+// cal processing stuff
+var calImage = null;
+
+var calStep = 0;
+
+
 // calibration setup (evolving)
 function calibrationSetup() {
 
@@ -30,27 +36,27 @@ function calibrationSetup() {
     console.log(calArrayList);
 
     // set up the calibration modal
-    let aCal1 = document.createElement("a");
-    var cal1Link = document.createElement("img");
-    cal1Link.src = "images/ana0.png";
-    cal1Link.width = "200";
-    cal1Link.style = "cursor:pointer";
-    cal1Link.style.paddingRight = "5px";
-    aCal1.appendChild(cal1Link);
-    aCal1.title = "Caltest1";
-    aCal1.addEventListener("click", cal1Click);
-    analysis.appendChild(aCal1);
+    let aCal = document.createElement("a");
+    calImage = document.createElement("img");
+    calImage.src = "images/ana0.png";
+    calImage.width = "300";
+    calImage.style = "cursor:pointer";
+    calImage.style.paddingRight = "5px";
+    aCal.appendChild(calImage);
+    aCal.title = "Caltest1";
+    aCal.addEventListener("click", calClick);
+
+    let caldiv = document.getElementById("calDiv");
+    caldiv.appendChild(aCal);
+
 
 }
 
-function cal1Click() {
+function calClick() {
     if (dbgInfo) {
         console.log("cal1Click");
     }
-    zoomLink.src = "images/zoom0.png";
-    panLink.src = "images/pan0.png";
-    anaLink.src = "images/ana1.png";
-    plotSetThis.mouseMode = "anal";
+    calImage.src = calStepList[calStep++].image;
 }
 // set cookies via server
 function setCalCookieTest() {
