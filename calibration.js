@@ -23,6 +23,7 @@ var notFetchedCal = [true, true];
 
 // cal processing stuff
 var calImage, calTitle, calTtext, calBtext;
+var calAnalF, calAnalA, calAnalM, calAnalG;
 
 var calStep = 0;
 
@@ -55,9 +56,8 @@ function calibrationSetup() {
 }
 
 function calClick() {
-    if (dbgInfo) {
-        console.log("cal1Click");
-    }
+    console.log("calClick");
+
     if (calStep < calStepList.length) {
         calImage.src = calStepList[calStep].image;
         calTitle.innerHTML = calStepList[calStep].title;
@@ -65,6 +65,72 @@ function calClick() {
         calBtext.innerHTML = calStepList[calStep].btext;
         calStep++;
     }
+}
+
+// configure calibration for Accelerometer, Magnetometer, Gyroscope sensors
+function configAMGcal() {
+    console.log("in configAMGcal():");
+
+    // for calculating averages etc
+    calAnalA = [new StatsIOLab(1, 1), new StatsIOLab(1, 2), new StatsIOLab(1, 3)];
+    alAnalM = [new StatsIOLab(2, 1), new StatsIOLab(2, 2), new StatsIOLab(2, 3)];
+    calAnalG = [new StatsIOLab(3, 1), new StatsIOLab(3, 2), new StatsIOLab(3, 3)];
+}
+
+// configure calibration for Force sensor
+function configFcal() {
+    console.log("in configFcal():");
+
+    // for calculating averages etc
+    calAnalF = new StatsIOLab(8, 1);
+
+}
+
+// set up the DAQ system for a calibration
+async function configCalDAQ() {
+    console.log("in configCalDAQ():");
+
+    // set current command to be "setFixedConfig" (dropdown index 3)
+    cmdPicker.selectedIndex = 3;
+    current_cmd = cmdPicker.options[cmdPicker.selectedIndex].value;
+
+    // set "kitchen sink" configuration for calibration (dropdown index 17)
+    configPicker.selectedIndex = 17;
+    current_config = configPicker.options[configPicker.selectedIndex].value;
+    current_config_code = iolabConfig.fixedConfigurations[configPicker.selectedIndex - 1]["code"];
+    configPicker.title = fixedConfigList[current_config_code].longDesc2;
+
+    let byteArray = getCommandRecord(current_cmd);
+    console.log(byteArray);
+    await sendRecord(byteArray);
+
+    setTimeout(async function () {
+        byteArray = getCommandRecord("getPacketConfig");
+        console.log(byteArray);
+        await sendRecord(byteArray);
+    }, 100);
+
+    // remove any existing plots
+    if (plotSet != null) {
+        plotSet.reset();
+        plotSet = null;
+        resetAcquisition();
+    }
+
+    // get the current fixed configuration object
+    let fixedConfigObject = fixedConfigList[current_config_code];
+    currentFCobject = fixedConfigObject;
+
+    // create a list of sensors to be used by the data processing code and keep track of sample rates
+    sensorIDlist = fixedConfigObject.sensList;
+    sensorRateList = fixedConfigObject.rateList;
+
+    // create a list of charts (by sensor ID) to be plotted
+    chartIDlist = fixedConfigObject.chartList;
+
+    // create the required plot objects
+    plotSet = new PlotSet(chartIDlist, "plotContainer", "controlContainer");
+
 }
 
 // set cookies via server

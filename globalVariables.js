@@ -149,12 +149,18 @@ var readPointer = 0;
 var rawData = null;
 var rawReadPtr = null;
 
+// adcData is decoded raw data that has not had calibration constants applied
+// useful for calibration for now is only used for calibrated sensors 1,2,3,8 (acc,mag,gyro,force) 
+var adcData = null;
+
 // calibrated data indexed by sensor number. Filled by buildAndCalibrate() and 
 // used by plottong code along with calWritePtr and calReadPtr
 // (initialized in resetAcquisition())
 var calData = null;
 var calWritePtr = null;
 var calReadPtr = null;
+
+
 
 // wheel data
 var rWheel = 0;

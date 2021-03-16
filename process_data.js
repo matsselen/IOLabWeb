@@ -23,9 +23,11 @@ function resetAcquisition() {
   calReadPtr = new Array(maxSensorCode).fill(0);
 
   rawData = [];
+  adcData = [];
   calData = [];
   for (let i = 0; i < maxSensorCode; i++) {
     rawData.push([]);
+    adcData.push([]);
     calData.push([]);
   }
 
@@ -409,19 +411,27 @@ function buildAndCalibrate() {
             tLast = tDat;
             
             let calXYZ = [];
+            let adcXYZ = [];
             if (sensorID == 1) { // accelerometer
               // accdelerometer is turned on PCB so x = -y and y = x
-              calXYZ = calAccelXYZ(-tc2int(yDat), tc2int(xDat), tc2int(zDat));
+              adcXYZ = [-tc2int(yDat), tc2int(xDat), tc2int(zDat)];
+              calXYZ = calAccelXYZ(adcXYZ[0], adcXYZ[1], adcXYZ[2]);
 
             } else if (sensorID == 2) { // magnetometer
               // swap signs to make calibration more natural
-              calXYZ = calMagXYZ(-tc2int(xDat), -tc2int(yDat), -tc2int(zDat));
+              adcXYZ = [-tc2int(xDat), -tc2int(yDat), -tc2int(zDat)];
+              calXYZ = calMagXYZ(adcXYZ[0], adcXYZ[1], adcXYZ[2]);
 
             } else if (sensorID == 3) { // gyroscope
               // gyro is turned on PCB so x = -y and y = x
-              calXYZ = calGyroXYZ(-tc2int(yDat), tc2int(xDat), tc2int(zDat));
+              adcXYZ = [-tc2int(yDat), tc2int(xDat), tc2int(zDat)];
+              calXYZ = calGyroXYZ(adcXYZ[0], adcXYZ[1], adcXYZ[2]);
             }
-            calData[sensorID][calWritePtr[sensorID]++] = [tDat, calXYZ[0], calXYZ[1], calXYZ[2]];
+
+            // save both adc and calibrated data
+            adcData[sensorID][calWritePtr[sensorID]] = [tDat, adcXYZ[0], adcXYZ[1], adcXYZ[2]];
+            calData[sensorID][calWritePtr[sensorID]] = [tDat, calXYZ[0], calXYZ[1], calXYZ[2]];
+            calWritePtr[sensorID]++;
 
           }//sample loop
         }
@@ -519,7 +529,7 @@ function buildAndCalibrate() {
             tLast = tDat;
             
 
-            // save calibrated force data
+            // save calibrated light data
             calData[sensorID][calWritePtr[sensorID]++] = [tDat, lDat / 500];
 
           }
@@ -550,8 +560,10 @@ function buildAndCalibrate() {
             tLast = tDat;
             
 
-            // save calibrated force data
-            calData[sensorID][calWritePtr[sensorID]++] = [tDat, fDat];
+            // save both adc and calibrated data
+            adcData[sensorID][calWritePtr[sensorID]] = [tDat, fRaw];
+            calData[sensorID][calWritePtr[sensorID]] = [tDat, fDat];
+            calWritePtr[sensorID]++;
 
           }
         }
