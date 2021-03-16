@@ -16,6 +16,7 @@ const dongleStatusDisplay = document.getElementById('dongleStatusDisplay');
 const remoteStatusDisplay = document.getElementById('remoteStatusDisplay');
 const configSelect = document.getElementById('configSelect');
 const cmdPicker = document.getElementById('cmd-picker');
+const configPicker = document.getElementById('config-picker');
 const dataBoxTx = document.getElementById("dataBoxTx");
 const dataBoxRx = document.getElementById("dataBoxRx");
 const debugStuff = document.getElementById("debugStuff");
@@ -40,8 +41,13 @@ document.addEventListener('DOMContentLoaded', () => {
   butDebug.addEventListener('click', clickDebug);
   inputFile.addEventListener("change", readInputFile);
 
-  // calibration modal stuff
-  calButton.onclick = function () { modal.style.display = "block"; }
+  // when the calibration modal is invoked
+  calButton.onclick = function () { 
+    configCalDAQ();
+    modal.style.display = "block"; 
+  }
+
+  // when the calibration modeal is closed
   ccspan.onclick = function () { modal.style.display = "none"; }
   //window.onclick = function (event) { if (event.target == modal) { modal.style.display = "none"; } }
 
@@ -141,6 +147,7 @@ async function clickStartStop() {
 async function clickDebug() {
 
   console.log("Debug button clicked (put breakpoint here)");
+  // configCalDAQ();
   //setCalCookieTest();
 
   //location.reload();

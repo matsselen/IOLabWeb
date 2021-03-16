@@ -177,7 +177,7 @@ function buildCmdPicker() {
 // construct the drop-down menu for selecting fixed configurations
 function buildConfigPicker() {
 
-  var configPicker = document.getElementById('config-picker');
+  // var configPicker = document.getElementById('config-picker');
   var configOption = document.createElement('option');
   configOption.value = configOption.innerText = "--- Select Configuration ---";
   configPicker.appendChild(configOption);

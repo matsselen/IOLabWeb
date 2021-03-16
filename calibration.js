@@ -59,6 +59,8 @@ function calClick() {
     console.log("calClick");
 
     if (calStep < calStepList.length) {
+        resetAcquisition();
+        runForSeconds(2000);
         calImage.src = calStepList[calStep].image;
         calTitle.innerHTML = calStepList[calStep].title;
         calTtext.innerHTML = calStepList[calStep].ttext;
