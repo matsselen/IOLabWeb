@@ -44,11 +44,15 @@ document.addEventListener('DOMContentLoaded', () => {
   // when the calibration modal is invoked
   calButton.onclick = function () { 
     configCalDAQ();
+    calMode = true;
     modal.style.display = "block"; 
   }
 
   // when the calibration modeal is closed
-  ccspan.onclick = function () { modal.style.display = "none"; }
+  ccspan.onclick = function () { 
+    modal.style.display = "none"; 
+    calMode = false;
+  }
   //window.onclick = function (event) { if (event.target == modal) { modal.style.display = "none"; } }
 
   // get things ready to rumble

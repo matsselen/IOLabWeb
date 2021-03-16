@@ -428,9 +428,9 @@ function buildAndCalibrate() {
               calXYZ = calGyroXYZ(adcXYZ[0], adcXYZ[1], adcXYZ[2]);
             }
 
-            // save both adc and calibrated data
-            adcData[sensorID][calWritePtr[sensorID]] = [tDat, adcXYZ[0], adcXYZ[1], adcXYZ[2]];
+            // save both adc and calibrated data as needed
             calData[sensorID][calWritePtr[sensorID]] = [tDat, calXYZ[0], calXYZ[1], calXYZ[2]];
+            if (calMode) { adcData[sensorID][calWritePtr[sensorID]] = [tDat, adcXYZ[0], adcXYZ[1], adcXYZ[2]]; }
             calWritePtr[sensorID]++;
 
           }//sample loop
@@ -560,9 +560,9 @@ function buildAndCalibrate() {
             tLast = tDat;
             
 
-            // save both adc and calibrated data
-            adcData[sensorID][calWritePtr[sensorID]] = [tDat, fRaw];
+            // save both adc and calibrated data as needed
             calData[sensorID][calWritePtr[sensorID]] = [tDat, fDat];
+            if (calMode) { adcData[sensorID][calWritePtr[sensorID]] = [tDat, fRaw]; }
             calWritePtr[sensorID]++;
 
           }

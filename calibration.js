@@ -69,25 +69,6 @@ function calClick() {
     }
 }
 
-// configure calibration for Accelerometer, Magnetometer, Gyroscope sensors
-function configAMGcal() {
-    console.log("in configAMGcal():");
-
-    // for calculating averages etc
-    calAnalA = [new StatsIOLab(1, 1), new StatsIOLab(1, 2), new StatsIOLab(1, 3)];
-    alAnalM = [new StatsIOLab(2, 1), new StatsIOLab(2, 2), new StatsIOLab(2, 3)];
-    calAnalG = [new StatsIOLab(3, 1), new StatsIOLab(3, 2), new StatsIOLab(3, 3)];
-}
-
-// configure calibration for Force sensor
-function configFcal() {
-    console.log("in configFcal():");
-
-    // for calculating averages etc
-    calAnalF = new StatsIOLab(8, 1);
-
-}
-
 // set up the DAQ system for a calibration
 async function configCalDAQ() {
     console.log("in configCalDAQ():");
@@ -132,6 +113,40 @@ async function configCalDAQ() {
 
     // create the required plot objects
     plotSet = new PlotSet(chartIDlist, "plotContainer", "controlContainer");
+
+}
+
+// returns mean, sigma, and N calibration use.
+function calMeanSigmaN(sensor, trace) {
+
+    // sensor is the sensor number (1, 2, 3, 8 for acc, mag, gyro, force)
+    // trace is the axis (1,2,3 = x, y, z axes for acc, mag, gyro and 1 = y-axis for force)
+
+    // set up counters
+    let Sy = 0;
+    let Syy = 0;
+    let n = 0;
+
+    // use all of the data except the first 10 points in case things were still settling
+    let indFirst = 10;
+    let indLast = adcData[sensor].length;
+
+    for (let ind = indFirst; ind < indLast; ind++) {
+        let y = adcData[sensor][ind][trace];
+        Sy += y;
+        Syy += y * y;
+        n += 1;
+    }
+    if (n < 100) { // we should be accumulating data for at least 2 seconds at 100 Hz
+        console.log("N = "+n.toString()+" when calibrationng sensor "+sensor.toString()+" trace "+trace.toString());
+        return [0,0,0];
+    }
+
+    let aveY = Sy / n;
+    let aveYY = Syy / n;
+    let sigY = Math.pow((aveYY - aveY * aveY), 0.5);
+
+    return [aveY, sigY, n];
 
 }
 
