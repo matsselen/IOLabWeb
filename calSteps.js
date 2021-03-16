@@ -2,17 +2,20 @@ var calStepList =
     [
         {
             "title": "Step 1",
-            "text": "Do this, then do that, then fuck a duck...",
+            "ttext": "Do this...",
+            "btext": "...very carefully.",
             "image": "images/zoom1.png"
         },
         {
             "title": "Step 2",
-            "text": "Now do that,...",
+            "ttext": "Now do that,...",
+            "btext": "...quite slowly.",
             "image": "images/pan1.png"
         },
         {
             "title": "Step 3",
-            "text": "Now do the other thing...",
+            "ttext": "Now do the other thing...",
+            "btext": "...rather quickly.",
             "image": "images/ana1.png"
         }     
     ]

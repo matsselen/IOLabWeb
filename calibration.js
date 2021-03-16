@@ -22,7 +22,7 @@ var calArrayList = null;
 var notFetchedCal = [true, true];
 
 // cal processing stuff
-var calImage = null;
+var calImage, calTitle, calTtext, calBtext;
 
 var calStep = 0;
 
@@ -49,15 +49,24 @@ function calibrationSetup() {
     let caldiv = document.getElementById("calDiv");
     caldiv.appendChild(aCal);
 
-
+    calTitle = document.getElementById("title_p");
+    calTtext = document.getElementById("ttext_p");
+    calBtext = document.getElementById("btext_p");
 }
 
 function calClick() {
     if (dbgInfo) {
         console.log("cal1Click");
     }
-    calImage.src = calStepList[calStep++].image;
+    if (calStep < calStepList.length) {
+        calImage.src = calStepList[calStep].image;
+        calTitle.innerHTML = calStepList[calStep].title;
+        calTtext.innerHTML = calStepList[calStep].ttext;
+        calBtext.innerHTML = calStepList[calStep].btext;
+        calStep++;
+    }
 }
+
 // set cookies via server
 function setCalCookieTest() {
     setCalCookie(remote1ID, 1, [-190, 833, -93, 830, 0, 832]);
