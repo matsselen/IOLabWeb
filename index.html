@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-  <title>IOLab Web v0.7.49</title>
+  <title>IOLab Web v0.7.50</title>
   <meta charset="utf-8">
   <meta name="iolab" content="testing-w-web-serial">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -29,7 +29,7 @@
 <body>
   <header class="header">
     <h1>
-      <label> <span id="iolabWeb" title="Version 0.7.49"> <i><b>iOLabWeb</b></i></span> </label> &nbsp;&nbsp; |
+      <label> <span id="iolabWeb" title="Version 0.7.50"> <i><b>iOLabWeb</b></i></span> </label> &nbsp;&nbsp; |
       &nbsp;&nbsp;
       <label> Dongle: <span id="dongleStatusDisplay" title="Plug in dongle and click on connect button">not connected
         </span> </label> &nbsp;&nbsp; | &nbsp;&nbsp;
@@ -124,14 +124,32 @@
       <!-- Modal content -->
       <div class="modal-content">
         <div class="modal-header">
+          <span>Calibration Control</span>
           <span class="closeCal">&times;</span>
         </div>
         <div class="modal-body">
-          <h3>Calibration Control</h3>
-          <div id="calChoose"></div>
-          <p id="ttext_p">Top Text</p>
+          <!-- <h3>Calibration Control</h3> -->
+          <table class="a">
+            <tr>
+              <td>
+                <div id="calChooseAMG"></div>
+              </td>
+              <td>
+                <div id="calChooseF"></div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div id="calChooseAMGtxt"></div>
+              </td>
+              <td>
+                <div id="calChooseFtxt"></div>
+              </td>
+            </tr>
+          </table>
+          <p id="ttext_p"> </p>
           <div id="calDiv"></div>
-          <p id="btext_p">Bottom Text</p>
+          <!-- <p id="btext_p">Bottom Text</p> -->
         </div>
         <!-- <div class="modal-footer">
           <h3>Modal Footer</h3>

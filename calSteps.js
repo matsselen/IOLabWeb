@@ -1,18 +1,27 @@
-var calStepList =
+var amgCalStepList =
     [
         {
-            "ttext": "Do this...",
-            "btext": "...very carefully.",
-            "image": "images/zoom1.png"
+            "text": "Put your IOLab with +x pointing up (as shown below) and click the image.",
+            "image": "images/camg1.jpg"
         },
         {
-            "ttext": "Now do that,...",
-            "btext": "...quite slowly.",
-            "image": "images/pan1.png"
+            "text": "images/camg2.jpg",
+            "image": "images/camg2.jpg"
         },
         {
-            "ttext": "Now do the other thing...",
-            "btext": "...rather quickly.",
-            "image": "images/ana1.png"
-        }     
+            "text": "images/camg3.jpg",
+            "image": "images/camg3.jpg"
+        },
+        {
+            "text": "images/camg4.jpg",
+            "image": "images/camg4.jpg"
+        },
+        {
+            "text": "images/camg5.jpg",
+            "image": "images/camg5.jpg"
+        },
+        {
+            "text": "images/camg6.jpg",
+            "image": "images/camg6.jpg"
+        }
     ]

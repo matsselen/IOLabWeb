@@ -24,8 +24,8 @@ var notFetchedCal = [true, true];
 // cal processing stuff
 var amgImage, fImage;
 var calImage, calTitle, calTtext, calBtext;
-var calAnalF, calAnalA, calAnalM, calAnalG;
 
+var calMode = "none";
 var calStep = 0;
 
 
@@ -39,73 +39,106 @@ function calibrationSetup() {
 
     // set up the calibration modal
 
-    // first set up the choice control (AMG or F)
-    let calchoose = document.getElementById("calChoose");
-
+    // display the image that the user clicks on to start AMG calibration
+    let calchooseAMG = document.getElementById("calChooseAMG");
     let aAmg = document.createElement("a");
     amgImage = document.createElement("img");
-    amgImage.src = "images/ana0.png";
-    amgImage.width = "50";
+    amgImage.src = "images/amg1.png";
     amgImage.style = "cursor:pointer";
     amgImage.style.paddingRight = "5px";
     aAmg.appendChild(amgImage);
     aAmg.title = "Accel Mag Gyro Calibration";
     aAmg.addEventListener("click", calAMGclick);
-    calchoose.appendChild(aAmg);
-    let amgTxt = document.createTextNode(" : AMG Last Calibrated ddddd \xA0\xA0 ");
-    calchoose.appendChild(amgTxt);
+    calchooseAMG.appendChild(aAmg)
 
+    // the text that goes under the AMG selection image
+    let calchooseAMGtxt = document.getElementById("calChooseAMGtxt");
+    let amgTxt = document.createTextNode("Last Calibrated xxxx");
+    calchooseAMGtxt.appendChild(amgTxt);
+
+    // display the image that the user clicks on to start Force calibration
+    let calchooseF = document.getElementById("calChooseF");
     let aForce = document.createElement("a");
     fImage = document.createElement("img");
-    fImage.src = "images/ana1.png";
-    fImage.width = "50";
+    fImage.src = "images/force1.png";
     fImage.style = "cursor:pointer";
     fImage.style.paddingRight = "5px";
     aForce.appendChild(fImage);
     aForce.title = "Force Calibration";
     aForce.addEventListener("click", calFclick);
-    calchoose.appendChild(aForce);
-    let fTxt = document.createTextNode(" : F Last Calibrated ddddd \xA0\xA0 ");
-    calchoose.appendChild(fTxt);
+    calchooseF.appendChild(aForce);
 
-    // set up the calibration steps
-    let aCal = document.createElement("a");
-    calImage = document.createElement("img");
-    calImage.src = "images/ana0.png";
-    calImage.width = "300";
-    calImage.style = "cursor:pointer";
-    calImage.style.paddingRight = "5px";
-    aCal.appendChild(calImage);
-    aCal.title = "Caltest1";
-    aCal.addEventListener("click", calClick);
+    // the text that goes under the Force selection image
+    let calchooseFtxt = document.getElementById("calChooseFtxt");
+    let fTxt = document.createTextNode("Last Calibrated yyyy");
+    calchooseFtxt.appendChild(fTxt);
 
-    let caldiv = document.getElementById("calDiv");
-    caldiv.appendChild(aCal);
 
-    calTitle = document.getElementById("title_p");
-    calTtext = document.getElementById("ttext_p");
-    calBtext = document.getElementById("btext_p");
+    // // set up the calibration steps
+    // calStep = 0;
+    // let aCal = document.createElement("a");
+    // calImage = document.createElement("img");
+    // calImage.src = amgCalStepList[calStep].image;
+    // calImage.style = "cursor:pointer";
+    // calImage.style.paddingRight = "5px";
+    // aCal.appendChild(calImage);
+    // aCal.title = "Caltest1";
+    // aCal.addEventListener("click", calClick);
+
+    // let caldiv = document.getElementById("calDiv");
+    // caldiv.appendChild(aCal);
+
+    // calTtext = document.getElementById("ttext_p");
+    // calTtext.innerHTML = amgCalStepList[calStep].text;
 }
 
 function calAMGclick() {
     console.log("calAMGclick");
+    calMode = "amg";
+
+    // set up the calibration controls
+    calStep = 0;
+    let aCal = document.createElement("a");
+    calImage = document.createElement("img");
+    calImage.src = amgCalStepList[calStep].image;
+    calImage.style = "cursor:pointer";
+    calImage.style.paddingRight = "5px";
+    aCal.appendChild(calImage);
+    aCal.title = "Calibrating Accelerometer, Magnetometer, and Gyroscope";
+    aCal.addEventListener("click", amgCalClick);
+
+    let caldiv = document.getElementById("calDiv");
+    caldiv.appendChild(aCal);
+
+    calTtext = document.getElementById("ttext_p");
+    calTtext.innerHTML = amgCalStepList[calStep].text;
 
 }
 function calFclick() {
-    console.log("calFclick");
+    console.log("In calFclick()");
 
 }
 
-function calClick() {
-    console.log("calClick");
+function amgCalClick() {
+    console.log("In amgCalClick()");
 
-    if (calStep < calStepList.length) {
+    calImage.src = "images/wait.png";
+    calTtext.innerHTML = "wait...";
+
+    if (calStep < amgCalStepList.length) {
         resetAcquisition();
         runForSeconds(2000);
-        calImage.src = calStepList[calStep].image;
-        calTtext.innerHTML = calStepList[calStep].ttext;
-        calBtext.innerHTML = calStepList[calStep].btext;
+
         calStep++;
+        setTimeout(async function () {
+            calImage.src = amgCalStepList[calStep].image;
+            calTtext.innerHTML = amgCalStepList[calStep].text;
+        }, 2000);
+
+        // calImage.src = amgCalStepList[calStep].image;
+        // calTtext.innerHTML = amgCalStepList[calStep].text;
+
+
     }
 }
 
@@ -178,8 +211,8 @@ function calMeanSigmaN(sensor, trace) {
         n += 1;
     }
     if (n < 100) { // we should be accumulating data for at least 2 seconds at 100 Hz
-        console.log("N = "+n.toString()+" when calibrationng sensor "+sensor.toString()+" trace "+trace.toString());
-        return [0,0,0];
+        console.log("N = " + n.toString() + " when calibrationng sensor " + sensor.toString() + " trace " + trace.toString());
+        return [0, 0, 0];
     }
 
     let aveY = Sy / n;
