@@ -22,6 +22,7 @@ var calArrayList = null;
 var notFetchedCal = [true, true];
 
 // cal processing stuff
+var amgImage, fImage;
 var calImage, calTitle, calTtext, calBtext;
 var calAnalF, calAnalA, calAnalM, calAnalG;
 
@@ -37,6 +38,37 @@ function calibrationSetup() {
     console.log(calArrayList);
 
     // set up the calibration modal
+
+    // first set up the choice control (AMG or F)
+    let calchoose = document.getElementById("calChoose");
+
+    let aAmg = document.createElement("a");
+    amgImage = document.createElement("img");
+    amgImage.src = "images/ana0.png";
+    amgImage.width = "50";
+    amgImage.style = "cursor:pointer";
+    amgImage.style.paddingRight = "5px";
+    aAmg.appendChild(amgImage);
+    aAmg.title = "Accel Mag Gyro Calibration";
+    aAmg.addEventListener("click", calAMGclick);
+    calchoose.appendChild(aAmg);
+    let amgTxt = document.createTextNode(" : AMG Last Calibrated ddddd \xA0\xA0 ");
+    calchoose.appendChild(amgTxt);
+
+    let aForce = document.createElement("a");
+    fImage = document.createElement("img");
+    fImage.src = "images/ana1.png";
+    fImage.width = "50";
+    fImage.style = "cursor:pointer";
+    fImage.style.paddingRight = "5px";
+    aForce.appendChild(fImage);
+    aForce.title = "Force Calibration";
+    aForce.addEventListener("click", calFclick);
+    calchoose.appendChild(aForce);
+    let fTxt = document.createTextNode(" : F Last Calibrated ddddd \xA0\xA0 ");
+    calchoose.appendChild(fTxt);
+
+    // set up the calibration steps
     let aCal = document.createElement("a");
     calImage = document.createElement("img");
     calImage.src = "images/ana0.png";
@@ -55,6 +87,15 @@ function calibrationSetup() {
     calBtext = document.getElementById("btext_p");
 }
 
+function calAMGclick() {
+    console.log("calAMGclick");
+
+}
+function calFclick() {
+    console.log("calFclick");
+
+}
+
 function calClick() {
     console.log("calClick");
 
@@ -62,7 +103,6 @@ function calClick() {
         resetAcquisition();
         runForSeconds(2000);
         calImage.src = calStepList[calStep].image;
-        calTitle.innerHTML = calStepList[calStep].title;
         calTtext.innerHTML = calStepList[calStep].ttext;
         calBtext.innerHTML = calStepList[calStep].btext;
         calStep++;
