@@ -15,6 +15,10 @@ var calMagConstDefault = [-1382, 9.0, 1180, 9.9, 1019, 9.1];
 var calGyroConstDefault = [0, 807, 20, 833, 13, 825];
 var calForceConstDefault = [2147, -58.2];
 
+// holds local values of g and Bvert
+var local_g = 9.81; //m/s/s
+var local_Bvert = -48.5; // uT (Urbana IL)
+
 // this holds the calibration constants fetched from browser cookies
 var calArrayList = null;
 
@@ -22,8 +26,10 @@ var calArrayList = null;
 var notFetchedCal = [true, true];
 
 // cal processing stuff
-var amgImage, fImage;
-var calImage, calTitle, calTtext, calBtext;
+var aCal, aForce, aAmg;
+var amgImage, fImage, calImage;
+var calDiv, calText;
+var calAMGStats, calFstats;
 
 var calMode = "none";
 var calStep = 0;
@@ -41,7 +47,7 @@ function calibrationSetup() {
 
     // display the image that the user clicks on to start AMG calibration
     let calchooseAMG = document.getElementById("calChooseAMG");
-    let aAmg = document.createElement("a");
+    aAmg = document.createElement("a");
     amgImage = document.createElement("img");
     amgImage.src = "images/amg1.png";
     amgImage.style = "cursor:pointer";
@@ -58,7 +64,7 @@ function calibrationSetup() {
 
     // display the image that the user clicks on to start Force calibration
     let calchooseF = document.getElementById("calChooseF");
-    let aForce = document.createElement("a");
+    aForce = document.createElement("a");
     fImage = document.createElement("img");
     fImage.src = "images/force1.png";
     fImage.style = "cursor:pointer";
@@ -72,33 +78,16 @@ function calibrationSetup() {
     let calchooseFtxt = document.getElementById("calChooseFtxt");
     let fTxt = document.createTextNode("Last Calibrated yyyy");
     calchooseFtxt.appendChild(fTxt);
-
-
-    // // set up the calibration steps
-    // calStep = 0;
-    // let aCal = document.createElement("a");
-    // calImage = document.createElement("img");
-    // calImage.src = amgCalStepList[calStep].image;
-    // calImage.style = "cursor:pointer";
-    // calImage.style.paddingRight = "5px";
-    // aCal.appendChild(calImage);
-    // aCal.title = "Caltest1";
-    // aCal.addEventListener("click", calClick);
-
-    // let caldiv = document.getElementById("calDiv");
-    // caldiv.appendChild(aCal);
-
-    // calTtext = document.getElementById("ttext_p");
-    // calTtext.innerHTML = amgCalStepList[calStep].text;
 }
 
 function calAMGclick() {
     console.log("calAMGclick");
     calMode = "amg";
+    calAMGStats = [];
 
     // set up the calibration controls
     calStep = 0;
-    let aCal = document.createElement("a");
+    aCal = document.createElement("a");
     calImage = document.createElement("img");
     calImage.src = amgCalStepList[calStep].image;
     calImage.style = "cursor:pointer";
@@ -107,11 +96,11 @@ function calAMGclick() {
     aCal.title = "Calibrating Accelerometer, Magnetometer, and Gyroscope";
     aCal.addEventListener("click", amgCalClick);
 
-    let caldiv = document.getElementById("calDiv");
-    caldiv.appendChild(aCal);
+    calDiv = document.getElementById("calDiv");
+    calDiv.appendChild(aCal);
 
-    calTtext = document.getElementById("ttext_p");
-    calTtext.innerHTML = amgCalStepList[calStep].text;
+    calText = document.getElementById("ttext_p");
+    calText.innerHTML = amgCalStepList[calStep].text;
 
 }
 function calFclick() {
@@ -123,23 +112,76 @@ function amgCalClick() {
     console.log("In amgCalClick()");
 
     calImage.src = "images/wait.png";
-    calTtext.innerHTML = "wait...";
+    calText.innerHTML = "Please wait while we record some data...";
 
     if (calStep < amgCalStepList.length) {
+
+        aCal.removeEventListener("click", amgCalClick);
         resetAcquisition();
         runForSeconds(2000);
 
-        calStep++;
         setTimeout(async function () {
-            calImage.src = amgCalStepList[calStep].image;
-            calTtext.innerHTML = amgCalStepList[calStep].text;
-        }, 2000);
+            let staceStep = [1, 1, 2, 2, 3, 3];
+            var aStat = calMeanSigmaN(1, staceStep[calStep]);
+            var mStat = calMeanSigmaN(2, staceStep[calStep]);
+            var gStat = calMeanSigmaN(3, staceStep[calStep]);
+            calAMGStats.push([aStat, mStat, gStat]);
 
-        // calImage.src = amgCalStepList[calStep].image;
-        // calTtext.innerHTML = amgCalStepList[calStep].text;
-
-
+            calStep++;
+            if (calStep < amgCalStepList.length) {
+                calImage.src = amgCalStepList[calStep].image;
+                calText.innerHTML = amgCalStepList[calStep].text;
+                aCal.addEventListener("click", amgCalClick);
+            } else {
+                calcAMGconstants();
+            }
+        }, 2500);
     }
+}
+
+function calcAMGconstants() {
+
+    // calculate accelerometer constants.
+    // Averages determine offsets and local value of g determines scales
+    let axOffset = (calAMGStats[0][0][0] + calAMGStats[1][0][0]) / 2;
+    let ayOffset = (calAMGStats[2][0][0] + calAMGStats[3][0][0]) / 2;
+    let azOffset = (calAMGStats[4][0][0] + calAMGStats[5][0][0]) / 2;
+
+    let axScale = (calAMGStats[0][0][0] - calAMGStats[1][0][0]) / 2 / local_g;
+    let ayScale = (calAMGStats[2][0][0] - calAMGStats[3][0][0]) / 2 / local_g;
+    let azScale = (calAMGStats[4][0][0] - calAMGStats[5][0][0]) / 2 / local_g;
+
+    // calculate magnetometer constants.
+    // Averages determine offsets and local value of B(vertical) determines scales
+    let mxOffset = (calAMGStats[0][1][0] + calAMGStats[1][1][0]) / 2;
+    let myOffset = (calAMGStats[2][1][0] + calAMGStats[3][1][0]) / 2;
+    let mzOffset = (calAMGStats[4][1][0] + calAMGStats[5][1][0]) / 2;
+
+    let mxScale = (calAMGStats[0][1][0] - calAMGStats[1][1][0]) / 2 / local_Bvert;
+    let myScale = (calAMGStats[2][1][0] - calAMGStats[3][1][0]) / 2 / local_Bvert;
+    let mzScale = (calAMGStats[4][1][0] - calAMGStats[5][1][0]) / 2 / local_Bvert;
+
+    // calculate gyroscope constants.
+    // average values to determine offsets
+    // scales are default values
+    let gxOffset = (calAMGStats[0][2][0] + calAMGStats[1][2][0]) / 2;
+    let gyOffset = (calAMGStats[2][2][0] + calAMGStats[3][2][0]) / 2;
+    let gzOffset = (calAMGStats[4][2][0] + calAMGStats[5][2][0]) / 2;
+
+    let gxScale = 807;
+    let gyScale = 833;
+    let gzScale = 825;
+
+    // save these values in calibration arrays
+    calAccelConst[0] = [axOffset, axScale, ayOffset, ayScale, azOffset, azScale];
+    calMagConst[0] = [mxOffset, mxScale, myOffset, myScale, mzOffset, mzScale];
+    calGyroConst[0] = [gxOffset, gxScale, gyOffset, gyScale, gzOffset, gzScale];
+    console.log("new calibration constants:")
+    console.log(calAccelConst[0]);
+    console.log(calMagConst[0]);
+    console.log(calGyroConst[0]);
+
+
 }
 
 // set up the DAQ system for a calibration

@@ -99,6 +99,10 @@ table.a {
   width: 500px;
 }
 
+p.inst {
+  font-size: 20px;
+}
+
 /*====================modal test===================*/
 /* The Modal (background) */
 .modal {
