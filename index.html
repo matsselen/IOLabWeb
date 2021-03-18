@@ -77,7 +77,7 @@
         <tr>
           <td><button id="butSend" type="button"
               title="Loads your IOLab with the configuration selected below">Configure</button></td>
-          <td></td>
+          <td><button id="calBtn">Calibration</button></td>
         </tr>
         <tr>
           <td>
@@ -114,47 +114,48 @@
     </div>
 
     <p> <button id="butDebug" type="button">Debug</button></p>
+  </div>
 
-    <!-- Trigger/Open calibration Modal -->
-    <button id="calBtn">Calibration</button>
+  <!-- Trigger/Open calibration Modal -->
+  <!-- <button id="calBtn">Calibration</button> -->
 
-    <!-- The Modal -->
-    <div id="calModal" class="modal">
+  <!-- The Modal -->
+  <div id="calModal" class="modal">
 
-      <!-- Modal content -->
-      <div class="modal-content">
-        <div class="modal-header">
-          <span>Calibration Control</span>
-          <span class="closeCal">&times;</span>
-        </div>
-        <div class="modal-body">
-          <!-- <h3>Calibration Control</h3> -->
-          <table class="a">
-            <tr>
-              <td>
-                <div id="calChooseAMG"></div>
-              </td>
-              <td>
-                <div id="calChooseF"></div>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <div id="calChooseAMGtxt"></div>
-              </td>
-              <td>
-                <div id="calChooseFtxt"></div>
-              </td>
-            </tr>
-          </table>
-          <p id="ttext_p" class="inst"> </p>
-          <div id="calDiv"></div>
-        </div>
+    <!-- Modal content -->
+    <div class="modal-content">
+      <div class="modal-header">
+        <span>Calibration Control</span>
+        <span class="closeCal">&times;</span>
       </div>
-
+      <div class="modal-body">
+        <!-- <h3>Calibration Control</h3> -->
+        <table class="a">
+          <tr>
+            <td>
+              <div id="calChooseAMG"></div>
+            </td>
+            <td>
+              <div id="calChooseF"></div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div id="calChooseAMGtxt"></div>
+            </td>
+            <td>
+              <div id="calChooseFtxt"></div>
+            </td>
+          </tr>
+        </table>
+        <p id="ttext_p" class="inst"> </p>
+        <div id="calDiv"></div>
+      </div>
     </div>
 
   </div>
+
+
 
 </body>
 
