@@ -149,13 +149,13 @@ function fCalClick() {
                 calForceConst[0] = [calFstats[0][0], (calFstats[1][0] - calFstats[0][0]) / -weight_IOLab];
                 console.log("New Force calibration constants:")
                 console.log(calForceConst[0]);
-
+                setCalCookie(remote1ID, 1, calAccelConst[0]);
+                
                 modal.style.display = "none";
                 calMode = false;
-                // remove any calDiv children 
                 while (calDiv.childNodes.length > 0) { calDiv.childNodes[0].remove(); }
             }
-        }, 3000);
+        }, 2600);
     }
 }
 
@@ -187,10 +187,9 @@ function amgCalClick() {
                 calcAMGconstants();
                 modal.style.display = "none";
                 calMode = false;
-                // remove any calDiv children 
                 while (calDiv.childNodes.length > 0) { calDiv.childNodes[0].remove(); }
             }
-        }, 3000);
+        }, 2600);
     }
 }
 
@@ -236,6 +235,9 @@ function calcAMGconstants() {
     console.log(calMagConst[0]);
     console.log(calGyroConst[0]);
 
+    setCalCookie(remote1ID, 1, calAccelConst[0]);
+    setCalCookie(remote1ID, 2, calMagConst[0]);
+    setCalCookie(remote1ID, 3, calGyroConst[0]);
 
 }
 
