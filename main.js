@@ -21,6 +21,12 @@ const dataBoxTx = document.getElementById("dataBoxTx");
 const dataBoxRx = document.getElementById("dataBoxRx");
 const debugStuff = document.getElementById("debugStuff");
 const inputFile = document.getElementById("inputfile");
+const calDiv = document.getElementById("calDiv");
+const calText = document.getElementById("ttext_p");
+const calchooseF = document.getElementById("calChooseF");
+const calchooseFtxt = document.getElementById("calChooseFtxt");
+const calchooseAMG = document.getElementById("calChooseAMG");
+const calchooseAMGtxt = document.getElementById("calChooseAMGtxt");
 
 // calibration modal stuff
 const modal = document.getElementById("calModal");
@@ -43,12 +49,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // when the calibration modal is invoked
   calButton.onclick = function () { 
-    configCalDAQ();
-    calMode = true;
+    // configCalDAQ();
+    // calMode = true;
     modal.style.display = "block"; 
   }
 
-  // when the calibration modeal is closed
+  // when the calibration modal is closed
   ccspan.onclick = function () { 
     modal.style.display = "none"; 
     calMode = false;

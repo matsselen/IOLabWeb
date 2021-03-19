@@ -25,3 +25,15 @@ var amgCalStepList =
             "image": "images/camg6.jpg"
         }
     ]
+
+    var fCalStepList =
+    [
+        {
+            "text": "Screw the eye-bolt into the force probe, place your IOLab with <b>+y pointing up</b>, and click the image.",
+            "image": "images/cf1.jpg"
+        },
+        {
+            "text": "Suspend the IOLab from the force probe and click the image.",
+            "image": "images/cf2.jpg"
+        }
+    ]    
