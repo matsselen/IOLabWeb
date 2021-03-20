@@ -119,14 +119,6 @@ var iolabConfig =
       "chartList": [2,12]
     },
     {
-      "code": 32,
-      "desc": "Gyroscope HS",
-      "highSpeed": true,
-      "frequencies": [800],
-      "sensors": [{ "sensorKey": 3, "sampleRate": 760 }],
-      "chartList": [3]
-    },
-    {
       "code": 12,
       "desc": "Header 3V3",
       "highSpeed": false,
@@ -141,6 +133,14 @@ var iolabConfig =
       ],
       //"chartList": [12,13,21,22,23]
       "chartList": [12,21,22,23]
+    },
+    {
+      "code": 32,
+      "desc": "Gyroscope HS",
+      "highSpeed": true,
+      "frequencies": [800],
+      "sensors": [{ "sensorKey": 3, "sampleRate": 760 }],
+      "chartList": [3]
     },
     {
       "code": 33,
