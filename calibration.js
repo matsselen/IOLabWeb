@@ -39,7 +39,7 @@ var aCal, aForce, aAmg;
 var amgImage, fImage, calImage;
 var calAMGstats, calFstats;
 
-var calMode = "none";
+var calMode = false;
 var calStep = 0;
 
 
@@ -147,28 +147,34 @@ function calFclick() {
 }
 
 function endCal() {
+
     modal.style.display = "none";
-    calMode = false;
-    while (calDiv.childNodes.length > 0) { calDiv.childNodes[0].remove(); }
-    calText.innerHTML = "";
-    configPicker.selectedIndex = 0;
-    current_config = configPicker.options[configPicker.selectedIndex].value;
-    current_config_code = -1;
-    daqConfigured = false;
+    
+    if (calMode) {
+        calMode = false;
+        
+        while (calDiv.childNodes.length > 0) { calDiv.childNodes[0].remove(); }
+        calText.innerHTML = "";
+        configPicker.selectedIndex = 0;
+        current_config = configPicker.options[configPicker.selectedIndex].value;
+        current_config_code = -1;
+        daqConfigured = false;
 
-    // remove any existing plots
-    // (wait a little bit first since this will fail if the end-run stuff isnt finished)
-
-    setTimeout(async function () {
-        if (plotSet != null) {
-            plotSet.reset();
-            plotSet = null;
-            resetAcquisition();
-        }
-    }, 100);
+        // remove any existing plots that resulted from the calibration
+        // (wait a little bit first since this will fail if the end-run stuff isnt finished)
 
 
-    updateSystemState();
+        console.log("Reset after cal")
+        setTimeout(async function () {
+            if (plotSet != null) {
+                plotSet.reset();
+                plotSet = null;
+                resetAcquisition();
+            }
+        }, 100);
+        updateSystemState();
+    }
+
 }
 
 function fCalClick() {

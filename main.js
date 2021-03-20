@@ -49,8 +49,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // when the calibration modal is invoked
   calButton.onclick = function () { 
-    // configCalDAQ();
-    // calMode = true;
     calibrationSetup();
     modal.style.display = "block"; 
   }
@@ -58,10 +56,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // when the calibration modal is closed
   ccspan.onclick = function () { 
     endCal();
-    // while (calDiv.childNodes.length > 0) { calDiv.childNodes[0].remove(); }
-    // calText.innerHTML = "";
-    // modal.style.display = "none"; 
-    // calMode = false;
   }
   //window.onclick = function (event) { if (event.target == modal) { modal.style.display = "none"; } }
 
