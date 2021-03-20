@@ -46,7 +46,7 @@ var plotTimerMS = 50;
 var fixedRunTimerID;
 
 // useful expert tools
-var dbgInfo = true;
+var dbgInfo = false;
 var showCommands = false;
 var nDebug = 0;
 

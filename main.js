@@ -51,6 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
   calButton.onclick = function () { 
     // configCalDAQ();
     // calMode = true;
+    calibrationSetup();
     modal.style.display = "block"; 
   }
 
@@ -68,7 +69,10 @@ document.addEventListener('DOMContentLoaded', () => {
   buildCmdPicker();
 
   // calibration setup
-  calibrationSetup();
+  //calibrationSetup();
+  // fetch any existing calibrations from browser cookies
+  calArrayList = [];
+  getCalCookies();
 
   // create canvas stacks and layers for charts and set these up
   setupControls();

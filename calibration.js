@@ -4,12 +4,20 @@
 
 'use strict';
 
-// calibration constant defaults (better than notning): [remote][values]
+// calibration constant variables
 var calAccelConst = [[], []];
-var calMagConst = [[], []];
-var calGyroConst = [[], []];
-var calForceConst = [[], []];
+var calAccelTime = 0;
 
+var calMagConst = [[], []];
+var calMagTime = 0;
+
+var calGyroConst = [[], []];
+var calGyroTime = 0;
+
+var calForceConst = [[], []];
+var calForceTime = 0;
+
+// calibration constant defaults (better than notning): 
 var calAccelConstDefault = [-190, 833, -93, 830, 0, 832];
 var calMagConstDefault = [-1382, 9.0, 1180, 9.9, 1019, 9.1];
 var calGyroConstDefault = [0, 807, 20, 833, 13, 825];
@@ -39,9 +47,11 @@ var calStep = 0;
 function calibrationSetup() {
 
     // fetch any existing calibrations from browser cookies
-    calArrayList = [];
-    getCalCookies();
-    console.log(calArrayList);
+    // calArrayList = [];
+    // getCalCookies();
+    // console.log(calArrayList);
+
+    let d = new Date();
 
     // display the image that the user clicks on to start AMG calibration
     // let calchooseAMG = document.getElementById("calChooseAMG");
@@ -56,8 +66,14 @@ function calibrationSetup() {
     calchooseAMG.appendChild(aAmg)
 
     // the text that goes under the AMG selection image
-    // let calchooseAMGtxt = document.getElementById("calChooseAMGtxt");
-    let amgTxt = document.createTextNode("Last Calibrated xxxx");
+    let amgTxt;
+    if (calMagTime > 0) {
+        d.setTime(calMagTime);
+        amgTxt = document.createTextNode("Done "+d.toLocaleString());
+    } else {
+        amgTxt = document.createTextNode("Not yet calibrated");
+    }
+    
     calchooseAMGtxt.appendChild(amgTxt);
 
     // display the image that the user clicks on to start Force calibration
@@ -73,8 +89,13 @@ function calibrationSetup() {
     calchooseF.appendChild(aForce);
 
     // the text that goes under the Force selection image
-    // let calchooseFtxt = document.getElementById("calChooseFtxt");
-    let fTxt = document.createTextNode("Last Calibrated yyyy");
+    let fTxt;
+    if (calForceTime > 0) {
+        d.setTime(calForceTime);
+        fTxt = document.createTextNode("Done "+d.toLocaleString());
+    } else {
+        fTxt = document.createTextNode("Not yet calibrated");
+    }    
     calchooseFtxt.appendChild(fTxt);
 }
 
@@ -149,7 +170,7 @@ function fCalClick() {
                 calForceConst[0] = [calFstats[0][0], (calFstats[1][0] - calFstats[0][0]) / -weight_IOLab];
                 console.log("New Force calibration constants:")
                 console.log(calForceConst[0]);
-                setCalCookie(remote1ID, 1, calAccelConst[0]);
+                setCalCookie(remote1ID, 8, calForceConst[0]);
                 
                 modal.style.display = "none";
                 calMode = false;
@@ -352,7 +373,7 @@ function setCalValues(remoteNumber, remoteID) {  // remoteNumber = 0,1 and remot
         return;
     }
 
-    // loop over calArrayList and see if any of the entries match the current remote(s)
+    // loop over calArrayList (read from cookies) and see if any of the entries match the current remote(s)
     for (let ind = 0; ind < calArrayList.length; ind++) {
 
         let entry = calArrayList[ind];
@@ -362,24 +383,28 @@ function setCalValues(remoteNumber, remoteID) {  // remoteNumber = 0,1 and remot
                 for (let i = 0; i < 6; i++) { calAccelConst[remoteNumber][i] = entry[i + 4]; }
                 console.log("accelerometer calibrations set for remote " +
                     remoteNumber.toString() + " remoteID " + remoteID.toString(), calAccelConst);
+                    calAccelTime = entry[0];
             }
 
             if (entry[2] == 2) { // magnetometer
                 for (let i = 0; i < 6; i++) { calMagConst[remoteNumber][i] = entry[i + 4]; }
                 console.log("magnetometer calibrations set for remote " +
                     remoteNumber.toString() + " remoteID " + remoteID.toString(), calMagConst);
+                    calMagTime = entry[0];
             }
 
             if (entry[2] == 3) { // gyroscope
                 for (let i = 0; i < 6; i++) { calGyroConst[remoteNumber][i] = entry[i + 4]; }
                 console.log("gyroscope calibrations set for remote " +
                     remoteNumber.toString() + " remoteID " + remoteID.toString(), calGyroConst);
+                    calGyroTime = entry[0];
             }
 
             if (entry[2] == 8) { // force
                 for (let i = 0; i < 2; i++) { calForceConst[remoteNumber][i] = entry[i + 4]; }
                 console.log("force probe calibrations set for remote " +
                     remoteNumber.toString() + " remoteID " + remoteID.toString(), calForceConst);
+                    calForceTime = entry[0];
             }
         }
     }
