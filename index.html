@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-  <title>IOLab Web v0.7.48</title>
+  <title>IOLab Web v0.7.65</title>
   <meta charset="utf-8">
   <meta name="iolab" content="testing-w-web-serial">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -21,6 +21,7 @@
   <script src="AnalClass.js"></script>
   <script src="run_control.js"></script>
   <script src="calibration.js"></script>
+  <script src="calsteps.js"></script>
   <script src="main.js" defer></script>
 
 </head>
@@ -28,7 +29,7 @@
 <body>
   <header class="header">
     <h1>
-      <label> <span id="iolabWeb" title="Version 0.7.48"> <i><b>iOLabWeb</b></i></span> </label> &nbsp;&nbsp; |
+      <label> <span id="iolabWeb" title="Version 0.7.65"> <i><b>iOLabWeb</b></i></span> </label> &nbsp;&nbsp; |
       &nbsp;&nbsp;
       <label> Dongle: <span id="dongleStatusDisplay" title="Plug in dongle and click on connect button">not connected
         </span> </label> &nbsp;&nbsp; | &nbsp;&nbsp;
@@ -76,11 +77,15 @@
         <tr>
           <td><button id="butSend" type="button"
               title="Loads your IOLab with the configuration selected below">Configure</button></td>
-          <td></td>
+          <!-- <td><button id="calBtn">Calibration</button></td> -->
+        <td>
+          Calibrate: <a id="calBtn" title="Calibration" style="cursor: pointer;">
+            <img src="images/calruler1.PNG" valign="bottom" ></a>
+        </td>
         </tr>
         <tr>
           <td>
-            <label><select class="selection" id="config-picker" title="Configuration Selector"></select></label>            
+            <label><select class="selection" id="config-picker" title="Configuration Selector"></select></label>
           </td>
           <td>&nbsp;&nbsp;<button id="butStartStop" type="button" title="Start or Stop an aquisition">Start</button>
           </td>
@@ -113,8 +118,48 @@
     </div>
 
     <p> <button id="butDebug" type="button">Debug</button></p>
+  </div>
+
+  <!-- Trigger/Open calibration Modal -->
+  <!-- <button id="calBtn">Calibration</button> -->
+
+  <!-- The Modal -->
+  <div id="calModal" class="modal">
+
+    <!-- Modal content -->
+    <div class="modal-content">
+      <div class="modal-header">
+        <span>Calibration Control</span>
+        <span class="closeCal">&times;</span>
+      </div>
+      <div class="modal-body">
+        <!-- <h3>Calibration Control</h3> -->
+        <table class="a">
+          <tr>
+            <td>
+              <div id="calChooseAMG"></div>
+            </td>
+            <td>
+              <div id="calChooseF"></div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div id="calChooseAMGtxt"></div>
+            </td>
+            <td>
+              <div id="calChooseFtxt"></div>
+            </td>
+          </tr>
+        </table>
+        <p id="ttext_p" class="inst"> </p>
+        <div id="calDiv"></div>
+      </div>
+    </div>
 
   </div>
+
+
 
 </body>
 

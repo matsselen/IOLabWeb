@@ -6,7 +6,18 @@
 'use strict';
 
 // application metadata (included with saved data)
-var appMetaData = {runSeconds: 0, date: null};
+var appMetaData = {
+    runSeconds: 0, 
+    date: null,
+    calAccelConst: null,
+    calAccelTime: 0,
+    calMagConst: null,
+    calMagTime: 0,    
+    calGyroConst: null,
+    calGyroTime: 0,
+    calForceConst: null,
+    calForceTime: 0
+};
 
 // plots
 var plotSet = null;
@@ -46,7 +57,7 @@ var plotTimerMS = 50;
 var fixedRunTimerID;
 
 // useful expert tools
-var dbgInfo = true;
+var dbgInfo = false;
 var showCommands = false;
 var nDebug = 0;
 
@@ -149,12 +160,19 @@ var readPointer = 0;
 var rawData = null;
 var rawReadPtr = null;
 
+// adcData is decoded raw data that has not had calibration constants applied
+// useful for calibration for now is only used for calibrated sensors 1,2,3,8 (acc,mag,gyro,force) 
+var adcData = null;
+var calMode = false;
+
 // calibrated data indexed by sensor number. Filled by buildAndCalibrate() and 
 // used by plottong code along with calWritePtr and calReadPtr
 // (initialized in resetAcquisition())
 var calData = null;
 var calWritePtr = null;
 var calReadPtr = null;
+
+
 
 // wheel data
 var rWheel = 0;

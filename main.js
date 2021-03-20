@@ -16,10 +16,22 @@ const dongleStatusDisplay = document.getElementById('dongleStatusDisplay');
 const remoteStatusDisplay = document.getElementById('remoteStatusDisplay');
 const configSelect = document.getElementById('configSelect');
 const cmdPicker = document.getElementById('cmd-picker');
+const configPicker = document.getElementById('config-picker');
 const dataBoxTx = document.getElementById("dataBoxTx");
 const dataBoxRx = document.getElementById("dataBoxRx");
 const debugStuff = document.getElementById("debugStuff");
 const inputFile = document.getElementById("inputfile");
+const calDiv = document.getElementById("calDiv");
+const calText = document.getElementById("ttext_p");
+const calchooseF = document.getElementById("calChooseF");
+const calchooseFtxt = document.getElementById("calChooseFtxt");
+const calchooseAMG = document.getElementById("calChooseAMG");
+const calchooseAMGtxt = document.getElementById("calChooseAMGtxt");
+
+// calibration modal stuff
+const modal = document.getElementById("calModal");
+const calButton = document.getElementById("calBtn");
+const ccspan = document.getElementsByClassName("closeCal")[0];
 
 // do this when the DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
@@ -35,15 +47,34 @@ document.addEventListener('DOMContentLoaded', () => {
   butDebug.addEventListener('click', clickDebug);
   inputFile.addEventListener("change", readInputFile);
 
+  // when the calibration modal is invoked
+  calButton.onclick = function () { 
+    // configCalDAQ();
+    // calMode = true;
+    calibrationSetup();
+    modal.style.display = "block"; 
+  }
+
+  // when the calibration modal is closed
+  ccspan.onclick = function () { 
+    endCal();
+    // while (calDiv.childNodes.length > 0) { calDiv.childNodes[0].remove(); }
+    // calText.innerHTML = "";
+    // modal.style.display = "none"; 
+    // calMode = false;
+  }
+  //window.onclick = function (event) { if (event.target == modal) { modal.style.display = "none"; } }
+
   // get things ready to rumble
   getIOLabConfigInfo();
   buildConfigPicker();
   buildCmdPicker();
 
+  // calibration setup
+  //calibrationSetup();
   // fetch any existing calibrations from browser cookies
   calArrayList = [];
   getCalCookies();
-  console.log(calArrayList);
 
   // create canvas stacks and layers for charts and set these up
   setupControls();
@@ -79,7 +110,7 @@ async function clickConnect() {
 async function clickSend() {
 
   // get the current command string
-  if ((current_cmd == "setFixedConfig")&&(current_config_code == -1)) return;
+  if ((current_cmd == "setFixedConfig") && (current_config_code == -1)) return;
 
   let byteArray = getCommandRecord(current_cmd);
   console.log(byteArray);
@@ -133,6 +164,7 @@ async function clickStartStop() {
 async function clickDebug() {
 
   console.log("Debug button clicked (put breakpoint here)");
+  // configCalDAQ();
   //setCalCookieTest();
 
   //location.reload();
@@ -186,7 +218,7 @@ function updateSystemState() {
     // get the cal values needed by this remote, if they exist (just remote 1 [0] for now)
     if (notFetchedCal[0]) {
       notFetchedCal[0] = false;
-      setCalValues(0,remote1ID);
+      setCalValues(0, remote1ID);
     }
     configSelect.style.display = "block";
 
@@ -217,7 +249,7 @@ function updateSystemState() {
       // get remote status
       let byteArray = getCommandRecord("getRemoteStatus");
       console.log(byteArray);
-      await sendRecord(byteArray);     
+      await sendRecord(byteArray);
 
     }, 100);
   }

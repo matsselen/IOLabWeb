@@ -13,6 +13,14 @@ function saveToFile() {
 
     appMetaData.runSeconds = runSeconds;
     appMetaData.date = date;
+    appMetaData.calAccelConst = calAccelConst;
+    appMetaData.calAccelTime = calAccelTime;
+    appMetaData.calMagConst = calMagConst;
+    appMetaData.calMagTime = calMagTime; 
+    appMetaData.calGyroConst = calGyroConst;
+    appMetaData.calGyroTime = calGyroTime;
+    appMetaData.calForceConst = calForceConst;
+    appMetaData.calForceTime = calForceTime;
 
     // push any metadata plus current fixed config object onto the bottom of the dalData array
     // then stringify this and put it in a blob
