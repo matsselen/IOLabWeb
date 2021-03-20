@@ -57,9 +57,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // when the calibration modal is closed
   ccspan.onclick = function () { 
-    while (calDiv.childNodes.length > 0) { calDiv.childNodes[0].remove(); }
-    modal.style.display = "none"; 
-    calMode = false;
+    endCal();
+    // while (calDiv.childNodes.length > 0) { calDiv.childNodes[0].remove(); }
+    // calText.innerHTML = "";
+    // modal.style.display = "none"; 
+    // calMode = false;
   }
   //window.onclick = function (event) { if (event.target == modal) { modal.style.display = "none"; } }
 

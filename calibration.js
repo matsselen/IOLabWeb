@@ -53,11 +53,16 @@ function calibrationSetup() {
 
     let d = new Date();
 
+    // remove any existing text or images
+    while (calchooseAMG.childNodes.length > 0) { calchooseAMG.childNodes[0].remove(); }
+    while (calchooseF.childNodes.length > 0) { calchooseF.childNodes[0].remove(); }
+    while (calchooseAMGtxt.childNodes.length > 0) { calchooseAMGtxt.childNodes[0].remove(); }
+    while (calchooseFtxt.childNodes.length > 0) { calchooseFtxt.childNodes[0].remove(); }
+
     // display the image that the user clicks on to start AMG calibration
     // let calchooseAMG = document.getElementById("calChooseAMG");
     aAmg = document.createElement("a");
     amgImage = document.createElement("img");
-    amgImage.src = "images/amg1.png";
     amgImage.style = "cursor:pointer";
     amgImage.style.paddingRight = "5px";
     aAmg.appendChild(amgImage);
@@ -66,21 +71,22 @@ function calibrationSetup() {
     calchooseAMG.appendChild(aAmg)
 
     // the text that goes under the AMG selection image
-    let amgTxt;
+    let amgTxt = "";
     if (calMagTime > 0) {
         d.setTime(calMagTime);
-        amgTxt = document.createTextNode("Done "+d.toLocaleString());
+        amgTxt = document.createTextNode("Done " + d.toLocaleString());
+        amgImage.src = "images/amg0.png";
     } else {
         amgTxt = document.createTextNode("Not yet calibrated");
+        amgImage.src = "images/amg1.png";
     }
-    
+
     calchooseAMGtxt.appendChild(amgTxt);
 
     // display the image that the user clicks on to start Force calibration
     // let calchooseF = document.getElementById("calChooseF");
     aForce = document.createElement("a");
     fImage = document.createElement("img");
-    fImage.src = "images/force1.png";
     fImage.style = "cursor:pointer";
     fImage.style.paddingRight = "5px";
     aForce.appendChild(fImage);
@@ -89,13 +95,15 @@ function calibrationSetup() {
     calchooseF.appendChild(aForce);
 
     // the text that goes under the Force selection image
-    let fTxt;
+    let fTxt = "";
     if (calForceTime > 0) {
         d.setTime(calForceTime);
-        fTxt = document.createTextNode("Done "+d.toLocaleString());
+        fTxt = document.createTextNode("Done " + d.toLocaleString());
+        fImage.src = "images/force0.png";
     } else {
         fTxt = document.createTextNode("Not yet calibrated");
-    }    
+        fImage.src = "images/force1.png";
+    }
     calchooseFtxt.appendChild(fTxt);
 }
 
@@ -145,6 +153,32 @@ function calFclick() {
 
 }
 
+function endCal() {
+    modal.style.display = "none";
+    calMode = false;
+    while (calDiv.childNodes.length > 0) { calDiv.childNodes[0].remove(); }
+    calText.innerHTML = "";
+    configPicker.selectedIndex = 0;
+    current_config = configPicker.options[configPicker.selectedIndex].value;
+    current_config_code = -1;
+    daqConfigured = false;
+    // document.getElementById('config-picker').style.visibility = "hidden";
+
+    // remove any existing plots
+    // (wait a little bit first since this will fail if the end-run stuff isnt finished)
+
+    setTimeout(async function () {
+        if (plotSet != null) {
+            plotSet.reset();
+            plotSet = null;
+            resetAcquisition();
+        }
+    }, 100);
+
+
+    updateSystemState();
+}
+
 function fCalClick() {
     console.log("In fCalClick()");
 
@@ -170,11 +204,13 @@ function fCalClick() {
                 calForceConst[0] = [calFstats[0][0], (calFstats[1][0] - calFstats[0][0]) / -weight_IOLab];
                 console.log("New Force calibration constants:")
                 console.log(calForceConst[0]);
-                setCalCookie(remote1ID, 8, calForceConst[0]);
-                
-                modal.style.display = "none";
-                calMode = false;
-                while (calDiv.childNodes.length > 0) { calDiv.childNodes[0].remove(); }
+                calForceTime = setCalCookie(remote1ID, 8, calForceConst[0]);
+                endCal();
+
+                // modal.style.display = "none";
+                // calMode = false;
+                // while (calDiv.childNodes.length > 0) { calDiv.childNodes[0].remove(); }
+                // calText.innerHTML = "";
             }
         }, 2600);
     }
@@ -206,9 +242,11 @@ function amgCalClick() {
                 aCal.addEventListener("click", amgCalClick);
             } else {
                 calcAMGconstants();
-                modal.style.display = "none";
-                calMode = false;
-                while (calDiv.childNodes.length > 0) { calDiv.childNodes[0].remove(); }
+                endCal();
+                // modal.style.display = "none";
+                // calMode = false;
+                // while (calDiv.childNodes.length > 0) { calDiv.childNodes[0].remove(); }
+                // calText.innerHTML = "";
             }
         }, 2600);
     }
@@ -256,9 +294,9 @@ function calcAMGconstants() {
     console.log(calMagConst[0]);
     console.log(calGyroConst[0]);
 
-    setCalCookie(remote1ID, 1, calAccelConst[0]);
-    setCalCookie(remote1ID, 2, calMagConst[0]);
-    setCalCookie(remote1ID, 3, calGyroConst[0]);
+    calAccelTime = setCalCookie(remote1ID, 1, calAccelConst[0]);
+    calMagTime = setCalCookie(remote1ID, 2, calMagConst[0]);
+    calGyroTime = setCalCookie(remote1ID, 3, calGyroConst[0]);
 
 }
 
@@ -383,28 +421,28 @@ function setCalValues(remoteNumber, remoteID) {  // remoteNumber = 0,1 and remot
                 for (let i = 0; i < 6; i++) { calAccelConst[remoteNumber][i] = entry[i + 4]; }
                 console.log("accelerometer calibrations set for remote " +
                     remoteNumber.toString() + " remoteID " + remoteID.toString(), calAccelConst);
-                    calAccelTime = entry[0];
+                calAccelTime = entry[0];
             }
 
             if (entry[2] == 2) { // magnetometer
                 for (let i = 0; i < 6; i++) { calMagConst[remoteNumber][i] = entry[i + 4]; }
                 console.log("magnetometer calibrations set for remote " +
                     remoteNumber.toString() + " remoteID " + remoteID.toString(), calMagConst);
-                    calMagTime = entry[0];
+                calMagTime = entry[0];
             }
 
             if (entry[2] == 3) { // gyroscope
                 for (let i = 0; i < 6; i++) { calGyroConst[remoteNumber][i] = entry[i + 4]; }
                 console.log("gyroscope calibrations set for remote " +
                     remoteNumber.toString() + " remoteID " + remoteID.toString(), calGyroConst);
-                    calGyroTime = entry[0];
+                calGyroTime = entry[0];
             }
 
             if (entry[2] == 8) { // force
                 for (let i = 0; i < 2; i++) { calForceConst[remoteNumber][i] = entry[i + 4]; }
                 console.log("force probe calibrations set for remote " +
                     remoteNumber.toString() + " remoteID " + remoteID.toString(), calForceConst);
-                    calForceTime = entry[0];
+                calForceTime = entry[0];
             }
         }
     }
@@ -442,6 +480,8 @@ function setCalCookie(remoteID, sensorNum, calArray) {
 
     // create the cookie
     document.cookie = cookieText;
+
+    return now;
 }
 
 // this fetches any calibration data that has been stored in cookies by the client browser
