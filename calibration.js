@@ -46,11 +46,6 @@ var calStep = 0;
 // calibration setup (evolving)
 function calibrationSetup() {
 
-    // fetch any existing calibrations from browser cookies
-    // calArrayList = [];
-    // getCalCookies();
-    // console.log(calArrayList);
-
     let d = new Date();
 
     // remove any existing text or images
@@ -60,7 +55,6 @@ function calibrationSetup() {
     while (calchooseFtxt.childNodes.length > 0) { calchooseFtxt.childNodes[0].remove(); }
 
     // display the image that the user clicks on to start AMG calibration
-    // let calchooseAMG = document.getElementById("calChooseAMG");
     aAmg = document.createElement("a");
     amgImage = document.createElement("img");
     amgImage.style = "cursor:pointer";
@@ -84,7 +78,6 @@ function calibrationSetup() {
     calchooseAMGtxt.appendChild(amgTxt);
 
     // display the image that the user clicks on to start Force calibration
-    // let calchooseF = document.getElementById("calChooseF");
     aForce = document.createElement("a");
     fImage = document.createElement("img");
     fImage.style = "cursor:pointer";
@@ -162,7 +155,6 @@ function endCal() {
     current_config = configPicker.options[configPicker.selectedIndex].value;
     current_config_code = -1;
     daqConfigured = false;
-    // document.getElementById('config-picker').style.visibility = "hidden";
 
     // remove any existing plots
     // (wait a little bit first since this will fail if the end-run stuff isnt finished)
@@ -206,11 +198,6 @@ function fCalClick() {
                 console.log(calForceConst[0]);
                 calForceTime = setCalCookie(remote1ID, 8, calForceConst[0]);
                 endCal();
-
-                // modal.style.display = "none";
-                // calMode = false;
-                // while (calDiv.childNodes.length > 0) { calDiv.childNodes[0].remove(); }
-                // calText.innerHTML = "";
             }
         }, 2600);
     }
@@ -243,10 +230,6 @@ function amgCalClick() {
             } else {
                 calcAMGconstants();
                 endCal();
-                // modal.style.display = "none";
-                // calMode = false;
-                // while (calDiv.childNodes.length > 0) { calDiv.childNodes[0].remove(); }
-                // calText.innerHTML = "";
             }
         }, 2600);
     }
@@ -381,13 +364,12 @@ function calMeanSigmaN(sensor, trace) {
 
 }
 
-// set cookies via server
-function setCalCookieTest() {
-    setCalCookie(remote1ID, 1, [-190, 833, -93, 830, 0, 832]);
-    setCalCookie(remote1ID, 2, [-1382, 9.0, 1180, 9.9, 1019, 9.1]);
-    setCalCookie(remote1ID, 3, [0, 807, 20, 833, 13, 825]);
-    setCalCookie(remote1ID, 8, [2147, -58.2]);
-}
+// function setCalCookieTest() {
+//     setCalCookie(remote1ID, 1, [-190, 833, -93, 830, 0, 832]);
+//     setCalCookie(remote1ID, 2, [-1382, 9.0, 1180, 9.9, 1019, 9.1]);
+//     setCalCookie(remote1ID, 3, [0, 807, 20, 833, 13, 825]);
+//     setCalCookie(remote1ID, 8, [2147, -58.2]);
+// }
 
 // see if any of the calibration values found in cookies can be used for the current remotes.
 function setCalValues(remoteNumber, remoteID) {  // remoteNumber = 0,1 and remoteID is 24 bit ID

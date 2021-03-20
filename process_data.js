@@ -498,7 +498,6 @@ function buildAndCalibrate() {
             let tDat = tLast + samplePeriod;
             tLast = tDat;
             
-
             // save calibrated force data
             calData[sensorID][calWritePtr[sensorID]++] = [tDat, mDat / 500];
 
@@ -528,7 +527,6 @@ function buildAndCalibrate() {
             let tDat = tLast + samplePeriod;
             tLast = tDat;
             
-
             // save calibrated light data
             calData[sensorID][calWritePtr[sensorID]++] = [tDat, lDat / 500];
 
@@ -559,7 +557,6 @@ function buildAndCalibrate() {
             let tDat = tLast + samplePeriod;
             tLast = tDat;
             
-
             // save both adc and calibrated data as needed
             calData[sensorID][calWritePtr[sensorID]] = [tDat, fDat];
             if (calMode) { adcData[sensorID][calWritePtr[sensorID]] = [tDat, fRaw]; }
@@ -664,7 +661,6 @@ function buildAndCalibrate() {
             let tDat = tLast + samplePeriod;
             tLast = tDat;
             
-
             // calibrated voltage in mV
             let calBat = aDat / countsPerVolt;
 
@@ -742,7 +738,6 @@ function buildAndCalibrate() {
             let tDat = tLast + samplePeriod;
             tLast = tDat;
             
-
             // calibrated ovltage
             let calAnalog = aDat / countsPerVolt;
 
@@ -813,7 +808,6 @@ function buildAndCalibrate() {
             let c1Dat = (0xf & rawData[sensorID][ind][2][j + 6]) << 8 | rawData[sensorID][ind][2][j + 7];
             let c2Dat = (0xf & rawData[sensorID][ind][2][j + 8]) << 8 | rawData[sensorID][ind][2][j + 9];
             let c3Dat = (0xf & rawData[sensorID][ind][2][j + 10]) << 8 | rawData[sensorID][ind][2][j + 11];
-            //let tDat = (rawData[sensorID][ind][0][0] + i / nsamples) * 0.010;
             let tDat = tLast + samplePeriod;
             tLast = tDat;
             
@@ -957,19 +951,3 @@ function tc2int(n) {
   }
 }
 
-// // // placeholder calibration functions 
-// function calAccelData(n) {
-//   return 9.81 * n / 8080;
-// }
-
-// function calMagData(n) {
-//   return (n + 500) / 50;
-// }
-
-// function calGyroData(n) {
-//   return n / 815;
-// }
-
-// function calForceData(n) {
-//   return (n - 200) / 1000;
-// }

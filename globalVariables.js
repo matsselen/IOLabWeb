@@ -6,7 +6,18 @@
 'use strict';
 
 // application metadata (included with saved data)
-var appMetaData = {runSeconds: 0, date: null};
+var appMetaData = {
+    runSeconds: 0, 
+    date: null,
+    calAccelConst: null,
+    calAccelTime: 0,
+    calMagConst: null,
+    calMagTime: 0,    
+    calGyroConst: null,
+    calGyroTime: 0,
+    calForceConst: null,
+    calForceTime: 0
+};
 
 // plots
 var plotSet = null;
