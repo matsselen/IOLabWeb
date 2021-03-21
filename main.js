@@ -9,6 +9,7 @@
 
 // some useflul handles
 const butConnect = document.getElementById('butConnect');
+const connectImg = document.getElementById('connectImg');
 const butSend = document.getElementById('butSend');
 const butStartStop = document.getElementById('butStartStop');
 const butDebug = document.getElementById('butDebug');
@@ -53,7 +54,6 @@ document.addEventListener('DOMContentLoaded', () => {
   calButton.onclick = function () { 
     calibrationSetup();
     modal.style.display = "block"; 
-    calBtnImg.src = "images/calruler0.PNG";
   }
 
   // when the calibration modal is closed
@@ -188,10 +188,13 @@ function updateSystemState() {
   }
 
   if (serialConnected) {
-    butConnect.textContent = "Disconnect Dongle";
+    //butConnect.textContent = "Disconnect Dongle";
+    connectImg.src = "images/release.PNG"
+
     if (remoteConnected) configSelect.style.display = "block";
   } else {
-    butConnect.textContent = "Connect to Dongle";
+    //butConnect.textContent = "Connect to Dongle";
+    connectImg.src = "images/connect.PNG"
     configSelect.style.display = "none";
   }
 
