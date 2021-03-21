@@ -228,7 +228,7 @@ class PlotSet {
 
         for (let ind = 0; ind < this.plotObjectList.length; ind++) {
 
-            let plot = this.plotObjectList[ind];
+            let plot = this.plotObjectList[ind];         
 
             // remove any static viewports from the stack
             while (plot.viewStack.length > 1) {
