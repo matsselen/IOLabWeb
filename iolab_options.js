@@ -21,8 +21,8 @@ function getIOLabConfigInfo() {
     let sensList = [];
     let rateList = [];
     //let longDesc = fc.code.toString() + " [" + fc.desc + "] ";
-    //let longDesc = fc.code.toString() + ": ";
-    let longDesc = "";
+    let longDesc = fc.code.toString() + ": ";
+    //let longDesc = "";
     let longDesc2 = "";
     for (let ind = 0; ind < fc.sensors.length; ind++) {
       let skey = fc.sensors[ind].sensorKey;
@@ -181,7 +181,7 @@ function buildConfigPicker() {
 
   // var configPicker = document.getElementById('config-picker');
   var configOption = document.createElement('option');
-  configOption.value = configOption.innerText = "--- Select Sensors (sample rate in Hz) ---";
+  configOption.value = configOption.innerText = "--- Select Sensor Combintion (sample rate in Hz) ---";
   configPicker.appendChild(configOption);
 
   for (let i = 0; i < iolabConfig.fixedConfigurations.length; i++) {
