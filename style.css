@@ -16,6 +16,7 @@ body {
   margin: 0;
   padding: 0;
   width: 100%;
+  font-size: 18px;
 }
 
 html {
@@ -102,6 +103,7 @@ table.a {
 p.inst {
   font-size: 20px;
 }
+
 
 /*====================modal test===================*/
 /* The Modal (background) */

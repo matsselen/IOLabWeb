@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-  <title>IOLab Web v0.7.65</title>
+  <title>IOLab Web v0.8.10</title>
   <meta charset="utf-8">
   <meta name="iolab" content="testing-w-web-serial">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -29,7 +29,7 @@
 <body>
   <header class="header">
     <h1>
-      <label> <span id="iolabWeb" title="Version 0.7.65"> <i><b>iOLabWeb</b></i></span> </label> &nbsp;&nbsp; |
+      <label> <span id="iolabWeb" title="Version 0.8.10"> <i><b>iOLabWeb</b></i></span> </label> &nbsp;&nbsp; |
       &nbsp;&nbsp;
       <label> Dongle: <span id="dongleStatusDisplay" title="Plug in dongle and click on connect button">not connected
         </span> </label> &nbsp;&nbsp; | &nbsp;&nbsp;
@@ -50,22 +50,27 @@
       <tr>
         <td>
           <p>
-            <button id="butConnect" type="button"
-              title="Make sure your dongle is plugged in and your remote is turned on">Connect</button> &nbsp; &nbsp;
+            <!-- <button id="butConnect" type="button"
+              title="Make sure your dongle is plugged in and your remote is turned on">Connect</button>  -->
+              <a id="butConnect" title="Serial Connection" style="cursor: pointer;">
+                <img id="connectImg" src="images/connect.PNG" valign="middle" ></a>
+              &nbsp;
+          <!-- </p>
+          <p> -->
             <select id="cmd-picker"></select>&nbsp; &nbsp;
           </p>
         </td>
         <td>
           <p>
-            Save Data: <a href="" id="downloadData" onclick="saveToFile()"
+            Save: <a href="" id="downloadData" onclick="saveToFile()"
               title="Saved data can be shared and restored on this or other computers." style="cursor: pointer;"><img
                 src="images/dload.PNG" alt="[Save]" valign="bottom" width="24" height="24"></a>
-            &nbsp; &nbsp;
-            Restore Data: <input type="file" accept=".iolab" size="20" name="inputfile" id="inputfile"></p>
+            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+            Restore: <input type="file" accept=".iolab" size="20" name="inputfile" id="inputfile"></p>
         </td>
         <td>
-          <p style="color: rgb(200,200,200); text-align: right; width: 100px;">
-            Debug:<input id="debug_ck" type="checkbox" checked="true"
+          <p style="color: rgb(200,200,200); text-align: right; width: 100px; ">
+            expert<input id="debug_ck" type="checkbox" checked="true"
               title="Displays additional information for experts">
           </p>
         </td>
@@ -79,8 +84,8 @@
               title="Loads your IOLab with the configuration selected below">Configure</button></td>
           <!-- <td><button id="calBtn">Calibration</button></td> -->
         <td>
-          Calibrate: <a id="calBtn" title="Calibration" style="cursor: pointer;">
-            <img src="images/calruler1.PNG" valign="bottom" ></a>
+          <span id="calBtnTxt">Calibrate:</span> <a id="calBtn" title="Calibration" style="cursor: pointer;">
+            <img id="calBtnImg" src="images/calruler1.PNG" valign="bottom" ></a>
         </td>
         </tr>
         <tr>

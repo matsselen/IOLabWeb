@@ -9,6 +9,7 @@
 
 // some useflul handles
 const butConnect = document.getElementById('butConnect');
+const connectImg = document.getElementById('connectImg');
 const butSend = document.getElementById('butSend');
 const butStartStop = document.getElementById('butStartStop');
 const butDebug = document.getElementById('butDebug');
@@ -31,6 +32,8 @@ const calchooseAMGtxt = document.getElementById("calChooseAMGtxt");
 // calibration modal stuff
 const modal = document.getElementById("calModal");
 const calButton = document.getElementById("calBtn");
+const calBtnImg = document.getElementById("calBtnImg");
+const calBtnTxt = document.getElementById("calBtnTxt");
 const ccspan = document.getElementsByClassName("closeCal")[0];
 
 // do this when the DOM is loaded
@@ -64,8 +67,6 @@ document.addEventListener('DOMContentLoaded', () => {
   buildConfigPicker();
   buildCmdPicker();
 
-  // calibration setup
-  //calibrationSetup();
   // fetch any existing calibrations from browser cookies
   calArrayList = [];
   getCalCookies();
@@ -158,18 +159,7 @@ async function clickStartStop() {
 async function clickDebug() {
 
   console.log("Debug button clicked (put breakpoint here)");
-  // configCalDAQ();
-  //setCalCookieTest();
 
-  //location.reload();
-  //resetAcquisition();
-  //runForSeconds(2000);
-  //window.dispatchEvent(new Event('resize'));
-  //serialConnected = !serialConnecteds;
-  //remoteConnected = !remoteConnected;
-  //updateSystemState();
-  //plotSet.reset();
-  //plotSet = null;
 
 }
 
@@ -185,10 +175,13 @@ function updateSystemState() {
   }
 
   if (serialConnected) {
-    butConnect.textContent = "Disconnect Dongle";
+    //butConnect.textContent = "Disconnect Dongle";
+    connectImg.src = "images/release.PNG"
+
     if (remoteConnected) configSelect.style.display = "block";
   } else {
-    butConnect.textContent = "Connect to Dongle";
+    //butConnect.textContent = "Connect to Dongle";
+    connectImg.src = "images/connect.PNG"
     configSelect.style.display = "none";
   }
 

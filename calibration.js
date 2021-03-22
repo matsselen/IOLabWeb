@@ -162,8 +162,6 @@ function endCal() {
 
         // remove any existing plots that resulted from the calibration
         // (wait a little bit first since this will fail if the end-run stuff isnt finished)
-
-
         console.log("Reset after cal")
         setTimeout(async function () {
             if (plotSet != null) {
@@ -369,13 +367,6 @@ function calMeanSigmaN(sensor, trace) {
     return [aveY, sigY, n];
 
 }
-
-// function setCalCookieTest() {
-//     setCalCookie(remote1ID, 1, [-190, 833, -93, 830, 0, 832]);
-//     setCalCookie(remote1ID, 2, [-1382, 9.0, 1180, 9.9, 1019, 9.1]);
-//     setCalCookie(remote1ID, 3, [0, 807, 20, 833, 13, 825]);
-//     setCalCookie(remote1ID, 8, [2147, -58.2]);
-// }
 
 // see if any of the calibration values found in cookies can be used for the current remotes.
 function setCalValues(remoteNumber, remoteID) {  // remoteNumber = 0,1 and remoteID is 24 bit ID
