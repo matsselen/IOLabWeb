@@ -67,8 +67,6 @@ document.addEventListener('DOMContentLoaded', () => {
   buildConfigPicker();
   buildCmdPicker();
 
-  // calibration setup
-  //calibrationSetup();
   // fetch any existing calibrations from browser cookies
   calArrayList = [];
   getCalCookies();
@@ -161,18 +159,7 @@ async function clickStartStop() {
 async function clickDebug() {
 
   console.log("Debug button clicked (put breakpoint here)");
-  // configCalDAQ();
-  //setCalCookieTest();
 
-  //location.reload();
-  //resetAcquisition();
-  //runForSeconds(2000);
-  //window.dispatchEvent(new Event('resize'));
-  //serialConnected = !serialConnecteds;
-  //remoteConnected = !remoteConnected;
-  //updateSystemState();
-  //plotSet.reset();
-  //plotSet = null;
 
 }
 
