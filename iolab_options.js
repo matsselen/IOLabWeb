@@ -181,7 +181,7 @@ function buildConfigPicker() {
 
   // var configPicker = document.getElementById('config-picker');
   var configOption = document.createElement('option');
-  configOption.value = configOption.innerText = "--- Select Sensor Combintion (sample rate in Hz) ---";
+  configOption.value = configOption.innerText = "Select Sensor Combintion (sample rate in Hz) then click Configure";
   configPicker.appendChild(configOption);
 
   for (let i = 0; i < iolabConfig.fixedConfigurations.length; i++) {
