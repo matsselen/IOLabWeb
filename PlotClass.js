@@ -251,7 +251,7 @@ class PlotSet {
             let plot = this.plotObjectList[ind];
 
             // recalibrate each time axis based on the number of samples and the elapsed time
-            plot.recalibrateTimes();
+            plot.processPlotData();
 
         }
     }
@@ -472,6 +472,9 @@ class PlotIOLab {
 
         this.timePerSample = 0;         // initalize to somenting nuts so we will know if used impropery
 
+        // this holds the reprocessed (smoothed etc) data that is plotted
+        this.plotData = [];
+
         // this will hold (t,x,[y,z,...]) of last data point plotted 
         // start with [t] and we will add 0's for each trace further below
         this.datLast = [-1];
@@ -487,6 +490,10 @@ class PlotIOLab {
 
         // the number of traces is the same as the number of axis titles and 
         this.nTraces = this.axisTitles.length;
+
+        // parameters that determine reprocessing of each trace
+        this.smooth = new Array(this.nTraces).fill(0);
+        this.yShift = new Array(this.nTraces).fill(1);
 
         // copy the trace colors so we can add to it w/o messing up the original.
         this.layerColorList = Array.from(this.sensor.pathColors);
@@ -1054,12 +1061,6 @@ class PlotIOLab {
 
     }
 
-
-    matsTest(e) {
-        let x = e.offsetX
-        let n = this.sensorNum;
-        console.log("Hi Mats n,x: ", n, x);
-    }
     // clean up the DOM
     reset() {
         while (this.parentElement.childNodes.length > 0) {
@@ -1067,12 +1068,12 @@ class PlotIOLab {
         }
     }
 
-    recalibrateTimes() {
+    processPlotData() {
 
         // get the original time of the last acquired data
         let datLength = calData[this.sensorNum].length;
 
-        if (datLength > 100) { // do only if we have some data for this semsor
+        if (datLength > 10) { // do only if we have some data for this semsor
             let tLast0 = calData[this.sensorNum][datLength - 1][0];
 
             // figure out actual time per sample (divide by 1000 since totalRunTime is in ms)
@@ -1083,12 +1084,20 @@ class PlotIOLab {
             for (let ind = 0; ind < datLength; ind++) {
                 calData[this.sensorNum][ind][0] = sampleTime;
                 sampleTime += this.timePerSample;
+
+                // the .slice nonsense is required to copy the array by value
+                let vals = calData[this.sensorNum][ind].slice();
+                this.plotData[ind] = vals;
+
+                for (let i=0; i<this.nTraces; i++) {
+                    this.plotData[ind][i+1] += this.yShift[i];
+                }
             }
 
             // debugging
             if (dbgInfo) {
                 let tLast1 = calData[this.sensorNum][datLength - 1][0];
-                console.log("In recalibrateTimes() sensor:" + this.sensorNum +
+                console.log("In processPlotData() sensor:" + this.sensorNum +
                     " timePerSample:" + this.timePerSample.toFixed(6) +
                     " tLast0:" + tLast0.toFixed(4) +
                     " tLast1:" + tLast1.toFixed(4) +
@@ -1264,14 +1273,16 @@ class PlotIOLab {
                 first = false;
                 for (let tr = 1; tr < this.nTraces + 1; tr++) {
                     contextList[tr].clearRect(0, 0, cWidth, cHeight);
-                    pix = this.viewStack[0].dataToPixel(tplot, calData[sensorID][ind][tr]);
+                    //pix = this.viewStack[0].dataToPixel(tplot, calData[sensorID][ind][tr]);
+                    pix = this.viewStack[0].dataToPixel(tplot, this.plotData[ind][tr]);
                     contextList[tr].beginPath();
                     contextList[tr].moveTo(pix[0], pix[1]);
                 }
 
             } else { // once we have the first point start drawing the rest
                 for (let tr = 1; tr < this.nTraces + 1; tr++) {
-                    pix = this.viewStack[0].dataToPixel(tplot, calData[sensorID][ind][tr]);
+                    //pix = this.viewStack[0].dataToPixel(tplot, calData[sensorID][ind][tr]);
+                    pix = this.viewStack[0].dataToPixel(tplot, this.plotData[ind][tr]);
                     contextList[tr].lineTo(pix[0], pix[1]);
                 }
             }
