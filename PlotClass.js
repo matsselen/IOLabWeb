@@ -589,9 +589,20 @@ class PlotIOLab {
             this.analObjectList.push(stat);
 
         }
-        let txt = document.createTextNode("\xA0\xA0 vs. time (s)");
+        let txt = document.createTextNode("\xA0 vs. t (s) \xA0\xA0 Smoothe: ");
         controls.appendChild(txt);
 
+        // create a drop-down menu to control smoothing
+        let opt = null;
+        let smoothSelect = document.createElement("select");
+        opt = document.createElement('option');
+        opt.value = opt.innerText = "1";
+        smoothSelect.appendChild(opt);
+        opt = document.createElement('option');
+        opt.value = opt.innerText = "2";
+        smoothSelect.appendChild(opt);
+
+        controls.appendChild(smoothSelect);
 
         // Set up the viewport that will be used while the DAQ is running 
         this.runningDataView = new ViewPort(0, this.initialTimeSpan, this.scales[0], this.scales[1], this.baseElement);
