@@ -589,12 +589,14 @@ class PlotIOLab {
             this.analObjectList.push(stat);
 
         }
-        let txt = document.createTextNode("\xA0 vs. t (s) \xA0\xA0 Smoothe: ");
+        let txt = document.createTextNode("\xA0 vs. t (s)");
         controls.appendChild(txt);
 
         // create a drop-down menu to control smoothing
         let opt = null;
         let smoothSelect = document.createElement("select");
+        smoothSelect.setAttribute("class","smooth");
+
         opt = document.createElement('option');
         opt.value = opt.innerText = "1";
         smoothSelect.appendChild(opt);
@@ -602,6 +604,11 @@ class PlotIOLab {
         opt.value = opt.innerText = "2";
         smoothSelect.appendChild(opt);
 
+        let smtxt = document.createElement('span');
+        smtxt.setAttribute("class","smooth");
+        smtxt.innerHTML = "\xA0\xA0 Sm:"
+
+        controls.appendChild(smtxt);
         controls.appendChild(smoothSelect);
 
         // Set up the viewport that will be used while the DAQ is running 
