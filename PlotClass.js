@@ -251,6 +251,17 @@ class PlotSet {
         }
     }
 
+    reprocessPlotData() {
+        for (let ind = 0; ind < this.plotObjectList.length; ind++) {
+
+            let plot = this.plotObjectList[ind];
+
+            // reprocess the plot data (smoothing etc)
+            plot.processPlotData();
+
+        }
+    }
+
     displayPlots() {
 
         this.mouseMode = "zoom";
@@ -1087,7 +1098,7 @@ class PlotIOLab {
                 // the .slice nonsense is required to copy the array by value
                 let dat = calData[this.sensorNum][ind].slice();
                 this.plotData[ind] = dat;
-                
+
                 for (let tr = 1; tr < this.nTraces+1; tr++) {
                     this.plotData[ind][tr] = this.smoothe(datLength, this.sensorNum, tr, ind, smoov);
                 }

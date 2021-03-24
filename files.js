@@ -86,6 +86,9 @@ function restoreAcquisition() {
     calData.shift();
     calData.shift();
 
+    // restore the total run time (ms)
+    totalRunTime = appMetaData.runSeconds*1000;
+
     // restore the cal data write pointers
     for (let i = 0; i < maxSensorCode; i++) {
         calWritePtr[i] = calData[i].length;
@@ -111,8 +114,15 @@ function restoreAcquisition() {
             plot.viewStack.shift();
         }
 
+        // reprocess plot data (smoothing etc)
+        plotSet.reprocessPlotData();
+
         // display the data we just loaded
         plotSet.displayPlots();
+
+        // setTimeout(async function () {
+        //     plotSet.displayPlots();
+        // }, 100);        
     }
 
 }
