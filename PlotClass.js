@@ -237,6 +237,7 @@ class PlotSet {
 
             plot.drawPlotAxes(plot.viewStack[0]);
             plot.plotStaticData();
+            plot.smoothHide();
         }
     }
 
@@ -247,7 +248,7 @@ class PlotSet {
 
             // recalibrate each time axis based on the number of samples and the elapsed time
             plot.processPlotData();
-
+            plot.smoothShow();
         }
     }
 
@@ -258,7 +259,7 @@ class PlotSet {
 
             // reprocess the plot data (smoothing etc)
             plot.processPlotData();
-
+            plot.smoothShow();
         }
     }
 
@@ -498,7 +499,7 @@ class PlotIOLab {
         this.nTraces = this.axisTitles.length;
 
         // parameters that determine reprocessing of each trace
-        this.smooth = 0;
+        this.smoothVal = 0;
         this.yShift = new Array(this.nTraces).fill(0);
 
         // copy the trace colors so we can add to it w/o messing up the original.
@@ -605,17 +606,20 @@ class PlotIOLab {
             this.smoothSelect.appendChild(opt);
         }
 
-        let smtxt = document.createElement('span');
-        smtxt.setAttribute("class", "smooth");
-        smtxt.innerHTML = "\xA0\xA0 Sm:"
+        this.smoothTxt = document.createElement('span');
+        this.smoothTxt.setAttribute("class", "smooth");
+        this.smoothTxt.innerHTML = "\xA0\xA0 Sm:"
 
-        controls.appendChild(smtxt);
+        controls.appendChild(this.smoothTxt);
         controls.appendChild(this.smoothSelect);
 
+        // hide the smoothing dropdown until we need it
+        this.smoothHide();
 
+        // event handler for changing smoothing
         this.smoothSelect.onchange = function () {
             let val = this.options[this.selectedIndex].value;
-            plotThis.smooth = parseInt(val);
+            plotThis.smoothVal = parseInt(val);
             console.log("selected smoothing= " + val.toString() + " for sensor "+plotThis.sensorNum.toString());
             plotThis.processPlotData();
             plotThis.plotStaticData();
@@ -902,6 +906,16 @@ class PlotIOLab {
 
     //===============================IOLabPlot Methods========================================
 
+    smoothHide() {
+        this.smoothTxt.hidden = true;
+        this.smoothSelect.hidden = true;
+    }
+
+    smoothShow() {
+        this.smoothTxt.hidden = false;
+        this.smoothSelect.hidden = false;
+    }
+
     drawSelectionAnalysis() {
         if (plotSet.linkMode) {
             for (let ind = 0; ind < plotSet.plotObjectList.length; ind++) {
@@ -1127,7 +1141,7 @@ class PlotIOLab {
                 this.plotData[ind] = dat;
 
                 for (let tr = 1; tr < this.nTraces + 1; tr++) {
-                    this.plotData[ind][tr] = this.smoothe(datLength, this.sensorNum, tr, ind, this.smooth);
+                    this.plotData[ind][tr] = this.smoothe(datLength, this.sensorNum, tr, ind, this.smoothVal);
                 }
 
                 // apply vertical shifts
