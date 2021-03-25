@@ -594,15 +594,15 @@ class PlotIOLab {
 
         // create a drop-down menu to control smoothing
         let opt = null;
-        let smoothSelect = document.createElement("select");
-        smoothSelect.setAttribute("class", "smooth");
+        this.smoothSelect = document.createElement("select");
+        this.smoothSelect.setAttribute("class", "smooth");
 
         for (let i = 0; i < 10; i++) {
             opt = document.createElement('option');
             opt.setAttribute("class", "smooth");
             opt.value = i;
             opt.innerText = (2 * i + 1).toString();
-            smoothSelect.appendChild(opt);
+            this.smoothSelect.appendChild(opt);
         }
 
         let smtxt = document.createElement('span');
@@ -610,18 +610,16 @@ class PlotIOLab {
         smtxt.innerHTML = "\xA0\xA0 Sm:"
 
         controls.appendChild(smtxt);
-        controls.appendChild(smoothSelect);
+        controls.appendChild(this.smoothSelect);
 
 
-        smoothSelect.onchange = function () {
-
+        this.smoothSelect.onchange = function () {
             let val = this.options[this.selectedIndex].value;
             plotThis.smooth = parseInt(val);
             console.log("selected smoothing= " + val.toString() + " for sensor "+plotThis.sensorNum.toString());
             plotThis.processPlotData();
             plotThis.plotStaticData();
             updateSystemState();
-
         };
 
         // Set up the viewport that will be used while the DAQ is running 
