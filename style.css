@@ -104,6 +104,12 @@ p.inst {
   font-size: 20px;
 }
 
+.smooth {
+  font-size: 14px;
+  padding: 0px 0px 0px 0px;
+  color: rgb(149, 149, 153);
+}
+
 
 /*====================modal test===================*/
 /* The Modal (background) */

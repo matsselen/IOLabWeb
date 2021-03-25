@@ -228,20 +228,16 @@ class PlotSet {
 
         for (let ind = 0; ind < this.plotObjectList.length; ind++) {
 
-            let plot = this.plotObjectList[ind];         
+            let plot = this.plotObjectList[ind];
 
             // remove any static viewports from the stack
             while (plot.viewStack.length > 1) {
                 plot.viewStack.shift();
             }
 
-            // let lastIndex = calData[plot.sensorNum].length-1;
-            // if(lastIndex > 0) { 
-            //     plot.datLast[0] = calData[plot.sensorNum][lastIndex][0]; 
-            // }
-            
             plot.drawPlotAxes(plot.viewStack[0]);
             plot.plotStaticData();
+            plot.smoothHide();
         }
     }
 
@@ -251,8 +247,19 @@ class PlotSet {
             let plot = this.plotObjectList[ind];
 
             // recalibrate each time axis based on the number of samples and the elapsed time
-            plot.recalibrateTimes();
+            plot.processPlotData();
+            plot.smoothShow();
+        }
+    }
 
+    reprocessPlotData() {
+        for (let ind = 0; ind < this.plotObjectList.length; ind++) {
+
+            let plot = this.plotObjectList[ind];
+
+            // reprocess the plot data (smoothing etc)
+            plot.processPlotData();
+            plot.smoothShow();
         }
     }
 
@@ -472,6 +479,9 @@ class PlotIOLab {
 
         this.timePerSample = 0;         // initalize to somenting nuts so we will know if used impropery
 
+        // this holds the reprocessed (smoothed etc) data that is plotted
+        this.plotData = [];
+
         // this will hold (t,x,[y,z,...]) of last data point plotted 
         // start with [t] and we will add 0's for each trace further below
         this.datLast = [-1];
@@ -487,6 +497,10 @@ class PlotIOLab {
 
         // the number of traces is the same as the number of axis titles and 
         this.nTraces = this.axisTitles.length;
+
+        // parameters that determine reprocessing of each trace
+        this.smoothVal = 0;
+        this.yShift = new Array(this.nTraces).fill(0);
 
         // copy the trace colors so we can add to it w/o messing up the original.
         this.layerColorList = Array.from(this.sensor.pathColors);
@@ -561,10 +575,10 @@ class PlotIOLab {
 
             // create the axis labels before each checkbox
             let axis = document.createTextNode("\xA0\xA0" + this.axisTitles[ind] + " (" + this.unit + "):");
-            
+
             // put the axis label in a <span> element so we can set the color of the text
-            let axisContainer =  document.createElement("span");
-            axisContainer.style.color = this.layerColorList[ind+1];
+            let axisContainer = document.createElement("span");
+            axisContainer.style.color = this.layerColorList[ind + 1];
             axisContainer.appendChild(axis);
 
             // add the labels and boxes to the control region
@@ -576,9 +590,41 @@ class PlotIOLab {
             this.analObjectList.push(stat);
 
         }
-        let txt = document.createTextNode("\xA0\xA0 vs. time (s)");
+        let txt = document.createTextNode("\xA0 vs. t (s)");
         controls.appendChild(txt);
 
+        // create a drop-down menu to control smoothing
+        let opt = null;
+        this.smoothSelect = document.createElement("select");
+        this.smoothSelect.setAttribute("class", "smooth");
+
+        for (let i = 0; i < 10; i++) {
+            opt = document.createElement('option');
+            opt.setAttribute("class", "smooth");
+            opt.value = i;
+            opt.innerText = (2 * i + 1).toString();
+            this.smoothSelect.appendChild(opt);
+        }
+
+        this.smoothTxt = document.createElement('span');
+        this.smoothTxt.setAttribute("class", "smooth");
+        this.smoothTxt.innerHTML = "\xA0\xA0 smoothing:"
+
+        controls.appendChild(this.smoothTxt);
+        controls.appendChild(this.smoothSelect);
+
+        // hide the smoothing dropdown until we need it
+        this.smoothHide();
+
+        // event handler for changing smoothing
+        this.smoothSelect.onchange = function () {
+            let val = this.options[this.selectedIndex].value;
+            plotThis.smoothVal = parseInt(val);
+            console.log("selected smoothing= " + val.toString() + " for sensor "+plotThis.sensorNum.toString());
+            plotThis.processPlotData();
+            plotThis.plotStaticData();
+            updateSystemState();
+        };
 
         // Set up the viewport that will be used while the DAQ is running 
         this.runningDataView = new ViewPort(0, this.initialTimeSpan, this.scales[0], this.scales[1], this.baseElement);
@@ -860,6 +906,16 @@ class PlotIOLab {
 
     //===============================IOLabPlot Methods========================================
 
+    smoothHide() {
+        this.smoothTxt.hidden = true;
+        this.smoothSelect.hidden = true;
+    }
+
+    smoothShow() {
+        this.smoothTxt.hidden = false;
+        this.smoothSelect.hidden = false;
+    }
+
     drawSelectionAnalysis() {
         if (plotSet.linkMode) {
             for (let ind = 0; ind < plotSet.plotObjectList.length; ind++) {
@@ -967,8 +1023,8 @@ class PlotIOLab {
                     analysisDrawContext.beginPath();
                     analysisDrawContext.moveTo(zeroLeft[0], zeroLeft[1]);
                     for (let ind = indLeft; ind <= indRight; ind++) {
-                        let t = calData[this.sensorNum][ind][0];
-                        let y = calData[this.sensorNum][ind][tr];
+                        let t = this.plotData[ind][0];//let t = calData[this.sensorNum][ind][0];
+                        let y = this.plotData[ind][tr];//let y = calData[this.sensorNum][ind][tr];
                         let p = this.viewStack[0].dataToPixel(t, y);
                         analysisDrawContext.lineTo(p[0], p[1]);
                     }
@@ -997,7 +1053,7 @@ class PlotIOLab {
 
         // if timePerSample is not initalized then something is wrong
         if (this.timePerSample == 0) {
-            console.log("In drawTimeAndDataMethod(): sensor "+this.sensorNum.toString()+" timePerSample in not set - Mats screwed up");
+            console.log("In drawTimeAndDataMethod(): sensor " + this.sensorNum.toString() + " timePerSample in not set - Mats screwed up");
             return;
         }
 
@@ -1033,7 +1089,7 @@ class PlotIOLab {
         for (let tr = 1; tr < this.nTraces + 1; tr++) {
             if (this.traceEnabledList[tr - 1]) {
 
-                let currentCursorData = calData[this.sensorNum][ind][tr];
+                let currentCursorData = this.plotData[ind][tr];//calData[this.sensorNum][ind][tr];
                 let dataPix = this.viewStack[0].dataToPixel(plotCursorTime, currentCursorData);
                 infoDrawContext.strokeStyle = 'rgba(0,0,0,0)'; // transparent circle outline (cluge)
                 infoDrawContext.lineWidth = 0;
@@ -1054,12 +1110,6 @@ class PlotIOLab {
 
     }
 
-
-    matsTest(e) {
-        let x = e.offsetX
-        let n = this.sensorNum;
-        console.log("Hi Mats n,x: ", n, x);
-    }
     // clean up the DOM
     reset() {
         while (this.parentElement.childNodes.length > 0) {
@@ -1067,34 +1117,72 @@ class PlotIOLab {
         }
     }
 
-    recalibrateTimes() {
+    // reprocesses calData and copies results into this.plotData
+    processPlotData() {
 
         // get the original time of the last acquired data
         let datLength = calData[this.sensorNum].length;
 
-        if (datLength > 100) { // do only if we have some data for this semsor
+        if (datLength > 10) { // do only if we have some data for this semsor
             let tLast0 = calData[this.sensorNum][datLength - 1][0];
 
             // figure out actual time per sample (divide by 1000 since totalRunTime is in ms)
             this.timePerSample = totalRunTime / datLength / 1000;
 
-            // fix all of the time emasurements based on actual elapsed time
+            // fix all of the time measurements based on actual elapsed time
             let sampleTime = 0;
+            this.plotData = [];
             for (let ind = 0; ind < datLength; ind++) {
                 calData[this.sensorNum][ind][0] = sampleTime;
                 sampleTime += this.timePerSample;
+
+                // the .slice nonsense is required to copy the array by value
+                let dat = calData[this.sensorNum][ind].slice();
+                this.plotData[ind] = dat;
+
+                for (let tr = 1; tr < this.nTraces + 1; tr++) {
+                    this.plotData[ind][tr] = this.smoothe(datLength, this.sensorNum, tr, ind, this.smoothVal);
+                }
+
+                // apply vertical shifts
+                // for (let i=0; i<this.nTraces; i++) {
+                //     this.plotData[ind][i+1] += this.yShift[i];
+                // }
+
             }
 
             // debugging
             if (dbgInfo) {
                 let tLast1 = calData[this.sensorNum][datLength - 1][0];
-                console.log("In recalibrateTimes() sensor:" + this.sensorNum +
+                console.log("In processPlotData() sensor:" + this.sensorNum +
                     " timePerSample:" + this.timePerSample.toFixed(6) +
                     " tLast0:" + tLast0.toFixed(4) +
                     " tLast1:" + tLast1.toFixed(4) +
                     " length:" + datLength.toFixed(0));
             }
         }
+    }
+
+    // returns average value for sensor/trace for index +/- nside.
+    smoothe(datlength, sensor, trace, index, nside) {
+
+        if (datlength == 0) { return 0; }
+        if (nside == 0) { return calData[sensor][index][trace]; }
+
+        // set up counters
+        let Sy = 0;
+        let n = 0;
+
+        let indFirst = Math.max(0, index - nside);
+        let indLast = Math.min(datlength, index + nside);
+
+        for (let ind = indFirst; ind < indLast; ind++) {
+            Sy += calData[sensor][ind][trace];
+            n += 1;
+        }
+
+        return Sy / n;
+
     }
 
     // draw plot axes on the layer below the chart traces of ViewPort vp
@@ -1192,7 +1280,7 @@ class PlotIOLab {
         let datLength = calData[this.sensorNum].length;
 
         if (datLength < 1) {
-            if (dbgInfo) console.log("In displayStaticData(): no data to display for sensor "+this.sensorNum.toString());
+            if (dbgInfo) console.log("In displayStaticData(): no data to display for sensor " + this.sensorNum.toString());
 
         } else {
             let tLastFloat = calData[this.sensorNum][datLength - 1][0];
@@ -1264,14 +1352,16 @@ class PlotIOLab {
                 first = false;
                 for (let tr = 1; tr < this.nTraces + 1; tr++) {
                     contextList[tr].clearRect(0, 0, cWidth, cHeight);
-                    pix = this.viewStack[0].dataToPixel(tplot, calData[sensorID][ind][tr]);
+                    //pix = this.viewStack[0].dataToPixel(tplot, calData[sensorID][ind][tr]);
+                    pix = this.viewStack[0].dataToPixel(tplot, this.plotData[ind][tr]);
                     contextList[tr].beginPath();
                     contextList[tr].moveTo(pix[0], pix[1]);
                 }
 
             } else { // once we have the first point start drawing the rest
                 for (let tr = 1; tr < this.nTraces + 1; tr++) {
-                    pix = this.viewStack[0].dataToPixel(tplot, calData[sensorID][ind][tr]);
+                    //pix = this.viewStack[0].dataToPixel(tplot, calData[sensorID][ind][tr]);
+                    pix = this.viewStack[0].dataToPixel(tplot, this.plotData[ind][tr]);
                     contextList[tr].lineTo(pix[0], pix[1]);
                 }
             }
