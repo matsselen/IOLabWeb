@@ -608,7 +608,7 @@ class PlotIOLab {
 
         this.smoothTxt = document.createElement('span');
         this.smoothTxt.setAttribute("class", "smooth");
-        this.smoothTxt.innerHTML = "\xA0\xA0 Sm:"
+        this.smoothTxt.innerHTML = "\xA0\xA0 smoothing:"
 
         controls.appendChild(this.smoothTxt);
         controls.appendChild(this.smoothSelect);
