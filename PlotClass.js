@@ -498,7 +498,7 @@ class PlotIOLab {
         this.nTraces = this.axisTitles.length;
 
         // parameters that determine reprocessing of each trace
-        this.smooth = new Array(this.nTraces).fill(0);
+        this.smooth = 0;
         this.yShift = new Array(this.nTraces).fill(0);
 
         // copy the trace colors so we can add to it w/o messing up the original.
@@ -595,21 +595,34 @@ class PlotIOLab {
         // create a drop-down menu to control smoothing
         let opt = null;
         let smoothSelect = document.createElement("select");
-        smoothSelect.setAttribute("class","smooth");
+        smoothSelect.setAttribute("class", "smooth");
 
-        opt = document.createElement('option');
-        opt.value = opt.innerText = "1";
-        smoothSelect.appendChild(opt);
-        opt = document.createElement('option');
-        opt.value = opt.innerText = "2";
-        smoothSelect.appendChild(opt);
+        for (let i = 0; i < 10; i++) {
+            opt = document.createElement('option');
+            opt.setAttribute("class", "smooth");
+            opt.value = i;
+            opt.innerText = (2 * i + 1).toString();
+            smoothSelect.appendChild(opt);
+        }
 
         let smtxt = document.createElement('span');
-        smtxt.setAttribute("class","smooth");
+        smtxt.setAttribute("class", "smooth");
         smtxt.innerHTML = "\xA0\xA0 Sm:"
 
         controls.appendChild(smtxt);
         controls.appendChild(smoothSelect);
+
+
+        smoothSelect.onchange = function () {
+
+            let val = this.options[this.selectedIndex].value;
+            plotThis.smooth = parseInt(val);
+            console.log("selected smoothing= " + val.toString() + " for sensor "+plotThis.sensorNum.toString());
+            plotThis.processPlotData();
+            plotThis.plotStaticData();
+            updateSystemState();
+
+        };
 
         // Set up the viewport that will be used while the DAQ is running 
         this.runningDataView = new ViewPort(0, this.initialTimeSpan, this.scales[0], this.scales[1], this.baseElement);
@@ -1095,8 +1108,6 @@ class PlotIOLab {
     // reprocesses calData and copies results into this.plotData
     processPlotData() {
 
-        let smoov = 5
-
         // get the original time of the last acquired data
         let datLength = calData[this.sensorNum].length;
 
@@ -1117,8 +1128,8 @@ class PlotIOLab {
                 let dat = calData[this.sensorNum][ind].slice();
                 this.plotData[ind] = dat;
 
-                for (let tr = 1; tr < this.nTraces+1; tr++) {
-                    this.plotData[ind][tr] = this.smoothe(datLength, this.sensorNum, tr, ind, smoov);
+                for (let tr = 1; tr < this.nTraces + 1; tr++) {
+                    this.plotData[ind][tr] = this.smoothe(datLength, this.sensorNum, tr, ind, this.smooth);
                 }
 
                 // apply vertical shifts
