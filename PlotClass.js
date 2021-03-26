@@ -637,7 +637,7 @@ class PlotIOLab {
         zeroLink.style.paddingLeft = "10px";
         zeroLink.style.verticalAlign = "bottom";
         aZero.appendChild(zeroLink);
-        aZero.title = "Click & drag to zoom, click to undo, double-click to reset";
+        aZero.title = "Set vertical zero at selected average";
         aZero.addEventListener("click", zeroClick);
         controls.appendChild(aZero);
 
@@ -681,7 +681,11 @@ class PlotIOLab {
             if (dbgInfo) {
                 console.log("In zeroClick()");
             }
-            zeroLink.src = "images/zero0.png";
+            aZero.hidden = true;
+            let st = plotThis.analObjectList[1];
+            let shift = st.mean;
+            console.log("Vertical shift "+shift.toFixed(4));
+            //zeroLink.src = "images/zero0.png";
         }
 
         // event handler for the layer selection checkboxes
@@ -829,6 +833,9 @@ class PlotIOLab {
                 if ((mousePtrX != e.offsetX) || (mousePtrY != e.offsetY)) {
                     analTime2 = commonCursorTime;
                     plotThis.drawSelectionAnalysis();
+                }
+                if (plotThis.zeroable) {
+                    aZero.hidden = false;
                 }
             }
         }
