@@ -494,6 +494,7 @@ class PlotIOLab {
         this.axisTitles = this.sensor.legends;   // the trace labels
         this.scales = this.sensor.scales;    // the initial y-axis scale range
         this.baseID = this.sensor.shortDesc; // the ID of the bottom layer (used for drawing axes)
+        this.zeroable = this.sensor.zeroable; // can this sensor be zeroed
 
         // the number of traces is the same as the number of axis titles and 
         this.nTraces = this.axisTitles.length;

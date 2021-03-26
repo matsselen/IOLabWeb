@@ -325,7 +325,8 @@ var iolabConfig =
       "legends": ['Signal strength'],
       "pathColors": ["#0000BB"],
       "scales": [0, 100],
-      "autoScaleY": false,
+      "zeroable": false,
+      "autoScaleY": false
     },    
     {
       "code": 1,
@@ -337,6 +338,7 @@ var iolabConfig =
       "pathColors": ["#BB0000", "#0000BB", "#008800"],
       "scales": [-20, 20],
       "minScalingRate": 5,
+      "zeroable": false,
       "autoScaleY": false
     },
     {
@@ -349,6 +351,7 @@ var iolabConfig =
       "pathColors": ["#BB0000", "#0000BB", "#008800"],
       "scales": [-150, 150],
       "minScalingRate": 5,
+      "zeroable": false,
       "autoScaleY": false
     },
     {
@@ -361,6 +364,7 @@ var iolabConfig =
       "pathColors": ["#BB0000", "#0000BB", "#008800"],
       "scales": [-20, 20],
       "minScalingRate": 5,
+      "zeroable": false,
       "autoScaleY": false
     },
     {
@@ -372,6 +376,7 @@ var iolabConfig =
       "legends": ["Pressure"],
       "pathColors": ["#0000BB"],
       "scales": [0, 120],
+      "zeroable": false,
       "autoScaleY": false
     },
     {
@@ -384,6 +389,7 @@ var iolabConfig =
       "pathColors": ["#0000BB"],
       "scales": [0, 10],
       "fftThreshold": 25,
+      "zeroable": false,
       "autoScaleY": false
     },
     {
@@ -395,6 +401,7 @@ var iolabConfig =
       "legends": ["Intensity"],
       "pathColors": ["#0000BB"],
       "scales": [0, 10],
+      "zeroable": false,
       "autoScaleY": false
     },
     {
@@ -406,6 +413,7 @@ var iolabConfig =
       "legends": ["Fᵧ"],
       "pathColors": ["#0000BB"],
       "scales": [-5, 5],
+      "zeroable": true,
       "autoScaleY": false
     },
     {
@@ -456,6 +464,7 @@ var iolabConfig =
       "legends": ["A1", "A2", "A3"],
       "pathColors": ["#BB0000", "#0000BB", "#008800"],
       "scales": [-0.5, 3.7],
+      "zeroable": false,
       "autoScaleY": false
     },
     {
@@ -467,6 +476,7 @@ var iolabConfig =
       "legends": ["Battery"],
       "pathColors": ["#0000BB"],
       "scales": [0, 4],
+      "zeroable": false,
       "autoScaleY": false
     },
     {
@@ -478,6 +488,7 @@ var iolabConfig =
       "legends": ["Voltage"],
       "pathColors": ["#0000BB"],
       "scales": [-1.5, 1.5],
+      "zeroable": true,
       "autoScaleY": false
     },
     {
@@ -487,6 +498,7 @@ var iolabConfig =
       "legends": ["Voltage"],
       "pathColors": ["#0000BB"],
       "scales": [0, 5],
+      "zeroable": false,
       "autoScaleY": false
     },
     {// calculated sensor (derived from sensor 9)
@@ -496,6 +508,7 @@ var iolabConfig =
       "legends": ["rᵧ"],
       "pathColors": ["#BB0000"],
       "scales": [-2, 2],
+      "zeroable": true,
       "unit": "m"
     },
     {// calculated sensor (derived from sensor 9)
@@ -505,6 +518,7 @@ var iolabConfig =
       "legends": ["vᵧ"],
       "pathColors": ["#008800"],
       "scales": [-3, 3],
+      "zeroable": false,
       "unit": "m/s"
     },
     {// calculated sensor (derived from sensor 9)
@@ -514,6 +528,7 @@ var iolabConfig =
       "legends": ["aᵧ"],
       "pathColors": ["#0000BB"],
       "scales": [-20, 20],
+      "zeroable": false,
       "unit": "m/s²"
     },
     {
@@ -525,6 +540,7 @@ var iolabConfig =
       "legends": ["Voltage"],
       "pathColors": ["#0000BB"],
       "scales": [-0.5, 3.7],
+      "zeroable": false,
       "autoScaleY": false
     },
     {
@@ -536,6 +552,7 @@ var iolabConfig =
       "legends": ["Voltage"],
       "pathColors": ["#0000BB"],
       "scales": [-0.5, 3.7],
+      "zeroable": false,
       "autoScaleY": false
     },
     {
@@ -547,6 +564,7 @@ var iolabConfig =
       "legends": ["Voltage"],
       "pathColors": ["#0000BB"],
       "scales": [-0.5, 3.7],
+      "zeroable": false,
       "autoScaleY": false
     },
     {
@@ -558,6 +576,7 @@ var iolabConfig =
       "legends": ["Temp."],
       "pathColors": ["#0000BB"],
       "scales": [0, 40],
+      "zeroable": false,
       "autoScaleY": false
     },
     {
@@ -568,6 +587,7 @@ var iolabConfig =
       "legends": ["I", "II", "III", "aVR", "aVL", "aVF", "V1", "V3", "V6"],
       "pathColors": ["#819263","#3ca13b","#546f6f","#342fdd","#49a6ff","#515095","#c34947","#fa3430","#a73431"],
       "timeAverageIdx": 2,
+      "zeroable": false,
       "scales": [-0.5, 0.5],
     },
     {// calculated sensor (derived from sensor 27)
@@ -577,6 +597,7 @@ var iolabConfig =
       "unit": "mV",
       "legends": ["I"],
       "pathColors": ["#819263"],
+      "zeroable": false,
       "scales": [-0.5, 0.5],
     },
     {// calculated sensor (derived from sensor 27)
@@ -586,6 +607,7 @@ var iolabConfig =
       "unit": "mV",
       "legends": ["II"],
       "pathColors": ["#3ca13b"],
+      "zeroable": false,
       "scales": [-0.5, 0.5],
     },
     {// calculated sensor (derived from sensor 27)
@@ -595,6 +617,7 @@ var iolabConfig =
       "unit": "mV",
       "legends": ["III"],
       "pathColors": ["#546f6f"],
+      "zeroable": false,
       "scales": [-0.5, 0.5],
     },
     {// calculated sensor (derived from sensor 27)
@@ -604,6 +627,7 @@ var iolabConfig =
       "unit": "mV",
       "legends": ["aVR"],
       "pathColors": ["#342fdd"],
+      "zeroable": false,
       "scales": [-0.5, 0.5],
     },
     {// calculated sensor (derived from sensor 27)
@@ -613,6 +637,7 @@ var iolabConfig =
       "unit": "mV",
       "legends": ["aVL"],
       "pathColors": ["#49a6ff"],
+      "zeroable": false,
       "scales": [-0.5, 0.5],
     },
     {// calculated sensor (derived from sensor 27)
@@ -622,6 +647,7 @@ var iolabConfig =
       "unit": "mV",
       "legends": ["aVF"],
       "pathColors": ["#515095"],
+      "zeroable": false,
       "scales": [-0.5, 0.5],
     },
     {// calculated sensor (derived from sensor 27)
@@ -631,6 +657,7 @@ var iolabConfig =
       "unit": "mV",
       "legends": ["V1"],
       "pathColors": ["#c34947"],
+      "zeroable": false,
       "scales": [-0.5, 0.5],
     },    
     {// calculated sensor (derived from sensor 27)
@@ -640,6 +667,7 @@ var iolabConfig =
       "unit": "mV",
       "legends": ["V2"],
       "pathColors": ["#fa3430"],
+      "zeroable": false,
       "scales": [-0.5, 0.5],
     },  
     {// calculated sensor (derived from sensor 27)
@@ -649,6 +677,7 @@ var iolabConfig =
       "unit": "mV",
       "legends": ["V3"],
       "pathColors": ["#a73431"],
+      "zeroable": false,
       "scales": [-0.5, 0.5],
     },  
     {
