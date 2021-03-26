@@ -9,15 +9,22 @@
 function setupControls() {
 
   document.getElementById("debug_ck").addEventListener("click", function () {
-    if (this.checked) {
+    if (this.checked && dbgInfo) {
       document.getElementById('debugStuff').style.display = "block";
       showCommands = true;
     } else {
       document.getElementById('debugStuff').style.display = "none";
       showCommands = false;
+      this.checked = false;
     }
+
     console.log(this.id);
     console.log(this.checked);
+
+    if (!dbgInfo) {
+      console.log("Debug mode is currently disabled.");
+      console.log("Set dbgInfo flag to enable.");
+    }
 
     updateSystemState();
 
@@ -25,7 +32,7 @@ function setupControls() {
 
   // document.getElementById("debugStuff").style.display = "none";
   // document.getElementById("debug_ck").checked = false;
-  
+
   document.getElementById("debugStuff").style.display = "none";
   document.getElementById("debug_ck").checked = false;
   showCommands = false;

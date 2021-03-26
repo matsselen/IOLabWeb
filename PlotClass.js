@@ -621,11 +621,28 @@ class PlotIOLab {
         this.smoothSelect.onchange = function () {
             let val = this.options[this.selectedIndex].value;
             plotThis.smoothVal = parseInt(val);
-            console.log("selected smoothing= " + val.toString() + " for sensor "+plotThis.sensorNum.toString());
+            console.log("selected smoothing= " + val.toString() + " for sensor " + plotThis.sensorNum.toString());
             plotThis.processPlotData();
             plotThis.plotStaticData();
             updateSystemState();
         };
+
+        // create a the zeroing button if approrpiate 
+        // place and control the zero icon
+        let aZero = document.createElement("a");
+        var zeroLink = document.createElement("img");
+        zeroLink.src = "images/zero1.png";
+        zeroLink.height = "20";
+        zeroLink.style = "cursor:pointer";
+        zeroLink.style.paddingLeft = "10px";
+        zeroLink.style.verticalAlign = "bottom";
+        aZero.appendChild(zeroLink);
+        aZero.title = "Click & drag to zoom, click to undo, double-click to reset";
+        aZero.addEventListener("click", zeroClick);
+        controls.appendChild(aZero);
+
+        // hide the zero button until its needed
+        aZero.hidden = true;
 
         // Set up the viewport that will be used while the DAQ is running 
         this.runningDataView = new ViewPort(0, this.initialTimeSpan, this.scales[0], this.scales[1], this.baseElement);
@@ -644,8 +661,8 @@ class PlotIOLab {
         ctlLayer.addEventListener("dblclick", dblclick);
 
         // analysis results and highlighting layer
-        let analysisLayer = this.layerElementList[this.layerElementList.length - 2];
-        let analysisDrawContext = analysisLayer.getContext("2d");
+        //let analysisLayer = this.layerElementList[this.layerElementList.length - 2];
+        //let analysisDrawContext = analysisLayer.getContext("2d");
 
         // cursor info layer
         let infoLayer = this.layerElementList[this.layerElementList.length - 3];
@@ -658,6 +675,14 @@ class PlotIOLab {
 
         // =================================================================================
         // IOLabPlot Constructor functions and event handlers
+
+
+        function zeroClick() {
+            if (dbgInfo) {
+                console.log("In zeroClick()");
+            }
+            zeroLink.src = "images/zero0.png";
+        }
 
         // event handler for the layer selection checkboxes
         function selectLayer() {

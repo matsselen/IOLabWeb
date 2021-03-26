@@ -58,6 +58,7 @@ var fixedRunTimerID;
 
 // useful expert tools
 var dbgInfo = false;
+//var dbgInfo = true;
 var showCommands = false;
 var nDebug = 0;
 
