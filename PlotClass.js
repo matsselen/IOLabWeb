@@ -629,20 +629,20 @@ class PlotIOLab {
 
         // create a the zeroing button if approrpiate 
         // place and control the zero icon
-        let aZero = document.createElement("a");
+        this.aZero = document.createElement("a");
         var zeroLink = document.createElement("img");
         zeroLink.src = "images/zero1.png";
         zeroLink.height = "20";
         zeroLink.style = "cursor:pointer";
         zeroLink.style.paddingLeft = "10px";
         zeroLink.style.verticalAlign = "bottom";
-        aZero.appendChild(zeroLink);
-        aZero.title = "Set vertical zero at selected average";
-        aZero.addEventListener("click", zeroClick);
-        controls.appendChild(aZero);
+        this.aZero.appendChild(zeroLink);
+        this.aZero.title = "Set vertical zero at selected average";
+        this.aZero.addEventListener("click", zeroClick);
+        controls.appendChild(this.aZero);
 
         // hide the zero button until its needed
-        aZero.hidden = true;
+        this.aZero.hidden = true;
 
         // Set up the viewport that will be used while the DAQ is running 
         this.runningDataView = new ViewPort(0, this.initialTimeSpan, this.scales[0], this.scales[1], this.baseElement);
@@ -678,14 +678,19 @@ class PlotIOLab {
 
 
         function zeroClick() {
-            if (dbgInfo) {
-                console.log("In zeroClick()");
-            }
-            aZero.hidden = true;
+            plotThis.aZero.hidden = true;
             let st = plotThis.analObjectList[1];
             let shift = st.mean;
-            console.log("Vertical shift "+shift.toFixed(4));
-            //zeroLink.src = "images/zero0.png";
+            plotThis.yShift[0] = shift;
+            plotThis.processPlotData();
+            plotThis.plotStaticData();
+            plotThis.drawSelectionAnalysis();
+
+            if (dbgInfo) {
+                console.log("In zeroClick()");
+                console.log("Vertical shift "+shift.toFixed(4));
+            }
+
         }
 
         // event handler for the layer selection checkboxes
@@ -835,7 +840,7 @@ class PlotIOLab {
                     plotThis.drawSelectionAnalysis();
                 }
                 if (plotThis.zeroable) {
-                    aZero.hidden = false;
+                    plotThis.aZero.hidden = false;
                 }
             }
         }
@@ -1013,9 +1018,12 @@ class PlotIOLab {
 
         // clear old stuff
         analysisDrawContext.clearRect(0, 0, this.baseElement.width + 2, this.baseElement.height + 2);
-
+        
         // if there is no interval to draw then return
-        if (tStopLocal == tStartLocal) return;
+        if (tStopLocal == tStartLocal) {
+            this.aZero.hidden = true;
+            return;
+        }
 
 
         if (tStartLocal >= this.viewStack[0].xMin && tStartLocal <= this.viewStack[0].xMax) {
@@ -1178,9 +1186,9 @@ class PlotIOLab {
                 }
 
                 // apply vertical shifts
-                // for (let i=0; i<this.nTraces; i++) {
-                //     this.plotData[ind][i+1] += this.yShift[i];
-                // }
+                for (let i=0; i<this.nTraces; i++) {
+                    this.plotData[ind][i+1] -= this.yShift[i];
+                }
 
             }
 
