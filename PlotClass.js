@@ -501,7 +501,7 @@ class PlotIOLab {
 
         // parameters that determine reprocessing of each trace
         this.smoothVal = 0;
-        this.yShift = new Array(this.nTraces).fill(0);
+        this.datShift = new Array(1 + this.nTraces).fill(0);
 
         // copy the trace colors so we can add to it w/o messing up the original.
         this.layerColorList = Array.from(this.sensor.pathColors);
@@ -587,7 +587,8 @@ class PlotIOLab {
             controls.appendChild(cb);
 
             // create a data analysis object for each trace
-            let stat = new StatsIOLab(this.sensorNum, ind + 1);
+            //let stat = new StatsIOLab(this.sensorNum, ind + 1);
+            let stat = new StatsIOLab(this, ind + 1);
             this.analObjectList.push(stat);
 
         }
@@ -679,17 +680,21 @@ class PlotIOLab {
 
         function zeroClick() {
             plotThis.aZero.hidden = true;
-            let st = plotThis.analObjectList[1];
-            let shift = st.mean;
-            plotThis.yShift[0] = shift;
+
+            for (let tr = 1; tr<plotThis.nTraces+1; tr++) {
+                let st = plotThis.analObjectList[tr];
+                plotThis.datShift[tr] += st.mean;
+                st.calcStats(0,0,"redo");
+            }
+
             plotThis.processPlotData();
             plotThis.plotStaticData();
             plotThis.drawSelectionAnalysis();
 
-            if (dbgInfo) {
-                console.log("In zeroClick()");
-                console.log("Vertical shift "+shift.toFixed(4));
-            }
+            //if (dbgInfo) {
+            console.log("In zeroClick(): datShift");
+            console.log(plotThis.datShift);
+            //}
 
         }
 
@@ -1018,7 +1023,7 @@ class PlotIOLab {
 
         // clear old stuff
         analysisDrawContext.clearRect(0, 0, this.baseElement.width + 2, this.baseElement.height + 2);
-        
+
         // if there is no interval to draw then return
         if (tStopLocal == tStartLocal) {
             this.aZero.hidden = true;
@@ -1064,8 +1069,8 @@ class PlotIOLab {
                     analysisDrawContext.beginPath();
                     analysisDrawContext.moveTo(zeroLeft[0], zeroLeft[1]);
                     for (let ind = indLeft; ind <= indRight; ind++) {
-                        let t = this.plotData[ind][0];//let t = calData[this.sensorNum][ind][0];
-                        let y = this.plotData[ind][tr];//let y = calData[this.sensorNum][ind][tr];
+                        let t = this.plotData[ind][0] - this.datShift[0];//let t = calData[this.sensorNum][ind][0];
+                        let y = this.plotData[ind][tr] - this.datShift[tr];//let y = calData[this.sensorNum][ind][tr];
                         let p = this.viewStack[0].dataToPixel(t, y);
                         analysisDrawContext.lineTo(p[0], p[1]);
                     }
@@ -1130,7 +1135,7 @@ class PlotIOLab {
         for (let tr = 1; tr < this.nTraces + 1; tr++) {
             if (this.traceEnabledList[tr - 1]) {
 
-                let currentCursorData = this.plotData[ind][tr];//calData[this.sensorNum][ind][tr];
+                let currentCursorData = this.plotData[ind][tr] - this.datShift[tr];//calData[this.sensorNum][ind][tr];
                 let dataPix = this.viewStack[0].dataToPixel(plotCursorTime, currentCursorData);
                 infoDrawContext.strokeStyle = 'rgba(0,0,0,0)'; // transparent circle outline (cluge)
                 infoDrawContext.lineWidth = 0;
@@ -1183,11 +1188,6 @@ class PlotIOLab {
 
                 for (let tr = 1; tr < this.nTraces + 1; tr++) {
                     this.plotData[ind][tr] = this.smoothe(datLength, this.sensorNum, tr, ind, this.smoothVal);
-                }
-
-                // apply vertical shifts
-                for (let i=0; i<this.nTraces; i++) {
-                    this.plotData[ind][i+1] -= this.yShift[i];
                 }
 
             }
@@ -1394,7 +1394,7 @@ class PlotIOLab {
                 for (let tr = 1; tr < this.nTraces + 1; tr++) {
                     contextList[tr].clearRect(0, 0, cWidth, cHeight);
                     //pix = this.viewStack[0].dataToPixel(tplot, calData[sensorID][ind][tr]);
-                    pix = this.viewStack[0].dataToPixel(tplot, this.plotData[ind][tr]);
+                    pix = this.viewStack[0].dataToPixel(tplot, this.plotData[ind][tr] - this.datShift[tr]);
                     contextList[tr].beginPath();
                     contextList[tr].moveTo(pix[0], pix[1]);
                 }
@@ -1402,7 +1402,7 @@ class PlotIOLab {
             } else { // once we have the first point start drawing the rest
                 for (let tr = 1; tr < this.nTraces + 1; tr++) {
                     //pix = this.viewStack[0].dataToPixel(tplot, calData[sensorID][ind][tr]);
-                    pix = this.viewStack[0].dataToPixel(tplot, this.plotData[ind][tr]);
+                    pix = this.viewStack[0].dataToPixel(tplot, this.plotData[ind][tr] - this.datShift[tr]);
                     contextList[tr].lineTo(pix[0], pix[1]);
                 }
             }
