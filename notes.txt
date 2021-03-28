@@ -1,0 +1,9 @@
+0.8.30  3/28/21
+Start keeping more careful track (i.e. this file)
+First bare-bones alpha release.
+
+
+To Do (just thoughts in no particular order yet):
+a. Revisit time shift
+b. Rationalize usage of calData vs plotData in plotting code
+c. display rezero icon on all zeroable plots when linked

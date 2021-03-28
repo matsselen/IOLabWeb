@@ -632,7 +632,7 @@ class PlotIOLab {
         // place and control the zero icon
         this.aZero = document.createElement("a");
         var zeroLink = document.createElement("img");
-        zeroLink.src = "images/zero1.png";
+        zeroLink.src = "images/rezero1.png";
         zeroLink.height = "20";
         zeroLink.style = "cursor:pointer";
         zeroLink.style.paddingLeft = "10px";
