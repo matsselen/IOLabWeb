@@ -9,9 +9,11 @@
 
 //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 class StatsIOLab {
-    constructor(sensor, trace) {
+    //constructor(sensor, trace) {
+    constructor(parent, trace) {
 
-        this.sensor = sensor;           // calData sensor number
+        //this.sensor = sensor;           // calData sensor number
+        this.parent = parent;
         this.trace = trace;             // trace number (counts from 1)
 
         this.Sx = 0;
@@ -36,14 +38,20 @@ class StatsIOLab {
     }
 
     // calculates various statistics
-    calcStats(indFirst, indLast) {
+    calcStats(indFirst, indLast, mode="") {
 
-        if (indFirst != this.indFirstCalc || indLast != this.indLastCalc) {
+
+        if (indFirst != this.indFirstCalc || indLast != this.indLastCalc || mode == "redo") {
             this.zeroSums();
 
+            if (mode == "redo") {
+                indFirst = this.indFirstCalc;
+                indLast = this.indLastCalc;
+            }
+
             for (let ind = indFirst; ind <= indLast; ind++) {
-                let x = calData[this.sensor][ind][0];
-                let y = calData[this.sensor][ind][this.trace];
+                let x = this.parent.plotData[ind][0] - this.parent.datShift[0]; 
+                let y = this.parent.plotData[ind][this.trace] - this.parent.datShift[this.trace]; 
                 this.Sx  += x;
                 this.Sxx += x*x;
                 this.Sy  += y;
@@ -69,7 +77,8 @@ class StatsIOLab {
             this.intercept = aveY - this.slope*aveX;
             this.rxy = covXY/(sigX*sigY);
 
-            this.timeRange = calData[this.sensor][indLast][0] - calData[this.sensor][indFirst][0];
+            //this.timeRange = calData[this.sensor][indLast][0] - calData[this.sensor][indFirst][0];
+            this.timeRange = this.parent.plotData[indLast][0] - this.parent.plotData[indFirst][0];
             this.area = this.mean*this.timeRange;
 
             // remember the limits so we dont do this again needlessly

@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-  <title>IOLab Web v0.8.20</title>
+  <title>IOLab Web v0.8.30</title>
   <meta charset="utf-8">
   <meta name="iolab" content="testing-w-web-serial">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -29,7 +29,7 @@
 <body>
   <header class="header">
     <h1>
-      <label> <span id="iolabWeb" title="Version 0.8.20"> <i><b>iOLabWeb</b></i></span> </label> &nbsp;&nbsp; |
+      <label> <span id="iolabWeb" title="Version 0.8.30"> <i><b>iOLabWeb</b></i></span> </label> &nbsp;&nbsp; |
       &nbsp;&nbsp;
       <label> Dongle: <span id="dongleStatusDisplay" title="Plug in dongle and click on connect button">not connected
         </span> </label> &nbsp;&nbsp; | &nbsp;&nbsp;
@@ -50,13 +50,9 @@
       <tr>
         <td>
           <p>
-            <!-- <button id="butConnect" type="button"
-              title="Make sure your dongle is plugged in and your remote is turned on">Connect</button>  -->
               <a id="butConnect" title="Serial Connection" style="cursor: pointer;">
                 <img id="connectImg" src="images/connect.PNG" valign="middle" ></a>
               &nbsp;
-          <!-- </p>
-          <p> -->
             <select id="cmd-picker"></select>&nbsp; &nbsp;
           </p>
         </td>
@@ -82,7 +78,6 @@
         <tr>
           <td><button id="butSend" type="button"
               title="Loads your IOLab with the configuration selected below">Configure</button></td>
-          <!-- <td><button id="calBtn">Calibration</button></td> -->
         <td>
           <span id="calBtnTxt">Calibrate:</span> <a id="calBtn" title="Calibration" style="cursor: pointer;">
             <img id="calBtnImg" src="images/calruler1.PNG" valign="bottom" ></a>
@@ -163,8 +158,6 @@
     </div>
 
   </div>
-
-
 
 </body>
 
