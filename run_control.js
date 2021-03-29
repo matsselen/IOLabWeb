@@ -13,7 +13,7 @@ function runForSeconds(mSeconds) {
     updateSystemState();
 }
 
-// this is called at the end of a fixed interval acquisition
+// this is called at the end of a fixed interval acquisition 
 function stopFixedRun() {
     clearInterval(fixedRunTimerID);
     stopRun()
@@ -54,7 +54,7 @@ async function stopRun() {
     // do end of acquisition stuff and display the plots
     // (but wait 100 ms for the last data to trickle in)
     setTimeout(async function () {
-        reProcess();
+        reProcessWheel();
         plotSet.stopAcquisition();
         plotSet.displayPlots();
     }, 100);

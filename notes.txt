@@ -8,6 +8,8 @@ Fix apply shift to running data
 0.8.32 3/29/21
 Cleaned up highlighting and aysis displays when restarting acquisition
 
+0.8.35 3/29/21
+more cleaning up
 
 To Do (just thoughts in no particular order yet):
 - Revisit time shift

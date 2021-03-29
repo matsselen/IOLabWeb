@@ -36,7 +36,7 @@ const calBtnImg = document.getElementById("calBtnImg");
 const calBtnTxt = document.getElementById("calBtnTxt");
 const ccspan = document.getElementsByClassName("closeCal")[0];
 
-// do this when the DOM is loaded
+// do this when the DOM is first loaded
 document.addEventListener('DOMContentLoaded', () => {
 
   // See if web-serial supported by this browser ?
@@ -60,8 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
   ccspan.onclick = function () { 
     endCal();
   }
-  //window.onclick = function (event) { if (event.target == modal) { modal.style.display = "none"; } }
-
+ 
   // get things ready to rumble
   getIOLabConfigInfo();
   buildConfigPicker();
@@ -158,6 +157,8 @@ async function clickStartStop() {
 // event handler for Debug button  
 async function clickDebug() {
 
+  // The checkbox at the top right of the will bring up a debugging menu
+  // (including a button that will get you here) if you set "dbgInfo = true"
   console.log("Debug button clicked (put breakpoint here)");
 
 
@@ -185,6 +186,7 @@ function updateSystemState() {
     configSelect.style.display = "none";
   }
 
+  // decide what text is shown on the send button
   if (current_cmd == "setFixedConfig") {
     butSend.textContent = "Configure";
   } else {
@@ -192,12 +194,14 @@ function updateSystemState() {
     daqConfigured = false;
   }
 
+  // display dongle info if we have it
   if (dongleID > 0) {
     dongleStatusDisplay.innerHTML = "0x" + dongleID.toString(16);
   } else {
     dongleStatusDisplay.innerHTML = "not connected";
   }
 
+  // display remote info if we have it
   if ((remote1ID > 0) && (remoteStatus[0])) {
     remoteStatusDisplay.innerHTML = "0x" + remote1ID.toString(16) +
       " (" + remoteVoltage[0].toFixed(2) + " V)";
@@ -215,12 +219,14 @@ function updateSystemState() {
     remoteStatusDisplay.innerHTML = "off";
   }
 
+  // display the start button if the daq is configured
   if (daqConfigured) {
     butStartStop.hidden = false;
   } else {
     butStartStop.hidden = true;
   }
 
+  // if we are running the start button becomes the stop button
   if (runningDAQ) {
     butStartStop.textContent = "Stop";
   } else {

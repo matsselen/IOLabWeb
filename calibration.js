@@ -583,7 +583,7 @@ function calBaromData(pDat, tDat) {
 }
 
 // calibration functions 
-// assume remote r=0 for now
+// assume remote r=0 for now - some day we will support two remotes
 function calAccelXYZ(x, y, z, r = 0) {
     let cx = (x - calAccelConst[r][0]) / calAccelConst[r][1];
     let cy = (y - calAccelConst[r][2]) / calAccelConst[r][3];

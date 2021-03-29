@@ -848,8 +848,8 @@ function buildAndCalibrate() {
 } //buildAndCalibrate()
 
 //======================================================================
-// reprocess data at the end of an acquisition (as needed)
-function reProcess() {
+// reprocess data at the end of an acquisition (as needed - right now just the wheel)
+function reProcessWheel() {
 
   // loop over sensors
   for (let s = 0; s < sensorIDlist.length; s++) {
@@ -867,12 +867,12 @@ function reProcess() {
       // dont bother unless we have enough data
       let nData = calData[sensorID].length;
       if (nData < 3 * wingA) {
-        console.log("In reProcess(): Not enough wheel data to reprocess")
+        console.log("In reProcessWheel(): Not enough wheel data to reprocess")
         return;
       }
 
       if (dbgInfo) {
-        console.log("In reProcess() nData (wheel) is " + nData.toString());
+        console.log("In reProcessWheel() nData (wheel) is " + nData.toString());
       }
 
       rWheel = 0;
@@ -936,7 +936,7 @@ function reProcess() {
       } // datapoints
     } // wheel
   } // sensor loop
-} // reProcess()
+} // reProcessWheel()
 
 
 // turn 16 bit twos complement signed int into signed int. 

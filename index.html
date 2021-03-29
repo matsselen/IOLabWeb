@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-  <title>IOLab Web v0.8.32</title>
+  <title>IOLab Web v0.8.35</title>
   <meta charset="utf-8">
   <meta name="iolab" content="testing-w-web-serial">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -29,7 +29,7 @@
 <body>
   <header class="header">
     <h1>
-      <label> <span id="iolabWeb" title="Version 0.8.32"> <i><b>iOLabWeb</b></i></span> </label> &nbsp;&nbsp; |
+      <label> <span id="iolabWeb" title="Version 0.8.35"> <i><b>iOLabWeb</b></i></span> </label> &nbsp;&nbsp; |
       &nbsp;&nbsp;
       <label> Dongle: <span id="dongleStatusDisplay" title="Plug in dongle and click on connect button">not connected
         </span> </label> &nbsp;&nbsp; | &nbsp;&nbsp;
@@ -38,8 +38,8 @@
   </header>
 
   <div id="notSupported" class="hidden">
-    Sorry, <b>Web Serial</b> is not supported on this device, make sure you're
-    running Chrome 78 or later and have enabled the<br />
+    <b>Web Serial</b> is not supported on this device. Please
+    Chrome 89 or later. For earlier version of Chrome (78 through 88) you will need to set the<br />
     <code>#enable-experimental-web-platform-features</code> flag in
     <code>chrome://flags</code>
   </div>
@@ -120,9 +120,6 @@
     <p> <button id="butDebug" type="button">Debug</button></p>
   </div>
 
-  <!-- Trigger/Open calibration Modal -->
-  <!-- <button id="calBtn">Calibration</button> -->
-
   <!-- The Modal -->
   <div id="calModal" class="modal">
 
@@ -133,7 +130,6 @@
         <span class="closeCal">&times;</span>
       </div>
       <div class="modal-body">
-        <!-- <h3>Calibration Control</h3> -->
         <table class="a">
           <tr>
             <td>
