@@ -16,3 +16,4 @@ To Do (just thoughts in no particular order yet):
 - Rationalize usage of calData vs plotData in plotting code
 - display rezero icon on all zeroable plots when linked
 (select zoom icon when restarting acquisition - 0.8.32)
+- save/restore dataShift
