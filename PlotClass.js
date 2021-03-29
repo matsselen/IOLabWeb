@@ -3,7 +3,7 @@
 // ---------------------------------
 
 // 
-// This code are used for plotting IOLab data
+// These classes are used for plotting IOLab data
 //      class PlotSet
 //      class ViewPort
 //      class PlotIOLab
@@ -12,6 +12,8 @@
 
 //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 class PlotSet {
+
+    // this class holds a set of "PlotIOLab" class objects - one for each active sensor
     constructor(chartList, chartContainer, controlContainer) {
 
         let plotSetThis = this;         // save "this" to use in callback routines
@@ -222,6 +224,7 @@ class PlotSet {
         }
     }
 
+    // called when the DAQ is started
     startAcquisition() {
 
         this.mouseMode = "";
@@ -257,6 +260,7 @@ class PlotSet {
         }
     }
 
+    // called when the DAQ is paused/ended
     stopAcquisition() {
         for (let ind = 0; ind < this.plotObjectList.length; ind++) {
 
@@ -272,6 +276,7 @@ class PlotSet {
         }
     }
 
+    // reprocess the acquired data so we can display and analyze it
     reprocessPlotData() {
         for (let ind = 0; ind < this.plotObjectList.length; ind++) {
 
@@ -283,6 +288,7 @@ class PlotSet {
         }
     }
 
+    // display whatever data we have after pausing or ending or recalling a run
     displayPlots() {
 
         this.mouseMode = "zoom";
@@ -295,7 +301,7 @@ class PlotSet {
         }
     }
 
-
+    // plot the data in real time as we are aquiring it
     plotRunningData() {
         for (let ind = 0; ind < this.plotObjectList.length; ind++) {
             this.plotObjectList[ind].plotRunningData();
@@ -474,6 +480,7 @@ class ViewPort {
 //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 class PlotIOLab {
 
+    // display and analyze the data for one sensor
     // the constructor sets up a ploting area and its controls
     constructor(thisParent, sensorNum, parentName, chartHeight = 200, chartWidth = 700) {
 
@@ -612,6 +619,8 @@ class PlotIOLab {
             this.analObjectList.push(stat);
 
         }
+
+        // text that appears at the end of the row of sensor checkboxes
         let txt = document.createTextNode("\xA0 vs. t (s)");
         controls.appendChild(txt);
 
@@ -638,7 +647,7 @@ class PlotIOLab {
         // hide the smoothing dropdown until we need it
         this.smoothHide();
 
-        // event handler for changing smoothing
+        // define the event handler for changing the smoothing parameter
         this.smoothSelect.onchange = function () {
             let val = this.options[this.selectedIndex].value;
             plotThis.smoothVal = parseInt(val);
@@ -648,8 +657,7 @@ class PlotIOLab {
             updateSystemState();
         };
 
-        // create a the zeroing button if approrpiate 
-        // place and control the zero icon
+        // create and place and control the re-zero button
         this.aZero = document.createElement("a");
         var zeroLink = document.createElement("img");
         zeroLink.src = "images/rezero1.png";
@@ -662,7 +670,7 @@ class PlotIOLab {
         this.aZero.addEventListener("click", zeroClick);
         controls.appendChild(this.aZero);
 
-        // hide the zero button until its needed
+        // hide the re-zero button until its needed
         this.aZero.hidden = true;
 
         // Set up the viewport that will be used while the DAQ is running 
@@ -681,23 +689,19 @@ class PlotIOLab {
         this.ctlLayer.addEventListener("mouseout", mouseOut);
         this.ctlLayer.addEventListener("dblclick", dblclick);
 
-        // analysis results and highlighting layer
-        //let analysisLayer = this.layerElementList[this.layerElementList.length - 2];
-        //let analysisDrawContext = analysisLayer.getContext("2d");
-
-        // cursor info layer
+        // create a handle to the cursor info layer
         let infoLayer = this.layerElementList[this.layerElementList.length - 3];
         let infoDrawContext = infoLayer.getContext("2d");
 
-        // if this involves the thermometer or barometer sensors then fetch their calibration constants
-        if (sensorNum == 4) {
+        // if this configuration involves the thermometer or barometer sensors then fetch their calibration constants
+        if (sensorNum == 4) { // the thermomenet does not appear witout the barometer
             getBarometerThermometerCalibration();
         }
 
         // =================================================================================
         // IOLabPlot Constructor functions and event handlers
 
-
+        // event handler for the re-zero button
         function zeroClick() {
             plotThis.aZero.hidden = true;
 
@@ -711,10 +715,10 @@ class PlotIOLab {
             plotThis.plotStaticData();
             plotThis.drawSelectionAnalysis();
 
-            //if (dbgInfo) {
-            console.log("In zeroClick(): datShift");
-            console.log(plotThis.datShift);
-            //}
+            if (dbgInfo) {
+                console.log("In zeroClick(): datShift");
+                console.log(plotThis.datShift);
+            }
 
         }
 
@@ -779,14 +783,13 @@ class PlotIOLab {
                 mousePtrY = e.offsetY;
                 mousePtrXlast = e.offsetX;
                 mousePtrYlast = e.offsetY;
+
                 // make a copy of the current viewport and put it n the stack       
                 let copyView = new ViewPort(plotThis.viewStack[0].xMin, plotThis.viewStack[0].xMax,
                     plotThis.viewStack[0].yMin, plotThis.viewStack[0].yMax, plotThis.viewStack[0].canvasElement);
 
                 // push the new viweport onto the bottom of the stack. 
                 plotThis.viewStack.unshift(copyView);
-
-
             }
 
             if (plotThis.thisParent.mouseMode == "anal") {
@@ -878,13 +881,13 @@ class PlotIOLab {
             if ((plotThis.thisParent.mouseMode == "zoom") || (plotThis.thisParent.mouseMode == "pan")) {
                 drawCursorInfo(e);
             }
+
             if (plotThis.thisParent.mouseMode == "anal") {
 
                 // find mouse location in data coordinates
                 let mouseData = plotThis.viewStack[0].pixelToData(e.offsetX, e.offsetY);
                 commonCursorTime = mouseData[0];
                 plotThis.drawTimeAndData();
-
             }
 
             // draw selection box if we are zooming
@@ -917,7 +920,6 @@ class PlotIOLab {
                 }
                 plotThis.drawSelectionAnalysis();
             }
-
         }
 
         // clean up when the mouse leaves the chart
@@ -945,7 +947,6 @@ class PlotIOLab {
             infoDrawContext.font = "10px Arial";
             let text = "(" + pix[0].toFixed(3) + "," + pix[1].toFixed(3) + ")";
             infoDrawContext.fillText(text, e.offsetX + 1, e.offsetY - 1);
-
         }
 
         // use when selecting a rectangle for some control function like zooming
@@ -965,22 +966,25 @@ class PlotIOLab {
             }
         }
 
-    } // constructor
+    } // IOLabPlot constructor
 
     //===============================IOLabPlot Methods========================================
 
+    // hide the smoothing control
     smoothHide() {
         this.smoothTxt.hidden = true;
         this.smoothSelect.hidden = true;
     }
 
+    // show the smoothing control
     smoothShow() {
         this.smoothTxt.hidden = false;
         this.smoothSelect.hidden = false;
     }
 
+    // draw region(s) selected (or being selected)
     drawSelectionAnalysis() {
-        if (plotSet.linkMode) {
+        if (plotSet.linkMode) { // if plots are linked the time is selected on all at once
             for (let ind = 0; ind < plotSet.plotObjectList.length; ind++) {
                 if (plotSet.sensorCBlist[ind].checked) {
                     plotSet.plotObjectList[ind].drawSelectionAnalysisMethod();
@@ -992,8 +996,9 @@ class PlotIOLab {
 
     }
 
+    // dsiplay the vertical (time) cursor and the data at this location
     drawTimeAndData() {
-        if (plotSet.linkMode) {
+        if (plotSet.linkMode) { // if plots are linked the info is displayed on all at once
             for (let ind = 0; ind < plotSet.plotObjectList.length; ind++) {
                 if (plotSet.sensorCBlist[ind].checked) {
                     plotSet.plotObjectList[ind].drawTimeAndDataMethod();
@@ -1004,7 +1009,7 @@ class PlotIOLab {
         }
     }
 
-    // use when selecting a rectangle for some control function like zooming
+    // draw the selected region as well as any analysis results for this region
     drawSelectionAnalysisMethod() {
 
         // analysis info layer
@@ -1050,21 +1055,21 @@ class PlotIOLab {
             return;
         }
 
-
+        // draw the vertical lines that delineate the selectd region
         if (tStartLocal >= this.viewStack[0].xMin && tStartLocal <= this.viewStack[0].xMax) {
             this.drawVline(analysisDrawContext, this.viewStack[0], tStartLocal, 1, '#000000');
         }
-
         if (tStopLocal >= this.viewStack[0].xMin && tStopLocal <= this.viewStack[0].xMax) {
             this.drawVline(analysisDrawContext, this.viewStack[0], tStopLocal, 1, '#000000');
         }
 
+        // display the time range of the selected region
         analysisDrawContext.fillStyle = '#000000';
         analysisDrawContext.font = "12px Arial";
         let text = "∆t = " + Math.abs(tStopLocal - tStartLocal).toFixed(3) + "s";
         analysisDrawContext.fillText(text, 200, 15);
 
-        // find the starting and ending 
+        // find the starting and ending pixels on the x axis
         let zeroLeft = this.viewStack[0].dataToPixel(tLeft, 0);
         let zeroRight = this.viewStack[0].dataToPixel(tRight, 0);
 
@@ -1077,7 +1082,7 @@ class PlotIOLab {
                 let st = this.analObjectList[tr];
                 st.calcStats(indStart, indStop);
 
-                // put data numbers at top left corner of plot
+                // put data analysis results on the plot for each selected trace
                 analysisDrawContext.fillStyle = this.layerColorList[tr];
                 let text = "n=" + st.n.toFixed(0) + " μ=" + st.mean.toFixed(4) + "±" + st.stderr.toFixed(4) + " σ=" + st.sigma.toFixed(4) +
                     " a=" + st.area.toFixed(2) + " m=" + st.slope.toFixed(2) + " b=" + st.intercept.toFixed(2) +
@@ -1085,12 +1090,13 @@ class PlotIOLab {
                 traceVoffset += 12;
                 analysisDrawContext.fillText(text, 200, traceVoffset);
 
+                // fill the area of the selected region (i.e. display the area)
                 if (indRight > indLeft) {
                     analysisDrawContext.beginPath();
                     analysisDrawContext.moveTo(zeroLeft[0], zeroLeft[1]);
                     for (let ind = indLeft; ind <= indRight; ind++) {
-                        let t = this.plotData[ind][0] - this.datShift[0];//let t = calData[this.sensorNum][ind][0];
-                        let y = this.plotData[ind][tr] - this.datShift[tr];//let y = calData[this.sensorNum][ind][tr];
+                        let t = this.plotData[ind][0] - this.datShift[0];
+                        let y = this.plotData[ind][tr] - this.datShift[tr];
                         let p = this.viewStack[0].dataToPixel(t, y);
                         analysisDrawContext.lineTo(p[0], p[1]);
                     }
@@ -1209,7 +1215,6 @@ class PlotIOLab {
                 for (let tr = 1; tr < this.nTraces + 1; tr++) {
                     this.plotData[ind][tr] = this.smoothe(datLength, this.sensorNum, tr, ind, this.smoothVal);
                 }
-
             }
 
             // debugging
@@ -1241,9 +1246,7 @@ class PlotIOLab {
             Sy += calData[sensor][ind][trace];
             n += 1;
         }
-
         return Sy / n;
-
     }
 
     // draw plot axes on the layer below the chart traces of ViewPort vp
@@ -1309,7 +1312,6 @@ class PlotIOLab {
         ctx.moveTo(pix1[0], pix1[1]);
         ctx.lineTo(pix2[0], pix2[1]);
         ctx.stroke();
-
     }
 
     // draws a vertical line at y = yDat on context ctx reference to viewport vp 
@@ -1352,7 +1354,6 @@ class PlotIOLab {
             if (this.timePerSample == 0) {
                 this.timePerSample = tLastFloat / datLength;
             }
-
 
             // first create a viewport that contains the entire time-range      
             this.staticDataView = new ViewPort(0, tLast,
@@ -1413,7 +1414,6 @@ class PlotIOLab {
                 first = false;
                 for (let tr = 1; tr < this.nTraces + 1; tr++) {
                     contextList[tr].clearRect(0, 0, cWidth, cHeight);
-                    //pix = this.viewStack[0].dataToPixel(tplot, calData[sensorID][ind][tr]);
                     pix = this.viewStack[0].dataToPixel(tplot, this.plotData[ind][tr] - this.datShift[tr]);
                     contextList[tr].beginPath();
                     contextList[tr].moveTo(pix[0], pix[1]);
@@ -1421,7 +1421,6 @@ class PlotIOLab {
 
             } else { // once we have the first point start drawing the rest
                 for (let tr = 1; tr < this.nTraces + 1; tr++) {
-                    //pix = this.viewStack[0].dataToPixel(tplot, calData[sensorID][ind][tr]);
                     pix = this.viewStack[0].dataToPixel(tplot, this.plotData[ind][tr] - this.datShift[tr]);
                     contextList[tr].lineTo(pix[0], pix[1]);
                 }
@@ -1514,10 +1513,8 @@ class PlotIOLab {
                         contextList[tr].moveTo(pix[0], pix[1]);
 
                     } else {
-
                         pix = this.viewStack[0].dataToPixel(tplot, calData[sensorID][ind][tr] - this.datShift[tr]);
                         contextList[tr].lineTo(pix[0], pix[1]);
-
                     }
                 }
                 shiftView = false;
@@ -1533,9 +1530,5 @@ class PlotIOLab {
         }
     } // plotRunningData
 
-    testClass() {
-        console.log("In testClass");
-        console.log(this);
-    }
 };
 
