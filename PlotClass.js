@@ -244,6 +244,16 @@ class PlotSet {
             this.panLink.src = "images/pan0.png";
             this.anaLink.src = "images/ana0.png";
             this.linkLink.src = "images/link0.png";
+
+            // analysis info layer
+            let analysisLayer = plot.layerElementList[plot.layerElementList.length - 2];
+            let analysisDrawContext = analysisLayer.getContext("2d");
+
+            // clear old stuff
+            analysisDrawContext.clearRect(0, 0, plot.baseElement.width + 2, plot.baseElement.height + 2);
+            tStart = 0;
+            tStop = 0;
+
         }
     }
 
@@ -257,6 +267,8 @@ class PlotSet {
             plot.smoothShow();
             plot.ctlLayer.hidden = false;
             this.zoomLink.src = "images/zoom1.png";
+
+
         }
     }
 
@@ -689,10 +701,10 @@ class PlotIOLab {
         function zeroClick() {
             plotThis.aZero.hidden = true;
 
-            for (let tr = 1; tr<plotThis.nTraces+1; tr++) {
+            for (let tr = 1; tr < plotThis.nTraces + 1; tr++) {
                 let st = plotThis.analObjectList[tr];
                 plotThis.datShift[tr] += st.mean;
-                st.calcStats(0,0,"redo");
+                st.calcStats(0, 0, "redo");
             }
 
             plotThis.processPlotData();
