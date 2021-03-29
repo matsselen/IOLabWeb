@@ -1453,13 +1453,13 @@ class PlotIOLab {
                 // start with the data at calReadPtr (presumably 0)
                 if (this.datLast[0] < 0) {
 
-                    let xd = calData[sensorID][calReadPtr[sensorID]][tr];
+                    let xd = calData[sensorID][calReadPtr[sensorID]][tr] - this.datShift[tr];
                     pix = this.viewStack[0].dataToPixel(td, xd);
 
                 } else { // if this is not the first call start with the last datapoint we plotted
 
                     let tstart = this.datLast[0];
-                    pix = this.viewStack[0].dataToPixel(tstart, this.datLast[tr]);
+                    pix = this.viewStack[0].dataToPixel(tstart, this.datLast[tr] - this.datShift[tr]);
                 }
                 contextList[tr].moveTo(pix[0], pix[1]);
             }
@@ -1489,13 +1489,13 @@ class PlotIOLab {
 
                         // clear canvas before wrapping
                         contextList[tr].clearRect(0, 0, cWidth, cHeight);
-                        pix = this.viewStack[0].dataToPixel(tplot, calData[sensorID][ind][tr]);
+                        pix = this.viewStack[0].dataToPixel(tplot, calData[sensorID][ind][tr] - this.datShift[tr]);
                         contextList[tr].beginPath();
                         contextList[tr].moveTo(pix[0], pix[1]);
 
                     } else {
 
-                        pix = this.viewStack[0].dataToPixel(tplot, calData[sensorID][ind][tr]);
+                        pix = this.viewStack[0].dataToPixel(tplot, calData[sensorID][ind][tr] - this.datShift[tr]);
                         contextList[tr].lineTo(pix[0], pix[1]);
 
                     }

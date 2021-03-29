@@ -7,3 +7,4 @@ To Do (just thoughts in no particular order yet):
 a. Revisit time shift
 b. Rationalize usage of calData vs plotData in plotting code
 c. display rezero icon on all zeroable plots when linked
+d. select zoom icon when restarting acquisition
