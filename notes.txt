@@ -5,9 +5,12 @@ First bare-bones alpha release.
 0.8.31 3/28/21
 Fix apply shift to running data
 
+0.8.32 3/29/21
+Cleaned up highlighting and aysis displays when restarting acquisition
+
 
 To Do (just thoughts in no particular order yet):
-a. Revisit time shift
-b. Rationalize usage of calData vs plotData in plotting code
-c. display rezero icon on all zeroable plots when linked
-d. select zoom icon when restarting acquisition
+- Revisit time shift
+- Rationalize usage of calData vs plotData in plotting code
+- display rezero icon on all zeroable plots when linked
+(select zoom icon when restarting acquisition - 0.8.32)
