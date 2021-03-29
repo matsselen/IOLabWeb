@@ -2,6 +2,9 @@
 Start keeping more careful track (i.e. this file)
 First bare-bones alpha release.
 
+0.8.31 3/28/21
+Fix apply shift to running data
+
 
 To Do (just thoughts in no particular order yet):
 a. Revisit time shift
