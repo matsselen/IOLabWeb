@@ -37,52 +37,52 @@ class PlotSet {
         analysis.style.paddingLeft = "5px";
 
         // place and control the zoom icon
-        let aZoom = document.createElement("a");
-        var zoomLink = document.createElement("img");
-        zoomLink.src = "images/zoom1.png";
-        zoomLink.width = "40";
-        zoomLink.style = "cursor:pointer";
-        zoomLink.style.paddingRight = "5px";
-        aZoom.appendChild(zoomLink);
-        aZoom.title = "Click & drag to zoom, click to undo, double-click to reset";
-        aZoom.addEventListener("click", zoomClick);
-        analysis.appendChild(aZoom);
+        this.aZoom = document.createElement("a");
+        this.zoomLink = document.createElement("img");
+        this.zoomLink.src = "images/zoom1.png";
+        this.zoomLink.width = "40";
+        this.zoomLink.style = "cursor:pointer";
+        this.zoomLink.style.paddingRight = "5px";
+        this.aZoom.appendChild(this.zoomLink);
+        this.aZoom.title = "Click & drag to zoom, click to undo, double-click to reset";
+        this.aZoom.addEventListener("click", zoomClick);
+        analysis.appendChild(this.aZoom);
 
         // place and control the pan icon
-        let aPan = document.createElement("a");
-        var panLink = document.createElement("img");
-        panLink.src = "images/pan0.png";
-        panLink.width = "40";
-        panLink.style = "cursor:pointer";
-        panLink.style.paddingRight = "5px";
-        aPan.appendChild(panLink);
-        aPan.title = "Click & drag to pan, click to undo, double-click to reset";
-        aPan.addEventListener("click", panClick);
-        analysis.appendChild(aPan);
+        this.aPan = document.createElement("a");
+        this.panLink = document.createElement("img");
+        this.panLink.src = "images/pan0.png";
+        this.panLink.width = "40";
+        this.panLink.style = "cursor:pointer";
+        this.panLink.style.paddingRight = "5px";
+        this.aPan.appendChild(this.panLink);
+        this.aPan.title = "Click & drag to pan, click to undo, double-click to reset";
+        this.aPan.addEventListener("click", panClick);
+        analysis.appendChild(this.aPan);
 
         // place and control the analysis icon
-        let aAnal = document.createElement("a");
-        var anaLink = document.createElement("img");
-        anaLink.src = "images/ana0.png";
-        anaLink.width = "40";
-        anaLink.style = "cursor:pointer";
-        anaLink.style.paddingRight = "5px";
-        aAnal.appendChild(anaLink);
-        aAnal.title = "Click & drag to select analysis region";
-        aAnal.addEventListener("click", anaClick);
-        analysis.appendChild(aAnal);
+        this.aAnal = document.createElement("a");
+        this.anaLink = document.createElement("img");
+        this.anaLink.src = "images/ana0.png";
+        this.anaLink.width = "40";
+        this.anaLink.style = "cursor:pointer";
+        this.anaLink.style.paddingRight = "5px";
+        this.aAnal.appendChild(this.anaLink);
+        this.aAnal.title = "Click & drag to select analysis region";
+        this.aAnal.addEventListener("click", anaClick);
+        analysis.appendChild(this.aAnal);
 
         // place and control the chart-link icon
-        let aLink = document.createElement("a");
-        var linkLink = document.createElement("img");
-        linkLink.src = "images/link0.png";
-        linkLink.width = "40";
-        linkLink.style = "cursor:pointer";
-        linkLink.style.paddingRight = "5px";
-        aLink.appendChild(linkLink);
-        aLink.title = "Link charts";
-        aLink.addEventListener("click", linkClick);
-        analysis.appendChild(aLink);
+        this.aLink = document.createElement("a");
+        this.linkLink = document.createElement("img");
+        this.linkLink.src = "images/link0.png";
+        this.linkLink.width = "40";
+        this.linkLink.style = "cursor:pointer";
+        this.linkLink.style.paddingRight = "5px";
+        this.aLink.appendChild(this.linkLink);
+        this.aLink.title = "Link charts";
+        this.aLink.addEventListener("click", linkClick);
+        analysis.appendChild(this.aLink);
 
         // add the analysis region to the page and put some vertical space below it
         this.controlElement.appendChild(analysis);
@@ -165,9 +165,9 @@ class PlotSet {
             if (dbgInfo) {
                 console.log("selecting zoom mode");
             }
-            zoomLink.src = "images/zoom1.png";
-            panLink.src = "images/pan0.png";
-            anaLink.src = "images/ana0.png";
+            plotSetThis.zoomLink.src = "images/zoom1.png";
+            plotSetThis.panLink.src = "images/pan0.png";
+            plotSetThis.anaLink.src = "images/ana0.png";
             plotSetThis.mouseMode = "zoom";
         }
 
@@ -175,9 +175,9 @@ class PlotSet {
             if (dbgInfo) {
                 console.log("selecting pan mode");
             }
-            zoomLink.src = "images/zoom0.png";
-            panLink.src = "images/pan1.png";
-            anaLink.src = "images/ana0.png";
+            plotSetThis.zoomLink.src = "images/zoom0.png";
+            plotSetThis.panLink.src = "images/pan1.png";
+            plotSetThis.anaLink.src = "images/ana0.png";
             plotSetThis.mouseMode = "pan";
         }
 
@@ -185,9 +185,9 @@ class PlotSet {
             if (dbgInfo) {
                 console.log("selecting analysis mode");
             }
-            zoomLink.src = "images/zoom0.png";
-            panLink.src = "images/pan0.png";
-            anaLink.src = "images/ana1.png";
+            plotSetThis.zoomLink.src = "images/zoom0.png";
+            plotSetThis.panLink.src = "images/pan0.png";
+            plotSetThis.anaLink.src = "images/ana1.png";
             plotSetThis.mouseMode = "anal";
         }
 
@@ -196,10 +196,10 @@ class PlotSet {
                 console.log("selecting link mode");
             }
             if (plotSetThis.linkMode) {
-                linkLink.src = "images/link0.png";
+                plotSetThis.linkLink.src = "images/link0.png";
                 plotSetThis.linkMode = false;
             } else {
-                linkLink.src = "images/link1.png";
+                plotSetThis.linkLink.src = "images/link1.png";
                 plotSetThis.linkMode = true;
             }
         }
@@ -238,6 +238,12 @@ class PlotSet {
             plot.drawPlotAxes(plot.viewStack[0]);
             plot.plotStaticData();
             plot.smoothHide();
+
+            plot.ctlLayer.hidden = true;
+            this.zoomLink.src = "images/zoom0.png";
+            this.panLink.src = "images/pan0.png";
+            this.anaLink.src = "images/ana0.png";
+            this.linkLink.src = "images/link0.png";
         }
     }
 
@@ -249,6 +255,8 @@ class PlotSet {
             // recalibrate each time axis based on the number of samples and the elapsed time
             plot.processPlotData();
             plot.smoothShow();
+            plot.ctlLayer.hidden = false;
+            this.zoomLink.src = "images/zoom1.png";
         }
     }
 
@@ -653,13 +661,13 @@ class PlotIOLab {
         this.drawPlotAxes(this.viewStack[0]);
 
         // attach some event listeners to the top (control) layer
-        let ctlLayer = this.layerElementList[this.layerElementList.length - 1];
-        let ctlDrawContext = ctlLayer.getContext("2d");
-        ctlLayer.addEventListener("mousedown", mouseDown);
-        ctlLayer.addEventListener("mouseup", mouseUp);
-        ctlLayer.addEventListener("mousemove", mouseMove);
-        ctlLayer.addEventListener("mouseout", mouseOut);
-        ctlLayer.addEventListener("dblclick", dblclick);
+        this.ctlLayer = this.layerElementList[this.layerElementList.length - 1];
+        let ctlDrawContext = this.ctlLayer.getContext("2d");
+        this.ctlLayer.addEventListener("mousedown", mouseDown);
+        this.ctlLayer.addEventListener("mouseup", mouseUp);
+        this.ctlLayer.addEventListener("mousemove", mouseMove);
+        this.ctlLayer.addEventListener("mouseout", mouseOut);
+        this.ctlLayer.addEventListener("dblclick", dblclick);
 
         // analysis results and highlighting layer
         //let analysisLayer = this.layerElementList[this.layerElementList.length - 2];
