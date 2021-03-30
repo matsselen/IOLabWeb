@@ -37,5 +37,6 @@ function setupControls() {
   debugCK.checked = false;
   showCommands = false;
   debugCK.hidden = true;
+  cmdPicker.hidden = true;
 }
 

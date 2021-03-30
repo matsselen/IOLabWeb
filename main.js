@@ -170,6 +170,7 @@ async function clickDebug() {
 function showDebug() {
   debugCK.hidden = false;
   dbgInfo = true;
+  cmdPicker.hidden = false;
 }
 
 //===============================================
