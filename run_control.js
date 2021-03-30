@@ -37,6 +37,8 @@ async function startRun() {
 
     // keep track whether this is a restart or a first time start
     if (lastFrame > 0) justRestarted = true;
+
+    updateSystemState();
 }
 
 //============================================================
@@ -59,6 +61,7 @@ async function stopRun() {
         plotSet.displayPlots();
     }, 100);
 
+    updateSystemState();
 }
 
 // plots new data (called above)

@@ -16,7 +16,7 @@ function saveToFile() {
     appMetaData.calAccelConst = calAccelConst;
     appMetaData.calAccelTime = calAccelTime;
     appMetaData.calMagConst = calMagConst;
-    appMetaData.calMagTime = calMagTime; 
+    appMetaData.calMagTime = calMagTime;
     appMetaData.calGyroConst = calGyroConst;
     appMetaData.calGyroTime = calGyroTime;
     appMetaData.calForceConst = calForceConst;
@@ -58,17 +58,23 @@ function saveToFile() {
 
 // code for reading back rxdata from a file
 async function readInputFile() {
+
     var frd = new FileReader;
-    frd.readAsText(this.files[0]);
-    frd.onload = function () {
-        parseFromFile(frd.result);
+    try {
+        frd.readAsText(this.files[0]);
+        frd.onload = function () {
+            parseFromFile(frd.result);
+        }
+
+        // wait 100 ms for shit to finish then get to work restoring the saved plots
+        setTimeout(async function () {
+            restoreAcquisition();
+        }, 100);
     }
-
-    // wait 100 ms for shit to finish then get to work restoring the saved plots
-    setTimeout(async function () {
-        restoreAcquisition();
-    }, 100);
-
+    catch (error) {
+        console.log("Did not reastore a data file");
+        console.log(error);
+    }
 }
 
 // called by readInputFile
@@ -80,6 +86,10 @@ function restoreAcquisition() {
 
     console.log("In restoreAcquisition()");
 
+    // if (serialConnected) { 
+    //     disconnectAndStop(); 
+    // }
+
     // exctact the fixed config object and restore the calibrated data
     currentFCobject = calData[1];
     appMetaData = calData[0]
@@ -87,7 +97,7 @@ function restoreAcquisition() {
     calData.shift();
 
     // restore the total run time (ms)
-    totalRunTime = appMetaData.runSeconds*1000;
+    totalRunTime = appMetaData.runSeconds * 1000;
 
     // restore the cal data write pointers
     for (let i = 0; i < maxSensorCode; i++) {
@@ -98,7 +108,7 @@ function restoreAcquisition() {
     if (plotSet != null) {
         plotSet.reset();
         plotSet = null;
-        resetAcquisition();
+        //resetAcquisition();
     }
 
     // if enough info is present create new plotSet and display the restored data
