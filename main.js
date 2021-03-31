@@ -14,6 +14,7 @@ const butSend = document.getElementById('butSend');
 const butStartStop = document.getElementById('butStartStop');
 const butRestore = document.getElementById('restore');
 const debugCK = document.getElementById("debug_ck");
+//const resetApp = document.getElementById("resetApp");
 const denugStuff = document.getElementById("debugStuff")
 const butDebug = document.getElementById('butDebug');
 const dongleStatusDisplay = document.getElementById('dongleStatusDisplay');
@@ -52,6 +53,11 @@ document.addEventListener('DOMContentLoaded', () => {
   butStartStop.addEventListener('click', clickStartStop);
   butDebug.addEventListener('click', clickDebug);
   inputFile.addEventListener("change", readInputFile);
+
+  window.onbeforeunload = function(){
+    console.log("Leaving App and turning off remote 1");
+    //return;
+  };
 
   // when the calibration modal is invoked
   calButton.onclick = function () { 
@@ -171,6 +177,23 @@ function showDebug() {
   debugCK.hidden = false;
   dbgInfo = true;
   cmdPicker.hidden = false;
+}
+
+function resetApp() {
+  console.log("Resetting App and turning off remote 1");
+  sendRecord(getCommandRecord("powerDown"));
+  // reload the page after a wait
+  setTimeout(async function () {
+    location.reload();
+  }, 100);  
+  
+}
+
+async function unloadApp() {
+  await sendRecord(getCommandRecord("powerDown"));
+  setTimeout(async function () {
+    console.log("Leaving App and turning off remote 1");
+  }, 200);
 }
 
 //===============================================
