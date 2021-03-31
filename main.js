@@ -169,11 +169,9 @@ async function clickStartStop() {
 // event handler for Debug button  
 async function clickDebug() {
 
-  // The checkbox at the top right of the will bring up a debugging menu
-  // (including a button that will get you here) if you set "dbgInfo = true"
+  // to display debug button type "showDebug()" in the console and the select the 
+  // checkbox that appears at the top right of the window
   console.log("Debug button clicked (put breakpoint here)");
-
-
 }
 
 // run this in the console to see the debugging features
