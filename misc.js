@@ -8,7 +8,7 @@
 // (will be will be replaced by sometning better once the IOLabPlot class is finished)
 function setupControls() {
 
-  document.getElementById("debug_ck").addEventListener("click", function () {
+  debugCK.addEventListener("click", function () {
     if (this.checked && dbgInfo) {
       document.getElementById('debugStuff').style.display = "block";
       showCommands = true;
@@ -33,8 +33,10 @@ function setupControls() {
   // document.getElementById("debugStuff").style.display = "none";
   // document.getElementById("debug_ck").checked = false;
 
-  document.getElementById("debugStuff").style.display = "none";
-  document.getElementById("debug_ck").checked = false;
+  debugStuff.style.display = "none";
+  debugCK.checked = false;
   showCommands = false;
+  debugCK.hidden = true;
+  cmdPicker.hidden = true;
 }
 

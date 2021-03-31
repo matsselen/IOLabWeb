@@ -12,6 +12,10 @@ const butConnect = document.getElementById('butConnect');
 const connectImg = document.getElementById('connectImg');
 const butSend = document.getElementById('butSend');
 const butStartStop = document.getElementById('butStartStop');
+const butRestore = document.getElementById('restore');
+const debugCK = document.getElementById("debug_ck");
+//const resetApp = document.getElementById("resetApp");
+const denugStuff = document.getElementById("debugStuff")
 const butDebug = document.getElementById('butDebug');
 const dongleStatusDisplay = document.getElementById('dongleStatusDisplay');
 const remoteStatusDisplay = document.getElementById('remoteStatusDisplay');
@@ -49,6 +53,14 @@ document.addEventListener('DOMContentLoaded', () => {
   butStartStop.addEventListener('click', clickStartStop);
   butDebug.addEventListener('click', clickDebug);
   inputFile.addEventListener("change", readInputFile);
+
+  window.onbeforeunload = function(){
+    sendRecord(getCommandRecord("powerDown"));
+    // leave page after a delay to give the shutdown command time to finish
+    setTimeout(async function () {
+      console.log("Leaving App and turning off remote 1");
+    }, 200);
+  };
 
   // when the calibration modal is invoked
   calButton.onclick = function () { 
@@ -157,11 +169,22 @@ async function clickStartStop() {
 // event handler for Debug button  
 async function clickDebug() {
 
-  // The checkbox at the top right of the will bring up a debugging menu
-  // (including a button that will get you here) if you set "dbgInfo = true"
+  // to display debug button type "showDebug()" in the console and the select the 
+  // checkbox that appears at the top right of the window
   console.log("Debug button clicked (put breakpoint here)");
+}
 
+// run this in the console to see the debugging features
+function showDebug() {
+  debugCK.hidden = false;
+  dbgInfo = true;
+  cmdPicker.hidden = false;
+}
 
+// action of the reset button
+function resetApp() {
+  console.log("Reload App");
+  location.reload();
 }
 
 //===============================================
@@ -177,13 +200,15 @@ function updateSystemState() {
 
   if (serialConnected) {
     //butConnect.textContent = "Disconnect Dongle";
-    connectImg.src = "images/release.PNG"
+    connectImg.src = "images/release.PNG";
+    butRestore.hidden = true;
 
     if (remoteConnected) configSelect.style.display = "block";
   } else {
     //butConnect.textContent = "Connect to Dongle";
-    connectImg.src = "images/connect.PNG"
+    connectImg.src = "images/connect.PNG";
     configSelect.style.display = "none";
+    butRestore.hidden = false;
   }
 
   // decide what text is shown on the send button
@@ -229,9 +254,10 @@ function updateSystemState() {
   // if we are running the start button becomes the stop button
   if (runningDAQ) {
     butStartStop.textContent = "Stop";
+    butSend.hidden = true;
   } else {
     butStartStop.textContent = "Start";
-  }
+    butSend.hidden = false;  }
 
   // if we just turned on the remote, fetch info about it
   if (justTurnedOnRemote) {
