@@ -55,8 +55,11 @@ document.addEventListener('DOMContentLoaded', () => {
   inputFile.addEventListener("change", readInputFile);
 
   window.onbeforeunload = function(){
-    console.log("Leaving App and turning off remote 1");
-    //return;
+    sendRecord(getCommandRecord("powerDown"));
+    // leave page after a delay to give the shutdown command time to finish
+    setTimeout(async function () {
+      console.log("Leaving App and turning off remote 1");
+    }, 200);
   };
 
   // when the calibration modal is invoked
@@ -173,27 +176,17 @@ async function clickDebug() {
 
 }
 
+// run this in the console to see the debugging features
 function showDebug() {
   debugCK.hidden = false;
   dbgInfo = true;
   cmdPicker.hidden = false;
 }
 
+// action of the reset button
 function resetApp() {
-  console.log("Resetting App and turning off remote 1");
-  sendRecord(getCommandRecord("powerDown"));
-  // reload the page after a wait
-  setTimeout(async function () {
-    location.reload();
-  }, 100);  
-  
-}
-
-async function unloadApp() {
-  await sendRecord(getCommandRecord("powerDown"));
-  setTimeout(async function () {
-    console.log("Leaving App and turning off remote 1");
-  }, 200);
+  console.log("Reload App");
+  location.reload();
 }
 
 //===============================================
