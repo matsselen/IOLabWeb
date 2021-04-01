@@ -1,20 +1,8 @@
-0.8.30  3/28/21
-Start keeping more careful track (i.e. this file)
-First bare-bones alpha release.
-
-0.8.31 3/28/21
-Fix apply shift to running data
-
-0.8.32 3/29/21
-Cleaned up highlighting and aysis displays when restarting acquisition
-
-0.8.35 3/29/21
-more cleaning up
-
 To Do (just thoughts in no particular order yet):
+
 - Revisit time shift
 - Rationalize usage of calData vs plotData in plotting code
 - display rezero icon on all zeroable plots when linked
-(select zoom icon when restarting acquisition - 0.8.32)
+(select zoom icon when restarting acquisition: 0.8.32)
 - save/restore dataShift
-- restoring data when not newly started may be buggy (?)
+(restoring data when not newly started may be buggy: 0.8.40)
