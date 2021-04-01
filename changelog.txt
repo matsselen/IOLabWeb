@@ -1,6 +1,6 @@
 changelog.txt
 
-This file is used to trach changes to IOLabWeb. Questions or suggestions to Mats.Selen@Gmail.com
+This file is used to track changes to IOLabWeb. Questions or suggestions to mats@illinois.edu.
 
 v0.8.40 4/1/21
 Innitial alpha release. No known bugs but I'm sure that will change as soon as someone else uses it. 
