@@ -253,10 +253,10 @@ function updateSystemState() {
 
   // if we are running the start button becomes the stop button
   if (runningDAQ) {
-    butStartStop.textContent = "Stop";
+    butStartStop.textContent = "Stop/Pause";
     butSend.hidden = true;
   } else {
-    butStartStop.textContent = "Start";
+    butStartStop.textContent = "Record";
     butSend.hidden = false;  }
 
   // if we just turned on the remote, fetch info about it
