@@ -5,7 +5,6 @@
 'use strict';
 
 // Associate event handlers with the checkboxes that control display
-// (will be will be replaced by sometning better once the IOLabPlot class is finished)
 function setupControls() {
 
   debugCK.addEventListener("click", function () {
