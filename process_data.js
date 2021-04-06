@@ -36,6 +36,9 @@ function resetAcquisition() {
   vWheel = 0;
   aWheel = 0;
 
+  // dont display the save button when there is no data to save
+  butSave.hidden = true;
+
 }
 
 //====================================================================
@@ -409,7 +412,7 @@ function buildAndCalibrate() {
             let zDat = rawData[sensorID][ind][2][j + 4] << 8 | rawData[sensorID][ind][2][j + 5];
             let tDat = tLast + samplePeriod;
             tLast = tDat;
-            
+
             let calXYZ = [];
             let adcXYZ = [];
             if (sensorID == 1) { // accelerometer
@@ -497,7 +500,7 @@ function buildAndCalibrate() {
             let mDat = rawData[sensorID][ind][2][j] << 8 | rawData[sensorID][ind][2][j + 1];
             let tDat = tLast + samplePeriod;
             tLast = tDat;
-            
+
             // save calibrated force data
             calData[sensorID][calWritePtr[sensorID]++] = [tDat, mDat / 500];
 
@@ -526,7 +529,7 @@ function buildAndCalibrate() {
             let lDat = rawData[sensorID][ind][2][j] << 8 | rawData[sensorID][ind][2][j + 1];
             let tDat = tLast + samplePeriod;
             tLast = tDat;
-            
+
             // save calibrated light data
             calData[sensorID][calWritePtr[sensorID]++] = [tDat, lDat / 500];
 
@@ -556,7 +559,7 @@ function buildAndCalibrate() {
             let fDat = calForceY(fRaw);
             let tDat = tLast + samplePeriod;
             tLast = tDat;
-            
+
             // save both adc and calibrated data as needed
             calData[sensorID][calWritePtr[sensorID]] = [tDat, fDat];
             if (calMode) { adcData[sensorID][calWritePtr[sensorID]] = [tDat, fRaw]; }
@@ -587,7 +590,7 @@ function buildAndCalibrate() {
             let wDatRaw = rawData[sensorID][ind][2][j] << 8 | rawData[sensorID][ind][2][j + 1];
             let tDat = tLast + samplePeriod;
             tLast = tDat;
-            
+
 
             let wDat = tc2int(wDatRaw); // change encoder reading (signed 2s comp int) into signed int
 
@@ -660,7 +663,7 @@ function buildAndCalibrate() {
             let aDat = (0xf & rawData[sensorID][ind][2][j]) << 8 | rawData[sensorID][ind][2][j + 1];
             let tDat = tLast + samplePeriod;
             tLast = tDat;
-            
+
             // calibrated voltage in mV
             let calBat = aDat / countsPerVolt;
 
@@ -696,7 +699,7 @@ function buildAndCalibrate() {
             let aDat = (0xf & rawData[sensorID][ind][2][j]) << 8 | rawData[sensorID][ind][2][j + 1];
             let tDat = tLast + samplePeriod;
             tLast = tDat;
-            
+
 
             // calibrated voltage in mV
             let calHGmv = (aDat - 2048) / countsPerMillivolt;
@@ -737,7 +740,7 @@ function buildAndCalibrate() {
             let aDat = (0xf & rawData[sensorID][ind][2][j]) << 8 | rawData[sensorID][ind][2][j + 1];
             let tDat = tLast + samplePeriod;
             tLast = tDat;
-            
+
             // calibrated ovltage
             let calAnalog = aDat / countsPerVolt;
 
@@ -768,7 +771,7 @@ function buildAndCalibrate() {
             let ovsTemp = rawData[sensorID][ind][2][j] << 24 | rawData[sensorID][ind][2][j + 1] << 16 | rawData[sensorID][ind][2][j + 2] << 8 | rawData[sensorID][ind][2][j + 3];
             let tDat = tLast + samplePeriod;
             tLast = tDat;
-            
+
             // the temperature are oversampled at 400 Hz and the readout rate of fixed config 6 is 50 Hz
             // so we need to divide this number by 400/50 = 8
             let tempCounts = ovsTemp / 8;
@@ -810,7 +813,7 @@ function buildAndCalibrate() {
             let c3Dat = (0xf & rawData[sensorID][ind][2][j + 10]) << 8 | rawData[sensorID][ind][2][j + 11];
             let tDat = tLast + samplePeriod;
             tLast = tDat;
-            
+
 
             // 2^12 counts = 3 volts. The minus sign fixes an sign inversion elsewhere.
             let countsPerVolt = -4096 / 3;

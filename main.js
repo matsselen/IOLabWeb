@@ -14,7 +14,7 @@ const butSend = document.getElementById('butSend');
 const butStartStop = document.getElementById('butStartStop');
 const butRestore = document.getElementById('restore');
 const debugCK = document.getElementById("debug_ck");
-//const resetApp = document.getElementById("resetApp");
+const butSave = document.getElementById("save");
 const denugStuff = document.getElementById("debugStuff")
 const butDebug = document.getElementById('butDebug');
 const dongleStatusDisplay = document.getElementById('dongleStatusDisplay');
@@ -82,8 +82,10 @@ document.addEventListener('DOMContentLoaded', () => {
   calArrayList = [];
   getCalCookies();
 
-  // create canvas stacks and layers for charts and set these up
-  setupControls();
+  // Set up the debugging controls (hidden by defaults)
+  setupDebug();
+
+  // create & reset the data acquisition arrays
   resetAcquisition();
 
   // update the UI
@@ -174,13 +176,6 @@ async function clickDebug() {
   console.log("Debug button clicked (put breakpoint here)");
 }
 
-// run this in the console to see the debugging features
-function showDebug() {
-  debugCK.hidden = false;
-  dbgInfo = true;
-  cmdPicker.hidden = false;
-}
-
 // action of the reset button
 function resetApp() {
   console.log("Reload App");
@@ -257,7 +252,8 @@ function updateSystemState() {
     butSend.hidden = true;
   } else {
     butStartStop.textContent = "Record";
-    butSend.hidden = false;  }
+    butSend.hidden = false;  
+  }
 
   // if we just turned on the remote, fetch info about it
   if (justTurnedOnRemote) {
