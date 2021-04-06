@@ -5,7 +5,7 @@
 'use strict';
 
 // Associate event handlers with the checkboxes that control display
-function setupControls() {
+function setupDebug() {
 
   debugCK.addEventListener("click", function () {
     if (this.checked && dbgInfo) {
@@ -29,9 +29,6 @@ function setupControls() {
 
   });
 
-  // document.getElementById("debugStuff").style.display = "none";
-  // document.getElementById("debug_ck").checked = false;
-
   debugStuff.style.display = "none";
   debugCK.checked = false;
   showCommands = false;
@@ -39,3 +36,9 @@ function setupControls() {
   cmdPicker.hidden = true;
 }
 
+// run this in the console to see the debugging features
+function showDebug() {
+  debugCK.hidden = false;
+  dbgInfo = true;
+  cmdPicker.hidden = false;
+}

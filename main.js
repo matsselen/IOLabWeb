@@ -82,8 +82,10 @@ document.addEventListener('DOMContentLoaded', () => {
   calArrayList = [];
   getCalCookies();
 
-  // create canvas stacks and layers for charts and set these up
-  setupControls();
+  // Set up the debugging controls (hidden by defaults)
+  setupDebug();
+
+  // create & reset the data acquisition arrays
   resetAcquisition();
 
   // update the UI
@@ -172,13 +174,6 @@ async function clickDebug() {
   // to display debug button type "showDebug()" in the console and the select the 
   // checkbox that appears at the top right of the window
   console.log("Debug button clicked (put breakpoint here)");
-}
-
-// run this in the console to see the debugging features
-function showDebug() {
-  debugCK.hidden = false;
-  dbgInfo = true;
-  cmdPicker.hidden = false;
 }
 
 // action of the reset button
