@@ -7,3 +7,6 @@ Innitial alpha release. No known bugs but I'm sure that will change as soon as s
 
 v0.8.41 4/1/21
 Moved calibration button to the left. Changed "Start" "Record" and "Stop" to "Stop/Pause"  
+
+v0.8.45 4/6/21
+Some small improvements to UX (button placements etc)  
