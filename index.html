@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-  <title>IOLab Web v0.8.42</title>
+  <title>IOLab Web v0.8.45</title>
   <meta charset="utf-8">
   <meta name="iolab" content="testing-w-web-serial">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -12,7 +12,7 @@
 
   <script src="CanvasStack-2v01.js"></script>
   <script src="globalVariables.js"></script>
-  <script src="misc.js"></script>
+  <script src="debug.js"></script>
   <script src="process_data.js"></script>
   <script src="iolab_options.js"></script>
   <script src="config.js"></script>
@@ -49,25 +49,33 @@
     <table>
       <tr>
         <td>
-          <a id="butConnect" title="Serial Connection" style="cursor: pointer;">
+          <a href="" id="resetApp" onclick="resetApp()" title="Reloads and restarts IOLabWeb (data is cleared). "
+            style="cursor: pointer;"><img src="images/reset1.PNG" valign="middle" height="28"></a>
+          
+          <a id="butConnect" title="Make or Break Serial Connection to Dongle" style="cursor: pointer;">
             <img id="connectImg" src="images/connect.PNG" valign="middle"></a>
           &nbsp;
           <select id="cmd-picker"></select>&nbsp; &nbsp;
         </td>
         <td>
-          Save: <a href="" id="downloadData" onclick="saveToFile()"
-            title="Saved data can be shared and restored on this or other computers." style="cursor: pointer;"><img
+          <span id="save" title="Saved data to .iolab file. Can be shared and restored on this or other computers." >
+            Save: <a href="" id="downloadData" onclick="saveToFile()"
+            style="cursor: pointer;"><img
               src="images/dload.PNG" alt="[Save]" valign="bottom" width="24" height="24"></a>
+            </span>
         </td>
         <td>&nbsp; &nbsp;</td>
-        <td>
-          Reset: <a href="" id="resetApp" onclick="resetApp()" title="Reset the IOLabWeb App."
+        <!-- <td>
+          <span title="Reloads and restarts the IOLabWeb App">
+            Reload: <a href="" id="resetApp" onclick="resetApp()" 
             style="cursor: pointer;"><img src="images/reset1.PNG" valign="bottom" height="24"></a>
-        </td>
-        <td>&nbsp; &nbsp;</td>
+          </span>
+        </td> -->
+        <!-- <td>&nbsp; &nbsp;</td> -->
         <td>
-          <span id="restore"> Restore: <input type="file" accept=".iolab" size="20" name="inputfile"
-              id="inputfile"></span>
+          <span id="restore" title="Load previously saved data from .iolab file"> 
+            Restore: <input type="file" accept=".iolab" size="20" name="inputfile" id="inputfile">
+          </span>
         </td>
         <td>
           <input id="debug_ck" type="checkbox" checked="false" title="Displays additional information for experts">

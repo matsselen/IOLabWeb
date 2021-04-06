@@ -14,7 +14,7 @@ const butSend = document.getElementById('butSend');
 const butStartStop = document.getElementById('butStartStop');
 const butRestore = document.getElementById('restore');
 const debugCK = document.getElementById("debug_ck");
-//const resetApp = document.getElementById("resetApp");
+const butSave = document.getElementById("save");
 const denugStuff = document.getElementById("debugStuff")
 const butDebug = document.getElementById('butDebug');
 const dongleStatusDisplay = document.getElementById('dongleStatusDisplay');
@@ -252,7 +252,8 @@ function updateSystemState() {
     butSend.hidden = true;
   } else {
     butStartStop.textContent = "Record";
-    butSend.hidden = false;  }
+    butSend.hidden = false;  
+  }
 
   // if we just turned on the remote, fetch info about it
   if (justTurnedOnRemote) {

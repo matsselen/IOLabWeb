@@ -39,6 +39,7 @@ async function startRun() {
     if (lastFrame > 0) justRestarted = true;
 
     updateSystemState();
+    butSave.hidden = true;
 }
 
 //============================================================
@@ -62,6 +63,8 @@ async function stopRun() {
     }, 100);
 
     updateSystemState();
+    butSave.hidden = false;
+    
 }
 
 // plots new data (called above)
@@ -194,9 +197,9 @@ async function readLoop() {
                 for (let i = 0; i < value.length; i++) {
                     rxdata[writePointer++] = value[i];
                 }
-                // write Rx control records to Rx box (but not async data records)
-                //if (!runningDAQ) { dataBoxRx.innerHTML += value + '\n'; }
-                if (showCommands) { 
+                // write Rx records to Rx box if we are in expert more and displaying debug info,
+                // but not if we are in DAQ mode (this produces too much data) 
+                if (showCommands && !runningDAQ) { 
                     dataBoxRx.innerHTML += value + '\n'; 
                 }
             }

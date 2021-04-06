@@ -20,11 +20,6 @@ function setupDebug() {
     console.log(this.id);
     console.log(this.checked);
 
-    if (!dbgInfo) {
-      console.log("Debug mode is currently disabled.");
-      console.log("Set dbgInfo flag to enable.");
-    }
-
     updateSystemState();
 
   });
@@ -34,7 +29,9 @@ function setupDebug() {
   showCommands = false;
   debugCK.hidden = true;
   cmdPicker.hidden = true;
+  dbgInfo = false;
 }
+
 
 // run this in the console to see the debugging features
 function showDebug() {
