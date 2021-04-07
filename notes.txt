@@ -3,8 +3,12 @@ To Do (just thoughts in no particular order yet):
 - Rationalize usage of calData vs plotData in plotting code
 - display rezero icon on all zeroable plots when linked
 - save/restore dataShift
-- change "Start" to "Record" 
+- compress saved files
+- skip points when Ndata >> Npixels
+- CSV export
+
 
 Moved here when fixed or finished:
 - select zoom icon when restarting acquisition: v0.8.32
 - restoring data when not newly started may be buggy: v0.8.40
+- change "Start" to "Record" 
