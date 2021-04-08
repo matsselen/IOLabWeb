@@ -15,14 +15,17 @@ Some small improvements to UX (button placements etc)
 
 
 ====================== WORK ========================================
+Known Bugs:
+- Sometimes plots are empty after importing data - re-importing fizes (timing?)
+- Imported plots empty if not viewed before csv export of another plot 
 
-Front Burner Tasks
+Front Burner Tasks:
 - CSV export
 - sparse plotting when Ndata >> Npixels
 - compress saved files
 - add sample rate to chart heading
 
-Back Burner TAsks
+Back Burner Tasks:
 - Revisit time shift
 - Rationalize usage of calData vs plotData in plotting code
 - display rezero icon on all zeroable plots when linked

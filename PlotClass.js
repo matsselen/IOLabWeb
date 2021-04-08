@@ -519,6 +519,7 @@ class PlotIOLab {
         this.plotName = this.sensor.desc;      // the name of the chart
         this.unit = this.sensor.unit;      // the units of the measurement
         this.axisTitles = this.sensor.legends;   // the trace labels
+        this.csvLabels = this.sensor.csvLabels;  // axis labels used for csv export
         this.scales = this.sensor.scales;    // the initial y-axis scale range
         this.baseID = this.sensor.shortDesc; // the ID of the bottom layer (used for drawing axes)
         this.zeroable = this.sensor.zeroable; // can this sensor be zeroed
@@ -720,12 +721,12 @@ class PlotIOLab {
 
             console.log("In csvClick() saving data for sensor " + plotThis.sensorNum.toString());
 
-            let csvdata = "t";
+            let csvdata = "t (s)";
 
             // the first row contains the columns labels
             for (let ind = 0; ind < plotThis.axisTitles.length; ind++) {
                 csvdata += ", ";
-                csvdata += plotThis.axisTitles[ind];
+                csvdata += plotThis.csvLabels[ind];
             }
             csvdata += "\r\n";
 
