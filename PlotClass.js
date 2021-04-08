@@ -718,27 +718,41 @@ class PlotIOLab {
         // save chart data to a csv file
         function csvClick() {
 
-            console.log("In csvClick() saving data for sensor "+plotThis.sensorNum.toString());
-        
+            console.log("In csvClick() saving data for sensor " + plotThis.sensorNum.toString());
+
             let csvdata = "t";
 
             // the first row contains the columns labels
             for (let ind = 0; ind < plotThis.axisTitles.length; ind++) {
                 csvdata += ", ";
-                csvdata += this.axisTitles[ind];
+                csvdata += plotThis.axisTitles[ind];
             }
             csvdata += "\r\n";
 
-            
+            // only save the visible part
+            let ind1 = Math.floor(plotThis.viewStack[0].xMin / plotThis.timePerSample) - 2;
+            if (ind1 < 0) ind1 = 0;
+            let ind2 = Math.floor(plotThis.viewStack[0].xMax / plotThis.timePerSample) + 2;
+            if (ind2 > plotThis.plotData.length) ind2 = plotThis.plotData.length;
 
+            // loop over data
+            for (let ind = ind1; ind < ind2; ind++) {
 
-            csvdata += "a,b,c\r\n"
-            csvdata += "1,2,3\r\n"
-            csvdata += "4,5,6\r\n"
+                // each line starts with the time coordinate
+                let tplot = plotThis.plotData[ind][0]; // the current time coordinate
+                csvdata += tplot.toString();
 
+                // then a y coordinate for each axis
+                for (let tr = 1; tr < plotThis.nTraces + 1; tr++) {
+                    let yplot = plotThis.plotData[ind][tr] - plotThis.datShift[tr];
+                    csvdata += ", "; 
+                    csvdata += yplot.toString();
+                }
+                csvdata += "\r\n";
+            }
+
+            // create a blob of the csv data
             let dataBlob = new Blob([csvdata]);
-
-
 
             // figure out filename
             let date = new Date();
@@ -749,7 +763,7 @@ class PlotIOLab {
                 date.toTimeString().substr(0, 2) + "." +
                 date.toTimeString().substr(3, 2) + "." +
                 date.toTimeString().substr(6, 2) + "_" +
-                "sens_"+ plotThis.sensorNum.toString() +".csv";
+                "sens_" + plotThis.sensorNum.toString() + ".csv";
 
             // save the data as a local download
             plotThis.aCSV.href = window.URL.createObjectURL(dataBlob), { type: "text/csv;charset=utf-8" };
