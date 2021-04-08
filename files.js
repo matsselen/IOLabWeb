@@ -4,6 +4,38 @@
 
 'use strict';
 
+// save to a csv file
+function saveToCSV() {
+    console.log("Saving to CSV file")
+
+    let date = new Date();
+
+    let csvdata = "a,b,c\r\n"
+    csvdata += "1,2,3\r\n"
+    csvdata += "4,5,6\r\n"
+
+    let dataBlob = new Blob([csvdata]);
+
+    // figure out filename
+    let configDesc = "noconfig";
+    if (currentFCobject != null) {
+        configDesc = currentFCobject.desc;
+    }
+
+    let fName = "IOLab_" +
+        date.toDateString().substr(4, 3) + "-" +
+        date.toDateString().substr(8, 2) + "-" +
+        date.toDateString().substr(11, 4) + "_" +
+        date.toTimeString().substr(0, 2) + "." +
+        date.toTimeString().substr(3, 2) + "." +
+        date.toTimeString().substr(6, 2) + "_" +
+        "s.csv";
+
+    // save the data as a local download
+    downloadCSV.href = window.URL.createObjectURL(dataBlob), { type: "text/csv;charset=utf-8" };
+    downloadCSV.download = fName;
+}
+
 // save to a file
 function saveToFile() {
 

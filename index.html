@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-  <title>IOLab Web v0.8.45</title>
+  <title>IOLab Web v0.8.46</title>
   <meta charset="utf-8">
   <meta name="iolab" content="testing-w-web-serial">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -58,11 +58,18 @@
           <select id="cmd-picker"></select>&nbsp; &nbsp;
         </td>
         <td>
-          <span id="save" title="Saved data to .iolab file. Can be shared and restored on this or other computers." >
-            Save: <a href="" id="downloadData" onclick="saveToFile()"
+          <span id="save" >
+            Save: <a href="" id="downloadData" onclick="saveToFile()" 
+            title="Saved data to .iolab file. Can be shared and restored on this or other computers."
             style="cursor: pointer;"><img
-              src="images/dload.PNG" alt="[Save]" valign="bottom" width="24" height="24"></a>
-            </span>
+            src="images/dload.PNG" alt="[Save]" valign="bottom" width="24" height="24"></a></span>
+            &nbsp;
+            <a href="" id="downloadCSV" onclick="saveToCSV()" 
+            title="Saved data to .csv file for further analysis."
+            style="cursor: pointer;"><img
+            src="images/csv.PNG" alt="[CSV]" valign="bottom" width="24" height="24"></a>
+
+            
         </td>
         <td>&nbsp; &nbsp;</td>
         <!-- <td>
