@@ -639,7 +639,7 @@ class PlotIOLab {
 
         this.smoothTxt = document.createElement('span');
         this.smoothTxt.setAttribute("class", "smooth");
-        this.smoothTxt.innerHTML = "\xA0\xA0 smoothing:"
+        this.smoothTxt.innerHTML = "\xA0\xA0 Smoothing:"
 
         controls.appendChild(this.smoothTxt);
         controls.appendChild(this.smoothSelect);
@@ -656,6 +656,20 @@ class PlotIOLab {
             plotThis.plotStaticData();
             updateSystemState();
         };
+
+        // create and place and control the csv download button
+        this.aCSV = document.createElement("a");
+        var csvLink = document.createElement("img");
+        csvLink.src = "images/csv.png";
+        csvLink.height = "21";
+        csvLink.style = "cursor:pointer";
+        csvLink.style.paddingLeft = "10px";
+        csvLink.style.verticalAlign = "bottom";
+        this.aCSV.appendChild(csvLink);
+        this.aCSV.title = "Save chart data to .csv file";
+        this.aCSV.addEventListener("click", csvClick);
+        controls.appendChild(this.aCSV);
+
 
         // create and place and control the re-zero button
         this.aZero = document.createElement("a");
@@ -700,6 +714,38 @@ class PlotIOLab {
 
         // =================================================================================
         // IOLabPlot Constructor functions and event handlers
+
+        // save chart data to a csv file
+        function csvClick() {
+            console.log("Saving CSV data for sensor "+plotThis.sensorNum.toString());
+
+            let date = new Date();
+
+            let csvdata = "a,b,c\r\n"
+            csvdata += "1,2,3\r\n"
+            csvdata += "4,5,6\r\n"
+
+            let dataBlob = new Blob([csvdata]);
+
+            // figure out filename
+            let configDesc = "noconfig";
+            if (currentFCobject != null) {
+                configDesc = currentFCobject.desc;
+            }
+
+            let fName = "IOLab_" +
+                date.toDateString().substr(4, 3) + "-" +
+                date.toDateString().substr(8, 2) + "-" +
+                date.toDateString().substr(11, 4) + "_" +
+                date.toTimeString().substr(0, 2) + "." +
+                date.toTimeString().substr(3, 2) + "." +
+                date.toTimeString().substr(6, 2) + "_" +
+                "sens_"+ plotThis.sensorNum.toString() +".csv";
+
+            // save the data as a local download
+            plotThis.aCSV.href = window.URL.createObjectURL(dataBlob), { type: "text/csv;charset=utf-8" };
+            plotThis.aCSV.download = fName;
+        }
 
         // event handler for the re-zero button
         function zeroClick() {
