@@ -666,7 +666,7 @@ class PlotIOLab {
         csvLink.style.paddingLeft = "10px";
         csvLink.style.verticalAlign = "bottom";
         this.aCSV.appendChild(csvLink);
-        this.aCSV.title = "Save chart data to .csv file";
+        this.aCSV.title = "Save current chart view data to .csv file";
         this.aCSV.addEventListener("click", csvClick);
         controls.appendChild(this.aCSV);
 
@@ -717,23 +717,32 @@ class PlotIOLab {
 
         // save chart data to a csv file
         function csvClick() {
-            console.log("Saving CSV data for sensor "+plotThis.sensorNum.toString());
 
-            let date = new Date();
+            console.log("In csvClick() saving data for sensor "+plotThis.sensorNum.toString());
+        
+            let csvdata = "t";
 
-            let csvdata = "a,b,c\r\n"
+            // the first row contains the columns labels
+            for (let ind = 0; ind < plotThis.axisTitles.length; ind++) {
+                csvdata += ", ";
+                csvdata += this.axisTitles[ind];
+            }
+            csvdata += "\r\n";
+
+            
+
+
+            csvdata += "a,b,c\r\n"
             csvdata += "1,2,3\r\n"
             csvdata += "4,5,6\r\n"
 
             let dataBlob = new Blob([csvdata]);
 
-            // figure out filename
-            let configDesc = "noconfig";
-            if (currentFCobject != null) {
-                configDesc = currentFCobject.desc;
-            }
 
-            let fName = "IOLab_" +
+
+            // figure out filename
+            let date = new Date();
+            let fName = "IOLabCSV_" +
                 date.toDateString().substr(4, 3) + "-" +
                 date.toDateString().substr(8, 2) + "-" +
                 date.toDateString().substr(11, 4) + "_" +
