@@ -143,7 +143,8 @@ class PlotSet {
             controls.appendChild(cb);
 
             // hide the plots for now
-            sensDiv.style.display = "none";
+            //sensDiv.style.display = "none";
+            sensDiv.style.display = "block";
             cb.checked = false;
             this.sensorCBlist.push(cb);
 
