@@ -13,10 +13,14 @@ Moved calibration button to the left. Changed "Start" "Record" and "Stop" to "St
 v0.8.45 4/6/21
 Some small improvements to UX (button placements etc)  
 
+v0.8.48 4/9/21
+Added CSV export button for each chart 
+Fixed display-after-load bug (I think)
+ 
 
 ====================== WORK ========================================
 Known Bugs:
-- Sometimes plots are empty after importing data - re-importing fizes (timing?)
+- Sometimes plots are empty after importing data - re-importing fixes (timing?)
 - Imported plots empty if not viewed before csv export of another plot 
 
 Front Burner Tasks:

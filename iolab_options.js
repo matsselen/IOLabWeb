@@ -24,9 +24,9 @@ function getIOLabConfigInfo() {
     let longDesc = fc.code.toString() + ": ";
     //let longDesc = "";
     let longDesc2 = "";
-    for (let ind = 0; ind < fc.sensors.length; ind++) {
-      let skey = fc.sensors[ind].sensorKey;
-      let srate = fc.sensors[ind].sampleRate;
+    for (let sens = 0; sens < fc.sensors.length; sens++) {
+      let skey = fc.sensors[sens].sensorKey;
+      let srate = fc.sensors[sens].sampleRate;
       longDesc2 += sensorInfoList[skey].shortDesc + '(' + srate.toString() + 'Hz) ';
       longDesc += sensorInfoList[skey].shortDesc + '(' + srate.toString() + ') ';
 
