@@ -20,8 +20,7 @@ Fixed display-after-load bug (I think)
 
 ====================== WORK ========================================
 Known Bugs:
-- Sometimes plots are empty after importing data - re-importing fixes (timing?)
-- Imported plots empty if not viewed before csv export of another plot 
+- Sometimes plots empty if not viewed before csv export of another plot (only Mac ?)
 
 Front Burner Tasks:
 - CSV export
