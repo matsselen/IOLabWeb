@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-  <title>IOLab Web v0.8.45</title>
+  <title>IOLab Web v0.8.48</title>
   <meta charset="utf-8">
   <meta name="iolab" content="testing-w-web-serial">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -58,20 +58,15 @@
           <select id="cmd-picker"></select>&nbsp; &nbsp;
         </td>
         <td>
-          <span id="save" title="Saved data to .iolab file. Can be shared and restored on this or other computers." >
-            Save: <a href="" id="downloadData" onclick="saveToFile()"
+          <span id="save" >
+            Save: <a href="" id="downloadData" onclick="saveToFile()" 
+            title="Saved data to .iolab file. Can be shared and restored on this or other computers."
             style="cursor: pointer;"><img
-              src="images/dload.PNG" alt="[Save]" valign="bottom" width="24" height="24"></a>
-            </span>
+            src="images/dload.PNG" alt="[Save]" valign="bottom" width="24" height="24"></a></span>
         </td>
+        
         <td>&nbsp; &nbsp;</td>
-        <!-- <td>
-          <span title="Reloads and restarts the IOLabWeb App">
-            Reload: <a href="" id="resetApp" onclick="resetApp()" 
-            style="cursor: pointer;"><img src="images/reset1.PNG" valign="bottom" height="24"></a>
-          </span>
-        </td> -->
-        <!-- <td>&nbsp; &nbsp;</td> -->
+
         <td>
           <span id="restore" title="Load previously saved data from .iolab file"> 
             Restore: <input type="file" accept=".iolab" size="20" name="inputfile" id="inputfile">

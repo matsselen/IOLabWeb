@@ -135,6 +135,9 @@ class PlotSet {
             // save which element this is controling
             cb.sensorDivID = sensorID;
 
+            // box is checked to begin with
+            cb.checked = true;
+
             // create the axis labels before each checkbox
             let whichSens = document.createTextNode("\xA0\xA0" + this.sensor.shortDesc + ":");
 
@@ -142,9 +145,6 @@ class PlotSet {
             controls.appendChild(whichSens);
             controls.appendChild(cb);
 
-            // hide the plots for now
-            sensDiv.style.display = "none";
-            cb.checked = false;
             this.sensorCBlist.push(cb);
 
         }
@@ -157,9 +157,11 @@ class PlotSet {
             if (dbgInfo) console.log("In Plot::selectSensor() ", this.id, this.checked);
 
             if (this.checked) {
-                document.getElementById(this.sensorDivID).style.display = "block";
+                //document.getElementById(this.sensorDivID).style.display = "block";
+                document.getElementById(this.sensorDivID).hidden = false;
             } else {
-                document.getElementById(this.sensorDivID).style.display = "none";
+                //document.getElementById(this.sensorDivID).style.display = "none";
+                document.getElementById(this.sensorDivID).hidden = true;
             }
         }
 
@@ -519,6 +521,7 @@ class PlotIOLab {
         this.plotName = this.sensor.desc;      // the name of the chart
         this.unit = this.sensor.unit;      // the units of the measurement
         this.axisTitles = this.sensor.legends;   // the trace labels
+        this.csvLabels = this.sensor.csvLabels;  // axis labels used for csv export
         this.scales = this.sensor.scales;    // the initial y-axis scale range
         this.baseID = this.sensor.shortDesc; // the ID of the bottom layer (used for drawing axes)
         this.zeroable = this.sensor.zeroable; // can this sensor be zeroed
@@ -639,7 +642,7 @@ class PlotIOLab {
 
         this.smoothTxt = document.createElement('span');
         this.smoothTxt.setAttribute("class", "smooth");
-        this.smoothTxt.innerHTML = "\xA0\xA0 smoothing:"
+        this.smoothTxt.innerHTML = "\xA0\xA0 Smoothing:"
 
         controls.appendChild(this.smoothTxt);
         controls.appendChild(this.smoothSelect);
@@ -656,6 +659,20 @@ class PlotIOLab {
             plotThis.plotStaticData();
             updateSystemState();
         };
+
+        // create and place and control the csv download button
+        this.aCSV = document.createElement("a");
+        var csvLink = document.createElement("img");
+        csvLink.src = "images/csv.png";
+        csvLink.height = "21";
+        csvLink.style = "cursor:pointer";
+        csvLink.style.paddingLeft = "10px";
+        csvLink.style.verticalAlign = "bottom";
+        this.aCSV.appendChild(csvLink);
+        this.aCSV.title = "Save current chart view data to .csv file";
+        this.aCSV.addEventListener("click", csvClick);
+        controls.appendChild(this.aCSV);
+
 
         // create and place and control the re-zero button
         this.aZero = document.createElement("a");
@@ -700,6 +717,61 @@ class PlotIOLab {
 
         // =================================================================================
         // IOLabPlot Constructor functions and event handlers
+
+        // save chart data to a csv file
+        function csvClick() {
+
+            console.log("In csvClick() saving data for sensor " + plotThis.sensorNum.toString());
+
+            let csvdata = "t (s)";
+
+            // the first row contains the columns labels
+            for (let ind = 0; ind < plotThis.axisTitles.length; ind++) {
+                csvdata += ", ";
+                csvdata += plotThis.csvLabels[ind];
+            }
+            csvdata += "\r\n";
+
+            // only save the visible part
+            let ind1 = Math.floor(plotThis.viewStack[0].xMin / plotThis.timePerSample) - 2;
+            if (ind1 < 0) ind1 = 0;
+            let ind2 = Math.floor(plotThis.viewStack[0].xMax / plotThis.timePerSample) + 2;
+            if (ind2 > plotThis.plotData.length) ind2 = plotThis.plotData.length;
+
+            // loop over data
+            for (let ind = ind1; ind < ind2; ind++) {
+
+                // each line starts with the time coordinate
+                let tplot = plotThis.plotData[ind][0]; // the current time coordinate
+                csvdata += tplot.toString();
+
+                // then a y coordinate for each axis
+                for (let tr = 1; tr < plotThis.nTraces + 1; tr++) {
+                    let yplot = plotThis.plotData[ind][tr] - plotThis.datShift[tr];
+                    csvdata += ", "; 
+                    csvdata += yplot.toString();
+                }
+                csvdata += "\r\n";
+            }
+
+            // create a blob of the csv data
+            let dataBlob = new Blob([csvdata]);
+
+            // figure out filename
+            let date = new Date();
+            let fName = "IOLabCSV_" +
+                date.toDateString().substr(4, 3) + "-" +
+                date.toDateString().substr(8, 2) + "-" +
+                date.toDateString().substr(11, 4) + "_" +
+                date.toTimeString().substr(0, 2) + "." +
+                date.toTimeString().substr(3, 2) + "." +
+                date.toTimeString().substr(6, 2) + "_" +
+                "sens_" + plotThis.sensorNum.toString() + ".csv";
+
+            // save the data as a local download
+            plotThis.aCSV.href = window.URL.createObjectURL(dataBlob), { type: "text/csv;charset=utf-8" };
+            plotThis.aCSV.download = fName;
+        }
 
         // event handler for the re-zero button
         function zeroClick() {

@@ -1,7 +1,9 @@
 changelog.txt
 
-This file is used to track changes to IOLabWeb. Questions or suggestions to mats@illinois.edu.
+This file is used to track changes to IOLabWeb and to show what is currently being worked on. 
+(Questions or suggestions to mats@illinois.edu)
 
+====================== RELEASES ====================================
 v0.8.40 4/1/21
 Innitial alpha release. No known bugs but I'm sure that will change as soon as someone else uses it. 
 
@@ -10,3 +12,24 @@ Moved calibration button to the left. Changed "Start" "Record" and "Stop" to "St
 
 v0.8.45 4/6/21
 Some small improvements to UX (button placements etc)  
+
+v0.8.48 4/9/21
+Added CSV export button for each chart 
+Fixed display-after-load bug (I think)
+ 
+
+====================== WORK ========================================
+Known Bugs:
+- Sometimes plots empty if not viewed before csv export of another plot (only Mac ?)
+
+Front Burner Tasks:
+- CSV export
+- sparse plotting when Ndata >> Npixels
+- compress saved files
+- add sample rate to chart heading
+
+Back Burner Tasks:
+- Revisit time shift
+- Rationalize usage of calData vs plotData in plotting code
+- display rezero icon on all zeroable plots when linked
+- save/restore dataShift
