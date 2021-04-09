@@ -145,7 +145,7 @@ class PlotSet {
             // hide the plots for now
             //sensDiv.style.display = "none";
             //cb.checked = false;
-            sensDiv.style.display = "block";
+            //sensDiv.style.display = "block";
             cb.checked = true;
             this.sensorCBlist.push(cb);
 
@@ -159,9 +159,11 @@ class PlotSet {
             if (dbgInfo) console.log("In Plot::selectSensor() ", this.id, this.checked);
 
             if (this.checked) {
-                document.getElementById(this.sensorDivID).style.display = "block";
+                //document.getElementById(this.sensorDivID).style.display = "block";
+                document.getElementById(this.sensorDivID).hidden = false;
             } else {
-                document.getElementById(this.sensorDivID).style.display = "none";
+                //document.getElementById(this.sensorDivID).style.display = "none";
+                document.getElementById(this.sensorDivID).hidden = true;
             }
         }
 
