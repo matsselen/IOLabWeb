@@ -135,6 +135,9 @@ class PlotSet {
             // save which element this is controling
             cb.sensorDivID = sensorID;
 
+            // box is checked to begin with
+            cb.checked = true;
+
             // create the axis labels before each checkbox
             let whichSens = document.createTextNode("\xA0\xA0" + this.sensor.shortDesc + ":");
 
@@ -142,11 +145,6 @@ class PlotSet {
             controls.appendChild(whichSens);
             controls.appendChild(cb);
 
-            // hide the plots for now
-            //sensDiv.style.display = "none";
-            //cb.checked = false;
-            //sensDiv.style.display = "block";
-            cb.checked = true;
             this.sensorCBlist.push(cb);
 
         }
