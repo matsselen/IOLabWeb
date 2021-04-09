@@ -144,8 +144,9 @@ class PlotSet {
 
             // hide the plots for now
             //sensDiv.style.display = "none";
+            //cb.checked = false;
             sensDiv.style.display = "block";
-            cb.checked = false;
+            cb.checked = true;
             this.sensorCBlist.push(cb);
 
         }
