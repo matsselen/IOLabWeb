@@ -14,12 +14,19 @@
 class PlotSet {
 
     // this class holds a set of "PlotIOLab" class objects - one for each active sensor
-    constructor(chartList, chartContainer, controlContainer) {
+    //constructor(chartList, chartContainer, controlContainer) {
+    constructor(fixedConfig, chartContainer, controlContainer) {
 
         let plotSetThis = this;         // save "this" to use in callback routines
-        this.chartList = chartList;     // list of charts to be created
+        this.fixedConfig = fixedConfig; // the fixed congiguration being used
         this.chartContainer = chartContainer;       // the name of the existing chart container
         this.controlContainer = controlContainer;   // the name of the existing control container
+
+        //this.chartList = chartList;                     // list of charts to be created
+        this.chartList     = fixedConfig.chartList;       // list of charts to be created 
+        //this.rateList      = fixedConfig.rateList;        // list of sample rates for each sensor
+        this.chartRateList = fixedConfig.chartRateList;   // list of sample rates for each chart
+
 
         this.plotObjectList = [];       // list of PlotIOLab instances (one for each sensor)
         this.checkboxIDlist = [];       // a list of all checkbox ID's (one for each sensor)
@@ -101,9 +108,10 @@ class PlotSet {
         //this.controlElement.appendChild(document.createElement("p"));
 
         // loop over sensors
-        for (let ind = 0; ind < chartList.length; ind++) {
+        for (let ind = 0; ind < this.chartList.length; ind++) {
 
-            this.sensorNum = chartList[ind];
+            this.chartRate = this.chartRateList[ind];
+            this.sensorNum = this.chartList[ind];
             this.sensor = sensorInfoList[this.sensorNum];
 
             // create the <div> element that will be the parent element for each sensors plot
@@ -119,7 +127,8 @@ class PlotSet {
             let chartHeight = 250;
 
             // create an IOLabPlot object on each plot element
-            this.plotObjectList.push(new PlotIOLab(this, this.sensorNum, sensorID, chartHeight));
+            //this.plotObjectList.push(new PlotIOLab(this, this.sensorNum, sensorID, chartHeight));
+            this.plotObjectList.push(new PlotIOLab(this, this.sensorNum, this.chartRate, sensorID, chartHeight));
 
             // create the checkbox to show/hide each sensor plot
             let cb = document.createElement("input");
@@ -484,13 +493,17 @@ class PlotIOLab {
 
     // display and analyze the data for one sensor
     // the constructor sets up a ploting area and its controls
-    constructor(thisParent, sensorNum, parentName, chartHeight = 200, chartWidth = 700) {
+    //constructor(thisParent, sensorNum, parentName, chartHeight = 200, chartWidth = 700) {
+    constructor(thisParent, sensorNum, sensorRate, parentName, chartHeight = 200, chartWidth = 700) {
 
         this.thisParent = thisParent;   // this probably wont work
         this.sensorNum = sensorNum;     // the number of the sensor being plotted
         this.parentName = parentName;   // the ID of the parent <div> block
         this.chartHeight = chartHeight; // initial height of the chart in pixels
         this.chartWidth = chartWidth;   // initial width of the chart in pixels
+
+        this.sensorRate = sensorRate;   // the sample rate of the sensor being plotted
+        console.log("PlotIOLab() sensor:"+sensorNum.toString()+" rate:"+sensorRate.toString());
 
         let plotThis = this;            // save "this" to used in callback routines
 

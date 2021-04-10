@@ -15,7 +15,6 @@ Some small improvements to UX (button placements etc)
 
 v0.8.48 4/9/21
 Added CSV export button for each chart 
-Fixed display-after-load bug (I think)
  
 
 ====================== WORK ========================================

@@ -114,8 +114,9 @@ function restoreAcquisition() {
     // if enough info is present create new plotSet and display the restored data
     if (currentFCobject != null) {
 
-        chartIDlist = currentFCobject.chartList;
-        plotSet = new PlotSet(chartIDlist, "plotContainer", "controlContainer");
+        //chartIDlist = currentFCobject.chartList;
+        //plotSet = new PlotSet(chartIDlist, "plotContainer", "controlContainer");
+        plotSet = new PlotSet(currentFCobject, "plotContainer", "controlContainer");
 
         // each new plot object in the set we just created has a default viewport (0-10sec) 
         // that is not needed when restoring old data, so remove these

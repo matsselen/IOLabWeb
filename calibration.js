@@ -330,7 +330,8 @@ async function configCalDAQ() {
     chartIDlist = fixedConfigObject.chartList;
 
     // create the required plot objects
-    plotSet = new PlotSet(chartIDlist, "plotContainer", "controlContainer");
+    //plotSet = new PlotSet(chartIDlist, "plotContainer", "controlContainer");
+    plotSet = new PlotSet(fixedConfigObject, "plotContainer", "controlContainer");
 
 }
 
