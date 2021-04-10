@@ -15,8 +15,13 @@ Some small improvements to UX (button placements etc)
 
 v0.8.48 4/9/21
 Added CSV export button for each chart 
-Fixed display-after-load bug (I think)
- 
+
+v0.8.50 4/10/21
+Added sample rate to chart title
+Store more config info with saved data & check version when restoring 
+Moved software version to globalVariables.js and added compatibility check for retored data
+Several small housekeeping items (fingers crossed nothing broke)
+
 
 ====================== WORK ========================================
 Known Bugs:

@@ -17,6 +17,7 @@ var iolabConfig =
       "highSpeed": false,
       "frequencies": [100, 200, 400],
       "sensors": [{ "sensorKey": 3, "sampleRate": 380 }],
+      "chartRateList":[380],
       "chartList": [3]
     },
     {
@@ -25,6 +26,7 @@ var iolabConfig =
       "highSpeed": false,
       "frequencies": [100, 200, 400],
       "sensors": [{ "sensorKey": 1, "sampleRate": 400 }],
+      "chartRateList":[400],
       "chartList": [1]
     },
     {
@@ -38,6 +40,7 @@ var iolabConfig =
         { "sensorKey": 3, "sampleRate": 95 },
         { "sensorKey": 12, "sampleRate": 100 }
       ],
+      "chartRateList":[100,80,95,100],
       "chartList": [1,2,3,12]
     },
     {
@@ -50,6 +53,7 @@ var iolabConfig =
         { "sensorKey": 8, "sampleRate": 200 },
         { "sensorKey": 9, "sampleRate": 100 }
       ],
+      "chartRateList":[200,200,100,100,100],
       "chartList": [1,8,15,16,17]
     },
     {
@@ -62,6 +66,7 @@ var iolabConfig =
         { "sensorKey": 3, "sampleRate": 95 },
         { "sensorKey": 8, "sampleRate": 100 }
       ],
+      "chartRateList":[100,95,100],
       "chartList": [1,3,8]
     },
     {
@@ -75,6 +80,7 @@ var iolabConfig =
         { "sensorKey": 11, "sampleRate": 50 },
         { "sensorKey": 26, "sampleRate": 50 }
       ],
+      "chartRateList":[100,400,50,50],
       "chartList": [4,7,11,26]
     },
     // {
@@ -97,6 +103,7 @@ var iolabConfig =
         { "sensorKey": 23, "sampleRate": 100 }
       ],
       //"chartList": [12,13,21,22,23]
+      "chartRateList":[200,100,100,100],
       "chartList": [12,21,22,23]
     },
     {
@@ -105,6 +112,7 @@ var iolabConfig =
       "highSpeed": false,
       "frequencies": [1200, 2400],
       "sensors": [{ "sensorKey": 6, "sampleRate": 2400 }],
+      "chartRateList":[2400],
       "chartList": [6]
     },
     {
@@ -116,6 +124,7 @@ var iolabConfig =
         { "sensorKey": 2, "sampleRate": 80 },
         { "sensorKey": 12, "sampleRate": 400 }
       ],
+      "chartRateList":[80,400],
       "chartList": [2,12]
     },
     {
@@ -131,6 +140,7 @@ var iolabConfig =
         { "sensorKey": 22, "sampleRate": 100 },
         { "sensorKey": 23, "sampleRate": 100 }
       ],
+      "chartRateList":[200,100,100,100],
       //"chartList": [12,13,21,22,23]
       "chartList": [12,21,22,23]
     },
@@ -140,6 +150,7 @@ var iolabConfig =
       "highSpeed": true,
       "frequencies": [800],
       "sensors": [{ "sensorKey": 3, "sampleRate": 760 }],
+      "chartRateList":[760],
       "chartList": [3]
     },
     {
@@ -148,6 +159,7 @@ var iolabConfig =
       "highSpeed": true,
       "frequencies": [800],
       "sensors": [{ "sensorKey": 1, "sampleRate": 800 }],
+      "chartRateList":[800],
       "chartList": [1]
     },
     {
@@ -160,6 +172,7 @@ var iolabConfig =
         { "sensorKey": 2, "sampleRate": 80 },
         { "sensorKey": 3, "sampleRate": 190 }
       ],
+      "chartRateList":[400,80,190],
       "chartList": [1,2,3]
     },
     {
@@ -173,6 +186,7 @@ var iolabConfig =
         { "sensorKey": 8, "sampleRate": 200 },
         { "sensorKey": 9, "sampleRate": 100 }
       ],
+      "chartRateList":[200,190,200,100,100,100],
       "chartList": [1,3,8,15,16,17]
     },
     {
@@ -186,6 +200,7 @@ var iolabConfig =
         { "sensorKey": 3, "sampleRate": 190 },
         { "sensorKey": 10, "sampleRate": 200 }
       ],
+      "chartRateList":[200,80,190,200],
       "chartList": [1,2,3,10]
     },
     {
@@ -198,6 +213,7 @@ var iolabConfig =
         { "sensorKey": 3, "sampleRate": 190 },
         { "sensorKey": 8, "sampleRate": 200 }
       ],
+      "chartRateList":[200,190,200],
       "chartList": [1,3,8]
     },
     {
@@ -219,6 +235,7 @@ var iolabConfig =
         { "sensorKey": 21, "sampleRate": 100 }
       ],
       //"chartList": [1,2,3,4,7,8,15,16,17,11,12,13,21]
+      "chartRateList":[100,80,95,100,100,100,100,100,100,100,100,100],
       "chartList": [1,2,3,4,7,8,15,16,17,11,12,21]
     },
     {
@@ -227,6 +244,7 @@ var iolabConfig =
       "highSpeed": true,
       "frequencies": [2400, 4800],
       "sensors": [{ "sensorKey": 6, "sampleRate": 4800 }],
+      "chartRateList":[4800],
       "chartList": [6]
     },
     {
@@ -235,6 +253,7 @@ var iolabConfig =
       "highSpeed": true,
       "frequencies": [2400, 4800],
       "sensors": [{ "sensorKey": 7, "sampleRate": 4800 }],
+      "chartRateList":[4800],
       "chartList": [7]
     },
     {
@@ -246,6 +265,7 @@ var iolabConfig =
         { "sensorKey": 1, "sampleRate": 800 },
         { "sensorKey": 7, "sampleRate": 800 }
       ],
+      "chartRateList":[800,800],
       "chartList": [1,7]
     },
     {
@@ -257,6 +277,7 @@ var iolabConfig =
         { "sensorKey": 1, "sampleRate": 800 },
         { "sensorKey": 8, "sampleRate": 800 }
       ],
+      "chartRateList":[800,800],
       "chartList": [1,8]
     },
     {
@@ -268,6 +289,7 @@ var iolabConfig =
         { "sensorKey": 6, "sampleRate": 2400 },
         { "sensorKey": 7, "sampleRate": 2400 }
       ],
+      "chartRateList":[2400,2400],
       "chartList": [6,7]
     },
     {
@@ -276,6 +298,7 @@ var iolabConfig =
       "highSpeed": true,
       "frequencies": [200, 400, 800],
       "sensors": [{ "sensorKey": 10, "sampleRate": 800 }],
+      "chartRateList":[800],
       "chartList": [10]
     },
     {
@@ -284,6 +307,7 @@ var iolabConfig =
       "highSpeed": true,
       "frequencies": [2400, 4800],
       "sensors": [{ "sensorKey": 12, "sampleRate": 4800 }],
+      "chartRateList":[4800],
       "chartList": [12]
     },
     {
@@ -292,6 +316,7 @@ var iolabConfig =
       "highSpeed": true,
       "frequencies": [2400, 4800],
       "sensors": [{ "sensorKey": 8, "sampleRate": 4800 }],
+      "chartRateList":[4800],
       "chartList": [8]
     },
     // {
@@ -307,12 +332,14 @@ var iolabConfig =
       "highSpeed": true,
       "frequencies": [100, 200, 400],
       "sensors": [{ "sensorKey": 27, "sampleRate": 400 }],
+      "chartRateList":[400,400,400,400,400,400,400,400,400],
       "chartList": [31,32,33,34,35,36,37,38,39]
     },
     {
       "code": 49,
       "desc": "ECG6 HS",
       "sensors": [{ "sensorKey": 27, "sampleRate": 800 }],
+      "chartRateList":[800,800,800,800,800,800,800,800,800],
       "chartList": [31,32,33,34,35,36,37,38,39]
     }
   ],

@@ -5,6 +5,12 @@
 // Global variables for data acquisition
 'use strict';
 
+// current version
+var currentVersion = [0,8,50];
+
+// oldest app version whose saved data is compatible with this app
+var bcompatVersion = [0,8,50];
+
 // application metadata (included with saved data)
 var appMetaData = {
     runSeconds: 0, 
@@ -16,7 +22,8 @@ var appMetaData = {
     calGyroConst: null,
     calGyroTime: 0,
     calForceConst: null,
-    calForceTime: 0
+    calForceTime: 0,
+    appVersion: currentVersion
 };
 
 // plots
@@ -75,7 +82,7 @@ var current_config_code;
 var currentFCobject = null;
 var sensorIDlist = [];
 var sensorRateList = [];
-var chartIDlist = [];
+//var chartIDlist = [];
 
 
 // keep track of raw data records
