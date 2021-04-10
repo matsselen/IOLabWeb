@@ -768,11 +768,12 @@ class PlotIOLab {
                 date.toTimeString().substr(6, 2) + "_" +
                 "sens_" + plotThis.sensorNum.toString() + ".csv";
 
-            setTimeout(async function () {
-                // save the data as a local download
-                plotThis.aCSV.href = window.URL.createObjectURL(dataBlob), { type: "text/csv;charset=utf-8" };
-                plotThis.aCSV.download = fName;
-            }, 100);
+            // save the data as a local download
+            plotThis.aCSV.href = window.URL.createObjectURL(dataBlob), { type: "text/csv;charset=utf-8" };
+            plotThis.aCSV.download = fName;
+            
+            // setTimeout(async function () {
+            // }, 200);
 
         }
 
