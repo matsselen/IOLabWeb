@@ -503,7 +503,6 @@ class PlotIOLab {
         this.chartWidth = chartWidth;   // initial width of the chart in pixels
 
         this.sensorRate = sensorRate;   // the sample rate of the sensor being plotted
-        console.log("PlotIOLab() sensor:"+sensorNum.toString()+" rate:"+sensorRate.toString());
 
         let plotThis = this;            // save "this" to used in callback routines
 
@@ -553,6 +552,10 @@ class PlotIOLab {
         this.layerColorList.push("#000000");
         this.layerColorList.unshift("#000000");
 
+        if(dbgInfo) {
+            console.log("PlotIOLab() sensor:"+sensorNum.toString()+" rate:"+sensorRate.toString());
+        }
+        
         // add a 0 to the datLast array for each chart trace since this is
         // the data dimensionality we expect from the acquired records 
         for (let ind = 0; ind < this.nTraces; ind++) {
@@ -568,7 +571,7 @@ class PlotIOLab {
 
         // create the control elements that appear above the canvas
         let controls = document.createElement("div");
-        let chartName = document.createTextNode(this.plotName + "\xA0\xA0");
+        let chartName = document.createTextNode(this.plotName + " (" + this.sensorRate.toString() + " Hz)\xA0\xA0");
         controls.appendChild(chartName);
 
         // get the existing parent element and add the controls and base canvas that we just created
@@ -655,7 +658,7 @@ class PlotIOLab {
 
         this.smoothTxt = document.createElement('span');
         this.smoothTxt.setAttribute("class", "smooth");
-        this.smoothTxt.innerHTML = "\xA0\xA0 Smoothing:"
+        this.smoothTxt.innerHTML = "\xA0\xA0 Smooth:"
 
         controls.appendChild(this.smoothTxt);
         controls.appendChild(this.smoothSelect);

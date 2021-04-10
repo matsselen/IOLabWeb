@@ -86,54 +86,67 @@ function restoreAcquisition() {
 
     console.log("In restoreAcquisition()");
 
-    // if (serialConnected) { 
-    //     disconnectAndStop(); 
-    // }
-
     // exctact the fixed config object and restore the calibrated data
     currentFCobject = calData[1];
     appMetaData = calData[0]
     calData.shift();
     calData.shift();
 
-    // restore the total run time (ms)
-    totalRunTime = appMetaData.runSeconds * 1000;
 
-    // restore the cal data write pointers
-    for (let i = 0; i < maxSensorCode; i++) {
-        calWritePtr[i] = calData[i].length;
+    // first see if the save data can be retored by this version of the software 
+    let dataVersion = 0;
+    try {
+        dataVersion = appMetaData.appVersion[0] * 1000 + appMetaData.appVersion[1] * 100 + appMetaData.appVersion[2];
     }
+    catch { }
 
-    // remove any existing plots
-    if (plotSet != null) {
-        plotSet.reset();
-        plotSet = null;
-        //resetAcquisition();
+    let compatVersion = bcompatVersion[0] * 1000 + bcompatVersion[1] * 100 + bcompatVersion[2];
+
+    if (dataVersion < compatVersion) {
+        let bcv = "v"+bcompatVersion[0].toString()+"."+bcompatVersion[1].toString()+"."+bcompatVersion[2].toString();
+        window.alert("Sorry - cant restore data written with app version before "+bcv)
     }
+    else {
 
-    // if enough info is present create new plotSet and display the restored data
-    if (currentFCobject != null) {
+        // restore the total run time (ms)
+        totalRunTime = appMetaData.runSeconds * 1000;
 
-        //chartIDlist = currentFCobject.chartList;
-        //plotSet = new PlotSet(chartIDlist, "plotContainer", "controlContainer");
-        plotSet = new PlotSet(currentFCobject, "plotContainer", "controlContainer");
-
-        // each new plot object in the set we just created has a default viewport (0-10sec) 
-        // that is not needed when restoring old data, so remove these
-        for (let ind = 0; ind < plotSet.plotObjectList.length; ind++) {
-            let plot = plotSet.plotObjectList[ind];
-            plot.viewStack.shift();
+        // restore the cal data write pointers
+        for (let i = 0; i < maxSensorCode; i++) {
+            calWritePtr[i] = calData[i].length;
         }
 
-        // reprocess plot data (smoothing etc)
-        plotSet.reprocessPlotData();
+        // remove any existing plots
+        if (plotSet != null) {
+            plotSet.reset();
+            plotSet = null;
+            //resetAcquisition();
+        }
 
-        // display the data we just loaded
-        plotSet.displayPlots();
+        // if enough info is present create new plotSet and display the restored data
+        if (currentFCobject != null) {
 
-        // setTimeout(async function () {
-        //     plotSet.displayPlots();
-        // }, 100);        
+            //chartIDlist = currentFCobject.chartList;
+            //plotSet = new PlotSet(chartIDlist, "plotContainer", "controlContainer");
+            plotSet = new PlotSet(currentFCobject, "plotContainer", "controlContainer");
+
+            // each new plot object in the set we just created has a default viewport (0-10sec) 
+            // that is not needed when restoring old data, so remove these
+            for (let ind = 0; ind < plotSet.plotObjectList.length; ind++) {
+                let plot = plotSet.plotObjectList[ind];
+                plot.viewStack.shift();
+            }
+
+            // reprocess plot data (smoothing etc)
+            plotSet.reprocessPlotData();
+
+            // display the data we just loaded
+            plotSet.displayPlots();
+
+            // setTimeout(async function () {
+            //     plotSet.displayPlots();
+            // }, 100);        
+        }
     }
 
 }
