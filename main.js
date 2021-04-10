@@ -44,7 +44,11 @@ const ccspan = document.getElementsByClassName("closeCal")[0];
 // do this when the DOM is first loaded
 document.addEventListener('DOMContentLoaded', () => {
 
-  titleText.innerHTML = "IOLab Web " + "v"+currentVersion[0].toString()+"."+currentVersion[1].toString()+"."+currentVersion[2].toString();
+  // display the version number on the browser tab
+  titleText.innerHTML = "IOLab Web v"+
+    currentVersion[0].toString()+"."+
+    currentVersion[1].toString()+"."+
+    currentVersion[2].toString();
 
   // See if web-serial supported by this browser ?
   const notSupported = document.getElementById('notSupported');
@@ -150,10 +154,9 @@ async function clickSend() {
     sensorRateList = fixedConfigObject.rateList;
 
     // create a list of charts (by sensor ID) to be plotted
-    chartIDlist = fixedConfigObject.chartList;
+    //chartIDlist = fixedConfigObject.chartList;
 
     // create the required plot objects
-    //plotSet = new PlotSet(chartIDlist, "plotContainer", "controlContainer");
     plotSet = new PlotSet(fixedConfigObject, "plotContainer", "controlContainer");
   }
 }

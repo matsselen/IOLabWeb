@@ -94,12 +94,12 @@ function restoreAcquisition() {
 
 
     // first see if the save data can be retored by this version of the software 
+    // do this with a try/catch in case someone is trying to restore old data that has no version info
     let dataVersion = 0;
-    try {
-        dataVersion = appMetaData.appVersion[0] * 1000 + appMetaData.appVersion[1] * 100 + appMetaData.appVersion[2];
-    }
+    try {dataVersion = appMetaData.appVersion[0]*1000 + appMetaData.appVersion[1]*100 + appMetaData.appVersion[2];}
     catch { }
 
+    // least copatible version (in globalVariables.js)
     let compatVersion = bcompatVersion[0] * 1000 + bcompatVersion[1] * 100 + bcompatVersion[2];
 
     if (dataVersion < compatVersion) {
@@ -126,8 +126,6 @@ function restoreAcquisition() {
         // if enough info is present create new plotSet and display the restored data
         if (currentFCobject != null) {
 
-            //chartIDlist = currentFCobject.chartList;
-            //plotSet = new PlotSet(chartIDlist, "plotContainer", "controlContainer");
             plotSet = new PlotSet(currentFCobject, "plotContainer", "controlContainer");
 
             // each new plot object in the set we just created has a default viewport (0-10sec) 
@@ -142,10 +140,7 @@ function restoreAcquisition() {
 
             // display the data we just loaded
             plotSet.displayPlots();
-
-            // setTimeout(async function () {
-            //     plotSet.displayPlots();
-            // }, 100);        
+       
         }
     }
 
