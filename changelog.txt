@@ -26,12 +26,13 @@ Several small housekeeping items (fingers crossed nothing broke)
 ====================== WORK ========================================
 Known Bugs:
 - Sometimes plots empty if not viewed before csv export of another plot (only Mac ?)
+- Sometimes restoring a data file created on another computer fails on Chromebook. 
+  The same file might sometimes fail and sometimes work?
+  This does not happen on Mac & Win with files created on Chromebook. 
 
 Front Burner Tasks:
-- CSV export
 - sparse plotting when Ndata >> Npixels
 - compress saved files
-- add sample rate to chart heading
 
 Back Burner Tasks:
 - Revisit time shift
