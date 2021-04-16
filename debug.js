@@ -39,3 +39,13 @@ function showDebug() {
   dbgInfo = true;
   cmdPicker.hidden = false;
 }
+
+// run this in the console to HIDE the debugging features
+function hideDebug() {
+  debugStuff.style.display = "none";
+  debugCK.checked = false;
+  showCommands = false;
+  debugCK.hidden = true;
+  cmdPicker.hidden = true;
+  dbgInfo = false;
+}
