@@ -86,12 +86,14 @@ async function readInputFile() {
     try {
         frd.readAsText(this.files[0]);
         frd.onload = function () {
-            parseFromFile(frd.result);
+            //mas parseFromFile(frd.result);
+            parseFromZip(frd.result);
         }
 
         // wait 100 ms for shit to finish then get to work restoring the saved plots
         setTimeout(async function () {
-            restoreAcquisition();
+            console.log(calData);
+            //mas restoreAcquisition();
         }, 100);
     }
     catch (error) {
@@ -103,6 +105,14 @@ async function readInputFile() {
 // called by readInputFile
 function parseFromFile(fileContents) {
     calData = JSON.parse(fileContents);
+}
+
+//mas called by readInputFile
+function parseFromZip(fileContents) {
+    JSZip.loadAsync(fileContents).then(function (zip) {
+        console.log(zip);
+        console.log(fileContents);
+    });
 }
 
 function restoreAcquisition() {
