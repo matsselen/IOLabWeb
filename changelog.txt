@@ -22,6 +22,10 @@ Store more config info with saved data & check version when restoring
 Moved software version to globalVariables.js and added compatibility check for retored data
 Several small housekeeping items (fingers crossed nothing broke)
 
+v0.8.52 4/16/2021
+Speed up panning by implementing sparse plotting when Ndata >> Npixels
+Added unit "n/a" for light and sound since these are not calibrated
+
 
 ====================== WORK ========================================
 Known Bugs:
@@ -31,7 +35,6 @@ Known Bugs:
   This does not happen on Mac & Win with files created on Chromebook. 
 
 Front Burner Tasks:
-- sparse plotting when Ndata >> Npixels
 - compress saved files
 
 Back Burner Tasks:

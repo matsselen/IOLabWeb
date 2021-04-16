@@ -1177,7 +1177,13 @@ class PlotIOLab {
                 if (indRight > indLeft) {
                     analysisDrawContext.beginPath();
                     analysisDrawContext.moveTo(zeroLeft[0], zeroLeft[1]);
-                    for (let ind = indLeft; ind <= indRight; ind++) {
+
+                    // pick the number to advance the index by for each point plotted so that we dont waste time plotting 
+                    // several points for a single pixel column on the chart
+                    let nSkip = Math.max(1,parseInt((indRight-indLeft)/cWidth/2));
+
+                    //for (let ind = indLeft; ind <= indRight; ind++) {
+                    for (let ind = indLeft; ind <= indRight; ind += nSkip) {
                         let t = this.plotData[ind][0] - this.datShift[0];
                         let y = this.plotData[ind][tr] - this.datShift[tr];
                         let p = this.viewStack[0].dataToPixel(t, y);
@@ -1486,8 +1492,13 @@ class PlotIOLab {
         let ind2 = Math.floor(this.viewStack[0].xMax / this.timePerSample) + 2;
         if (ind2 > calData[sensorID].length) ind2 = calData[sensorID].length;
 
+        // pick the number to advance the index by for each point plotted so that we dont waste time plotting 
+        // several points for a single pixel column on the chart
+        let nSkip = Math.max(1,parseInt((ind2-ind1)/cWidth/2));
+
         // loop over data
-        for (let ind = ind1; ind < ind2; ind++) {
+        //for (let ind = ind1; ind < ind2; ind++) {
+        for (let ind = ind1; ind < ind2; ind += nSkip) {
 
             let tplot = calData[sensorID][ind][0]; // the current time coordinate
 
