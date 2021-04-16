@@ -50,9 +50,32 @@ function saveToFile() {
         configDesc + "_" +
         runSeconds.toFixed(0) + "s.iolab";
 
+
     // save the data as a local download
     downloadData.href = window.URL.createObjectURL(dataBlob), { type: "text/plain;charset=utf-8" };
     downloadData.download = fName;
+
+    //----- test zip stuff ----------------
+    fName += "zip";
+    var zip = new JSZip();
+    zip.file("data.json", jdata);
+
+    zip.generateAsync({
+        type: "blob",
+        /* NOTE THESE ADDED COMPRESSION OPTIONS */
+        /* deflate is the name of the compression algorithm used */
+        compression: "DEFLATE",
+        compressionOptions: {
+            /* compression level ranges from 1 (best speed) to 9 (best compression) */
+            level: 9
+        }
+    })
+        .then(function (content) {
+            // uses FileSaver.js
+            saveAs(content, fName);
+        }
+        );
+    //----- test zip stuff ----------------
 
 }
 
@@ -96,15 +119,15 @@ function restoreAcquisition() {
     // first see if the save data can be retored by this version of the software 
     // do this with a try/catch in case someone is trying to restore old data that has no version info
     let dataVersion = 0;
-    try {dataVersion = appMetaData.appVersion[0]*1000 + appMetaData.appVersion[1]*100 + appMetaData.appVersion[2];}
+    try { dataVersion = appMetaData.appVersion[0] * 1000 + appMetaData.appVersion[1] * 100 + appMetaData.appVersion[2]; }
     catch { }
 
     // least copatible version (in globalVariables.js)
     let compatVersion = bcompatVersion[0] * 1000 + bcompatVersion[1] * 100 + bcompatVersion[2];
 
     if (dataVersion < compatVersion) {
-        let bcv = "v"+bcompatVersion[0].toString()+"."+bcompatVersion[1].toString()+"."+bcompatVersion[2].toString();
-        window.alert("Sorry - cant restore data written with app version before "+bcv)
+        let bcv = "v" + bcompatVersion[0].toString() + "." + bcompatVersion[1].toString() + "." + bcompatVersion[2].toString();
+        window.alert("Sorry - cant restore data written with app version before " + bcv)
     }
     else {
 
@@ -140,7 +163,7 @@ function restoreAcquisition() {
 
             // display the data we just loaded
             plotSet.displayPlots();
-       
+
         }
     }
 
