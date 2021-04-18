@@ -56,7 +56,7 @@ function saveToFile() {
     downloadData.download = fName;
 
     //----- test zip stuff ----------------
-    fName += "zip";
+    fName += ".zip";
     var zip = new JSZip();
     zip.file("data.json", jdata);
 
@@ -82,38 +82,59 @@ function saveToFile() {
 // code for reading back rxdata from a file
 async function readInputFile() {
 
-    var frd = new FileReader;
-    try {
-        frd.readAsText(this.files[0]);
-        frd.onload = function () {
-            //mas parseFromFile(frd.result);
-            parseFromZip(frd.result);
-        }
+    if (dbgInfo) {
+        console.log("Will unzip the first file in this list:");
+        console.log(this.files);
+    }
 
-        // wait 100 ms for shit to finish then get to work restoring the saved plots
-        setTimeout(async function () {
-            console.log(calData);
-            //mas restoreAcquisition();
-        }, 100);
-    }
-    catch (error) {
-        console.log("Did not reastore a data file");
-        console.log(error);
-    }
+    JSZip.loadAsync(this.files[0]).then(function (zip) {
+
+        zip.file("data.json").async("text").then(function success(content) {
+            calData = JSON.parse(content);
+            if (dbgInfo) {
+                console.log(calData);
+            }
+            restoreAcquisition();
+
+        }, function error(e) {
+            console.log("Error unzipping");
+            console.log(e);
+        })
+
+    });
+
+
+    // var frd = new FileReader;
+    // try {
+    //     frd.readAsText(this.files[0]);
+    //     frd.onload = function () {
+    //         parseFromFile(frd.result);
+    //     }
+
+    //     // wait 100 ms for shit to finish then get to work restoring the saved plots
+    //     setTimeout(async function () {
+    //         console.log(calData);
+    //         //mas restoreAcquisition();
+    //     }, 100);
+    // }
+    // catch (error) {
+    //     console.log("Did not reastore a data file");
+    //     console.log(error);
+    // }
 }
 
 // called by readInputFile
-function parseFromFile(fileContents) {
-    calData = JSON.parse(fileContents);
-}
+// function parseFromFile(fileContents) {
+//     calData = JSON.parse(fileContents);
+// }
 
-//mas called by readInputFile
-function parseFromZip(fileContents) {
-    JSZip.loadAsync(fileContents).then(function (zip) {
-        console.log(zip);
-        console.log(fileContents);
-    });
-}
+// //mas called by readInputFile
+// function parseFromZip(fileContents) {
+//     JSZip.loadAsync(fileContents).then(function (zip) {
+//         console.log(zip);
+//         console.log(fileContents);
+//     });
+// }
 
 function restoreAcquisition() {
 
@@ -121,7 +142,7 @@ function restoreAcquisition() {
 
     // exctact the fixed config object and restore the calibrated data
     currentFCobject = calData[1];
-    appMetaData = calData[0]
+    appMetaData = calData[0];
     calData.shift();
     calData.shift();
 
