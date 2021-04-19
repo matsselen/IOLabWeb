@@ -28,7 +28,7 @@ Added unit "n/a" for light and sound since these are not calibrated
 
 v0.8.55 4/18/2021
 Added zip compression to files used for saving & restoring acquisitions.
-The files now have names like "IOLab_Apr-18-2021_19.48.59_Pendulum_29s.iolab.zip".
+The files now have names like "IOLab_Apr-18-2021_19.48.59_Pendulum_29s.iozip".
 Files saved with previous versions will not be readable. 
 
 ====================== WORK ========================================

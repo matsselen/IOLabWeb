@@ -47,7 +47,7 @@ function saveToFile() {
         date.toTimeString().substr(3, 2) + "." +
         date.toTimeString().substr(6, 2) + "_" +
         configDesc + "_" +
-        runSeconds.toFixed(0) + "s.iolab.zip";
+        runSeconds.toFixed(0) + "s.iozip";
 
     let zip = new JSZip();
     zip.file("data.json", jdata);
