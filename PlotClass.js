@@ -688,7 +688,7 @@ class PlotIOLab {
         // create and place and control the re-zero button
         this.aZero = document.createElement("a");
         var zeroLink = document.createElement("img");
-        zeroLink.src = "images/rezero1.png";
+        zeroLink.src = "images/rezero2.png";
         zeroLink.height = "20";
         zeroLink.style = "cursor:pointer";
         zeroLink.style.paddingLeft = "10px";
