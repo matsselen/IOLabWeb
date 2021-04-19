@@ -73,6 +73,10 @@
           <span id="restore" title="Load previously saved data from an iozip file"> 
             Restore: <input type="file" accept=".iozip" size="20" name="inputfile" id="inputfile">
           </span>
+
+          <a id="outBtn" title="Show Output Control" style="cursor: pointer;">
+            <img id="outBtnImg" src="images/calruler1.PNG" valign="bottom"></a> 
+
         </td>
         <td>
           <input id="debug_ck" type="checkbox" checked="false" title="Displays additional information for experts">
@@ -89,6 +93,10 @@
 
             <span id="calBtnTxt">Calibrate:</span> <a id="calBtn" title="Calibration" style="cursor: pointer;">
               <img id="calBtnImg" src="images/calruler1.PNG" valign="bottom"></a>
+
+              <!-- &nbsp;&nbsp;
+              <a id="outBtn" title="Show Output Control" style="cursor: pointer;">
+                <img id="outBtnImg" src="images/calruler1.PNG" valign="bottom"></a>               -->
           </td>
         </tr>
         <tr>
@@ -128,10 +136,10 @@
     <p> <button id="butDebug" type="button">Debug</button></p>
   </div>
 
-  <!-- The Modal -->
+  <!-- The Calibration Modal -->
   <div id="calModal" class="modal">
 
-    <!-- Modal content -->
+    <!-- Calibration Modal content -->
     <div class="modal-content">
       <div class="modal-header">
         <span>Calibration Control</span>

@@ -36,8 +36,9 @@ const calchooseAMG = document.getElementById("calChooseAMG");
 const calchooseAMGtxt = document.getElementById("calChooseAMGtxt");
 
 // calibration modal stuff
-const modal = document.getElementById("calModal");
+const calModal = document.getElementById("calModal");
 const calButton = document.getElementById("calBtn");
+const outButton = document.getElementById("outBtn");
 const calBtnImg = document.getElementById("calBtnImg");
 const calBtnTxt = document.getElementById("calBtnTxt");
 const ccspan = document.getElementsByClassName("closeCal")[0];
@@ -74,8 +75,14 @@ document.addEventListener('DOMContentLoaded', () => {
   // when the calibration modal is invoked
   calButton.onclick = function () { 
     calibrationSetup();
-    modal.style.display = "block"; 
+    calModal.style.display = "block"; 
   }
+
+    // when the output control modal is invoked
+    outButton.onclick = function () { 
+      outputControlSetup();
+      outModal.style.display = "block"; 
+    }
 
   // when the calibration modal is closed
   ccspan.onclick = function () { 
