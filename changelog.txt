@@ -40,7 +40,7 @@ Known Bugs:
   **These issues may be fixed in 0.8.55 but still need to test**
 
 Front Burner Tasks:
-- 
+- Add controls for DAC and other outputs
 
 Back Burner Tasks:
 - Revisit time shift
