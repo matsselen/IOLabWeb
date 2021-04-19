@@ -37,6 +37,7 @@ Known Bugs:
 - Sometimes restoring a data file created on another computer fails on Chromebook. 
   The same file might sometimes fail and sometimes work?
   This does not happen on Mac & Win with files created on Chromebook. 
+  **These issues may be fixed in 0.8.55 but still need to test**
 
 Front Burner Tasks:
 - 
@@ -45,4 +46,5 @@ Back Burner Tasks:
 - Revisit time shift
 - Rationalize usage of calData vs plotData in plotting code
 - display rezero icon on all zeroable plots when linked
+- make a better rezero icon
 - save/restore dataShift
