@@ -23,18 +23,17 @@ function saveToFile() {
     appMetaData.calForceTime = calForceTime;
 
     // push any metadata plus current fixed config object onto the bottom of the dalData array
-    // then stringify this and put it in a blob
+    // then stringify this
 
     calData.unshift(currentFCobject);
     calData.unshift(appMetaData);
     let jdata = JSON.stringify(calData);
-    //let dataBlob = new Blob([jdata]);
 
     // put calData back the way it was
     calData.shift();
     calData.shift();
 
-    // figure out filename
+    // figure out the filename for the save file
     let configDesc = "noconfig";
     if (currentFCobject != null) {
         configDesc = currentFCobject.desc;
@@ -48,38 +47,23 @@ function saveToFile() {
         date.toTimeString().substr(3, 2) + "." +
         date.toTimeString().substr(6, 2) + "_" +
         configDesc + "_" +
-        runSeconds.toFixed(0) + "s.zip";
+        runSeconds.toFixed(0) + "s.iolab.zip";
 
-
-    // save the data as a local download
-    //downloadData.href = window.URL.createObjectURL(dataBlob), { type: "text/plain;charset=utf-8" };
-    //downloadData.download = fName;
-
-    //----- test zip stuff ----------------
-    //fName += ".zip";
-    var zip = new JSZip();
+    let zip = new JSZip();
     zip.file("data.json", jdata);
 
     zip.generateAsync({ // uses jszip.jz
-        type: "blob",
-        /* NOTE THESE ADDED COMPRESSION OPTIONS */
-        /* deflate is the name of the compression algorithm used */
-        compression: "DEFLATE",
-        compressionOptions: {
-            /* compression level ranges from 1 (best speed) to 9 (best compression) */
-            level: 9
-        }
-    })
-        .then(function success(content) {
+        type: "blob", compression: "DEFLATE",
+        compressionOptions: { level: 9 } })
+    .then (
+        function success(content) {
             saveAs(content, fName); // uses FileSaver.js           
-        }, 
+        },
         function error(e) {
             console.log("Error saving zip file");
             console.log(e);
         }
-        );
-    //----- test zip stuff ----------------
-
+    );
 }
 
 // code for reading back rxdata from a file
@@ -103,41 +87,8 @@ async function readInputFile() {
             console.log("Error unzipping");
             console.log(e);
         })
-
     });
-
-
-    // var frd = new FileReader;
-    // try {
-    //     frd.readAsText(this.files[0]);
-    //     frd.onload = function () {
-    //         parseFromFile(frd.result);
-    //     }
-
-    //     // wait 100 ms for shit to finish then get to work restoring the saved plots
-    //     setTimeout(async function () {
-    //         console.log(calData);
-    //         //mas restoreAcquisition();
-    //     }, 100);
-    // }
-    // catch (error) {
-    //     console.log("Did not reastore a data file");
-    //     console.log(error);
-    // }
 }
-
-// called by readInputFile
-// function parseFromFile(fileContents) {
-//     calData = JSON.parse(fileContents);
-// }
-
-// //mas called by readInputFile
-// function parseFromZip(fileContents) {
-//     JSZip.loadAsync(fileContents).then(function (zip) {
-//         console.log(zip);
-//         console.log(fileContents);
-//     });
-// }
 
 function restoreAcquisition() {
 
