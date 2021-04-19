@@ -48,7 +48,7 @@ function saveToFile() {
         date.toTimeString().substr(3, 2) + "." +
         date.toTimeString().substr(6, 2) + "_" +
         configDesc + "_" +
-        runSeconds.toFixed(0) + "s.iolab";
+        runSeconds.toFixed(0) + "s.zip";
 
 
     // save the data as a local download
@@ -56,11 +56,11 @@ function saveToFile() {
     //downloadData.download = fName;
 
     //----- test zip stuff ----------------
-    fName += ".zip";
+    //fName += ".zip";
     var zip = new JSZip();
     zip.file("data.json", jdata);
 
-    zip.generateAsync({
+    zip.generateAsync({ // uses jszip.jz
         type: "blob",
         /* NOTE THESE ADDED COMPRESSION OPTIONS */
         /* deflate is the name of the compression algorithm used */

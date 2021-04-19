@@ -7,7 +7,7 @@
 //
 'use strict';
 
-// some useflul handles
+// some useflul html element handles
 const titleText = document.getElementById('titleText');
 const butConnect = document.getElementById('butConnect');
 const connectImg = document.getElementById('connectImg');
