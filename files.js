@@ -28,7 +28,7 @@ function saveToFile() {
     calData.unshift(currentFCobject);
     calData.unshift(appMetaData);
     let jdata = JSON.stringify(calData);
-    let dataBlob = new Blob([jdata]);
+    //let dataBlob = new Blob([jdata]);
 
     // put calData back the way it was
     calData.shift();
@@ -52,8 +52,8 @@ function saveToFile() {
 
 
     // save the data as a local download
-    downloadData.href = window.URL.createObjectURL(dataBlob), { type: "text/plain;charset=utf-8" };
-    downloadData.download = fName;
+    //downloadData.href = window.URL.createObjectURL(dataBlob), { type: "text/plain;charset=utf-8" };
+    //downloadData.download = fName;
 
     //----- test zip stuff ----------------
     fName += ".zip";
@@ -70,9 +70,12 @@ function saveToFile() {
             level: 9
         }
     })
-        .then(function (content) {
-            // uses FileSaver.js
-            saveAs(content, fName);
+        .then(function success(content) {
+            saveAs(content, fName); // uses FileSaver.js           
+        }, 
+        function error(e) {
+            console.log("Error saving zip file");
+            console.log(e);
         }
         );
     //----- test zip stuff ----------------

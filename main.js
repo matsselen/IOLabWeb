@@ -27,7 +27,8 @@ const dataBoxTx = document.getElementById("dataBoxTx");
 const dataBoxRx = document.getElementById("dataBoxRx");
 const debugStuff = document.getElementById("debugStuff");
 const inputFile = document.getElementById("inputfile");
-const calDiv = document.getElementById("calDiv");
+const downloadData = document.getElementById("downloadData");
+const calDiv = document.getElementById("calDiv");//mas-test
 const calText = document.getElementById("ttext_p");
 const calchooseF = document.getElementById("calChooseF");
 const calchooseFtxt = document.getElementById("calChooseFtxt");
@@ -60,6 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
   butStartStop.addEventListener('click', clickStartStop);
   butDebug.addEventListener('click', clickDebug);
   inputFile.addEventListener("change", readInputFile);
+  downloadData.addEventListener('click', saveToFile);
 
   window.onbeforeunload = function(){
     sendRecord(getCommandRecord("powerDown"));
