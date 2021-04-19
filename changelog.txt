@@ -26,6 +26,10 @@ v0.8.52 4/16/2021
 Speed up panning by implementing sparse plotting when Ndata >> Npixels
 Added unit "n/a" for light and sound since these are not calibrated
 
+v0.8.55 4/18/2021
+Added zip compression to files used for saving & restoring acquisitions.
+The files now have names like "IOLab_Apr-18-2021_19.48.59_Pendulum_29s.iolab.zip".
+Files saved with previous versions will not be readable. 
 
 ====================== WORK ========================================
 Known Bugs:
@@ -35,7 +39,7 @@ Known Bugs:
   This does not happen on Mac & Win with files created on Chromebook. 
 
 Front Burner Tasks:
-- compress saved files
+- 
 
 Back Burner Tasks:
 - Revisit time shift

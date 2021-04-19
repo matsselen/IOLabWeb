@@ -23,18 +23,17 @@ function saveToFile() {
     appMetaData.calForceTime = calForceTime;
 
     // push any metadata plus current fixed config object onto the bottom of the dalData array
-    // then stringify this and put it in a blob
+    // then stringify this
 
     calData.unshift(currentFCobject);
     calData.unshift(appMetaData);
     let jdata = JSON.stringify(calData);
-    let dataBlob = new Blob([jdata]);
 
     // put calData back the way it was
     calData.shift();
     calData.shift();
 
-    // figure out filename
+    // figure out the filename for the save file
     let configDesc = "noconfig";
     if (currentFCobject != null) {
         configDesc = currentFCobject.desc;
@@ -48,38 +47,47 @@ function saveToFile() {
         date.toTimeString().substr(3, 2) + "." +
         date.toTimeString().substr(6, 2) + "_" +
         configDesc + "_" +
-        runSeconds.toFixed(0) + "s.iolab";
+        runSeconds.toFixed(0) + "s.iolab.zip";
 
-    // save the data as a local download
-    downloadData.href = window.URL.createObjectURL(dataBlob), { type: "text/plain;charset=utf-8" };
-    downloadData.download = fName;
+    let zip = new JSZip();
+    zip.file("data.json", jdata);
 
+    zip.generateAsync({ // uses jszip.jz
+        type: "blob", compression: "DEFLATE",
+        compressionOptions: { level: 9 } })
+    .then (
+        function success(content) {
+            saveAs(content, fName); // uses FileSaver.js           
+        },
+        function error(e) {
+            console.log("Error saving zip file");
+            console.log(e);
+        }
+    );
 }
 
 // code for reading back rxdata from a file
 async function readInputFile() {
 
-    var frd = new FileReader;
-    try {
-        frd.readAsText(this.files[0]);
-        frd.onload = function () {
-            parseFromFile(frd.result);
-        }
+    if (dbgInfo) {
+        console.log("Will unzip the first file in this list:");
+        console.log(this.files);
+    }
 
-        // wait 100 ms for shit to finish then get to work restoring the saved plots
-        setTimeout(async function () {
+    JSZip.loadAsync(this.files[0]).then(function (zip) {
+
+        zip.file("data.json").async("text").then(function success(content) {
+            calData = JSON.parse(content);
+            if (dbgInfo) {
+                console.log(calData);
+            }
             restoreAcquisition();
-        }, 100);
-    }
-    catch (error) {
-        console.log("Did not reastore a data file");
-        console.log(error);
-    }
-}
 
-// called by readInputFile
-function parseFromFile(fileContents) {
-    calData = JSON.parse(fileContents);
+        }, function error(e) {
+            console.log("Error unzipping");
+            console.log(e);
+        })
+    });
 }
 
 function restoreAcquisition() {
@@ -88,7 +96,7 @@ function restoreAcquisition() {
 
     // exctact the fixed config object and restore the calibrated data
     currentFCobject = calData[1];
-    appMetaData = calData[0]
+    appMetaData = calData[0];
     calData.shift();
     calData.shift();
 
@@ -96,15 +104,15 @@ function restoreAcquisition() {
     // first see if the save data can be retored by this version of the software 
     // do this with a try/catch in case someone is trying to restore old data that has no version info
     let dataVersion = 0;
-    try {dataVersion = appMetaData.appVersion[0]*1000 + appMetaData.appVersion[1]*100 + appMetaData.appVersion[2];}
+    try { dataVersion = appMetaData.appVersion[0] * 1000 + appMetaData.appVersion[1] * 100 + appMetaData.appVersion[2]; }
     catch { }
 
     // least copatible version (in globalVariables.js)
     let compatVersion = bcompatVersion[0] * 1000 + bcompatVersion[1] * 100 + bcompatVersion[2];
 
     if (dataVersion < compatVersion) {
-        let bcv = "v"+bcompatVersion[0].toString()+"."+bcompatVersion[1].toString()+"."+bcompatVersion[2].toString();
-        window.alert("Sorry - cant restore data written with app version before "+bcv)
+        let bcv = "v" + bcompatVersion[0].toString() + "." + bcompatVersion[1].toString() + "." + bcompatVersion[2].toString();
+        window.alert("Sorry - cant restore data written with app version before " + bcv)
     }
     else {
 
@@ -140,7 +148,7 @@ function restoreAcquisition() {
 
             // display the data we just loaded
             plotSet.displayPlots();
-       
+
         }
     }
 

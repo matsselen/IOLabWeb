@@ -22,6 +22,8 @@
   <script src="run_control.js"></script>
   <script src="calibration.js"></script>
   <script src="calsteps.js"></script>
+  <script src="jszip.js"></script>
+  <script src="FileSaver.js"></script>
   <script src="main.js" defer></script>
 
 </head>
@@ -58,18 +60,18 @@
           <select id="cmd-picker"></select>&nbsp; &nbsp;
         </td>
         <td>
-          <span id="save" >
-            Save: <a href="" id="downloadData" onclick="saveToFile()" 
-            title="Saved data to .iolab file. Can be shared and restored on this or other computers."
-            style="cursor: pointer;"><img
-            src="images/dload.PNG" alt="[Save]" valign="bottom" width="24" height="24"></a></span>
+            <span id="save" >
+              Save: <a id="downloadData"  
+              title="Saves current data to a zip file which can be shared and restored on this or other computers."
+              style="cursor: pointer;"><img
+              src="images/dload.PNG" valign="bottom" width="24" height="24"></a></span>
         </td>
         
         <td>&nbsp; &nbsp;</td>
 
         <td>
-          <span id="restore" title="Load previously saved data from .iolab file"> 
-            Restore: <input type="file" accept=".iolab" size="20" name="inputfile" id="inputfile">
+          <span id="restore" title="Load previously saved data from a zip file"> 
+            Restore: <input type="file" accept=".iolab.zip" size="20" name="inputfile" id="inputfile">
           </span>
         </td>
         <td>
