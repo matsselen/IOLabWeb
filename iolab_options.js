@@ -193,12 +193,26 @@ function buildDacPicker() {
     let dacValue = dacPicker.options[dacPicker.selectedIndex].value;
 
     let remoteID = 1;
-    let kvPair = (1<<5) + dacValue;
-    let payload = [1,0x19, kvPair];
+    let kvPair = (1 << 5) + dacValue;
+    let payload = [1, 0x19, kvPair];
 
     sendOutputConfig(remoteID, payload);
 
   }
+
+  dacCK.addEventListener("click", function () {
+    console.log("In dacCK", this.checked);
+
+    let remoteID = 1;
+    if (this.checked) {
+      let payload = [1, 0x19, 1];
+      sendOutputConfig(remoteID, payload);
+    } else {
+      let payload = [1, 0x19, 0];
+      sendOutputConfig(remoteID, payload);      
+    }
+
+  });
 
 }
 
@@ -237,10 +251,10 @@ function buildConfigPicker() {
       current_config_code = -1;
       configPicker.title = "Select Configuration";
     } else {
-      current_config_code = iolabConfig.fixedConfigurations[configPicker.selectedIndex-1]["code"];
+      current_config_code = iolabConfig.fixedConfigurations[configPicker.selectedIndex - 1]["code"];
       configPicker.title = fixedConfigList[current_config_code].longDesc2;
     }
     updateSystemState();
   }
-  
+
 }

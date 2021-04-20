@@ -24,6 +24,7 @@ const configSelect = document.getElementById('configSelect');
 const cmdPicker = document.getElementById('cmd-picker');
 const configPicker = document.getElementById('config-picker');
 const dacPicker = document.getElementById('dacPicker');
+const dacCK = document.getElementById('dac_ck');
 const dataBoxTx = document.getElementById("dataBoxTx");
 const dataBoxRx = document.getElementById("dataBoxRx");
 const debugStuff = document.getElementById("debugStuff");
