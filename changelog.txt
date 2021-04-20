@@ -36,6 +36,7 @@ Better rezero icon.
 
 ====================== WORK ========================================
 Known Bugs:
+- Config 44 (A1/A2/A3) not working. 
 - Sometimes plots empty if not viewed before csv export of another plot (only Mac ?)
 - Sometimes restoring a data file created on another computer fails on Chromebook. 
   The same file might sometimes fail and sometimes work?

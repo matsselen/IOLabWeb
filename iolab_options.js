@@ -180,10 +180,10 @@ function buildCmdPicker() {
 function buildDacPicker() {
 
   var dacOption;
-  for (let i = 0; i < iolabConfig.DACVAlues.length; i++) {
+  for (let i = 0; i < iolabConfig.DACValues.length; i++) {
     dacOption = document.createElement('option');
-    dacOption.value = iolabConfig.DACVAlues[i].value;
-    dacOption.innerText = iolabConfig.DACVAlues[i].label + " V";
+    dacOption.value = 32 + iolabConfig.DACValues[i].val;        // the key-value for each DAC setting
+    dacOption.innerText = iolabConfig.DACValues[i].lbl + " V";  // the menu text for each DAC setting
     dacPicker.appendChild(dacOption);
   }
   dacPicker.selectedIndex = 17;
@@ -194,7 +194,7 @@ function buildDacPicker() {
     let dacValue = dacPicker.options[dacPicker.selectedIndex].value;
 
     let remoteID = 1;
-    let kvPair = (1<<5) + parseInt(dacValue);
+    let kvPair = parseInt(dacValue);
     sendOutputConfig(remoteID, [1, 0x19, kvPair]);
 
   }
@@ -208,6 +208,45 @@ function buildDacPicker() {
       sendOutputConfig(remoteID, [1, 0x19, 1]);
     } else {
       sendOutputConfig(remoteID, [1, 0x19, 0]);      
+    }
+  });
+}
+
+//====================================================================
+// construct the drop-down menu for the D5 control
+function buildD5Picker() {
+
+  var d5Option;
+  for (let i = 0; i < iolabConfig.D5pwmValues.length; i++) {
+    d5Option = document.createElement('option');
+    let key = iolabConfig.D5pwmValues[i].key;
+    let value = iolabConfig.D5pwmValues[i].val;
+    d5Option.value = key<<5 + value;                               // the key-value for each setting
+    d5Option.innerText = iolabConfig.D5pwmValues[i].lbl + " Hz";  // the menu text for each setting
+    d5Picker.appendChild(d5Option);
+  }
+  d5Picker.selectedIndex = 13;
+
+  // when the DAC voltage is changed
+  dacPicker.onchange = function () {
+    if (dbgInfo) {console.log("selecting dacPicker index ", dacPicker.selectedIndex);}
+    let dacValue = dacPicker.options[dacPicker.selectedIndex].value;
+
+    let remoteID = 1;
+    let kvPair = parseInt(dacValue);
+    sendOutputConfig(remoteID, [1, 0x13, kvPair]);
+
+  }
+
+  // when the DAC box is checked or unchecked
+  d5CK.addEventListener("click", function () {
+    if (dbgInfo) {console.log("In d5CK", this.checked);}
+
+    let remoteID = 1;
+    if (this.checked) {
+      sendOutputConfig(remoteID, [1, 0x13, 2]);
+    } else {
+      sendOutputConfig(remoteID, [1, 0x13, 0]);      
     }
   });
 

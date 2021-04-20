@@ -20,16 +20,23 @@ const denugStuff = document.getElementById("debugStuff")
 const butDebug = document.getElementById('butDebug');
 const dongleStatusDisplay = document.getElementById('dongleStatusDisplay');
 const remoteStatusDisplay = document.getElementById('remoteStatusDisplay');
+
 const configSelect = document.getElementById('configSelect');
 const cmdPicker = document.getElementById('cmd-picker');
 const configPicker = document.getElementById('config-picker');
+
 const dacPicker = document.getElementById('dacPicker');
-const dacCK = document.getElementById('dac_ck');
+const dacCK = document.getElementById('dacCK');
+
+const d5Picker = document.getElementById('d5Picker');
+const d5CK = document.getElementById('d5CK');
+
 const dataBoxTx = document.getElementById("dataBoxTx");
 const dataBoxRx = document.getElementById("dataBoxRx");
 const debugStuff = document.getElementById("debugStuff");
 const inputFile = document.getElementById("inputfile");
 const downloadData = document.getElementById("downloadData");
+
 const calDiv = document.getElementById("calDiv");//mas-test
 const calText = document.getElementById("ttext_p");
 const calchooseF = document.getElementById("calChooseF");
@@ -89,6 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
   buildConfigPicker();
   buildCmdPicker();
   buildDacPicker();
+  buildD5Picker();
 
   // fetch any existing calibrations from browser cookies
   calArrayList = [];
