@@ -193,7 +193,7 @@ function buildDacPicker() {
     let dacValue = dacPicker.options[dacPicker.selectedIndex].value;
 
     let remoteID = 1;
-    let kvPair = (1 << 5) + dacValue;
+    let kvPair = (1<<5) + parseInt(dacValue);
     let payload = [1, 0x19, kvPair];
 
     sendOutputConfig(remoteID, payload);
