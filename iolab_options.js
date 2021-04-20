@@ -188,30 +188,27 @@ function buildDacPicker() {
   }
   dacPicker.selectedIndex = 17;
 
+  // when the DAC voltage is changed
   dacPicker.onchange = function () {
-    console.log("selecting dacPicker index ", dacPicker.selectedIndex);
+    if (dbgInfo) {console.log("selecting dacPicker index ", dacPicker.selectedIndex);}
     let dacValue = dacPicker.options[dacPicker.selectedIndex].value;
 
     let remoteID = 1;
     let kvPair = (1<<5) + parseInt(dacValue);
-    let payload = [1, 0x19, kvPair];
-
-    sendOutputConfig(remoteID, payload);
+    sendOutputConfig(remoteID, [1, 0x19, kvPair]);
 
   }
 
+  // when the DAC box is checked or unchecked
   dacCK.addEventListener("click", function () {
-    console.log("In dacCK", this.checked);
+    if (dbgInfo) {console.log("In dacCK", this.checked);}
 
     let remoteID = 1;
     if (this.checked) {
-      let payload = [1, 0x19, 1];
-      sendOutputConfig(remoteID, payload);
+      sendOutputConfig(remoteID, [1, 0x19, 1]);
     } else {
-      let payload = [1, 0x19, 0];
-      sendOutputConfig(remoteID, payload);      
+      sendOutputConfig(remoteID, [1, 0x19, 0]);      
     }
-
   });
 
 }
