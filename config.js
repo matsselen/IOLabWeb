@@ -319,13 +319,19 @@ var iolabConfig =
       "chartRateList":[4800],
       "chartList": [8]
     },
-    // {
-    //   "code": 47,
-    //   "desc": "ECG & Analog",
-    //   "highSpeed": true,
-    //   "frequencies": [100, 200, 400],
-    //   "sensors": [{ "sensorKey": 241, "sampleRate": 400 }]
-    // },
+    {
+      "code": 47,
+      "desc": "ECG Analog",
+      "highSpeed": true,
+      "frequencies": [200, 400],
+      "sensors": [
+        { "sensorKey": 21, "sampleRate": 400 },
+        { "sensorKey": 22, "sampleRate": 400 },
+        { "sensorKey": 23, "sampleRate": 400 }
+      ],
+      "chartRateList":[400,400,400],
+      "chartList": [21,22,23]
+    },  
     {
       "code": 48,
       "desc": "ECG6",

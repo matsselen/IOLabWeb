@@ -258,10 +258,14 @@ async function sendOutputConfig(remoteID, payload) {
 
     let byteArray = new Uint8Array(dataArray);
 
-    // send the record twice in case the first send fails
+    // send the record 
     await sendRecord(byteArray);
 
-    setTimeout(async function () {
-        await sendRecord(byteArray);
-      }, 100);    
+    // setTimeout(async function () {
+    //     await sendRecord(byteArray);
+    //   }, 100);    
+
+    //   setTimeout(async function () {
+    //     await sendRecord(byteArray);
+    //   }, 200);   
 }

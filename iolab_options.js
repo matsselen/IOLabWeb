@@ -228,12 +228,12 @@ function buildD5Picker() {
   d5Picker.selectedIndex = 13;
 
   // when the DAC voltage is changed
-  dacPicker.onchange = function () {
+  d5Picker.onchange = function () {
     if (dbgInfo) {console.log("selecting dacPicker index ", dacPicker.selectedIndex);}
-    let dacValue = dacPicker.options[dacPicker.selectedIndex].value;
+    let d5Value = dacPicker.options[dacPicker.selectedIndex].value;
 
     let remoteID = 1;
-    let kvPair = parseInt(dacValue);
+    let kvPair = parseInt(d5Value);
     sendOutputConfig(remoteID, [1, 0x13, kvPair]);
 
   }
