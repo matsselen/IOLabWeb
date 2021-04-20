@@ -176,6 +176,19 @@ function buildCmdPicker() {
 }
 
 //====================================================================
+// construct the drop-down menu for the DAC control
+function buildDacPicker() {
+
+  var dacOption;
+  for (let i = 0; i < iolabConfig.DACVAlues.length; i++) {
+    dacOption = document.createElement('option');
+    dacOption.value = iolabConfig.DACVAlues[i].value;
+    dacOption.innerText = iolabConfig.DACVAlues[i].label + "V";
+    dacPicker.appendChild(dacOption);
+  }
+}
+
+//====================================================================
 // construct the drop-down menu for selecting fixed configurations
 function buildConfigPicker() {
 

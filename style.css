@@ -87,6 +87,13 @@ label.iolab {
   width: 500px;
 } 
 
+.daqselect {
+  /* font: 1.2em 13px/5 Arial;  */
+  font-size: 12px;
+  vertical-align: top;
+  /* width: 500px; */
+} 
+
 .hidden {
   display: none;
 }

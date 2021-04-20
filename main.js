@@ -23,6 +23,7 @@ const remoteStatusDisplay = document.getElementById('remoteStatusDisplay');
 const configSelect = document.getElementById('configSelect');
 const cmdPicker = document.getElementById('cmd-picker');
 const configPicker = document.getElementById('config-picker');
+const dacPicker = document.getElementById('dacPicker');
 const dataBoxTx = document.getElementById("dataBoxTx");
 const dataBoxRx = document.getElementById("dataBoxRx");
 const debugStuff = document.getElementById("debugStuff");
@@ -86,6 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
   getIOLabConfigInfo();
   buildConfigPicker();
   buildCmdPicker();
+  buildDacPicker();
 
   // fetch any existing calibrations from browser cookies
   calArrayList = [];
