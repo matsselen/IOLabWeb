@@ -238,3 +238,28 @@ async function sendRecord(byteArray) {
         console.log("sendRecord: serial port is not open");
     }
 }
+
+// send output config command
+async function sendOutputConfig(remoteID, payload) {
+
+    // start building the command record
+    let byteArray = new Uint8Array([0x02, 0x24]);
+
+    // add bytecount and remote ID
+    byteArray.push(payload.length + 1,remoteID);
+
+    // add the output configuration payload
+    for (let i=0; i<payload.length; i++) {
+        byteArray.push(payload(i));
+    }
+
+    // add end of record byte
+    byteArray.push(0x0A);
+
+    // send the record twice in case the first send fails
+    await sendRecord(byteArray);
+
+    setTimeout(async function () {
+        await sendRecord(byteArray);
+      }, 100);    
+}

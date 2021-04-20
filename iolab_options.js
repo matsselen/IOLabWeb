@@ -183,9 +183,18 @@ function buildDacPicker() {
   for (let i = 0; i < iolabConfig.DACVAlues.length; i++) {
     dacOption = document.createElement('option');
     dacOption.value = iolabConfig.DACVAlues[i].value;
-    dacOption.innerText = iolabConfig.DACVAlues[i].label + "V";
+    dacOption.innerText = iolabConfig.DACVAlues[i].label + " V";
     dacPicker.appendChild(dacOption);
   }
+  dacPicker.selectedIndex = 19;
+
+  dacPicker.onchange = function () {
+    console.log("selecting dacPicker index ", dacPicker.selectedIndex);
+    current_config = dacPicker.options[dacPicker.selectedIndex].value;
+
+    
+  }
+
 }
 
 //====================================================================
