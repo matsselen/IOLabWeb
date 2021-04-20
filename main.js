@@ -41,15 +41,16 @@ const calButton = document.getElementById("calBtn");
 const outButton = document.getElementById("outBtn");
 const calBtnImg = document.getElementById("calBtnImg");
 const calBtnTxt = document.getElementById("calBtnTxt");
-const ccspan = document.getElementsByClassName("closeCal")[0];
+const closeCal = document.getElementsByClassName("closeCal")[0];
+const closeOut = document.getElementsByClassName("closeOut")[0];
 
 // do this when the DOM is first loaded
 document.addEventListener('DOMContentLoaded', () => {
 
   // display the version number on the browser tab
-  titleText.innerHTML = "IOLab Web v"+
-    currentVersion[0].toString()+"."+
-    currentVersion[1].toString()+"."+
+  titleText.innerHTML = "IOLab Web v" +
+    currentVersion[0].toString() + "." +
+    currentVersion[1].toString() + "." +
     currentVersion[2].toString();
 
   // See if web-serial supported by this browser ?
@@ -64,7 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
   inputFile.addEventListener("change", readInputFile);
   downloadData.addEventListener('click', saveToFile);
 
-  window.onbeforeunload = function(){
+  window.onbeforeunload = function () {
     sendRecord(getCommandRecord("powerDown"));
     // leave page after a delay to give the shutdown command time to finish
     setTimeout(async function () {
@@ -73,22 +74,26 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   // when the calibration modal is invoked
-  calButton.onclick = function () { 
+  calButton.onclick = function () {
     calibrationSetup();
-    calModal.style.display = "block"; 
+    calModal.style.display = "block";
   }
-
-    // when the output control modal is invoked
-    outButton.onclick = function () { 
-      outputControlSetup();
-      outModal.style.display = "block"; 
-    }
 
   // when the calibration modal is closed
-  ccspan.onclick = function () { 
+  closeCal.onclick = function () {
     endCal();
   }
- 
+  // when the output control modal is invoked
+  outButton.onclick = function () {
+    //outputControlSetup();
+    outModal.style.display = "block";
+  }
+
+  // when the calibration modal is closed
+  closeOut.onclick = function () {
+    outModal.style.display = "none";
+  }
+
   // get things ready to rumble
   getIOLabConfigInfo();
   buildConfigPicker();
@@ -268,7 +273,7 @@ function updateSystemState() {
     butSend.hidden = true;
   } else {
     butStartStop.textContent = "Record";
-    butSend.hidden = false;  
+    butSend.hidden = false;
   }
 
   // if we just turned on the remote, fetch info about it
