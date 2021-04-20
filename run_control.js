@@ -243,18 +243,20 @@ async function sendRecord(byteArray) {
 async function sendOutputConfig(remoteID, payload) {
 
     // start building the command record
-    let byteArray = new Uint8Array([0x02, 0x24]);
+    let dataArray = [0x02, 0x24];
 
     // add bytecount and remote ID
-    byteArray.push(payload.length + 1,remoteID);
+    dataArray.push(payload.length + 1,remoteID);
 
     // add the output configuration payload
     for (let i=0; i<payload.length; i++) {
-        byteArray.push(payload(i));
+        dataArray.push(payload[i]);
     }
 
     // add end of record byte
-    byteArray.push(0x0A);
+    dataArray.push(0x0A);
+
+    let byteArray = new Uint8Array(dataArray);
 
     // send the record twice in case the first send fails
     await sendRecord(byteArray);

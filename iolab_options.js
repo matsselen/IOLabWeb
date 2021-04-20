@@ -186,13 +186,18 @@ function buildDacPicker() {
     dacOption.innerText = iolabConfig.DACVAlues[i].label + " V";
     dacPicker.appendChild(dacOption);
   }
-  dacPicker.selectedIndex = 19;
+  dacPicker.selectedIndex = 17;
 
   dacPicker.onchange = function () {
     console.log("selecting dacPicker index ", dacPicker.selectedIndex);
-    current_config = dacPicker.options[dacPicker.selectedIndex].value;
+    let dacValue = dacPicker.options[dacPicker.selectedIndex].value;
 
-    
+    let remoteID = 1;
+    let kvPair = (1<<5) + dacValue;
+    let payload = [1,0x19, kvPair];
+
+    sendOutputConfig(remoteID, payload);
+
   }
 
 }
