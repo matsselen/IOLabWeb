@@ -223,6 +223,7 @@ async function readLoop() {
 async function sendRecord(byteArray) {
     if (port != null) {
         dataBoxTx.innerHTML += byteArray + '\n';
+        console.log(byteArray);
 
         if (byteArray[1] == 0x21) {
             stopTime = Date.now();
@@ -237,4 +238,35 @@ async function sendRecord(byteArray) {
     } else {
         console.log("sendRecord: serial port is not open");
     }
+}
+
+// send output config command
+async function sendOutputConfig(remoteID, payload) {
+
+    // start building the command record
+    let dataArray = [0x02, 0x24];
+
+    // add bytecount and remote ID
+    dataArray.push(payload.length + 1,remoteID);
+
+    // add the output configuration payload
+    for (let i=0; i<payload.length; i++) {
+        dataArray.push(payload[i]);
+    }
+
+    // add end of record byte
+    dataArray.push(0x0A);
+
+    let byteArray = new Uint8Array(dataArray);
+
+    // send the record 
+    await sendRecord(byteArray);
+
+    // setTimeout(async function () {
+    //     await sendRecord(byteArray);
+    //   }, 100);    
+
+    //   setTimeout(async function () {
+    //     await sendRecord(byteArray);
+    //   }, 200);   
 }

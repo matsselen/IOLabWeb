@@ -1095,10 +1095,12 @@ class PlotIOLab {
     // draw the selected region as well as any analysis results for this region
     drawSelectionAnalysisMethod() {
 
+        // if there is no data for this sensor then go home
+        if (calData[this.sensorNum].length == 0) return;
+
         // analysis info layer
         let analysisLayer = this.layerElementList[this.layerElementList.length - 2];
         let analysisDrawContext = analysisLayer.getContext("2d");
-
 
         // the size of all layers is the same as the bottom one
         let cWidth = this.layerElementList[0].width;

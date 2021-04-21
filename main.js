@@ -20,14 +20,25 @@ const denugStuff = document.getElementById("debugStuff")
 const butDebug = document.getElementById('butDebug');
 const dongleStatusDisplay = document.getElementById('dongleStatusDisplay');
 const remoteStatusDisplay = document.getElementById('remoteStatusDisplay');
+
 const configSelect = document.getElementById('configSelect');
 const cmdPicker = document.getElementById('cmd-picker');
 const configPicker = document.getElementById('config-picker');
+
+const dacCtl = document.getElementById('dacCtl');
+const dacPicker = document.getElementById('dacPicker');
+const dacCK = document.getElementById('dacCK');
+
+const d5Ctl = document.getElementById('d5Ctl');
+const d5Picker = document.getElementById('d5Picker');
+const d5CK = document.getElementById('d5CK');
+
 const dataBoxTx = document.getElementById("dataBoxTx");
 const dataBoxRx = document.getElementById("dataBoxRx");
 const debugStuff = document.getElementById("debugStuff");
 const inputFile = document.getElementById("inputfile");
 const downloadData = document.getElementById("downloadData");
+
 const calDiv = document.getElementById("calDiv");//mas-test
 const calText = document.getElementById("ttext_p");
 const calchooseF = document.getElementById("calChooseF");
@@ -86,6 +97,8 @@ document.addEventListener('DOMContentLoaded', () => {
   getIOLabConfigInfo();
   buildConfigPicker();
   buildCmdPicker();
+  buildDacPicker();
+  buildD5Picker();
 
   // fetch any existing calibrations from browser cookies
   calArrayList = [];
@@ -130,7 +143,7 @@ async function clickSend() {
   if ((current_cmd == "setFixedConfig") && (current_config_code == -1)) return;
 
   let byteArray = getCommandRecord(current_cmd);
-  console.log(byteArray);
+  // console.log(byteArray);
   await sendRecord(byteArray);
 
   if (current_cmd == "setFixedConfig") {
