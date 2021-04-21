@@ -25,9 +25,11 @@ const configSelect = document.getElementById('configSelect');
 const cmdPicker = document.getElementById('cmd-picker');
 const configPicker = document.getElementById('config-picker');
 
+const dacCtl = document.getElementById('dacCtl');
 const dacPicker = document.getElementById('dacPicker');
 const dacCK = document.getElementById('dacCK');
 
+const d5Ctl = document.getElementById('d5Ctl');
 const d5Picker = document.getElementById('d5Picker');
 const d5CK = document.getElementById('d5CK');
 
@@ -141,7 +143,7 @@ async function clickSend() {
   if ((current_cmd == "setFixedConfig") && (current_config_code == -1)) return;
 
   let byteArray = getCommandRecord(current_cmd);
-  console.log(byteArray);
+  // console.log(byteArray);
   await sendRecord(byteArray);
 
   if (current_cmd == "setFixedConfig") {

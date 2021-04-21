@@ -642,6 +642,47 @@ function buildAndCalibrate() {
       rawReadPtr[sensorID] = rawData[sensorID].length;
     }// wheel
 
+    // A1/A2/A3 
+    else if (sensorID == 10) {
+
+      // V = counts*3V/4095 (i.e. Vref is always 3 volts)
+      let countsPerVolt = 4095 / 3;
+
+      // loop over data packets that arrived since the last time
+      for (let ind = rawReadPtr[sensorID]; ind < rawData[sensorID].length; ind++) {
+
+        let nbytes = rawData[sensorID][ind][2].length;
+        if (nbytes % 6 != 0) {
+          console.log("A1/2/3 bytecount not a multiple of 6");
+        } else {
+
+          // loop over the data samples in each packet
+          let nsamples = nbytes / 6;
+          for (let i = 0; i < nsamples; i++) {
+            let j = i * 6;
+            let a1Dat = (0xf & rawData[sensorID][ind][2][j]) << 8 | rawData[sensorID][ind][2][j + 1];
+            let a2Dat = (0xf & rawData[sensorID][ind][2][j + 2]) << 8 | rawData[sensorID][ind][2][j + 3];
+            let a3Dat = (0xf & rawData[sensorID][ind][2][j + 4]) << 8 | rawData[sensorID][ind][2][j + 5];
+            let tDat = tLast + samplePeriod;
+            tLast = tDat;
+
+            let a1Cal = a1Dat/countsPerVolt;
+            let a2Cal = a2Dat/countsPerVolt;
+            let a3Cal = a3Dat/countsPerVolt;
+
+            // save both adc and calibrated data as needed
+            calData[sensorID][calWritePtr[sensorID]] = [tDat, a1Cal, a2Cal, a3Cal];
+            calWritePtr[sensorID]++;
+
+          }//sample loop
+        }
+      }//data packet loop
+
+      // advance raw data read pointer
+      rawReadPtr[sensorID] = rawData[sensorID].length;
+    } // A1/2/3
+
+
     // Battery
     else if (sensorID == 11) {
 
@@ -664,7 +705,7 @@ function buildAndCalibrate() {
             let tDat = tLast + samplePeriod;
             tLast = tDat;
 
-            // calibrated voltage in mV
+            // calibrated voltage in Volts
             let calBat = aDat / countsPerVolt;
 
             calData[sensorID][calWritePtr[sensorID]++] = [tDat, calBat];
@@ -741,7 +782,7 @@ function buildAndCalibrate() {
             let tDat = tLast + samplePeriod;
             tLast = tDat;
 
-            // calibrated ovltage
+            // calibrated voltage
             let calAnalog = aDat / countsPerVolt;
 
             calData[sensorID][calWritePtr[sensorID]++] = [tDat, calAnalog];

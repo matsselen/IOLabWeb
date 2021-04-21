@@ -223,6 +223,7 @@ async function readLoop() {
 async function sendRecord(byteArray) {
     if (port != null) {
         dataBoxTx.innerHTML += byteArray + '\n';
+        console.log(byteArray);
 
         if (byteArray[1] == 0x21) {
             stopTime = Date.now();

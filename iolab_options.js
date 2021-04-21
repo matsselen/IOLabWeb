@@ -177,76 +177,87 @@ function buildCmdPicker() {
 
 //====================================================================
 // construct the drop-down menu for the DAC control
-function buildDacPicker() {
+async function buildDacPicker() {
 
-  var dacOption;
   for (let i = 0; i < iolabConfig.DACValues.length; i++) {
-    dacOption = document.createElement('option');
+    var dacOption = document.createElement('option');
     dacOption.value = 32 + iolabConfig.DACValues[i].val;        // the key-value for each DAC setting
     dacOption.innerText = iolabConfig.DACValues[i].lbl + " V";  // the menu text for each DAC setting
     dacPicker.appendChild(dacOption);
   }
   dacPicker.selectedIndex = 17;
 
-  // when the DAC voltage is changed
-  dacPicker.onchange = function () {
-    if (dbgInfo) {console.log("selecting dacPicker index ", dacPicker.selectedIndex);}
+  // when the DAC volt age is changed
+  dacPicker.onchange = async function () {
+    if (dbgInfo) { console.log("selecting dacPicker index ", dacPicker.selectedIndex); }
     let dacValue = dacPicker.options[dacPicker.selectedIndex].value;
 
     let remoteID = 1;
     let kvPair = parseInt(dacValue);
-    sendOutputConfig(remoteID, [1, 0x19, kvPair]);
-
+    await sendOutputConfig(remoteID, [1, 0x19, kvPair]);
+    setTimeout(async function () {
+      await sendOutputConfig(remoteID, [1, 0x19, kvPair]);
+    }, 25);
   }
 
   // when the DAC box is checked or unchecked
-  dacCK.addEventListener("click", function () {
-    if (dbgInfo) {console.log("In dacCK", this.checked);}
+  dacCK.addEventListener("click", async function () {
+    if (dbgInfo) { console.log("In dacCK", this.checked); }
 
     let remoteID = 1;
     if (this.checked) {
-      sendOutputConfig(remoteID, [1, 0x19, 1]);
+      await sendOutputConfig(remoteID, [1, 0x19, 1]);
+      setTimeout(async function () {
+        await sendOutputConfig(remoteID, [1, 0x19, 1]);
+      }, 25);
+
+
     } else {
-      sendOutputConfig(remoteID, [1, 0x19, 0]);      
+      await sendOutputConfig(remoteID, [1, 0x19, 0]);
+      setTimeout(async function () {
+        await sendOutputConfig(remoteID, [1, 0x19, 0]);
+      }, 25);
     }
   });
 }
 
 //====================================================================
 // construct the drop-down menu for the D5 control
-function buildD5Picker() {
+async function buildD5Picker() {
 
-  var d5Option;
   for (let i = 0; i < iolabConfig.D5pwmValues.length; i++) {
-    d5Option = document.createElement('option');
+    var d5Option = document.createElement('option');
     let key = iolabConfig.D5pwmValues[i].key;
     let value = iolabConfig.D5pwmValues[i].val;
-    d5Option.value = key<<5 + value;                               // the key-value for each setting
+    d5Option.value = (key << 5) + value;                            // the key-value for each setting
     d5Option.innerText = iolabConfig.D5pwmValues[i].lbl + " Hz";  // the menu text for each setting
     d5Picker.appendChild(d5Option);
   }
-  d5Picker.selectedIndex = 13;
+  d5Picker.selectedIndex = 41;
+  d5Ctl.hidden = true; // dont display this intil I figure out how to make it more reliable
 
-  // when the DAC voltage is changed
-  d5Picker.onchange = function () {
-    if (dbgInfo) {console.log("selecting dacPicker index ", dacPicker.selectedIndex);}
-    let d5Value = dacPicker.options[dacPicker.selectedIndex].value;
-
+  // when the D5 setting is changed
+  d5Picker.onchange = async function () {
+    console.log("selecting dacPicker index ", d5Picker.selectedIndex);
+    
     let remoteID = 1;
+    let d5Value = d5Picker.options[d5Picker.selectedIndex].value;
     let kvPair = parseInt(d5Value);
-    sendOutputConfig(remoteID, [1, 0x13, kvPair]);
+    console.log(kvPair);
+    await sendOutputConfig(remoteID, [1, 0x13, kvPair]);
 
   }
 
-  // when the DAC box is checked or unchecked
-  d5CK.addEventListener("click", function () {
-    if (dbgInfo) {console.log("In d5CK", this.checked);}
+  // when the D5 box is checked or unchecked
+  d5CK.addEventListener("click", async function () {
+    if (dbgInfo) { console.log("In d5CK", this.checked); }
 
     let remoteID = 1;
+
     if (this.checked) {
-      sendOutputConfig(remoteID, [1, 0x13, 2]);
+      await sendOutputConfig(remoteID, [1, 0x13, 2]); 
     } else {
-      sendOutputConfig(remoteID, [1, 0x13, 0]);      
+      await sendOutputConfig(remoteID, [1, 0x13, 0]);
     }
   });
 
