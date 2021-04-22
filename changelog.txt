@@ -39,6 +39,7 @@ Better rezero icon.
 
 v0.8.58 4/22/2021
 Added up/down DAC controls
+Some housekeeping
 
 
 ====================== WORK ========================================
