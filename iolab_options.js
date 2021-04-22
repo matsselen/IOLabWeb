@@ -185,6 +185,8 @@ async function buildDacPicker() {
     dacOption.innerText = iolabConfig.DACValues[i].lbl + " V";  // the menu text for each DAC setting
     dacPicker.appendChild(dacOption);
   }
+
+  dacCtl.hidden = false;
   dacPicker.selectedIndex = 17;
 
   // when the DAC voltage is changed
@@ -193,14 +195,14 @@ async function buildDacPicker() {
   }
 
   dacUp.addEventListener("click", async function () {
-    if(dacPicker.selectedIndex < (iolabConfig.DACValues.length-1)) {
+    if (dacPicker.selectedIndex < (iolabConfig.DACValues.length - 1)) {
       dacPicker.selectedIndex += 1;
     }
     setDacVoltage();
   });
 
   dacDn.addEventListener("click", async function () {
-    if(dacPicker.selectedIndex > 0) {
+    if (dacPicker.selectedIndex > 0) {
       dacPicker.selectedIndex -= 1;
     }
     setDacVoltage();
@@ -211,66 +213,136 @@ async function buildDacPicker() {
     dacEnable(this.checked);
   });
 
-  async function setDacVoltage(remoteID = 1) {
-    let dacValue = dacPicker.options[dacPicker.selectedIndex].value;
-    let kvPair = parseInt(dacValue);
-    await sendOutputConfig(remoteID, [1, 0x19, kvPair]);
-    setTimeout(async function () {
-      await sendOutputConfig(remoteID, [1, 0x19, kvPair]);
-    }, 25);
+}
+
+//====================================================================
+// construct the drop-down menu for buzzer control
+async function buildBzzPicker() {
+
+  for (let i = 0; i < iolabConfig.BzzValues.length; i++) {
+    var bzzOption = document.createElement('option');
+    bzzOption.value = 32 + iolabConfig.BzzValues[i].val;        // the key-value for each DAC setting
+    bzzOption.innerText = iolabConfig.BzzValues[i].lbl + " Hz";  // the menu text for each DAC setting
+    bzzPicker.appendChild(bzzOption);
   }
 
-  async function dacEnable(turnOn, remoteID = 1) {
-    let val = 0;
-    if (turnOn) val = 1;
-    await sendOutputConfig(remoteID, [1, 0x19, val]);
-    setTimeout(async function () {
-      await sendOutputConfig(remoteID, [1, 0x19, val]);
-    }, 25);
+  bzzCtl.hidden = false;
+  bzzPicker.selectedIndex = 8;
 
+  // when the Bzz frequency is changed
+  bzzPicker.onchange = async function () {
+    setBzzFrequency();
   }
+
+  // when the Bzz box is checked or unchecked
+  bzzCK.addEventListener("click", async function () {
+    bzzEnable(this.checked);
+  });
+
 }
 
 //====================================================================
 // construct the drop-down menu for the D5 control
 async function buildD5Picker() {
 
-  for (let i = 0; i < iolabConfig.D5pwmValues.length; i++) {
+  for (let i = 0; i < iolabConfig.D5Values.length; i++) {
     var d5Option = document.createElement('option');
-    let key = iolabConfig.D5pwmValues[i].key;
-    let value = iolabConfig.D5pwmValues[i].val;
+    let key = iolabConfig.D5Values[i].key;
+    let value = iolabConfig.D5Values[i].val;
     d5Option.value = (key << 5) + value;                            // the key-value for each setting
-    d5Option.innerText = iolabConfig.D5pwmValues[i].lbl + " Hz";  // the menu text for each setting
+    d5Option.innerText = iolabConfig.D5Values[i].lbl + " Hz";  // the menu text for each setting
     d5Picker.appendChild(d5Option);
   }
-  d5Picker.selectedIndex = 41;
-  d5Ctl.hidden = true; // dont display this intil I figure out how to make it more reliable
 
-  // when the D5 setting is changed
+  d5Ctl.hidden = true; // hide this until option menu is available 
+  d5Picker.selectedIndex = 3;
+
+  // when the D5 voltage is changed
   d5Picker.onchange = async function () {
-    console.log("selecting dacPicker index ", d5Picker.selectedIndex);
-
-    let remoteID = 1;
-    let d5Value = d5Picker.options[d5Picker.selectedIndex].value;
-    let kvPair = parseInt(d5Value);
-    console.log(kvPair);
-    await sendOutputConfig(remoteID, [1, 0x13, kvPair]);
-
+    setD5Frequency();
   }
 
   // when the D5 box is checked or unchecked
   d5CK.addEventListener("click", async function () {
-    if (dbgInfo) { console.log("In d5CK", this.checked); }
-
-    let remoteID = 1;
-
-    if (this.checked) {
-      await sendOutputConfig(remoteID, [1, 0x13, 2]);
-    } else {
-      await sendOutputConfig(remoteID, [1, 0x13, 0]);
-    }
+    d5Enable(this.checked);
   });
 
+}
+
+//====================================================================
+// The D6 output is just controlled by a checkbox. 
+// It powers up to Z, check = 1, uncheck = 0.  
+async function buildD6control() {
+
+  d6Ctl.hidden = false; // dont display this until the option is selected
+
+  // when the D6 box is checked or unchecked
+  d6CK.addEventListener("click", async function () {
+    d6Enable(this.checked);
+  });
+
+}
+
+// methods used by event handlers
+async function setDacVoltage(remoteID = 1) {
+  let dacValue = dacPicker.options[dacPicker.selectedIndex].value;
+  let kvPair = parseInt(dacValue);
+  await sendOutputConfig(remoteID, [1, 0x19, kvPair]);
+  setTimeout(async function () {
+    await sendOutputConfig(remoteID, [1, 0x19, kvPair]);
+  }, 25);
+}
+
+async function dacEnable(turnOn, remoteID = 1) {
+  let val = 0;
+  if (turnOn) val = 1;
+  await sendOutputConfig(remoteID, [1, 0x19, val]);
+  setTimeout(async function () {
+    await sendOutputConfig(remoteID, [1, 0x19, val]);
+  }, 25);
+}
+
+async function setD5Frequency(remoteID = 1) {
+  let D5Value = d5Picker.options[d5Picker.selectedIndex].value;
+  let kvPair = parseInt(D5Value);
+  await sendOutputConfig(remoteID, [1, 0x13, kvPair]);
+}
+
+async function d5Enable(turnOn, remoteID = 1) {
+  let val = 0;
+  if (turnOn) val = 2;
+  let D5Value = d5Picker.options[d5Picker.selectedIndex].value;
+  let kvPair = parseInt(D5Value);
+  await sendOutputConfig(remoteID, [2, 0x13, kvPair, 0x13, val]);
+}
+
+async function setBzzFrequency(remoteID = 1) {
+  let bzzValue = bzzPicker.options[bzzPicker.selectedIndex].value;
+  let kvPair = parseInt(bzzValue);
+  await sendOutputConfig(remoteID, [1, 0x18, kvPair]);
+  setTimeout(async function () {
+    await sendOutputConfig(remoteID, [1, 0x18, kvPair]);
+  }, 25);
+}
+
+async function bzzEnable(turnOn, remoteID = 1) {
+  let val = 0;
+  if (turnOn) val = 1;
+  let bzzValue = bzzPicker.options[bzzPicker.selectedIndex].value;
+  let kvPair = parseInt(bzzValue);
+  await sendOutputConfig(remoteID, [2, 0x18, kvPair, 0x18, val]);
+  setTimeout(async function () {
+    await sendOutputConfig(remoteID, [2, 0x18, kvPair, 0x18, val]);
+  }, 25);
+}
+
+async function d6Enable(turnOn, remoteID = 1) {
+  let val = 32;
+  if (turnOn) val = 33;
+  await sendOutputConfig(remoteID, [2, 0x14, 2, 0x14, val]);
+  setTimeout(async function () {
+    await sendOutputConfig(remoteID, [2, 0x14, 2, 0x14, val]);
+  }, 25);
 }
 
 //====================================================================

@@ -87,24 +87,31 @@
           <td><button id="butSend" type="button"
               title="Loads your IOLab with the configuration selected below">Configure</button>
 
-            &nbsp;&nbsp;&nbsp;
-            <span id="calBtnTxt">Calibrate:</span> <a id="calBtn" title="Calibration" style="cursor: pointer;">
-              <img id="calBtnImg" src="images/calruler1.PNG" valign="bottom"></a>
-
             &nbsp;&nbsp;
-            <span id="dacCtl" title="Control DAC Output">
-              DAC:<input id="dacCK" type="checkbox">
-              <select class="daqselect" id="dacPicker"></select>
+            <span id="calBtnTxt">Cal:</span> <a id="calBtn" title="Calibration" style="cursor: pointer;">
+              <img id="calBtnImg" src="images/calruler3.PNG" height="20" valign="top"></a>
+
+            &nbsp;
+            <span id="dacCtl" title="Control DAC Output">DAC:<input id="dacCK" type="checkbox">
+              <select class="doutselect" id="dacPicker"></select>
               <a id="dacUp" title="Increase DAC voltage" style="cursor: pointer;">
                 <img src="images/dacUp.PNG" height="18" valign="top"></a>
               <a id="dacDn" title="Decrease DAC voltage" style="cursor: pointer;">
                 <img src="images/dacDn.PNG" height="18" valign="top"></a>
             </span>
 
-            &nbsp;&nbsp;
-            <span id="d5Ctl" title="Control D5 Output">
-              D5:<input id="d5CK" type="checkbox">
-              <select class="d5select" id="d5Picker"></select>
+            &nbsp;
+            <span id="d6Ctl" title="Buzzer Control">D6:<input id="d6CK" type="checkbox">
+            </span>
+
+            &nbsp;
+            <span id="bzzCtl" title="Buzzer Control">Bzz:<input id="bzzCK" type="checkbox">
+              <select class="doutselect" id="bzzPicker"></select>
+            </span>
+
+            &nbsp;
+            <span id="d5Ctl" title="Control D5 Output">D5:<input id="d5CK" type="checkbox">
+              <select class="doutselect" id="d5Picker"></select>
             </span>
 
           </td>
@@ -112,8 +119,9 @@
         <tr>
           <td>
             <label><select class="selection" id="config-picker" title="Configuration Selector"></select></label>
-          </td>
-          <td>&nbsp;&nbsp;<button id="butStartStop" type="button" title="Start or Stop an aquisition">Start</button>
+
+            &nbsp;&nbsp;
+          <button id="butStartStop" type="button" title="Start or Stop an aquisition">Start</button>
           </td>
         </tr>
       </table>
