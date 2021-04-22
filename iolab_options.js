@@ -242,14 +242,13 @@ async function buildBzzPicker() {
     bzzPicker.appendChild(bzzOption);
   }
   bzzPicker.selectedIndex = 8;
-  setBzzFrequency();
-  
-  // when the DAC voltage is changed
+
+  // when the Bzz frequency is changed
   bzzPicker.onchange = async function () {
     setBzzFrequency();
   }
 
-  // when the DAC box is checked or unchecked
+  // when the Bzz box is checked or unchecked
   bzzCK.addEventListener("click", async function () {
     bzzEnable(this.checked);
   });
@@ -266,9 +265,11 @@ async function buildBzzPicker() {
   async function bzzEnable(turnOn, remoteID = 1) {
     let val = 0;
     if (turnOn) val = 1;
-    await sendOutputConfig(remoteID, [1, 0x18, val]);
+    let bzzValue = bzzPicker.options[bzzPicker.selectedIndex].value;
+    let kvPair = parseInt(bzzValue);    
+    await sendOutputConfig(remoteID, [2, 0x18, kvPair, 0x18, val]);
     setTimeout(async function () {
-      await sendOutputConfig(remoteID, [1, 0x18, val]);
+      await sendOutputConfig(remoteID, [2, 0x18, kvPair, 0x18, val]);
     }, 25);
 
   }
@@ -286,33 +287,33 @@ async function buildD5Picker() {
     d5Option.innerText = iolabConfig.D5Values[i].lbl + " Hz";  // the menu text for each setting
     d5Picker.appendChild(d5Option);
   }
-  d5Picker.selectedIndex = 41;
-  //d5Ctl.hidden = true; // dont display this intil I figure out how to make it more reliable
 
-  // when the D5 setting is changed
+  d5Ctl.hidden = true; // dont display this until the option is selected
+  d5Picker.selectedIndex = 3;
+
+  // when the D5 voltage is changed
   d5Picker.onchange = async function () {
-    console.log("selecting dacPicker index ", d5Picker.selectedIndex);
-
-    let remoteID = 1;
-    let d5Value = d5Picker.options[d5Picker.selectedIndex].value;
-    let kvPair = parseInt(d5Value);
-    console.log(kvPair);
-    await sendOutputConfig(remoteID, [1, 0x13, kvPair]);
-
+    setD5Frequency();
   }
 
   // when the D5 box is checked or unchecked
   d5CK.addEventListener("click", async function () {
-    if (dbgInfo) { console.log("In d5CK", this.checked); }
-
-    let remoteID = 1;
-
-    if (this.checked) {
-      await sendOutputConfig(remoteID, [1, 0x13, 2]);
-    } else {
-      await sendOutputConfig(remoteID, [1, 0x13, 0]);
-    }
+    d5Enable(this.checked);
   });
+
+  async function setD5Frequency(remoteID = 1) {
+    let D5Value = d5Picker.options[d5Picker.selectedIndex].value;
+    let kvPair = parseInt(D5Value);
+    await sendOutputConfig(remoteID, [1, 0x13, kvPair]);
+  }
+
+  async function d5Enable(turnOn, remoteID = 1) {
+    let val = 0;
+    if (turnOn) val = 2;
+    let D5Value = d5Picker.options[d5Picker.selectedIndex].value;
+    let kvPair = parseInt(D5Value);    
+    await sendOutputConfig(remoteID, [2, 0x13, kvPair, 0x13, val]);
+  }
 
 }
 

@@ -25,15 +25,15 @@ const configSelect = document.getElementById('configSelect');
 const cmdPicker = document.getElementById('cmd-picker');
 const configPicker = document.getElementById('config-picker');
 
-const dacCtl = document.getElementById('dacCtl');
-const dacPicker = document.getElementById('dacPicker');
-const dacCK = document.getElementById('dacCK');
-const dacUp = document.getElementById('dacUp');
-const dacDN = document.getElementById('dacDn');
+// const dacCtl = document.getElementById('dacCtl');
+// const dacPicker = document.getElementById('dacPicker');
+// const dacCK = document.getElementById('dacCK');
+// const dacUp = document.getElementById('dacUp');
+// const dacDN = document.getElementById('dacDn');
 
-const d5Ctl = document.getElementById('d5Ctl');
-const d5Picker = document.getElementById('d5Picker');
-const d5CK = document.getElementById('d5CK');
+// const d5Ctl = document.getElementById('d5Ctl');
+// const d5Picker = document.getElementById('d5Picker');
+// const d5CK = document.getElementById('d5CK');
 
 const dataBoxTx = document.getElementById("dataBoxTx");
 const dataBoxRx = document.getElementById("dataBoxRx");
