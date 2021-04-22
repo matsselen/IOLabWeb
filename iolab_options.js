@@ -185,6 +185,8 @@ async function buildDacPicker() {
     dacOption.innerText = iolabConfig.DACValues[i].lbl + " V";  // the menu text for each DAC setting
     dacPicker.appendChild(dacOption);
   }
+
+  dacCtl.hidden = false;
   dacPicker.selectedIndex = 17;
 
   // when the DAC voltage is changed
@@ -193,14 +195,14 @@ async function buildDacPicker() {
   }
 
   dacUp.addEventListener("click", async function () {
-    if(dacPicker.selectedIndex < (iolabConfig.DACValues.length-1)) {
+    if (dacPicker.selectedIndex < (iolabConfig.DACValues.length - 1)) {
       dacPicker.selectedIndex += 1;
     }
     setDacVoltage();
   });
 
   dacDn.addEventListener("click", async function () {
-    if(dacPicker.selectedIndex > 0) {
+    if (dacPicker.selectedIndex > 0) {
       dacPicker.selectedIndex -= 1;
     }
     setDacVoltage();
@@ -211,24 +213,6 @@ async function buildDacPicker() {
     dacEnable(this.checked);
   });
 
-  async function setDacVoltage(remoteID = 1) {
-    let dacValue = dacPicker.options[dacPicker.selectedIndex].value;
-    let kvPair = parseInt(dacValue);
-    await sendOutputConfig(remoteID, [1, 0x19, kvPair]);
-    setTimeout(async function () {
-      await sendOutputConfig(remoteID, [1, 0x19, kvPair]);
-    }, 25);
-  }
-
-  async function dacEnable(turnOn, remoteID = 1) {
-    let val = 0;
-    if (turnOn) val = 1;
-    await sendOutputConfig(remoteID, [1, 0x19, val]);
-    setTimeout(async function () {
-      await sendOutputConfig(remoteID, [1, 0x19, val]);
-    }, 25);
-
-  }
 }
 
 //====================================================================
@@ -241,6 +225,8 @@ async function buildBzzPicker() {
     bzzOption.innerText = iolabConfig.BzzValues[i].lbl + " Hz";  // the menu text for each DAC setting
     bzzPicker.appendChild(bzzOption);
   }
+
+  bzzCtl.hidden = false;
   bzzPicker.selectedIndex = 8;
 
   // when the Bzz frequency is changed
@@ -253,26 +239,6 @@ async function buildBzzPicker() {
     bzzEnable(this.checked);
   });
 
-  async function setBzzFrequency(remoteID = 1) {
-    let bzzValue = bzzPicker.options[bzzPicker.selectedIndex].value;
-    let kvPair = parseInt(bzzValue);
-    await sendOutputConfig(remoteID, [1, 0x18, kvPair]);
-    setTimeout(async function () {
-      await sendOutputConfig(remoteID, [1, 0x18, kvPair]);
-    }, 25);
-  }
-
-  async function bzzEnable(turnOn, remoteID = 1) {
-    let val = 0;
-    if (turnOn) val = 1;
-    let bzzValue = bzzPicker.options[bzzPicker.selectedIndex].value;
-    let kvPair = parseInt(bzzValue);    
-    await sendOutputConfig(remoteID, [2, 0x18, kvPair, 0x18, val]);
-    setTimeout(async function () {
-      await sendOutputConfig(remoteID, [2, 0x18, kvPair, 0x18, val]);
-    }, 25);
-
-  }
 }
 
 //====================================================================
@@ -288,7 +254,7 @@ async function buildD5Picker() {
     d5Picker.appendChild(d5Option);
   }
 
-  d5Ctl.hidden = true; // dont display this until the option is selected
+  d5Ctl.hidden = true; // hide this until option menu is available 
   d5Picker.selectedIndex = 3;
 
   // when the D5 voltage is changed
@@ -301,20 +267,82 @@ async function buildD5Picker() {
     d5Enable(this.checked);
   });
 
-  async function setD5Frequency(remoteID = 1) {
-    let D5Value = d5Picker.options[d5Picker.selectedIndex].value;
-    let kvPair = parseInt(D5Value);
-    await sendOutputConfig(remoteID, [1, 0x13, kvPair]);
-  }
+}
 
-  async function d5Enable(turnOn, remoteID = 1) {
-    let val = 0;
-    if (turnOn) val = 2;
-    let D5Value = d5Picker.options[d5Picker.selectedIndex].value;
-    let kvPair = parseInt(D5Value);    
-    await sendOutputConfig(remoteID, [2, 0x13, kvPair, 0x13, val]);
-  }
+//====================================================================
+// The D6 output is just controlled by a checkbox. 
+// It powers up to Z, check = 1, uncheck = 0.  
+async function buildD6control() {
 
+  d6Ctl.hidden = false; // dont display this until the option is selected
+
+  // when the D6 box is checked or unchecked
+  d6CK.addEventListener("click", async function () {
+    d6Enable(this.checked);
+  });
+
+}
+
+// methods used by event handlers
+async function setDacVoltage(remoteID = 1) {
+  let dacValue = dacPicker.options[dacPicker.selectedIndex].value;
+  let kvPair = parseInt(dacValue);
+  await sendOutputConfig(remoteID, [1, 0x19, kvPair]);
+  setTimeout(async function () {
+    await sendOutputConfig(remoteID, [1, 0x19, kvPair]);
+  }, 25);
+}
+
+async function dacEnable(turnOn, remoteID = 1) {
+  let val = 0;
+  if (turnOn) val = 1;
+  await sendOutputConfig(remoteID, [1, 0x19, val]);
+  setTimeout(async function () {
+    await sendOutputConfig(remoteID, [1, 0x19, val]);
+  }, 25);
+}
+
+async function setD5Frequency(remoteID = 1) {
+  let D5Value = d5Picker.options[d5Picker.selectedIndex].value;
+  let kvPair = parseInt(D5Value);
+  await sendOutputConfig(remoteID, [1, 0x13, kvPair]);
+}
+
+async function d5Enable(turnOn, remoteID = 1) {
+  let val = 0;
+  if (turnOn) val = 2;
+  let D5Value = d5Picker.options[d5Picker.selectedIndex].value;
+  let kvPair = parseInt(D5Value);
+  await sendOutputConfig(remoteID, [2, 0x13, kvPair, 0x13, val]);
+}
+
+async function setBzzFrequency(remoteID = 1) {
+  let bzzValue = bzzPicker.options[bzzPicker.selectedIndex].value;
+  let kvPair = parseInt(bzzValue);
+  await sendOutputConfig(remoteID, [1, 0x18, kvPair]);
+  setTimeout(async function () {
+    await sendOutputConfig(remoteID, [1, 0x18, kvPair]);
+  }, 25);
+}
+
+async function bzzEnable(turnOn, remoteID = 1) {
+  let val = 0;
+  if (turnOn) val = 1;
+  let bzzValue = bzzPicker.options[bzzPicker.selectedIndex].value;
+  let kvPair = parseInt(bzzValue);
+  await sendOutputConfig(remoteID, [2, 0x18, kvPair, 0x18, val]);
+  setTimeout(async function () {
+    await sendOutputConfig(remoteID, [2, 0x18, kvPair, 0x18, val]);
+  }, 25);
+}
+
+async function d6Enable(turnOn, remoteID = 1) {
+  let val = 32;
+  if (turnOn) val = 33;
+  await sendOutputConfig(remoteID, [2, 0x14, 2, 0x14, val]);
+  setTimeout(async function () {
+    await sendOutputConfig(remoteID, [2, 0x14, 2, 0x14, val]);
+  }, 25);
 }
 
 //====================================================================

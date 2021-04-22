@@ -25,15 +25,22 @@ const configSelect = document.getElementById('configSelect');
 const cmdPicker = document.getElementById('cmd-picker');
 const configPicker = document.getElementById('config-picker');
 
-// const dacCtl = document.getElementById('dacCtl');
-// const dacPicker = document.getElementById('dacPicker');
-// const dacCK = document.getElementById('dacCK');
-// const dacUp = document.getElementById('dacUp');
-// const dacDN = document.getElementById('dacDn');
+const dacCtl = document.getElementById('dacCtl');
+const dacPicker = document.getElementById('dacPicker');
+const dacCK = document.getElementById('dacCK');
+const dacUp = document.getElementById('dacUp');
+const dacDN = document.getElementById('dacDn');
 
-// const d5Ctl = document.getElementById('d5Ctl');
-// const d5Picker = document.getElementById('d5Picker');
-// const d5CK = document.getElementById('d5CK');
+const bzzCtl = document.getElementById('bzzCtl');
+const bzzPicker = document.getElementById('bzzPicker');
+const bzzCK = document.getElementById('bzzCK');
+
+const d5Ctl = document.getElementById('d5Ctl');
+const d5Picker = document.getElementById('d5Picker');
+const d5CK = document.getElementById('d5CK');
+
+const d6Ctl = document.getElementById('d6Ctl');
+const d6CK = document.getElementById('d6CK');
 
 const dataBoxTx = document.getElementById("dataBoxTx");
 const dataBoxRx = document.getElementById("dataBoxRx");
@@ -41,7 +48,7 @@ const debugStuff = document.getElementById("debugStuff");
 const inputFile = document.getElementById("inputfile");
 const downloadData = document.getElementById("downloadData");
 
-const calDiv = document.getElementById("calDiv");//mas-test
+const calDiv = document.getElementById("calDiv");
 const calText = document.getElementById("ttext_p");
 const calchooseF = document.getElementById("calChooseF");
 const calchooseFtxt = document.getElementById("calChooseFtxt");
@@ -101,6 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
   buildCmdPicker();
   buildDacPicker();
   buildD5Picker();
+  buildD6control();
   buildBzzPicker();
 
   // fetch any existing calibrations from browser cookies
