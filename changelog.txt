@@ -37,6 +37,10 @@ Added A1/A2/A3 readout.
 Fixed error when checking/unchecking empty plot  
 Better rezero icon.
 
+v0.8.58 4/22/2021
+Added up/down DAC controls
+
+
 ====================== WORK ========================================
 Known Bugs:
 - Sometimes plots empty if not viewed before csv export of another plot (only Mac ?)

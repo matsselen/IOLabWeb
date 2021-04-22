@@ -202,9 +202,13 @@ async function buildDacPicker() {
     setDacVoltage();
   });
 
-  async function setDacVoltage() {
+  // when the DAC box is checked or unchecked
+  dacCK.addEventListener("click", async function () {
+    dacEnable(this.checked);
+  });
+
+  async function setDacVoltage(remoteID = 1) {
     let dacValue = dacPicker.options[dacPicker.selectedIndex].value;
-    let remoteID = 1;
     let kvPair = parseInt(dacValue);
     await sendOutputConfig(remoteID, [1, 0x19, kvPair]);
     setTimeout(async function () {
@@ -212,22 +216,15 @@ async function buildDacPicker() {
     }, 25);
   }
 
-  // when the DAC box is checked or unchecked
-  dacCK.addEventListener("click", async function () {
-    let remoteID = 1;
-    if (this.checked) {
-      await sendOutputConfig(remoteID, [1, 0x19, 1]);
-      setTimeout(async function () {
-        await sendOutputConfig(remoteID, [1, 0x19, 1]);
-      }, 25);
+  async function dacEnable(turnOn, remoteID = 1) {
+    let val = 0;
+    if (turnOn) val = 1;
+    await sendOutputConfig(remoteID, [1, 0x19, val]);
+    setTimeout(async function () {
+      await sendOutputConfig(remoteID, [1, 0x19, val]);
+    }, 25);
 
-    } else {
-      await sendOutputConfig(remoteID, [1, 0x19, 0]);
-      setTimeout(async function () {
-        await sendOutputConfig(remoteID, [1, 0x19, 0]);
-      }, 25);
-    }
-  });
+  }
 }
 
 //====================================================================
@@ -248,7 +245,7 @@ async function buildD5Picker() {
   // when the D5 setting is changed
   d5Picker.onchange = async function () {
     console.log("selecting dacPicker index ", d5Picker.selectedIndex);
-    
+
     let remoteID = 1;
     let d5Value = d5Picker.options[d5Picker.selectedIndex].value;
     let kvPair = parseInt(d5Value);
@@ -264,7 +261,7 @@ async function buildD5Picker() {
     let remoteID = 1;
 
     if (this.checked) {
-      await sendOutputConfig(remoteID, [1, 0x13, 2]); 
+      await sendOutputConfig(remoteID, [1, 0x13, 2]);
     } else {
       await sendOutputConfig(remoteID, [1, 0x13, 0]);
     }
