@@ -101,6 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
   buildCmdPicker();
   buildDacPicker();
   buildD5Picker();
+  buildBzzPicker();
 
   // fetch any existing calibrations from browser cookies
   calArrayList = [];

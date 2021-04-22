@@ -17,7 +17,7 @@ var iolabConfig =
       "highSpeed": false,
       "frequencies": [100, 200, 400],
       "sensors": [{ "sensorKey": 3, "sampleRate": 380 }],
-      "chartRateList":[380],
+      "chartRateList": [380],
       "chartList": [3]
     },
     {
@@ -26,7 +26,7 @@ var iolabConfig =
       "highSpeed": false,
       "frequencies": [100, 200, 400],
       "sensors": [{ "sensorKey": 1, "sampleRate": 400 }],
-      "chartRateList":[400],
+      "chartRateList": [400],
       "chartList": [1]
     },
     {
@@ -40,8 +40,8 @@ var iolabConfig =
         { "sensorKey": 3, "sampleRate": 95 },
         { "sensorKey": 12, "sampleRate": 100 }
       ],
-      "chartRateList":[100,80,95,100],
-      "chartList": [1,2,3,12]
+      "chartRateList": [100, 80, 95, 100],
+      "chartList": [1, 2, 3, 12]
     },
     {
       "code": 4,
@@ -53,8 +53,8 @@ var iolabConfig =
         { "sensorKey": 8, "sampleRate": 200 },
         { "sensorKey": 9, "sampleRate": 100 }
       ],
-      "chartRateList":[200,200,100,100,100],
-      "chartList": [1,8,15,16,17]
+      "chartRateList": [200, 200, 100, 100, 100],
+      "chartList": [1, 8, 15, 16, 17]
     },
     {
       "code": 5,
@@ -66,8 +66,8 @@ var iolabConfig =
         { "sensorKey": 3, "sampleRate": 95 },
         { "sensorKey": 8, "sampleRate": 100 }
       ],
-      "chartRateList":[100,95,100],
-      "chartList": [1,3,8]
+      "chartRateList": [100, 95, 100],
+      "chartList": [1, 3, 8]
     },
     {
       "code": 6,
@@ -80,8 +80,8 @@ var iolabConfig =
         { "sensorKey": 11, "sampleRate": 50 },
         { "sensorKey": 26, "sampleRate": 50 }
       ],
-      "chartRateList":[100,400,50,50],
-      "chartList": [4,7,11,26]
+      "chartRateList": [100, 400, 50, 50],
+      "chartList": [4, 7, 11, 26]
     },
     // {
     //   "code": 7,
@@ -103,8 +103,8 @@ var iolabConfig =
         { "sensorKey": 23, "sampleRate": 100 }
       ],
       //"chartList": [12,13,21,22,23]
-      "chartRateList":[200,100,100,100],
-      "chartList": [12,21,22,23]
+      "chartRateList": [200, 100, 100, 100],
+      "chartList": [12, 21, 22, 23]
     },
     {
       "code": 9,
@@ -112,7 +112,7 @@ var iolabConfig =
       "highSpeed": false,
       "frequencies": [1200, 2400],
       "sensors": [{ "sensorKey": 6, "sampleRate": 2400 }],
-      "chartRateList":[2400],
+      "chartRateList": [2400],
       "chartList": [6]
     },
     {
@@ -124,8 +124,8 @@ var iolabConfig =
         { "sensorKey": 2, "sampleRate": 80 },
         { "sensorKey": 12, "sampleRate": 400 }
       ],
-      "chartRateList":[80,400],
-      "chartList": [2,12]
+      "chartRateList": [80, 400],
+      "chartList": [2, 12]
     },
     {
       "code": 12,
@@ -140,9 +140,9 @@ var iolabConfig =
         { "sensorKey": 22, "sampleRate": 100 },
         { "sensorKey": 23, "sampleRate": 100 }
       ],
-      "chartRateList":[200,100,100,100],
+      "chartRateList": [200, 100, 100, 100],
       //"chartList": [12,13,21,22,23]
-      "chartList": [12,21,22,23]
+      "chartList": [12, 21, 22, 23]
     },
     {
       "code": 32,
@@ -150,7 +150,7 @@ var iolabConfig =
       "highSpeed": true,
       "frequencies": [800],
       "sensors": [{ "sensorKey": 3, "sampleRate": 760 }],
-      "chartRateList":[760],
+      "chartRateList": [760],
       "chartList": [3]
     },
     {
@@ -159,7 +159,7 @@ var iolabConfig =
       "highSpeed": true,
       "frequencies": [800],
       "sensors": [{ "sensorKey": 1, "sampleRate": 800 }],
-      "chartRateList":[800],
+      "chartRateList": [800],
       "chartList": [1]
     },
     {
@@ -172,8 +172,8 @@ var iolabConfig =
         { "sensorKey": 2, "sampleRate": 80 },
         { "sensorKey": 3, "sampleRate": 190 }
       ],
-      "chartRateList":[400,80,190],
-      "chartList": [1,2,3]
+      "chartRateList": [400, 80, 190],
+      "chartList": [1, 2, 3]
     },
     {
       "code": 35,
@@ -186,8 +186,8 @@ var iolabConfig =
         { "sensorKey": 8, "sampleRate": 200 },
         { "sensorKey": 9, "sampleRate": 100 }
       ],
-      "chartRateList":[200,190,200,100,100,100],
-      "chartList": [1,3,8,15,16,17]
+      "chartRateList": [200, 190, 200, 100, 100, 100],
+      "chartList": [1, 3, 8, 15, 16, 17]
     },
     {
       "code": 36,
@@ -200,8 +200,8 @@ var iolabConfig =
         { "sensorKey": 3, "sampleRate": 190 },
         { "sensorKey": 10, "sampleRate": 200 }
       ],
-      "chartRateList":[200,80,190,200],
-      "chartList": [1,2,3,10]
+      "chartRateList": [200, 80, 190, 200],
+      "chartList": [1, 2, 3, 10]
     },
     {
       "code": 37,
@@ -213,8 +213,8 @@ var iolabConfig =
         { "sensorKey": 3, "sampleRate": 190 },
         { "sensorKey": 8, "sampleRate": 200 }
       ],
-      "chartRateList":[200,190,200],
-      "chartList": [1,3,8]
+      "chartRateList": [200, 190, 200],
+      "chartList": [1, 3, 8]
     },
     {
       "code": 38,
@@ -235,8 +235,8 @@ var iolabConfig =
         { "sensorKey": 21, "sampleRate": 100 }
       ],
       //"chartList": [1,2,3,4,7,8,15,16,17,11,12,13,21]
-      "chartRateList":[100,80,95,100,100,100,100,100,100,100,100,100],
-      "chartList": [1,2,3,4,7,8,15,16,17,11,12,21]
+      "chartRateList": [100, 80, 95, 100, 100, 100, 100, 100, 100, 100, 100, 100],
+      "chartList": [1, 2, 3, 4, 7, 8, 15, 16, 17, 11, 12, 21]
     },
     {
       "code": 39,
@@ -244,7 +244,7 @@ var iolabConfig =
       "highSpeed": true,
       "frequencies": [2400, 4800],
       "sensors": [{ "sensorKey": 6, "sampleRate": 4800 }],
-      "chartRateList":[4800],
+      "chartRateList": [4800],
       "chartList": [6]
     },
     {
@@ -253,7 +253,7 @@ var iolabConfig =
       "highSpeed": true,
       "frequencies": [2400, 4800],
       "sensors": [{ "sensorKey": 7, "sampleRate": 4800 }],
-      "chartRateList":[4800],
+      "chartRateList": [4800],
       "chartList": [7]
     },
     {
@@ -265,8 +265,8 @@ var iolabConfig =
         { "sensorKey": 1, "sampleRate": 800 },
         { "sensorKey": 7, "sampleRate": 800 }
       ],
-      "chartRateList":[800,800],
-      "chartList": [1,7]
+      "chartRateList": [800, 800],
+      "chartList": [1, 7]
     },
     {
       "code": 42,
@@ -277,8 +277,8 @@ var iolabConfig =
         { "sensorKey": 1, "sampleRate": 800 },
         { "sensorKey": 8, "sampleRate": 800 }
       ],
-      "chartRateList":[800,800],
-      "chartList": [1,8]
+      "chartRateList": [800, 800],
+      "chartList": [1, 8]
     },
     {
       "code": 43,
@@ -289,8 +289,8 @@ var iolabConfig =
         { "sensorKey": 6, "sampleRate": 2400 },
         { "sensorKey": 7, "sampleRate": 2400 }
       ],
-      "chartRateList":[2400,2400],
-      "chartList": [6,7]
+      "chartRateList": [2400, 2400],
+      "chartList": [6, 7]
     },
     {
       "code": 44,
@@ -298,7 +298,7 @@ var iolabConfig =
       "highSpeed": true,
       "frequencies": [200, 400, 800],
       "sensors": [{ "sensorKey": 10, "sampleRate": 800 }],
-      "chartRateList":[800],
+      "chartRateList": [800],
       "chartList": [10]
     },
     {
@@ -307,7 +307,7 @@ var iolabConfig =
       "highSpeed": true,
       "frequencies": [2400, 4800],
       "sensors": [{ "sensorKey": 12, "sampleRate": 4800 }],
-      "chartRateList":[4800],
+      "chartRateList": [4800],
       "chartList": [12]
     },
     {
@@ -316,7 +316,7 @@ var iolabConfig =
       "highSpeed": true,
       "frequencies": [2400, 4800],
       "sensors": [{ "sensorKey": 8, "sampleRate": 4800 }],
-      "chartRateList":[4800],
+      "chartRateList": [4800],
       "chartList": [8]
     },
     {
@@ -329,24 +329,24 @@ var iolabConfig =
         { "sensorKey": 22, "sampleRate": 400 },
         { "sensorKey": 23, "sampleRate": 400 }
       ],
-      "chartRateList":[400,400,400],
-      "chartList": [21,22,23]
-    },  
+      "chartRateList": [400, 400, 400],
+      "chartList": [21, 22, 23]
+    },
     {
       "code": 48,
       "desc": "ECG6",
       "highSpeed": true,
       "frequencies": [100, 200, 400],
       "sensors": [{ "sensorKey": 27, "sampleRate": 400 }],
-      "chartRateList":[400,400,400,400,400,400,400,400,400],
-      "chartList": [31,32,33,34,35,36,37,38,39]
+      "chartRateList": [400, 400, 400, 400, 400, 400, 400, 400, 400],
+      "chartList": [31, 32, 33, 34, 35, 36, 37, 38, 39]
     },
     {
       "code": 49,
       "desc": "ECG6 HS",
       "sensors": [{ "sensorKey": 27, "sampleRate": 800 }],
-      "chartRateList":[800,800,800,800,800,800,800,800,800],
-      "chartList": [31,32,33,34,35,36,37,38,39]
+      "chartRateList": [800, 800, 800, 800, 800, 800, 800, 800, 800],
+      "chartList": [31, 32, 33, 34, 35, 36, 37, 38, 39]
     }
   ],
   "sensors": [
@@ -355,13 +355,13 @@ var iolabConfig =
       "desc": 'RSSI',
       "shortDesc": 'RSSI',
       "label": 'Sig Str',
-      "csvLabels":["Signal (arb)"],
+      "csvLabels": ["Signal (arb)"],
       "legends": ['Signal strength'],
       "pathColors": ["#0000BB"],
       "scales": [0, 100],
       "zeroable": false,
       "autoScaleY": false
-    },    
+    },
     {
       "code": 1,
       "desc": "Accelerometer",
@@ -369,7 +369,7 @@ var iolabConfig =
       "label": "a",
       "unit": "m/s²",
       "legends": ["Ax", "Ay", "Az"],
-      "csvLabels":["Ax (m/s/s)", "Ay (m/s/s)", "Az (m/s/s)"],
+      "csvLabels": ["Ax (m/s/s)", "Ay (m/s/s)", "Az (m/s/s)"],
       "pathColors": ["#BB0000", "#0000BB", "#008800"],
       "scales": [-20, 20],
       "minScalingRate": 5,
@@ -383,7 +383,7 @@ var iolabConfig =
       "label": "B",
       "unit": "µT",
       "legends": ["Bx", "By", "Bz"],
-      "csvLabels":["Bx (uT)", "By (uT)", "Bz (uT)"],
+      "csvLabels": ["Bx (uT)", "By (uT)", "Bz (uT)"],
       "pathColors": ["#BB0000", "#0000BB", "#008800"],
       "scales": [-150, 150],
       "minScalingRate": 5,
@@ -397,7 +397,7 @@ var iolabConfig =
       "label": "ω",
       "unit": "rad/s",
       "legends": ["ωx", "ωy", "ωz"],
-      "csvLabels":["wx (rad/s)", "wy (rad/s)", "wz (rad/s)"],
+      "csvLabels": ["wx (rad/s)", "wy (rad/s)", "wz (rad/s)"],
       "pathColors": ["#BB0000", "#0000BB", "#008800"],
       "scales": [-20, 20],
       "minScalingRate": 5,
@@ -411,7 +411,7 @@ var iolabConfig =
       "label": "P",
       "unit": "kPa",
       "legends": ["Pressure"],
-      "csvLabels":["Press (kPa)"],
+      "csvLabels": ["Press (kPa)"],
       "pathColors": ["#0000BB"],
       "scales": [0, 120],
       "zeroable": false,
@@ -424,7 +424,7 @@ var iolabConfig =
       "label": "Intensity",
       "unit": "n/a",
       "legends": ["Intensity"],
-      "csvLabels":["Intensity (arb)"],
+      "csvLabels": ["Intensity (arb)"],
       "pathColors": ["#0000BB"],
       "scales": [0, 10],
       "fftThreshold": 25,
@@ -438,7 +438,7 @@ var iolabConfig =
       "label": "Intensity",
       "unit": "n/a",
       "legends": ["Intensity"],
-      "csvLabels":["Intensity (arb)"],
+      "csvLabels": ["Intensity (arb)"],
       "pathColors": ["#0000BB"],
       "scales": [0, 10],
       "zeroable": false,
@@ -451,7 +451,7 @@ var iolabConfig =
       "label": "Fᵧ",
       "unit": "N",
       "legends": ["Fᵧ"],
-      "csvLabels":["Fy (N)"],
+      "csvLabels": ["Fy (N)"],
       "pathColors": ["#0000BB"],
       "scales": [-5, 5],
       "zeroable": true,
@@ -638,7 +638,7 @@ var iolabConfig =
       "unit": "mV",
       "legends": ["I", "II", "III", "aVR", "aVL", "aVF", "V1", "V3", "V6"],
       "csvLabels": ["I (mV)", "II (mV)", "III (mV)", "aVR (mV)", "aVL (mV)", "aVF (mV)", "V1 (mV)", "V3 (mV)", "V6 (mV)"],
-      "pathColors": ["#819263","#3ca13b","#546f6f","#342fdd","#49a6ff","#515095","#c34947","#fa3430","#a73431"],
+      "pathColors": ["#819263", "#3ca13b", "#546f6f", "#342fdd", "#49a6ff", "#515095", "#c34947", "#fa3430", "#a73431"],
       "timeAverageIdx": 2,
       "zeroable": false,
       "scales": [-0.5, 0.5],
@@ -719,7 +719,7 @@ var iolabConfig =
       "pathColors": ["#c34947"],
       "zeroable": false,
       "scales": [-0.5, 0.5],
-    },    
+    },
     {// calculated sensor (derived from sensor 27)
       "code": 38,
       "desc": "Electrocardiogram",
@@ -730,7 +730,7 @@ var iolabConfig =
       "pathColors": ["#fa3430"],
       "zeroable": false,
       "scales": [-0.5, 0.5],
-    },  
+    },
     {// calculated sensor (derived from sensor 27)
       "code": 39,
       "desc": "Electrocardiogram",
@@ -741,7 +741,7 @@ var iolabConfig =
       "pathColors": ["#a73431"],
       "zeroable": false,
       "scales": [-0.5, 0.5],
-    },  
+    },
     {
       "code": 241,
       "desc": "Electrocardiogram (9-old)",
@@ -766,135 +766,201 @@ var iolabConfig =
     }
   ],
   "DACValues": [
-    { "val": 0, "lbl": "0.0"},
-    { "val": 1, "lbl": "0.1"},
-    { "val": 2, "lbl": "0.2"},
-    { "val": 3, "lbl": "0.3"},
-    { "val": 4, "lbl": "0.4"},
-    { "val": 5, "lbl": "0.5"},
-    { "val": 6, "lbl": "0.6"},
-    { "val": 7, "lbl": "0.7"},
-    { "val": 8, "lbl": "0.8"},
-    { "val": 9, "lbl": "1.0"},
-    { "val": 10, "lbl": "1.1"},
-    { "val": 11, "lbl": "1.2"},
-    { "val": 12, "lbl": "1.3"},
-    { "val": 13, "lbl": "1.4"},
-    { "val": 14, "lbl": "1.5"},
-    { "val": 15, "lbl": "1.6"},
-    { "val": 16, "lbl": "1.7"},
-    { "val": 17, "lbl": "1.8"},
-    { "val": 18, "lbl": "1.9"},
-    { "val": 19, "lbl": "2.0"},
-    { "val": 20, "lbl": "2.1"},
-    { "val": 21, "lbl": "2.2"},
-    { "val": 22, "lbl": "2.3"},
-    { "val": 23, "lbl": "2.4"},
-    { "val": 24, "lbl": "2.5"},
-    { "val": 25, "lbl": "2.7"},
-    { "val": 26, "lbl": "2.8"},
-    { "val": 27, "lbl": "2.9"},
-    { "val": 28, "lbl": "3.0"},
-    { "val": 29, "lbl": "3.1"},
-    { "val": 30, "lbl": "3.2"},
-    { "val": 31, "lbl": "3.3"}
+    { "val": 0, "lbl": "0.0" },
+    { "val": 1, "lbl": "0.1" },
+    { "val": 2, "lbl": "0.2" },
+    { "val": 3, "lbl": "0.3" },
+    { "val": 4, "lbl": "0.4" },
+    { "val": 5, "lbl": "0.5" },
+    { "val": 6, "lbl": "0.6" },
+    { "val": 7, "lbl": "0.7" },
+    { "val": 8, "lbl": "0.8" },
+    { "val": 9, "lbl": "1.0" },
+    { "val": 10, "lbl": "1.1" },
+    { "val": 11, "lbl": "1.2" },
+    { "val": 12, "lbl": "1.3" },
+    { "val": 13, "lbl": "1.4" },
+    { "val": 14, "lbl": "1.5" },
+    { "val": 15, "lbl": "1.6" },
+    { "val": 16, "lbl": "1.7" },
+    { "val": 17, "lbl": "1.8" },
+    { "val": 18, "lbl": "1.9" },
+    { "val": 19, "lbl": "2.0" },
+    { "val": 20, "lbl": "2.1" },
+    { "val": 21, "lbl": "2.2" },
+    { "val": 22, "lbl": "2.3" },
+    { "val": 23, "lbl": "2.4" },
+    { "val": 24, "lbl": "2.5" },
+    { "val": 25, "lbl": "2.7" },
+    { "val": 26, "lbl": "2.8" },
+    { "val": 27, "lbl": "2.9" },
+    { "val": 28, "lbl": "3.0" },
+    { "val": 29, "lbl": "3.1" },
+    { "val": 30, "lbl": "3.2" },
+    { "val": 31, "lbl": "3.3" }
   ],
-  "D5pwmValues": [
-    { "key": 1, "val": 0, "lbl": "20"},
-    { "key": 1, "val": 1, "lbl": "25"},
-    { "key": 1, "val": 2, "lbl": "30"},
-    { "key": 1, "val": 3, "lbl": "35"},
-    { "key": 1, "val": 4, "lbl": "40"},
-    { "key": 1, "val": 5, "lbl": "45"},
-    { "key": 1, "val": 6, "lbl": "50"},
-    { "key": 1, "val": 7, "lbl": "55"},
-    { "key": 1, "val": 8, "lbl": "60"},
-    { "key": 1, "val": 9, "lbl": "65"},
-    { "key": 1, "val": 10, "lbl": "70"},
-    { "key": 1, "val": 11, "lbl": "75"},
-    { "key": 1, "val": 12, "lbl": "80"},
-    { "key": 1, "val": 13, "lbl": "85"},
-    { "key": 1, "val": 14, "lbl": "90"},
-    { "key": 1, "val": 15, "lbl": "95"},
-    { "key": 1, "val": 16, "lbl": "100"},
-    { "key": 1, "val": 17, "lbl": "150"},
-    { "key": 1, "val": 18, "lbl": "200"},
-    { "key": 1, "val": 19, "lbl": "250"},
-    { "key": 1, "val": 20, "lbl": "300"},
-    { "key": 1, "val": 21, "lbl": "350"},
-    { "key": 1, "val": 22, "lbl": "400"},
-    { "key": 1, "val": 23, "lbl": "450"},
-    { "key": 1, "val": 24, "lbl": "500"},
-    { "key": 1, "val": 25, "lbl": "600"},
-    { "key": 1, "val": 26, "lbl": "700"},
-    { "key": 1, "val": 27, "lbl": "800"},
-    { "key": 1, "val": 28, "lbl": "900"},
-    { "key": 1, "val": 29, "lbl": "1000"},
-    { "key": 1, "val": 30, "lbl": "1100"},
-    { "key": 1, "val": 31, "lbl": "1200"},
-    { "key": 2, "val": 0, "lbl": "1400"},
-    { "key": 2, "val": 1, "lbl": "1600"},
-    { "key": 2, "val": 2, "lbl": "1800"},
-    { "key": 2, "val": 3, "lbl": "2000"},
-    { "key": 2, "val": 4, "lbl": "2200"},
-    { "key": 2, "val": 5, "lbl": "2400"},
-    { "key": 2, "val": 6, "lbl": "2600"},
-    { "key": 2, "val": 7, "lbl": "2800"},
-    { "key": 2, "val": 8, "lbl": "3000"},
-    { "key": 2, "val": 9, "lbl": "3200"},
-    { "key": 2, "val": 10, "lbl": "3400"},
-    { "key": 2, "val": 11, "lbl": "3600"},
-    { "key": 2, "val": 12, "lbl": "3800"},
-    { "key": 2, "val": 13, "lbl": "4000"},
-    { "key": 2, "val": 14, "lbl": "4200"},
-    { "key": 2, "val": 15, "lbl": "4400"},
-    { "key": 2, "val": 16, "lbl": "4600"},
-    { "key": 2, "val": 17, "lbl": "4800"},
-    { "key": 2, "val": 18, "lbl": "5000"},
-    { "key": 2, "val": 19, "lbl": "5500"},
-    { "key": 2, "val": 20, "lbl": "6000"},
-    { "key": 2, "val": 21, "lbl": "6500"},
-    { "key": 2, "val": 22, "lbl": "7000"},
-    { "key": 2, "val": 23, "lbl": "7500"},
-    { "key": 2, "val": 24, "lbl": "8000"},
-    { "key": 2, "val": 25, "lbl": "8500"},
-    { "key": 2, "val": 26, "lbl": "9000"},
-    { "key": 2, "val": 27, "lbl": "9500"},
-    { "key": 2, "val": 28, "lbl": "10000"},
-    { "key": 2, "val": 29, "lbl": "10500"},
-    { "key": 2, "val": 30, "lbl": "11000"},
-    { "key": 2, "val": 31, "lbl": "11500"},
-    { "key": 3, "val": 0, "lbl": "12000"},
-    { "key": 3, "val": 1, "lbl": "12500"},
-    { "key": 3, "val": 2, "lbl": "13000"},
-    { "key": 3, "val": 3, "lbl": "13500"},
-    { "key": 3, "val": 4, "lbl": "14000"},
-    { "key": 3, "val": 5, "lbl": "14500"},
-    { "key": 3, "val": 6, "lbl": "15000"},
-    { "key": 3, "val": 7, "lbl": "15500"},
-    { "key": 3, "val": 8, "lbl": "16000"},
-    { "key": 3, "val": 9, "lbl": "16500"},
-    { "key": 3, "val": 10, "lbl": "17000"},
-    { "key": 3, "val": 11, "lbl": "18000"},
-    { "key": 3, "val": 12, "lbl": "19000"},
-    { "key": 3, "val": 13, "lbl": "20000"},
-    { "key": 3, "val": 14, "lbl": "21000"},
-    { "key": 3, "val": 15, "lbl": "22000"},
-    { "key": 3, "val": 16, "lbl": "23000"},
-    { "key": 3, "val": 17, "lbl": "24000"},
-    { "key": 3, "val": 18, "lbl": "25000"},
-    { "key": 3, "val": 19, "lbl": "26000"},
-    { "key": 3, "val": 20, "lbl": "27000"},
-    { "key": 3, "val": 21, "lbl": "28000"},
-    { "key": 3, "val": 22, "lbl": "29000"},
-    { "key": 3, "val": 23, "lbl": "30000"},
-    { "key": 3, "val": 24, "lbl": "31000"},
-    { "key": 3, "val": 25, "lbl": "32000"},
-    { "key": 3, "val": 26, "lbl": "33000"},
-    { "key": 3, "val": 27, "lbl": "34000"},
-    { "key": 3, "val": 28, "lbl": "35000"},
-    { "key": 3, "val": 29, "lbl": "36000"},
-    { "key": 3, "val": 30, "lbl": "37000"},
-    { "key": 3, "val": 31, "lbl": "37500"}
-  ]  
+  "D5Values": [
+    { "key": 1, "val": 0, "lbl": "20" },
+    { "key": 1, "val": 1, "lbl": "25" },
+    { "key": 1, "val": 2, "lbl": "30" },
+    { "key": 1, "val": 3, "lbl": "35" },
+    { "key": 1, "val": 4, "lbl": "40" },
+    { "key": 1, "val": 5, "lbl": "45" },
+    { "key": 1, "val": 6, "lbl": "50" },
+    { "key": 1, "val": 7, "lbl": "55" },
+    { "key": 1, "val": 8, "lbl": "60" },
+    { "key": 1, "val": 9, "lbl": "65" },
+    { "key": 1, "val": 10, "lbl": "70" },
+    { "key": 1, "val": 11, "lbl": "75" },
+    { "key": 1, "val": 12, "lbl": "80" },
+    { "key": 1, "val": 13, "lbl": "85" },
+    { "key": 1, "val": 14, "lbl": "90" },
+    { "key": 1, "val": 15, "lbl": "95" },
+    { "key": 1, "val": 16, "lbl": "100" },
+    { "key": 1, "val": 17, "lbl": "150" },
+    { "key": 1, "val": 18, "lbl": "200" },
+    { "key": 1, "val": 19, "lbl": "250" },
+    { "key": 1, "val": 20, "lbl": "300" },
+    { "key": 1, "val": 21, "lbl": "350" },
+    { "key": 1, "val": 22, "lbl": "400" },
+    { "key": 1, "val": 23, "lbl": "450" },
+    { "key": 1, "val": 24, "lbl": "500" },
+    { "key": 1, "val": 25, "lbl": "600" },
+    { "key": 1, "val": 26, "lbl": "700" },
+    { "key": 1, "val": 27, "lbl": "800" },
+    { "key": 1, "val": 28, "lbl": "900" },
+    { "key": 1, "val": 29, "lbl": "1000" },
+    { "key": 1, "val": 30, "lbl": "1100" },
+    { "key": 1, "val": 31, "lbl": "1200" },
+    { "key": 2, "val": 0, "lbl": "1400" },
+    { "key": 2, "val": 1, "lbl": "1600" },
+    { "key": 2, "val": 2, "lbl": "1800" },
+    { "key": 2, "val": 3, "lbl": "2000" },
+    { "key": 2, "val": 4, "lbl": "2200" },
+    { "key": 2, "val": 5, "lbl": "2400" },
+    { "key": 2, "val": 6, "lbl": "2600" },
+    { "key": 2, "val": 7, "lbl": "2800" },
+    { "key": 2, "val": 8, "lbl": "3000" },
+    { "key": 2, "val": 9, "lbl": "3200" },
+    { "key": 2, "val": 10, "lbl": "3400" },
+    { "key": 2, "val": 11, "lbl": "3600" },
+    { "key": 2, "val": 12, "lbl": "3800" },
+    { "key": 2, "val": 13, "lbl": "4000" },
+    { "key": 2, "val": 14, "lbl": "4200" },
+    { "key": 2, "val": 15, "lbl": "4400" },
+    { "key": 2, "val": 16, "lbl": "4600" },
+    { "key": 2, "val": 17, "lbl": "4800" },
+    { "key": 2, "val": 18, "lbl": "5000" },
+    { "key": 2, "val": 19, "lbl": "5500" },
+    { "key": 2, "val": 20, "lbl": "6000" },
+    { "key": 2, "val": 21, "lbl": "6500" },
+    { "key": 2, "val": 22, "lbl": "7000" },
+    { "key": 2, "val": 23, "lbl": "7500" },
+    { "key": 2, "val": 24, "lbl": "8000" },
+    { "key": 2, "val": 25, "lbl": "8500" },
+    { "key": 2, "val": 26, "lbl": "9000" },
+    { "key": 2, "val": 27, "lbl": "9500" },
+    { "key": 2, "val": 28, "lbl": "10000" },
+    { "key": 2, "val": 29, "lbl": "10500" },
+    { "key": 2, "val": 30, "lbl": "11000" },
+    { "key": 2, "val": 31, "lbl": "11500" },
+    { "key": 3, "val": 0, "lbl": "12000" },
+    { "key": 3, "val": 1, "lbl": "12500" },
+    { "key": 3, "val": 2, "lbl": "13000" },
+    { "key": 3, "val": 3, "lbl": "13500" },
+    { "key": 3, "val": 4, "lbl": "14000" },
+    { "key": 3, "val": 5, "lbl": "14500" },
+    { "key": 3, "val": 6, "lbl": "15000" },
+    { "key": 3, "val": 7, "lbl": "15500" },
+    { "key": 3, "val": 8, "lbl": "16000" },
+    { "key": 3, "val": 9, "lbl": "16500" },
+    { "key": 3, "val": 10, "lbl": "17000" },
+    { "key": 3, "val": 11, "lbl": "18000" },
+    { "key": 3, "val": 12, "lbl": "19000" },
+    { "key": 3, "val": 13, "lbl": "20000" },
+    { "key": 3, "val": 14, "lbl": "21000" },
+    { "key": 3, "val": 15, "lbl": "22000" },
+    { "key": 3, "val": 16, "lbl": "23000" },
+    { "key": 3, "val": 17, "lbl": "24000" },
+    { "key": 3, "val": 18, "lbl": "25000" },
+    { "key": 3, "val": 19, "lbl": "26000" },
+    { "key": 3, "val": 20, "lbl": "27000" },
+    { "key": 3, "val": 21, "lbl": "28000" },
+    { "key": 3, "val": 22, "lbl": "29000" },
+    { "key": 3, "val": 23, "lbl": "30000" },
+    { "key": 3, "val": 24, "lbl": "31000" },
+    { "key": 3, "val": 25, "lbl": "32000" },
+    { "key": 3, "val": 26, "lbl": "33000" },
+    { "key": 3, "val": 27, "lbl": "34000" },
+    { "key": 3, "val": 28, "lbl": "35000" },
+    { "key": 3, "val": 29, "lbl": "36000" },
+    { "key": 3, "val": 30, "lbl": "37000" },
+    { "key": 3, "val": 31, "lbl": "37500" }
+  ],
+  "BzzValues": [
+    { "key": 1, "val": 0, "lbl": "50" },
+    { "key": 1, "val": 1, "lbl": "60" },
+    { "key": 1, "val": 2, "lbl": "70" },
+    { "key": 1, "val": 3, "lbl": "80" },
+    { "key": 1, "val": 4, "lbl": "90" },
+    { "key": 1, "val": 5, "lbl": "100" },
+    { "key": 1, "val": 6, "lbl": "120" },
+    { "key": 1, "val": 7, "lbl": "150" },
+    { "key": 1, "val": 8, "lbl": "200" },
+    { "key": 1, "val": 9, "lbl": "240" },
+    { "key": 1, "val": 10, "lbl": "250" },
+    { "key": 1, "val": 11, "lbl": "300" },
+    { "key": 1, "val": 12, "lbl": "350" },
+    { "key": 1, "val": 13, "lbl": "400" },
+    { "key": 1, "val": 14, "lbl": "450" },
+    { "key": 1, "val": 15, "lbl": "480" },
+    { "key": 1, "val": 16, "lbl": "500" },
+    { "key": 1, "val": 17, "lbl": "600" },
+    { "key": 1, "val": 18, "lbl": "700" },
+    { "key": 1, "val": 19, "lbl": "800" },
+    { "key": 1, "val": 20, "lbl": "900" },
+    { "key": 1, "val": 21, "lbl": "960" },
+    { "key": 1, "val": 22, "lbl": "1000" },
+    { "key": 1, "val": 23, "lbl": "1100" },
+    { "key": 1, "val": 24, "lbl": "1200" },
+    { "key": 1, "val": 25, "lbl": "1300" },
+    { "key": 1, "val": 26, "lbl": "1400" },
+    { "key": 1, "val": 27, "lbl": "1500" },
+    { "key": 1, "val": 28, "lbl": "1600" },
+    { "key": 1, "val": 29, "lbl": "1700" },
+    { "key": 1, "val": 30, "lbl": "1800" },
+    { "key": 1, "val": 31, "lbl": "1900" },
+    { "key": 2, "val": 0, "lbl": "2000" },
+    { "key": 2, "val": 1, "lbl": "2100" },
+    { "key": 2, "val": 2, "lbl": "2200" },
+    { "key": 2, "val": 3, "lbl": "2300" },
+    { "key": 2, "val": 4, "lbl": "2398" },
+    { "key": 2, "val": 5, "lbl": "2400" },
+    { "key": 2, "val": 6, "lbl": "2402" },
+    { "key": 2, "val": 7, "lbl": "2500" },
+    { "key": 2, "val": 8, "lbl": "2750" },
+    { "key": 2, "val": 9, "lbl": "3000" },
+    { "key": 2, "val": 10, "lbl": "3250" },
+    { "key": 2, "val": 11, "lbl": "3500" },
+    { "key": 2, "val": 12, "lbl": "3750" },
+    { "key": 2, "val": 13, "lbl": "4000" },
+    { "key": 2, "val": 14, "lbl": "4250" },
+    { "key": 2, "val": 15, "lbl": "4500" },
+    { "key": 2, "val": 16, "lbl": "4750" },
+    { "key": 2, "val": 17, "lbl": "4798" },
+    { "key": 2, "val": 18, "lbl": "4800" },
+    { "key": 2, "val": 19, "lbl": "4802" },
+    { "key": 2, "val": 20, "lbl": "4900" },
+    { "key": 2, "val": 21, "lbl": "5000" },
+    { "key": 2, "val": 22, "lbl": "5250" },
+    { "key": 2, "val": 23, "lbl": "5500" },
+    { "key": 2, "val": 24, "lbl": "5750" },
+    { "key": 2, "val": 25, "lbl": "6000" },
+    { "key": 2, "val": 26, "lbl": "6250" },
+    { "key": 2, "val": 27, "lbl": "6500" },
+    { "key": 2, "val": 28, "lbl": "6750" },
+    { "key": 2, "val": 29, "lbl": "7000" },
+    { "key": 2, "val": 30, "lbl": "7250" },
+    { "key": 2, "val": 31, "lbl": "7500" }
+  ]
 }

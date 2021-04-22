@@ -232,19 +232,75 @@ async function buildDacPicker() {
 }
 
 //====================================================================
+// construct the drop-down menu for buzzer control
+async function buildBzzPicker() {
+
+  for (let i = 0; i < iolabConfig.BzzValues.length; i++) {
+    var bzzOption = document.createElement('option');
+    bzzOption.value = 32 + iolabConfig.BzzValues[i].val;        // the key-value for each DAC setting
+    bzzOption.innerText = iolabConfig.BzzValues[i].lbl + " Hz";  // the menu text for each DAC setting
+    bzzPicker.appendChild(bzzOption);
+  }
+  bzzPicker.selectedIndex = 17;
+
+  // when the DAC voltage is changed
+  bzzPicker.onchange = async function () {
+    setBzzFrequency();
+  }
+
+  // dacUp.addEventListener("click", async function () {
+  //   if(bzzPicker.selectedIndex < (iolabConfig.DACValues.length-1)) {
+  //     bzzPicker.selectedIndex += 1;
+  //   }
+  //   setBzzFrequency();
+  // });
+
+  // dacDn.addEventListener("click", async function () {
+  //   if(bzzPicker.selectedIndex > 0) {
+  //     bzzPicker.selectedIndex -= 1;
+  //   }
+  //   setBzzFrequency();
+  // });
+
+  // when the DAC box is checked or unchecked
+  bzzCK.addEventListener("click", async function () {
+    bzzEnable(this.checked);
+  });
+
+  async function setBzzFrequency(remoteID = 1) {
+    let bzzValue = bzzPicker.options[bzzPicker.selectedIndex].value;
+    let kvPair = parseInt(bzzValue);
+    await sendOutputConfig(remoteID, [1, 0x18, kvPair]);
+    setTimeout(async function () {
+      await sendOutputConfig(remoteID, [1, 0x18, kvPair]);
+    }, 25);
+  }
+
+  async function bzzEnable(turnOn, remoteID = 1) {
+    let val = 0;
+    if (turnOn) val = 1;
+    await sendOutputConfig(remoteID, [1, 0x18, val]);
+    setTimeout(async function () {
+      await sendOutputConfig(remoteID, [1, 0x18, val]);
+    }, 25);
+
+  }
+}
+
+//====================================================================
 // construct the drop-down menu for the D5 control
 async function buildD5Picker() {
 
-  for (let i = 0; i < iolabConfig.D5pwmValues.length; i++) {
+  for (let i = 0; i < iolabConfig.D5Values.length; i++) {
     var d5Option = document.createElement('option');
-    let key = iolabConfig.D5pwmValues[i].key;
-    let value = iolabConfig.D5pwmValues[i].val;
+    let key = iolabConfig.D5Values[i].key;
+    let value = iolabConfig.D5Values[i].val;
     d5Option.value = (key << 5) + value;                            // the key-value for each setting
-    d5Option.innerText = iolabConfig.D5pwmValues[i].lbl + " Hz";  // the menu text for each setting
+    d5Option.innerText = iolabConfig.D5Values[i].lbl + " Hz";  // the menu text for each setting
     d5Picker.appendChild(d5Option);
   }
   d5Picker.selectedIndex = 41;
-  d5Ctl.hidden = true; // dont display this intil I figure out how to make it more reliable
+  //d5Ctl.hidden = true; // dont display this intil I figure out how to make it more reliable
 
   // when the D5 setting is changed
   d5Picker.onchange = async function () {
