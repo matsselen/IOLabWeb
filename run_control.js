@@ -213,9 +213,7 @@ async function readLoop() {
         } catch (e) {
             console.log("Error fetching data in readLoop");
         }
-
     }
-
 }
 
 //============================================
@@ -260,13 +258,5 @@ async function sendOutputConfig(remoteID, payload) {
     let byteArray = new Uint8Array(dataArray);
 
     // send the record 
-    await sendRecord(byteArray);
-
-    // setTimeout(async function () {
-    //     await sendRecord(byteArray);
-    //   }, 100);    
-
-    //   setTimeout(async function () {
-    //     await sendRecord(byteArray);
-    //   }, 200);   
+    await sendRecord(byteArray); 
 }
