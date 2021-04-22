@@ -241,26 +241,13 @@ async function buildBzzPicker() {
     bzzOption.innerText = iolabConfig.BzzValues[i].lbl + " Hz";  // the menu text for each DAC setting
     bzzPicker.appendChild(bzzOption);
   }
-  bzzPicker.selectedIndex = 17;
-
+  bzzPicker.selectedIndex = 8;
+  setBzzFrequency();
+  
   // when the DAC voltage is changed
   bzzPicker.onchange = async function () {
     setBzzFrequency();
   }
-
-  // dacUp.addEventListener("click", async function () {
-  //   if(bzzPicker.selectedIndex < (iolabConfig.DACValues.length-1)) {
-  //     bzzPicker.selectedIndex += 1;
-  //   }
-  //   setBzzFrequency();
-  // });
-
-  // dacDn.addEventListener("click", async function () {
-  //   if(bzzPicker.selectedIndex > 0) {
-  //     bzzPicker.selectedIndex -= 1;
-  //   }
-  //   setBzzFrequency();
-  // });
 
   // when the DAC box is checked or unchecked
   bzzCK.addEventListener("click", async function () {
