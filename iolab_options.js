@@ -187,11 +187,23 @@ async function buildDacPicker() {
   }
   dacPicker.selectedIndex = 17;
 
-  // when the DAC volt age is changed
+  // when the DAC voltage is changed
   dacPicker.onchange = async function () {
-    if (dbgInfo) { console.log("selecting dacPicker index ", dacPicker.selectedIndex); }
-    let dacValue = dacPicker.options[dacPicker.selectedIndex].value;
+    setDacVoltage();
+  }
 
+  dacUp.addEventListener("click", async function () {
+    dacPicker.selectedIndex += 1;
+    setDacVoltage();
+  });
+
+  dacDn.addEventListener("click", async function () {
+    dacPicker.selectedIndex -= 1;
+    setDacVoltage();
+  });
+
+  async function setDacVoltage() {
+    let dacValue = dacPicker.options[dacPicker.selectedIndex].value;
     let remoteID = 1;
     let kvPair = parseInt(dacValue);
     await sendOutputConfig(remoteID, [1, 0x19, kvPair]);
@@ -202,15 +214,12 @@ async function buildDacPicker() {
 
   // when the DAC box is checked or unchecked
   dacCK.addEventListener("click", async function () {
-    if (dbgInfo) { console.log("In dacCK", this.checked); }
-
     let remoteID = 1;
     if (this.checked) {
       await sendOutputConfig(remoteID, [1, 0x19, 1]);
       setTimeout(async function () {
         await sendOutputConfig(remoteID, [1, 0x19, 1]);
       }, 25);
-
 
     } else {
       await sendOutputConfig(remoteID, [1, 0x19, 0]);

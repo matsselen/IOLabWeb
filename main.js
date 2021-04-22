@@ -28,6 +28,8 @@ const configPicker = document.getElementById('config-picker');
 const dacCtl = document.getElementById('dacCtl');
 const dacPicker = document.getElementById('dacPicker');
 const dacCK = document.getElementById('dacCK');
+const dacUp = document.getElementById('dacUp');
+const dacDN = document.getElementById('dacDn');
 
 const d5Ctl = document.getElementById('d5Ctl');
 const d5Picker = document.getElementById('d5Picker');

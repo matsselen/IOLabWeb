@@ -31,7 +31,8 @@
 <body>
   <header class="header">
     <h1>
-      <label class="iolab"> <span id="iolabWeb" title="Under Construction"> <i><b>iOLabWeb</b> (alpha release)</i></span> </label> &nbsp;&nbsp; |
+      <label class="iolab"> <span id="iolabWeb" title="Under Construction"> <i><b>iOLabWeb</b> (alpha
+            release)</i></span> </label> &nbsp;&nbsp; |
       &nbsp;&nbsp;
       <label> Dongle: <span id="dongleStatusDisplay" title="Plug in dongle and click on connect button">not connected
         </span> </label> &nbsp;&nbsp; | &nbsp;&nbsp;
@@ -53,24 +54,23 @@
         <td>
           <a href="" id="resetApp" onclick="resetApp()" title="Reloads and restarts IOLabWeb (data is cleared). "
             style="cursor: pointer;"><img src="images/reset1.PNG" valign="middle" height="28"></a>
-          
+
           <a id="butConnect" title="Make or Break Serial Connection to Dongle" style="cursor: pointer;">
             <img id="connectImg" src="images/connect.PNG" valign="middle"></a>
           &nbsp;
           <select id="cmd-picker"></select>&nbsp; &nbsp;
         </td>
         <td>
-            <span id="save" >
-              Save: <a id="downloadData"  
+          <span id="save">
+            Save: <a id="downloadData"
               title="Saves current data to an iozip file which can be shared and restored on this or other computers."
-              style="cursor: pointer;"><img
-              src="images/dload.PNG" valign="bottom" width="24" height="24"></a></span>
+              style="cursor: pointer;"><img src="images/dload.PNG" valign="bottom" width="24" height="24"></a></span>
         </td>
-        
+
         <td>&nbsp; &nbsp;</td>
 
         <td>
-          <span id="restore" title="Load previously saved data from an iozip file"> 
+          <span id="restore" title="Load previously saved data from an iozip file">
             Restore: <input type="file" accept=".iozip" size="20" name="inputfile" id="inputfile">
           </span>
         </td>
@@ -80,7 +80,7 @@
       </tr>
     </table>
 
-    <br/>
+    <br />
     <div id="configSelect">
       <table>
         <tr>
@@ -90,18 +90,22 @@
             &nbsp;&nbsp;&nbsp;
             <span id="calBtnTxt">Calibrate:</span> <a id="calBtn" title="Calibration" style="cursor: pointer;">
               <img id="calBtnImg" src="images/calruler1.PNG" valign="bottom"></a>
-              
-              &nbsp;&nbsp;
-              <span id="dacCtl" title="Control DAC Output">
-                DAC:<input id="dacCK" type="checkbox">
-                <select class="daqselect" id="dacPicker"></select>
-              </span>
-              
-              &nbsp;&nbsp;
-              <span id="d5Ctl" title="Control D5 Output">
-                D5:<input id="d5CK" type="checkbox">
-                <select class="d5select" id="d5Picker"></select>
-              </span>
+
+            &nbsp;&nbsp;
+            <span id="dacCtl" title="Control DAC Output">
+              DAC:<input id="dacCK" type="checkbox">
+              <select class="daqselect" id="dacPicker"></select>
+              <a id="dacUp" title="Increase DAC voltage" style="cursor: pointer;">
+                <img src="images/dacUp.PNG" height="18" valign="top"></a>
+              <a id="dacDn" title="Decrease DAC voltage" style="cursor: pointer;">
+                <img src="images/dacDn.PNG" height="18" valign="top"></a>
+            </span>
+
+            &nbsp;&nbsp;
+            <span id="d5Ctl" title="Control D5 Output">
+              D5:<input id="d5CK" type="checkbox">
+              <select class="d5select" id="d5Picker"></select>
+            </span>
 
           </td>
         </tr>

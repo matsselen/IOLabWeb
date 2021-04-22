@@ -46,7 +46,7 @@ Known Bugs:
   **These issues may be fixed in 0.8.55 but I still need to test this**
 
 Front Burner Tasks:
-- Add controls for other outputs (D5, buzzer, etc)
+- Add controls for other outputs (D4, D5, D6, buzzer)
 
 Back Burner Tasks:
 - Revisit time shift
