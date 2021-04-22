@@ -193,12 +193,16 @@ async function buildDacPicker() {
   }
 
   dacUp.addEventListener("click", async function () {
-    dacPicker.selectedIndex += 1;
+    if(dacPicker.selectedIndex < (iolabConfig.DACValues.length-1)) {
+      dacPicker.selectedIndex += 1;
+    }
     setDacVoltage();
   });
 
   dacDn.addEventListener("click", async function () {
-    dacPicker.selectedIndex -= 1;
+    if(dacPicker.selectedIndex > 0) {
+      dacPicker.selectedIndex -= 1;
+    }
     setDacVoltage();
   });
 
