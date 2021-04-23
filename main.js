@@ -108,7 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // when the options modal is invoked
   optButton.onclick = function () {
-    optionsModal();
+    openOptModal();
     optModal.style.display = "block";
   }
 

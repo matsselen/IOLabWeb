@@ -6,12 +6,28 @@
 
 //===================================================================
 // summarize some useful info from config.js
-function optionsModal() {
+function openOptModal() {
+  
+}
 
+function initializeOptions() {
+  getOptionCookies();
+  dispDac.checked = iolabOptions.showDac;
+  dispBzz.checked = iolabOptions.showBzz;
+  dispD4.checked = iolabOptions.showD4;
+  dispD5.checked = iolabOptions.showD5;
+  dispD6.checked = iolabOptions.showD6;
 }
 
 function endOpt() {
   optModal.style.display = "none";
+  iolabOptions.showDac = dispDac.checked;
+  iolabOptions.showBzz = dispBzz.checked;
+  iolabOptions.showD4 = dispD4.checked;
+  iolabOptions.showD5 = dispD5.hecked;
+  iolabOptions.showD6 = dispD6.checked;
+  setOptionCookie();
+
 }
 
 function selectOutput() {
@@ -22,6 +38,16 @@ function selectOutput() {
   d6Ctl.hidden = !dispD6.checked;
 }
 
+// default values
+var iolabOptions = {
+  "time":0,
+  "showDac":true,
+  "showBzz":true,
+  "showD4":false,
+  "showD5":false,
+  "showD6":true
+}
+
 // this creates a cookie on the client browser to hold the calibration values in "calArray" for 
 // sensor "sensorNum" on remote having "remoteID"
 function setOptionCookie() {
@@ -30,24 +56,23 @@ function setOptionCookie() {
 
   // the time now
   let d = new Date();
-  console.log("setCalCookie() called:" + d.toGMTString());
+  console.log("setOptionCookie() called:" + d.toGMTString());
 
   // figure out the expiration time
   let now = d.getTime();
   d.setTime(now + expireHours * 60 * 60 * 1000);
   let expirationTime = d.toGMTString();
 
-  let options = {};
+  // put the current time into the data being saved
+  iolabOptions.time = now;
 
   // assemble the values to save in the cookie
   // [timestamp, sensorID, options]
-  let values = "[" + now.toString() + "," + JSON.stringify(options);
-
-  values += "]";
+  let values = "[" + JSON.stringify(iolabOptions) + "]";
 
   // construct the cookie contents in the form "name=value; expires=expirationTime; path"
   let cookieText = "iolab_options =" + values + ";" + "expires=" + expirationTime + ";path=/";
-  console.log("setCalCookie(): " + cookieText);
+  console.log("setOptionCookie(): " + cookieText);
 
   // create the cookie
   document.cookie = cookieText;
@@ -58,24 +83,31 @@ function setOptionCookie() {
 // this fetches any option configuration data that has been stored in cookies by the client browser
 function getOptionCookies() {
 
+  console.log("In getOptionCookies():");
   let cookieList = decodeURIComponent(document.cookie).split(';');
 
+  let optRead = 0;
   for (let ind = 0; ind < cookieList.length; ind++) {
       let c = cookieList[ind];
 
-      if (c.indexOf("iolabcal_") > -1) {
-          let i1 = c.indexOf("[");
-          let i2 = c.indexOf("]") + 1;
+      if (c.indexOf("iolab_options") > -1) {
+          let i1 = c.indexOf("[")+1;
+          let i2 = c.length-1;
           let str = c.substring(i1, i2);
-          let a = JSON.parse(str);
-          // consistency check
-          if (a[3] == a.length - 4) {
-              calArrayList.push(a);
-              console.log("found ", a);
-          } else {
-              console.log("Inconsistent option cookie: " + a);
-          }
+          optRead = JSON.parse(str);
+          console.log(optRead); 
       }
+  }
+
+  if(optRead == 0) {
+    console.log("getOptionCookies(): No options found");
+  } else {
+    if (optRead.showD6 != undefined) {
+      iolabOptions = optRead;
+    } else {
+      console.log("getOptionCookies(): Options seem corrupt:");
+      console.log(optRead);
+    }
   }
 }
 
