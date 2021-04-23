@@ -106,6 +106,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 200);
   };
 
+  // fetch option from cookie if possible
+  initializeOptions();
+
   // when the options modal is invoked
   optButton.onclick = function () {
     openOptModal();

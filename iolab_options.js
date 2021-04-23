@@ -24,7 +24,7 @@ function endOpt() {
   iolabOptions.showDac = dispDac.checked;
   iolabOptions.showBzz = dispBzz.checked;
   iolabOptions.showD4 = dispD4.checked;
-  iolabOptions.showD5 = dispD5.hecked;
+  iolabOptions.showD5 = dispD5.checked;
   iolabOptions.showD6 = dispD6.checked;
   setOptionCookie();
 
