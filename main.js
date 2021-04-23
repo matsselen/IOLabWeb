@@ -30,17 +30,27 @@ const dacPicker = document.getElementById('dacPicker');
 const dacCK = document.getElementById('dacCK');
 const dacUp = document.getElementById('dacUp');
 const dacDN = document.getElementById('dacDn');
+const dispDac = document.getElementById('dispDac');
+
 
 const bzzCtl = document.getElementById('bzzCtl');
 const bzzPicker = document.getElementById('bzzPicker');
 const bzzCK = document.getElementById('bzzCK');
+const dispBzz = document.getElementById('dispBzz');
+
+const d4Ctl = document.getElementById('d4Ctl');
+const d4Picker = document.getElementById('d4Picker');
+const d4CK = document.getElementById('d4CK');
+const dispD4 = document.getElementById('dispD4');
 
 const d5Ctl = document.getElementById('d5Ctl');
 const d5Picker = document.getElementById('d5Picker');
 const d5CK = document.getElementById('d5CK');
+const dispD5 = document.getElementById('dispD5');
 
 const d6Ctl = document.getElementById('d6Ctl');
 const d6CK = document.getElementById('d6CK');
+const dispD6 = document.getElementById('dispD6');
 
 const dataBoxTx = document.getElementById("dataBoxTx");
 const dataBoxRx = document.getElementById("dataBoxRx");
@@ -113,16 +123,17 @@ document.addEventListener('DOMContentLoaded', () => {
     endCal();
   }
 
-    // when the calibration modal is closed
-    cospan.onclick = function () {
-      endOpt();
-    }
+  // when the calibration modal is closed
+  cospan.onclick = function () {
+    endOpt();
+  }
 
-  // get things ready to rumble
+  // get things ready
   getIOLabConfigInfo();
   buildConfigPicker();
   buildCmdPicker();
   buildDacPicker();
+  buildD4Picker();
   buildD5Picker();
   buildD6control();
   buildBzzPicker();

@@ -14,6 +14,14 @@ function endOpt() {
   optModal.style.display = "none";
 }
 
+function selectOutput() {
+  dacCtl.hidden = !dispDac.checked;
+  bzzCtl.hidden = !dispBzz.checked;
+  d4Ctl.hidden = !dispD4.checked;
+  d5Ctl.hidden = !dispD5.checked;
+  d6Ctl.hidden = !dispD6.checked;
+}
+
 //===================================================================
 // summarize some useful info from config.js
 function getIOLabConfigInfo() {
@@ -199,7 +207,7 @@ async function buildDacPicker() {
     dacPicker.appendChild(dacOption);
   }
 
-  dacCtl.hidden = false;
+  dacCtl.hidden = !dispDac.checked;
   dacPicker.selectedIndex = 17;
 
   // when the DAC voltage is changed
@@ -239,7 +247,7 @@ async function buildBzzPicker() {
     bzzPicker.appendChild(bzzOption);
   }
 
-  bzzCtl.hidden = false;
+  bzzCtl.hidden = !dispBzz.checked;
   bzzPicker.selectedIndex = 8;
 
   // when the Bzz frequency is changed
@@ -255,19 +263,47 @@ async function buildBzzPicker() {
 }
 
 //====================================================================
+// construct the drop-down menu for the D4 control
+async function buildD4Picker() {
+
+  for (let i = 0; i < iolabConfig.D4D5Values.length; i++) {
+    var d4Option = document.createElement('option');
+    let key = iolabConfig.D4D5Values[i].key;
+    let value = iolabConfig.D4D5Values[i].val;
+    d4Option.value = (key << 5) + value;                            // the key-value for each setting
+    d4Option.innerText = iolabConfig.D4D5Values[i].lbl + " Hz";  // the menu text for each setting
+    d4Picker.appendChild(d4Option);
+  }
+
+  d4Ctl.hidden = !dispD4.checked;
+  d4Picker.selectedIndex = 3;
+
+  // when the D4 voltage is changed
+  d4Picker.onchange = async function () {
+    setD4Frequency();
+  }
+
+  // when the D4 box is checked or unchecked
+  d4CK.addEventListener("click", async function () {
+    d4Enable(this.checked);
+  });
+
+}
+
+//====================================================================
 // construct the drop-down menu for the D5 control
 async function buildD5Picker() {
 
-  for (let i = 0; i < iolabConfig.D5Values.length; i++) {
+  for (let i = 0; i < iolabConfig.D4D5Values.length; i++) {
     var d5Option = document.createElement('option');
-    let key = iolabConfig.D5Values[i].key;
-    let value = iolabConfig.D5Values[i].val;
+    let key = iolabConfig.D4D5Values[i].key;
+    let value = iolabConfig.D4D5Values[i].val;
     d5Option.value = (key << 5) + value;                            // the key-value for each setting
-    d5Option.innerText = iolabConfig.D5Values[i].lbl + " Hz";  // the menu text for each setting
+    d5Option.innerText = iolabConfig.D4D5Values[i].lbl + " Hz";  // the menu text for each setting
     d5Picker.appendChild(d5Option);
   }
 
-  d5Ctl.hidden = true; // hide this until option menu is available 
+  d5Ctl.hidden = !dispD5.checked;
   d5Picker.selectedIndex = 3;
 
   // when the D5 voltage is changed
@@ -287,7 +323,7 @@ async function buildD5Picker() {
 // It powers up to Z, check = 1, uncheck = 0.  
 async function buildD6control() {
 
-  d6Ctl.hidden = false; // dont display this until the option is selected
+  d6Ctl.hidden = !dispD6.checked;
 
   // when the D6 box is checked or unchecked
   d6CK.addEventListener("click", async function () {
@@ -313,6 +349,20 @@ async function dacEnable(turnOn, remoteID = 1) {
   setTimeout(async function () {
     await sendOutputConfig(remoteID, [1, 0x19, val]);
   }, 25);
+}
+
+async function setD4Frequency(remoteID = 1) {
+  let D4Value = d4Picker.options[d4Picker.selectedIndex].value;
+  let kvPair = parseInt(D4Value);
+  await sendOutputConfig(remoteID, [1, 0x12, kvPair]);
+}
+
+async function d4Enable(turnOn, remoteID = 1) {
+  let val = 0;
+  if (turnOn) val = 2;
+  let D4Value = d4Picker.options[d4Picker.selectedIndex].value;
+  let kvPair = parseInt(D4Value);
+  await sendOutputConfig(remoteID, [2, 0x12, kvPair, 0x12, val]);
 }
 
 async function setD5Frequency(remoteID = 1) {

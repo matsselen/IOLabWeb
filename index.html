@@ -113,6 +113,11 @@
             </span>
 
             &nbsp;
+            <span id="d4Ctl" title="Control D4 Output">D4:<input id="d4CK" type="checkbox">
+              <select class="doutselect" id="d4Picker"></select>
+            </span>
+
+            &nbsp;
             <span id="d5Ctl" title="Control D5 Output">D5:<input id="d5CK" type="checkbox">
               <select class="doutselect" id="d5Picker"></select>
             </span>
@@ -201,37 +206,18 @@
         <span class="closeOpt">&times;</span>
       </div>
       <div class="optmodal-body">
-        <table class="a">
-          <div>This page will contain user options.</div>
+        <table>
+          <div>Output controls to display when remote is turned on:</div>
           <tr>
-            <td>
-              <div>aaa</div>
-            </td>
-            <td>
-              <div>bbb</div>
-            </td>
-            <td>
-              <div>ccc</div>
-            </td>
-            <td>
-              <div>ddd</div>
-            </td>          </tr>
-          <tr>
-            <td>
-              <div>111</div>
-            </td>
-            <td>
-              <div>222</div>
-            </td>
-            <td>
-              <div>333</div>
-            </td>
-            <td>
-              <div>444</div>
-            </td>          
+            <td><div><input id="dispDac" type="checkbox" onclick="selectOutput()" checked>DAC (analog) &nbsp;&nbsp;</div></td>
+            <td><div><input id="dispD6" type="checkbox" onclick="selectOutput()" checked>D6 (digital) &nbsp;&nbsp;</div></td>
+            <td><div><input id="dispBzz" type="checkbox" onclick="selectOutput()" checked>Buzzer &nbsp;&nbsp;</div> </td>
+            <td><div><input id="dispD4" type="checkbox" onclick="selectOutput()" >D4 (PWM) &nbsp;&nbsp;</div></td>            
+            <td><div><input id="dispD5" type="checkbox" onclick="selectOutput()" >D5 (PWM) &nbsp;&nbsp;</div></td>
           </tr>
+
         </table>
-        <div>These options will be sticky (cookies).</div>
+        <div> <br/><br/> </div>
       </div>
     </div>
   </div>
