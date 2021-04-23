@@ -130,6 +130,7 @@ var iolabConfig =
     {
       "code": 12,
       "desc": "Header 3V3",
+      "extra": " [3.3V ref]",
       "highSpeed": false,
       "priority": 10,
       "frequencies": [100, 200],

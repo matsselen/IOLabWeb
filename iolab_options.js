@@ -34,11 +34,16 @@ function getIOLabConfigInfo() {
       rateList.push(srate);
     }
 
+    // if there is any "extra" text tack it on to the end of the description
+    let extra = "";
+    if(fc.extra != undefined) {
+      extra = fc.extra;
+    }
+
     fc.sensList = sensList;
     fc.rateList = rateList;
-    fc.longDesc = longDesc.slice(0, -1);
-    fc.longDesc2 = longDesc2.slice(0, -1);
-
+    fc.longDesc = longDesc.slice(0, -1) + extra;
+    fc.longDesc2 = longDesc2.slice(0, -1) + extra;
 
     fixedConfigList[fc.code] = fc;
   }
