@@ -800,7 +800,7 @@ var iolabConfig =
     { "val": 30, "lbl": "3.2" },
     { "val": 31, "lbl": "3.3" }
   ],
-  "D5Values": [
+  "D4D5Values": [
     { "key": 1, "val": 0, "lbl": "20" },
     { "key": 1, "val": 1, "lbl": "25" },
     { "key": 1, "val": 2, "lbl": "30" },

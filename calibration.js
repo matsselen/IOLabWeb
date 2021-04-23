@@ -148,7 +148,7 @@ function calFclick() {
 
 function endCal() {
 
-    modal.style.display = "none";
+    calModal.style.display = "none";
     
     if (calMode) {
         calMode = false;
@@ -434,7 +434,7 @@ function setCalValues(remoteNumber, remoteID) {  // remoteNumber = 0,1 and remot
 // sensor "sensorNum" on remote having "remoteID"
 function setCalCookie(remoteID, sensorNum, calArray) {
 
-    let expireHours = 4380; // expires in 6 months
+    let expireHours = 17520; // expires in 2 years
 
     // the time now
     let d = new Date();

@@ -31,7 +31,7 @@
 <body>
   <header class="header">
     <h1>
-      <label class="iolab"> <span id="iolabWeb" title="Under Construction"> <i><b>iOLabWeb</b> (alpha
+      <label class="iolab"> <span id="iolabWeb" title="Expect Frequent Updates"> <i><b>iOLabWeb</b> (beta
             release)</i></span> </label> &nbsp;&nbsp; |
       &nbsp;&nbsp;
       <label> Dongle: <span id="dongleStatusDisplay" title="Plug in dongle and click on connect button">not connected
@@ -53,7 +53,10 @@
       <tr>
         <td>
           <a href="" id="resetApp" onclick="resetApp()" title="Reloads and restarts IOLabWeb (data is cleared). "
-            style="cursor: pointer;"><img src="images/reset1.PNG" valign="middle" height="28"></a>
+            style="cursor: pointer;"><img src="images/reset2.PNG" valign="middle" height="30"></a>
+            
+            <a id="optBtn" title="Manage Options" style="cursor: pointer; ">
+              <img src="images/gear.PNG" height="30" valign="top"></a>
 
           <a id="butConnect" title="Make or Break Serial Connection to Dongle" style="cursor: pointer;">
             <img id="connectImg" src="images/connect.PNG" valign="middle"></a>
@@ -110,6 +113,11 @@
             </span>
 
             &nbsp;
+            <span id="d4Ctl" title="Control D4 Output">D4:<input id="d4CK" type="checkbox">
+              <select class="doutselect" id="d4Picker"></select>
+            </span>
+
+            &nbsp;
             <span id="d5Ctl" title="Control D5 Output">D5:<input id="d5CK" type="checkbox">
               <select class="doutselect" id="d5Picker"></select>
             </span>
@@ -154,16 +162,16 @@
     <p> <button id="butDebug" type="button">Debug</button></p>
   </div>
 
-  <!-- The Modal -->
-  <div id="calModal" class="modal">
+  <!-- The Calibration Modal -->
+  <div id="calModal" class="calmodal">
 
-    <!-- Modal content -->
-    <div class="modal-content">
-      <div class="modal-header">
+    <!-- calmodal content -->
+    <div class="calmodal-content">
+      <div class="calmodal-header">
         <span>Calibration Control</span>
         <span class="closeCal">&times;</span>
       </div>
-      <div class="modal-body">
+      <div class="calmodal-body">
         <table class="a">
           <tr>
             <td>
@@ -186,9 +194,33 @@
         <div id="calDiv"></div>
       </div>
     </div>
-
   </div>
 
+  <!-- The Option Modal -->
+  <div id="optModal" class="optmodal">
+
+    <!-- optmodal content -->
+    <div class="optmodal-content">
+      <div class="optmodal-header">
+        <span>Options and Preferences</span>
+        <span class="closeOpt">&times;</span>
+      </div>
+      <div class="optmodal-body">
+        <table>
+          <div>Output controls to display (when remote is on):</div>
+          <tr>
+            <td><div><input id="dispDac" type="checkbox" onclick="selectOutput()" checked>DAC (analog) &nbsp;&nbsp;</div></td>
+            <td><div><input id="dispD6" type="checkbox" onclick="selectOutput()" checked>D6 (digital) &nbsp;&nbsp;</div></td>
+            <td><div><input id="dispBzz" type="checkbox" onclick="selectOutput()" checked>Buzzer &nbsp;&nbsp;</div> </td>
+            <td><div><input id="dispD4" type="checkbox" onclick="selectOutput()" >D4 (PWM) &nbsp;&nbsp;</div></td>            
+            <td><div><input id="dispD5" type="checkbox" onclick="selectOutput()" >D5 (PWM) &nbsp;&nbsp;</div></td>
+          </tr>
+
+        </table>
+        <div> <br/><br/> </div>
+      </div>
+    </div>
+  </div>
 </body>
 
 </html>

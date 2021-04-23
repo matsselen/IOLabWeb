@@ -45,6 +45,11 @@ v0.8.60 4/22/2021
 Add controls for other outputs (D5, D6, buzzer).
 Hide D5 control until option menu is available.
 
+v0.8.62 4/23/2021
+Added an options modal to select which output controls are shown 
+Store options in a cookie
+Changed cookie persistence to 2 years for both calibrations and options
+Elevate application to Beta
 
 ====================== WORK ========================================
 Known Bugs:
@@ -55,7 +60,8 @@ Known Bugs:
   **These issues may be fixed in 0.8.55 but I still need to test this**
 
 Front Burner Tasks:
-- Option menu modal.
+- Clean up console.log
+- Clean up comments & code
 
 Back Burner Tasks:
 - Revisit time shift

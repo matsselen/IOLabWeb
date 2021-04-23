@@ -6,6 +6,114 @@
 
 //===================================================================
 // summarize some useful info from config.js
+function openOptModal() {
+  
+}
+
+function initializeOptions() {
+  getOptionCookies();
+  dispDac.checked = iolabOptions.showDac;
+  dispBzz.checked = iolabOptions.showBzz;
+  dispD4.checked = iolabOptions.showD4;
+  dispD5.checked = iolabOptions.showD5;
+  dispD6.checked = iolabOptions.showD6;
+}
+
+function endOpt() {
+  optModal.style.display = "none";
+  iolabOptions.showDac = dispDac.checked;
+  iolabOptions.showBzz = dispBzz.checked;
+  iolabOptions.showD4 = dispD4.checked;
+  iolabOptions.showD5 = dispD5.checked;
+  iolabOptions.showD6 = dispD6.checked;
+  setOptionCookie();
+
+}
+
+function selectOutput() {
+  dacCtl.hidden = !dispDac.checked;
+  bzzCtl.hidden = !dispBzz.checked;
+  d4Ctl.hidden = !dispD4.checked;
+  d5Ctl.hidden = !dispD5.checked;
+  d6Ctl.hidden = !dispD6.checked;
+}
+
+// default values
+var iolabOptions = {
+  "time":0,
+  "showDac":true,
+  "showBzz":true,
+  "showD4":false,
+  "showD5":false,
+  "showD6":true
+}
+
+// this creates a cookie on the client browser to hold the calibration values in "calArray" for 
+// sensor "sensorNum" on remote having "remoteID"
+function setOptionCookie() {
+
+  let expireHours = 17520; // expires in 2 years
+
+  // the time now
+  let d = new Date();
+  console.log("setOptionCookie() called:" + d.toGMTString());
+
+  // figure out the expiration time
+  let now = d.getTime();
+  d.setTime(now + expireHours * 60 * 60 * 1000);
+  let expirationTime = d.toGMTString();
+
+  // put the current time into the data being saved
+  iolabOptions.time = now;
+
+  // assemble the values to save in the cookie
+  // [timestamp, sensorID, options]
+  let values = "[" + JSON.stringify(iolabOptions) + "]";
+
+  // construct the cookie contents in the form "name=value; expires=expirationTime; path"
+  let cookieText = "iolab_options =" + values + ";" + "expires=" + expirationTime + ";path=/";
+  console.log("setOptionCookie(): " + cookieText);
+
+  // create the cookie
+  document.cookie = cookieText;
+
+  return now;
+}
+
+// this fetches any option configuration data that has been stored in cookies by the client browser
+function getOptionCookies() {
+
+  console.log("In getOptionCookies():");
+  let cookieList = decodeURIComponent(document.cookie).split(';');
+
+  let optRead = 0;
+  for (let ind = 0; ind < cookieList.length; ind++) {
+      let c = cookieList[ind];
+
+      if (c.indexOf("iolab_options") > -1) {
+          let i1 = c.indexOf("[")+1;
+          let i2 = c.length-1;
+          let str = c.substring(i1, i2);
+          optRead = JSON.parse(str);
+          console.log(optRead); 
+      }
+  }
+
+  if(optRead == 0) {
+    console.log("getOptionCookies(): No options found");
+  } else {
+    if (optRead.showD6 != undefined) {
+      iolabOptions = optRead;
+    } else {
+      console.log("getOptionCookies(): Options seem corrupt:");
+      console.log(optRead);
+    }
+  }
+}
+
+
+//===================================================================
+// summarize some useful info from config.js
 function getIOLabConfigInfo() {
 
   // store information about each sensor, indexed by sensor number
@@ -20,9 +128,7 @@ function getIOLabConfigInfo() {
 
     let sensList = [];
     let rateList = [];
-    //let longDesc = fc.code.toString() + " [" + fc.desc + "] ";
     let longDesc = fc.code.toString() + ": ";
-    //let longDesc = "";
     let longDesc2 = "";
     for (let sens = 0; sens < fc.sensors.length; sens++) {
       let skey = fc.sensors[sens].sensorKey;
@@ -191,7 +297,7 @@ async function buildDacPicker() {
     dacPicker.appendChild(dacOption);
   }
 
-  dacCtl.hidden = false;
+  dacCtl.hidden = !dispDac.checked;
   dacPicker.selectedIndex = 17;
 
   // when the DAC voltage is changed
@@ -231,7 +337,7 @@ async function buildBzzPicker() {
     bzzPicker.appendChild(bzzOption);
   }
 
-  bzzCtl.hidden = false;
+  bzzCtl.hidden = !dispBzz.checked;
   bzzPicker.selectedIndex = 8;
 
   // when the Bzz frequency is changed
@@ -247,19 +353,47 @@ async function buildBzzPicker() {
 }
 
 //====================================================================
+// construct the drop-down menu for the D4 control
+async function buildD4Picker() {
+
+  for (let i = 0; i < iolabConfig.D4D5Values.length; i++) {
+    var d4Option = document.createElement('option');
+    let key = iolabConfig.D4D5Values[i].key;
+    let value = iolabConfig.D4D5Values[i].val;
+    d4Option.value = (key << 5) + value;                            // the key-value for each setting
+    d4Option.innerText = iolabConfig.D4D5Values[i].lbl + " Hz";  // the menu text for each setting
+    d4Picker.appendChild(d4Option);
+  }
+
+  d4Ctl.hidden = !dispD4.checked;
+  d4Picker.selectedIndex = 3;
+
+  // when the D4 voltage is changed
+  d4Picker.onchange = async function () {
+    setD4Frequency();
+  }
+
+  // when the D4 box is checked or unchecked
+  d4CK.addEventListener("click", async function () {
+    d4Enable(this.checked);
+  });
+
+}
+
+//====================================================================
 // construct the drop-down menu for the D5 control
 async function buildD5Picker() {
 
-  for (let i = 0; i < iolabConfig.D5Values.length; i++) {
+  for (let i = 0; i < iolabConfig.D4D5Values.length; i++) {
     var d5Option = document.createElement('option');
-    let key = iolabConfig.D5Values[i].key;
-    let value = iolabConfig.D5Values[i].val;
+    let key = iolabConfig.D4D5Values[i].key;
+    let value = iolabConfig.D4D5Values[i].val;
     d5Option.value = (key << 5) + value;                            // the key-value for each setting
-    d5Option.innerText = iolabConfig.D5Values[i].lbl + " Hz";  // the menu text for each setting
+    d5Option.innerText = iolabConfig.D4D5Values[i].lbl + " Hz";  // the menu text for each setting
     d5Picker.appendChild(d5Option);
   }
 
-  d5Ctl.hidden = true; // hide this until option menu is available 
+  d5Ctl.hidden = !dispD5.checked;
   d5Picker.selectedIndex = 3;
 
   // when the D5 voltage is changed
@@ -279,7 +413,7 @@ async function buildD5Picker() {
 // It powers up to Z, check = 1, uncheck = 0.  
 async function buildD6control() {
 
-  d6Ctl.hidden = false; // dont display this until the option is selected
+  d6Ctl.hidden = !dispD6.checked;
 
   // when the D6 box is checked or unchecked
   d6CK.addEventListener("click", async function () {
@@ -305,6 +439,20 @@ async function dacEnable(turnOn, remoteID = 1) {
   setTimeout(async function () {
     await sendOutputConfig(remoteID, [1, 0x19, val]);
   }, 25);
+}
+
+async function setD4Frequency(remoteID = 1) {
+  let D4Value = d4Picker.options[d4Picker.selectedIndex].value;
+  let kvPair = parseInt(D4Value);
+  await sendOutputConfig(remoteID, [1, 0x12, kvPair]);
+}
+
+async function d4Enable(turnOn, remoteID = 1) {
+  let val = 0;
+  if (turnOn) val = 2;
+  let D4Value = d4Picker.options[d4Picker.selectedIndex].value;
+  let kvPair = parseInt(D4Value);
+  await sendOutputConfig(remoteID, [2, 0x12, kvPair, 0x12, val]);
 }
 
 async function setD5Frequency(remoteID = 1) {
