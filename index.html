@@ -31,7 +31,7 @@
 <body>
   <header class="header">
     <h1>
-      <label class="iolab"> <span id="iolabWeb" title="Under Construction"> <i><b>iOLabWeb</b> (alpha
+      <label class="iolab"> <span id="iolabWeb" title="Expect Frequent Updates"> <i><b>iOLabWeb</b> (alpha
             release)</i></span> </label> &nbsp;&nbsp; |
       &nbsp;&nbsp;
       <label> Dongle: <span id="dongleStatusDisplay" title="Plug in dongle and click on connect button">not connected
@@ -53,7 +53,10 @@
       <tr>
         <td>
           <a href="" id="resetApp" onclick="resetApp()" title="Reloads and restarts IOLabWeb (data is cleared). "
-            style="cursor: pointer;"><img src="images/reset1.PNG" valign="middle" height="28"></a>
+            style="cursor: pointer;"><img src="images/reset2.PNG" valign="middle" height="30"></a>
+            
+            <a id="optBtn" title="Options" style="cursor: pointer; ">
+              <img src="images/gear.PNG" height="30" valign="top"></a>
 
           <a id="butConnect" title="Make or Break Serial Connection to Dongle" style="cursor: pointer;">
             <img id="connectImg" src="images/connect.PNG" valign="middle"></a>
@@ -154,16 +157,16 @@
     <p> <button id="butDebug" type="button">Debug</button></p>
   </div>
 
-  <!-- The Modal -->
-  <div id="calModal" class="modal">
+  <!-- The Calibration Modal -->
+  <div id="calModal" class="calmodal">
 
-    <!-- Modal content -->
-    <div class="modal-content">
-      <div class="modal-header">
+    <!-- calmodal content -->
+    <div class="calmodal-content">
+      <div class="calmodal-header">
         <span>Calibration Control</span>
         <span class="closeCal">&times;</span>
       </div>
-      <div class="modal-body">
+      <div class="calmodal-body">
         <table class="a">
           <tr>
             <td>
@@ -186,9 +189,41 @@
         <div id="calDiv"></div>
       </div>
     </div>
-
   </div>
 
+  <!-- The Option Modal -->
+  <div id="optModal" class="optmodal">
+
+    <!-- optmodal content -->
+    <div class="optmodal-content">
+      <div class="optmodal-header">
+        <span>Options and Preferences</span>
+        <span class="closeOpt">&times;</span>
+      </div>
+      <div class="optmodal-body">
+        <table class="a">
+          <tr>
+            <td>
+              <div>aaa</div>
+            </td>
+            <td>
+              <div>bbb</div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div>ccc</div>
+            </td>
+            <td>
+              <div>ddd</div>
+            </td>
+          </tr>
+        </table>
+        <p>eee</p>
+        <div>fff</div>
+      </div>
+    </div>
+  </div>
 </body>
 
 </html>

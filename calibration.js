@@ -148,7 +148,7 @@ function calFclick() {
 
 function endCal() {
 
-    modal.style.display = "none";
+    calModal.style.display = "none";
     
     if (calMode) {
         calMode = false;

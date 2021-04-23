@@ -6,6 +6,16 @@
 
 //===================================================================
 // summarize some useful info from config.js
+function optionsModal() {
+
+}
+
+function endOpt() {
+  optModal.style.display = "none";
+}
+
+//===================================================================
+// summarize some useful info from config.js
 function getIOLabConfigInfo() {
 
   // store information about each sensor, indexed by sensor number
@@ -20,9 +30,7 @@ function getIOLabConfigInfo() {
 
     let sensList = [];
     let rateList = [];
-    //let longDesc = fc.code.toString() + " [" + fc.desc + "] ";
     let longDesc = fc.code.toString() + ": ";
-    //let longDesc = "";
     let longDesc2 = "";
     for (let sens = 0; sens < fc.sensors.length; sens++) {
       let skey = fc.sensors[sens].sensorKey;
