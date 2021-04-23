@@ -45,7 +45,7 @@ v0.8.60 4/22/2021
 Add controls for other outputs (D5, D6, buzzer).
 Hide D5 control until option menu is available.
 
-v0.8.62 4/23/2021
+v0.9.00 4/23/2021
 Added an options modal to select which output controls are shown 
 Store options in a cookie
 Changed cookie persistence to 2 years for both calibrations and options
