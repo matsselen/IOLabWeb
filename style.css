@@ -48,7 +48,7 @@ body {
   font-size: 20px;
   height: 48px;
   justify-content: flex-start;
-  padding: 12px 16px 0px 16px;
+  padding: 12px 16px 14px 16px;
   /*position: fixed;*/
   transition: transform 0.233s cubic-bezier(0, 0, 0.21, 1) 0.1s;
   width: 100%;
