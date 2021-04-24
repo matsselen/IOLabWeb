@@ -52,6 +52,9 @@ Changed cookie persistence to 2 years for both calibrations and options
 Tweak CSV download icon
 Elevate application to Beta
 
+v0.9.01 x/x/2021
+
+
 ====================== WORK ========================================
 Known Bugs:
 - Sometimes plots empty if not viewed before csv export of another plot (only Mac ?)
@@ -61,6 +64,8 @@ Known Bugs:
   **These issues may be fixed in 0.8.55 but I still need to test this**
 
 Front Burner Tasks:
+- Add timeout to save battery power
+- Add ability to specify Earth B field for calibration
 - Clean up console.log
 - Clean up comments & code
 
@@ -69,3 +74,4 @@ Back Burner Tasks:
 - Rationalize usage of calData vs plotData in plotting code
 - display rezero icon on all zeroable plots when linked
 - save/restore dataShift (?)
+- improved gyroscope calibration
