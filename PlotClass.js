@@ -675,7 +675,7 @@ class PlotIOLab {
         this.aCSV = document.createElement("a");
         var csvLink = document.createElement("img");
         csvLink.src = "images/csv.png";
-        csvLink.height = "21";
+        csvLink.height = "18";
         csvLink.style = "cursor:pointer";
         csvLink.style.paddingLeft = "10px";
         csvLink.style.verticalAlign = "bottom";
