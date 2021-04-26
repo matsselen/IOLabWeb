@@ -326,11 +326,7 @@ async function configCalDAQ() {
     sensorIDlist = fixedConfigObject.sensList;
     sensorRateList = fixedConfigObject.rateList;
 
-    // create a list of charts (by sensor ID) to be plotted
-    chartIDlist = fixedConfigObject.chartList;
-
     // create the required plot objects
-    //plotSet = new PlotSet(chartIDlist, "plotContainer", "controlContainer");
     plotSet = new PlotSet(fixedConfigObject, "plotContainer", "controlContainer");
 
 }
