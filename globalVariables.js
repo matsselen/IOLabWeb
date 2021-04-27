@@ -68,6 +68,8 @@ var fixedRunTimerID;
 // various tick timers (1 tick = 1 second)
 var totalTicks = 0;
 var idleTicks = 0;
+var idleIncrement = 0;
+var idleTimeoutCount = 300;
 
 // useful expert tools
 var dbgInfo = false;

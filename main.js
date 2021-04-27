@@ -166,9 +166,15 @@ document.addEventListener('DOMContentLoaded', () => {
 // event handler for connect/disconnect button  
 async function handleTick() {
   totalTicks ++;
-  idleTicks ++;
+  idleTicks += idleIncrement;
   tickCounter.innerHTML = idleTicks.toString();
 
+  if (idleTicks >= idleTimeoutCount) {
+    sendRecord(getCommandRecord("powerDown"));
+    console.log("Inactivity timeout");
+    idleTicks = 0; 
+    idleIncrement = 0;
+  }
 
 }
 
@@ -310,12 +316,16 @@ function updateSystemState() {
       notFetchedCal[0] = false;
       setCalValues(0, remote1ID);
     }
-    configSelect.style.display = "block";
+    configSelect.style.display = "block";    
+    idleIncrement = 1;
+
 
   } else {
     remoteConnected = false;
     configSelect.style.display = "none";
     remoteStatusDisplay.innerHTML = "off";
+    idleIncrement = 0;
+    idleTicks = 0; 
   }
 
   // display the start button if the daq is configured
