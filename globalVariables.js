@@ -61,7 +61,13 @@ var calRecordTimerID;
 var calRecordTimerMS = 50;
 var plotTimerID;
 var plotTimerMS = 50;
+var tickTimerID;
+var tickTimerMS = 1000;
 var fixedRunTimerID;
+
+// various tick timers (1 tick = 1 second)
+var totalTicks = 0;
+var idleTicks = 0;
 
 // useful expert tools
 var dbgInfo = false;

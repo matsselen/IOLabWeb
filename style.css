@@ -115,6 +115,12 @@ p.inst {
   font-size: 20px;
 }
 
+p.tiny {
+  font-size: 10px;
+  text-align: right;
+  padding: 0px 50px 0px 0px;
+}
+
 .smooth {
   font-size: 14px;
   padding: 0px 0px 0px 0px;

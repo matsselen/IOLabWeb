@@ -77,6 +77,9 @@ const optModal = document.getElementById("optModal");
 const optButton = document.getElementById("optBtn");
 const cospan = document.getElementsByClassName("closeOpt")[0];
 
+// ticks
+const tickCounter = document.getElementById("tickCounter");
+
 // do this when the DOM is first loaded
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -126,7 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
     endCal();
   }
 
-  // when the calibration modal is closed
+  // when the option modal is closed
   cospan.onclick = function () {
     endOpt();
   }
@@ -154,7 +157,20 @@ document.addEventListener('DOMContentLoaded', () => {
   // update the UI
   updateSystemState();
 
+  // start the tick timer
+  tickTimerID = setInterval(handleTick, tickTimerMS);
+
 });
+
+//============================================
+// event handler for connect/disconnect button  
+async function handleTick() {
+  totalTicks ++;
+  idleTicks ++;
+  tickCounter.innerHTML = idleTicks.toString();
+
+
+}
 
 //============================================
 // event handler for connect/disconnect button  
