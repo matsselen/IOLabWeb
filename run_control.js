@@ -222,6 +222,9 @@ async function sendRecord(byteArray) {
     if (port != null) {
         dataBoxTx.innerHTML += byteArray + '\n';
         console.log(byteArray);
+        
+        // reset inactivity timeout counter
+        idleTicks = 0;
 
         if (byteArray[1] == 0x21) {
             stopTime = Date.now();
