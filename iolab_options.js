@@ -409,6 +409,34 @@ async function buildD5Picker() {
 }
 
 //====================================================================
+// construct the drop-down menu for the timeout option
+async function buildTimeoutPicker() {
+
+  let timeoutList = [1,5,10,15,20,30,45,60,90,120,180];
+  for (let i = 0; i < timeoutList.length; i++) {
+    let timeoutOption = document.createElement('option');
+    timeoutOption.value = timeoutList[i];                               // value for each setting
+    timeoutOption.innerText = timeoutList[i].toString() + " minutes";  // the menu text for each setting
+    timeoutPicker.appendChild(timeoutOption);
+  }
+
+  timeoutPicker.selectedIndex = 0;
+  idleTimeoutCount = 60*timeoutPicker.options[timeoutPicker.selectedIndex].value;
+
+  // start the tick timer
+  tickTimerID = setInterval(handleTick, tickTimerMS);
+
+  // when the timeout value is changed
+  timeoutPicker.onchange = async function () {
+    idleTimeoutCount = 60*timeoutPicker.options[timeoutPicker.selectedIndex].value;
+    idleTicks = 0;
+    tickCounter.innerHTML = idleTicks.toString()+" / "+idleTimeoutCount.toString()+" s";
+
+  }
+
+}
+
+//====================================================================
 // The D6 output is just controlled by a checkbox. 
 // It powers up to Z, check = 1, uncheck = 0.  
 async function buildD6control() {

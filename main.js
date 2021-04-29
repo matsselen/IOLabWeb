@@ -79,6 +79,7 @@ const cospan = document.getElementsByClassName("closeOpt")[0];
 
 // ticks
 const tickCounter = document.getElementById("tickCounter");
+const timeoutPicker = document.getElementById("timeoutPicker");
 
 // do this when the DOM is first loaded
 document.addEventListener('DOMContentLoaded', () => {
@@ -143,6 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
   buildD5Picker();
   buildD6control();
   buildBzzPicker();
+  buildTimeoutPicker();
 
   // fetch any existing calibrations from browser cookies
   calArrayList = [];
@@ -157,9 +159,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // update the UI
   updateSystemState();
 
-  // start the tick timer
-  tickTimerID = setInterval(handleTick, tickTimerMS);
-
 });
 
 //============================================
@@ -167,7 +166,7 @@ document.addEventListener('DOMContentLoaded', () => {
 async function handleTick() {
   totalTicks ++;
   idleTicks += idleIncrement;
-  tickCounter.innerHTML = idleTicks.toString();
+  tickCounter.innerHTML = idleTicks.toString()+" / "+idleTimeoutCount.toString()+" s";
 
   if (idleTicks >= idleTimeoutCount) {
     sendRecord(getCommandRecord("powerDown"));
