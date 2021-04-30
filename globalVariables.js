@@ -6,7 +6,7 @@
 'use strict';
 
 // current version
-var currentVersion = [0,9,2];
+var currentVersion = [0,9,4];
 
 // oldest app version whose saved data is compatible with this app
 var bcompatVersion = [0,8,54];
@@ -61,7 +61,15 @@ var calRecordTimerID;
 var calRecordTimerMS = 50;
 var plotTimerID;
 var plotTimerMS = 50;
+var tickTimerID;
+var tickTimerMS = 1000;
 var fixedRunTimerID;
+
+// various tick timers (1 tick = 1 second)
+var totalTicks = 0;
+var idleTicks = 0;
+var idleIncrement = 0;
+var idleTimeoutCount = 300;
 
 // useful expert tools
 var dbgInfo = false;

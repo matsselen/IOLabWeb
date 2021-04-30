@@ -77,6 +77,10 @@ const optModal = document.getElementById("optModal");
 const optButton = document.getElementById("optBtn");
 const cospan = document.getElementsByClassName("closeOpt")[0];
 
+// ticks
+const tickCounter = document.getElementById("tickCounter");
+const timeoutPicker = document.getElementById("timeoutPicker");
+
 // do this when the DOM is first loaded
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -126,7 +130,7 @@ document.addEventListener('DOMContentLoaded', () => {
     endCal();
   }
 
-  // when the calibration modal is closed
+  // when the option modal is closed
   cospan.onclick = function () {
     endOpt();
   }
@@ -140,6 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
   buildD5Picker();
   buildD6control();
   buildBzzPicker();
+  buildTimeoutPicker();
 
   // fetch any existing calibrations from browser cookies
   calArrayList = [];
@@ -155,6 +160,22 @@ document.addEventListener('DOMContentLoaded', () => {
   updateSystemState();
 
 });
+
+//============================================
+// event handler for connect/disconnect button  
+async function handleTick() {
+  totalTicks ++;
+  if(!runningDAQ) { idleTicks -= idleIncrement };
+  tickCounter.innerHTML = "Timeout "+idleTicks.toString();
+
+  if (idleTicks <= 0) {
+    sendRecord(getCommandRecord("powerDown"));
+    console.log("Inactivity timeout");
+    idleTicks = idleTimeoutCount; 
+    idleIncrement = 0;
+  }
+
+}
 
 //============================================
 // event handler for connect/disconnect button  
@@ -294,12 +315,16 @@ function updateSystemState() {
       notFetchedCal[0] = false;
       setCalValues(0, remote1ID);
     }
-    configSelect.style.display = "block";
+    configSelect.style.display = "block";    
+    idleIncrement = 1;
+
 
   } else {
     remoteConnected = false;
     configSelect.style.display = "none";
     remoteStatusDisplay.innerHTML = "off";
+    idleIncrement = 0;
+    idleTicks = idleTimeoutCount; 
   }
 
   // display the start button if the daq is configured

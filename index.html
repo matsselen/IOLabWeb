@@ -50,7 +50,7 @@
   </div>
 
   <div class="topcontrol">
-    <p></p>
+    <p class="tiny" id="tickCounter">Timer</p>
     <table>
       <tr>
         <td>
@@ -218,9 +218,11 @@
             <td><div><input id="dispD4" type="checkbox" onclick="selectOutput()" >D4 (PWM) &nbsp;&nbsp;</div></td>            
             <td><div><input id="dispD5" type="checkbox" onclick="selectOutput()" >D5 (PWM) &nbsp;&nbsp;</div></td>
           </tr>
-
         </table>
-        <div> <br/><br/> </div>
+
+        <div> <br/> 
+          <span id="toCtl" title="Timeout Control">Inactivity Timeout <select id="timeoutPicker"></select> </span>
+          <br/><br/> </div>
       </div>
     </div>
   </div>

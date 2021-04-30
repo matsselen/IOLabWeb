@@ -55,6 +55,9 @@ Elevate application to Beta
 v0.9.02 4/26/2021
 Bugfix - removed outdated reference to chartlist causing calibration to fail
 
+v0.9.04 4/30/2021
+Added inactivity timeout to save battery life. Made timeout setting an option controllable
+on option modal & saved in option cookie.  If not set the fault timeout is 10 minutes. 
 
 
 ====================== WORK ========================================
@@ -62,7 +65,6 @@ Known Bugs:
 - Sometimes plots empty if not viewed before csv export of another plot (only Mac ?)
 
 Front Burner Tasks:
-- Add timeout to save battery power
 - Add ability to specify Earth B field for calibration
 - Clean up console.log
 - Clean up comments & code

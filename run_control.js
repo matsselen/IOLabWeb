@@ -24,6 +24,7 @@ function stopFixedRun() {
 // start recording data
 async function startRun() {
     console.log("Start runnung");
+    idleIncrement = 0;
 
     // prepare all charts for acquisition
     plotSet.startAcquisition();
@@ -46,6 +47,7 @@ async function startRun() {
 // stop recording data
 async function stopRun() {
     console.log("Stop runnung");
+    idleIncrement = 1;
 
     // clear the runningDAQ flag send a startData record to the system
     runningDAQ = false;
@@ -222,6 +224,9 @@ async function sendRecord(byteArray) {
     if (port != null) {
         dataBoxTx.innerHTML += byteArray + '\n';
         console.log(byteArray);
+        
+        // reset inactivity timeout counter
+        idleTicks = idleTimeoutCount;
 
         if (byteArray[1] == 0x21) {
             stopTime = Date.now();
