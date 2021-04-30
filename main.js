@@ -165,13 +165,13 @@ document.addEventListener('DOMContentLoaded', () => {
 // event handler for connect/disconnect button  
 async function handleTick() {
   totalTicks ++;
-  idleTicks += idleIncrement;
-  tickCounter.innerHTML = idleTicks.toString()+" / "+idleTimeoutCount.toString()+" s";
+  if(!runningDAQ) { idleTicks -= idleIncrement };
+  tickCounter.innerHTML = "Timeout "+idleTicks.toString();
 
-  if (idleTicks >= idleTimeoutCount) {
+  if (idleTicks <= 0) {
     sendRecord(getCommandRecord("powerDown"));
     console.log("Inactivity timeout");
-    idleTicks = 0; 
+    idleTicks = idleTimeoutCount; 
     idleIncrement = 0;
   }
 
@@ -324,7 +324,7 @@ function updateSystemState() {
     configSelect.style.display = "none";
     remoteStatusDisplay.innerHTML = "off";
     idleIncrement = 0;
-    idleTicks = 0; 
+    idleTicks = idleTimeoutCount; 
   }
 
   // display the start button if the daq is configured

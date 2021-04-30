@@ -117,8 +117,9 @@ p.inst {
 
 p.tiny {
   font-size: 10px;
+  color: #d4d4d4;
   text-align: right;
-  padding: 0px 50px 0px 0px;
+  padding: 0px 20px 0px 0px;
 }
 
 .smooth {

@@ -7,7 +7,7 @@
 //===================================================================
 // summarize some useful info from config.js
 function openOptModal() {
-  
+
 }
 
 function initializeOptions() {
@@ -17,6 +17,7 @@ function initializeOptions() {
   dispD4.checked = iolabOptions.showD4;
   dispD5.checked = iolabOptions.showD5;
   dispD6.checked = iolabOptions.showD6;
+  timeoutPicker.selectedIndex = iolabOptions.toIndex;
 }
 
 function endOpt() {
@@ -26,6 +27,7 @@ function endOpt() {
   iolabOptions.showD4 = dispD4.checked;
   iolabOptions.showD5 = dispD5.checked;
   iolabOptions.showD6 = dispD6.checked;
+  iolabOptions.toIndex = timeoutPicker.selectedIndex;
   setOptionCookie();
 
 }
@@ -40,12 +42,13 @@ function selectOutput() {
 
 // default values
 var iolabOptions = {
-  "time":0,
-  "showDac":true,
-  "showBzz":true,
-  "showD4":false,
-  "showD5":false,
-  "showD6":true
+  "time": 0,
+  "showDac": true,
+  "showBzz": true,
+  "showD4": false,
+  "showD5": false,
+  "showD6": true,
+  "toIndex": 1
 }
 
 // this creates a cookie on the client browser to hold the calibration values in "calArray" for 
@@ -88,29 +91,39 @@ function getOptionCookies() {
 
   let optRead = 0;
   for (let ind = 0; ind < cookieList.length; ind++) {
-      let c = cookieList[ind];
+    let c = cookieList[ind];
 
-      if (c.indexOf("iolab_options") > -1) {
-          let i1 = c.indexOf("[")+1;
-          let i2 = c.length-1;
-          let str = c.substring(i1, i2);
-          optRead = JSON.parse(str);
-          console.log(optRead); 
-      }
-  }
-
-  if(optRead == 0) {
-    console.log("getOptionCookies(): No options found");
-  } else {
-    if (optRead.showD6 != undefined) {
-      iolabOptions = optRead;
-    } else {
-      console.log("getOptionCookies(): Options seem corrupt:");
+    if (c.indexOf("iolab_options") > -1) {
+      let i1 = c.indexOf("[") + 1;
+      let i2 = c.length - 1;
+      let str = c.substring(i1, i2);
+      optRead = JSON.parse(str);
       console.log(optRead);
     }
   }
+
+  if (optRead == 0) {
+    console.log("getOptionCookies(): No options found");
+  } else {
+    console.log("getOptionCookies() found:");
+    console.log(optRead);
+
+    // get the options
+    getValidOptions(optRead);
+  }
 }
 
+// get whatever valid options are in the cookie we found
+function getValidOptions(optRead) {
+
+  if (optRead.showDac != undefined) {iolabOptions.showDac = optRead.showDac;}
+  if (optRead.showBzz != undefined) {iolabOptions.showBzz = optRead.showBzz;}
+  if (optRead.showD4 != undefined) {iolabOptions.showD4 = optRead.showD4;}
+  if (optRead.showD5 != undefined) {iolabOptions.showD5 = optRead.showD5;}
+  if (optRead.showD6 != undefined) {iolabOptions.showD6 = optRead.showD6;}
+  if (optRead.toIndex != undefined) {iolabOptions.toIndex = optRead.toIndex;}
+  console.log(iolabOptions);
+}
 
 //===================================================================
 // summarize some useful info from config.js
@@ -142,7 +155,7 @@ function getIOLabConfigInfo() {
 
     // if there is any "extra" text tack it on to the end of the description
     let extra = "";
-    if(fc.extra != undefined) {
+    if (fc.extra != undefined) {
       extra = fc.extra;
     }
 
@@ -412,28 +425,29 @@ async function buildD5Picker() {
 // construct the drop-down menu for the timeout option
 async function buildTimeoutPicker() {
 
-  let timeoutList = [1,5,10,15,20,30,45,60,90,120,180];
-  for (let i = 0; i < timeoutList.length; i++) {
+  let timeoutValue = [.5, 5, 10, 15, 30, 60, 120, 180, 360];
+  let timeoutText = ["30 sec", "5 min", "10 min", "15 min", "30 min", "1 hr", "2 hr", "3 hr", "6 hr"];
+
+  for (let i = 0; i < timeoutValue.length; i++) {
     let timeoutOption = document.createElement('option');
-    timeoutOption.value = timeoutList[i];                               // value for each setting
-    timeoutOption.innerText = timeoutList[i].toString() + " minutes";  // the menu text for each setting
+    timeoutOption.value = timeoutValue[i];     // value for each setting
+    timeoutOption.innerText = timeoutText[i];  // the menu text for each setting
     timeoutPicker.appendChild(timeoutOption);
   }
 
-  timeoutPicker.selectedIndex = 0;
-  idleTimeoutCount = 60*timeoutPicker.options[timeoutPicker.selectedIndex].value;
+  timeoutPicker.selectedIndex = 2;
+  idleTimeoutCount = 60 * timeoutPicker.options[timeoutPicker.selectedIndex].value;
 
   // start the tick timer
   tickTimerID = setInterval(handleTick, tickTimerMS);
 
   // when the timeout value is changed
   timeoutPicker.onchange = async function () {
-    idleTimeoutCount = 60*timeoutPicker.options[timeoutPicker.selectedIndex].value;
-    idleTicks = 0;
-    tickCounter.innerHTML = idleTicks.toString()+" / "+idleTimeoutCount.toString()+" s";
+    idleTimeoutCount = 60 * timeoutPicker.options[timeoutPicker.selectedIndex].value;
+    idleTicks = idleTimeoutCount;
+    tickCounter.innerHTML = "Timeout " + idleTicks.toString();
 
   }
-
 }
 
 //====================================================================
