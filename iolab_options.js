@@ -7,7 +7,7 @@
 //===================================================================
 // summarize some useful info from config.js
 function openOptModal() {
-
+  //may need this some day
 }
 
 function initializeOptions() {
@@ -17,7 +17,7 @@ function initializeOptions() {
   dispD4.checked = iolabOptions.showD4;
   dispD5.checked = iolabOptions.showD5;
   dispD6.checked = iolabOptions.showD6;
-  timeoutPicker.selectedIndex = iolabOptions.toIndex;
+  
 }
 
 function endOpt() {
@@ -40,7 +40,7 @@ function selectOutput() {
   d6Ctl.hidden = !dispD6.checked;
 }
 
-// default values
+// placeholder option values
 var iolabOptions = {
   "time": 0,
   "showDac": true,
@@ -425,8 +425,8 @@ async function buildD5Picker() {
 // construct the drop-down menu for the timeout option
 async function buildTimeoutPicker() {
 
-  let timeoutValue = [.5, 5, 10, 15, 30, 60, 120, 180, 360];
-  let timeoutText = ["30 sec", "5 min", "10 min", "15 min", "30 min", "1 hr", "2 hr", "3 hr", "6 hr"];
+  let timeoutValue = [5, 10, 15, 30, 60, 120, 180, 360];
+  let timeoutText = ["5 min", "10 min", "15 min", "30 min", "1 hr", "2 hr", "3 hr", "6 hr"];
 
   for (let i = 0; i < timeoutValue.length; i++) {
     let timeoutOption = document.createElement('option');
@@ -435,7 +435,7 @@ async function buildTimeoutPicker() {
     timeoutPicker.appendChild(timeoutOption);
   }
 
-  timeoutPicker.selectedIndex = 2;
+  timeoutPicker.selectedIndex = iolabOptions.toIndex;
   idleTimeoutCount = 60 * timeoutPicker.options[timeoutPicker.selectedIndex].value;
 
   // start the tick timer
