@@ -442,7 +442,7 @@ var iolabConfig =
       "csvLabels": ["Intensity (arb)"],
       "pathColors": ["#0000BB"],
       "scales": [0, 10],
-      "zeroable": false,
+      "zeroable": true,
       "autoScaleY": false
     },
     {
