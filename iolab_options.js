@@ -28,6 +28,7 @@ function endOpt() {
   iolabOptions.showD5 = dispD5.checked;
   iolabOptions.showD6 = dispD6.checked;
   iolabOptions.toIndex = timeoutPicker.selectedIndex;
+  iolabOptions.byLocal = bzLocal.value;
   setOptionCookie();
 
 }
@@ -48,7 +49,8 @@ var iolabOptions = {
   "showD4": false,
   "showD5": false,
   "showD6": true,
-  "toIndex": 1
+  "toIndex": 1,
+  "byLocal": -48.5
 }
 
 // this creates a cookie on the client browser to hold the calibration values in "calArray" for 
@@ -122,6 +124,7 @@ function getValidOptions(optRead) {
   if (optRead.showD5 != undefined) {iolabOptions.showD5 = optRead.showD5;}
   if (optRead.showD6 != undefined) {iolabOptions.showD6 = optRead.showD6;}
   if (optRead.toIndex != undefined) {iolabOptions.toIndex = optRead.toIndex;}
+  if (optRead.byLocal != undefined) {iolabOptions.byLocal = optRead.byLocal;}
   console.log(iolabOptions);
 }
 
@@ -468,7 +471,7 @@ async function buildD6control() {
 // The local vertical B-field used in magnetometer calibration  
 async function buildBvertControl() {
 
-  bzLocal.innerText = 50.123;
+  bzLocal.value = local_Bvert;
 
 
 }
