@@ -5,7 +5,7 @@
 'use strict';
 
 //===================================================================
-// summarize some useful info from config.js
+
 function openOptModal() {
   //may need this some day
 }
@@ -445,7 +445,7 @@ async function buildTimeoutPicker() {
   timeoutPicker.onchange = async function () {
     idleTimeoutCount = 60 * timeoutPicker.options[timeoutPicker.selectedIndex].value;
     idleTicks = idleTimeoutCount;
-    tickCounter.innerHTML = "Timeout " + idleTicks.toString();
+    tickCounter.innerHTML = "Inactivity Timeout " + idleTicks.toString();
 
   }
 }
@@ -463,6 +463,16 @@ async function buildD6control() {
   });
 
 }
+
+//====================================================================
+// The local vertical B-field used in magnetometer calibration  
+async function buildBvertControl() {
+
+  bzLocal.innerText = 50.123;
+
+
+}
+
 
 // methods used by event handlers
 async function setDacVoltage(remoteID = 1) {
