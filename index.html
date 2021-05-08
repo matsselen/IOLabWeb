@@ -210,7 +210,7 @@
       </div>
       <div class="optmodal-body">
         <table>
-          <div>Output controls to display (when remote is on):</div>
+          <div><br/><b>Select which output controls to display when your remote is on:</b></div>
           <tr>
             <td><div><input id="dispDac" type="checkbox" onclick="selectOutput()" checked>DAC (analog) &nbsp;&nbsp;</div></td>
             <td><div><input id="dispD6" type="checkbox" onclick="selectOutput()" checked>D6 (digital) &nbsp;&nbsp;</div></td>
@@ -220,9 +220,21 @@
           </tr>
         </table>
 
+        <div> <br/>
+          <b>Specify the vertical component of the Earth's magnetic field at your logation to improve your magnetometer calibration:</b><br/>
+          Local Bz = <input id="bzLocal" type="text" style="resize:none; vertical-align: middle;" ></input> uT 
+          &nbsp; (<a href="images/Bcal.pdf" title="" target="_blank">Look here</a> 
+          for detailed instructions)
+        </div>
+
         <div> <br/> 
+          <b>Specify how long to let your IOLab be idle before powering it down to save power:</b><br/>
           <span id="toCtl" title="Timeout Control">Inactivity Timeout <select id="timeoutPicker"></select> </span>
-          <br/><br/> </div>
+          &nbsp;&nbsp; 
+        </div>
+
+
+        <br/><br/>
       </div>
     </div>
   </div>

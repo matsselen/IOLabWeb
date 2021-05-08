@@ -5,9 +5,10 @@
 'use strict';
 
 //===================================================================
-// summarize some useful info from config.js
+
 function openOptModal() {
-  //may need this some day
+  local_Bvert = iolabOptions.byLocal;
+  bzLocal.value = local_Bvert;
 }
 
 function initializeOptions() {
@@ -17,6 +18,7 @@ function initializeOptions() {
   dispD4.checked = iolabOptions.showD4;
   dispD5.checked = iolabOptions.showD5;
   dispD6.checked = iolabOptions.showD6;
+  dispD6.byLocal = iolabOptions.byLocal;
   
 }
 
@@ -28,6 +30,8 @@ function endOpt() {
   iolabOptions.showD5 = dispD5.checked;
   iolabOptions.showD6 = dispD6.checked;
   iolabOptions.toIndex = timeoutPicker.selectedIndex;
+  iolabOptions.byLocal = parseFloat(bzLocal.value);
+  local_Bvert = iolabOptions.byLocal;
   setOptionCookie();
 
 }
@@ -48,7 +52,8 @@ var iolabOptions = {
   "showD4": false,
   "showD5": false,
   "showD6": true,
-  "toIndex": 1
+  "toIndex": 1,
+  "byLocal": -48.5
 }
 
 // this creates a cookie on the client browser to hold the calibration values in "calArray" for 
@@ -122,6 +127,8 @@ function getValidOptions(optRead) {
   if (optRead.showD5 != undefined) {iolabOptions.showD5 = optRead.showD5;}
   if (optRead.showD6 != undefined) {iolabOptions.showD6 = optRead.showD6;}
   if (optRead.toIndex != undefined) {iolabOptions.toIndex = optRead.toIndex;}
+  if (optRead.byLocal != undefined) {iolabOptions.byLocal = optRead.byLocal;}
+  console.log("In getValidOptions():")
   console.log(iolabOptions);
 }
 
@@ -445,7 +452,7 @@ async function buildTimeoutPicker() {
   timeoutPicker.onchange = async function () {
     idleTimeoutCount = 60 * timeoutPicker.options[timeoutPicker.selectedIndex].value;
     idleTicks = idleTimeoutCount;
-    tickCounter.innerHTML = "Timeout " + idleTicks.toString();
+    tickCounter.innerHTML = "Inactivity Timeout " + idleTicks.toString();
 
   }
 }
@@ -463,6 +470,17 @@ async function buildD6control() {
   });
 
 }
+
+//====================================================================
+// The local vertical B-field used in magnetometer calibration  
+async function buildBvertControl() {
+
+  local_Bvert = iolabOptions.byLocal;
+  bzLocal.value = local_Bvert;
+
+
+}
+
 
 // methods used by event handlers
 async function setDacVoltage(remoteID = 1) {

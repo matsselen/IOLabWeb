@@ -76,6 +76,7 @@ const ccspan = document.getElementsByClassName("closeCal")[0];
 const optModal = document.getElementById("optModal");
 const optButton = document.getElementById("optBtn");
 const cospan = document.getElementsByClassName("closeOpt")[0];
+const bzLocal = document.getElementById("bzLocal");
 
 // ticks
 const tickCounter = document.getElementById("tickCounter");
@@ -145,6 +146,7 @@ document.addEventListener('DOMContentLoaded', () => {
   buildD6control();
   buildBzzPicker();
   buildTimeoutPicker();
+  buildBvertControl();
 
   // fetch any existing calibrations from browser cookies
   calArrayList = [];
@@ -166,7 +168,7 @@ document.addEventListener('DOMContentLoaded', () => {
 async function handleTick() {
   totalTicks ++;
   if(!runningDAQ) { idleTicks -= idleIncrement };
-  tickCounter.innerHTML = "Timeout "+idleTicks.toString();
+  tickCounter.innerHTML = "Inactivity Timeout "+idleTicks.toString();
 
   if (idleTicks <= 0) {
     sendRecord(getCommandRecord("powerDown"));
