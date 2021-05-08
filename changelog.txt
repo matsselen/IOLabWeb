@@ -60,7 +60,10 @@ Added inactivity timeout to save battery life. Made timeout setting an option co
 on option modal & saved in option cookie.  If not set the fault timeout is 10 minutes. 
 
 v0.9.06
-Made light sensor "zeroable"
+Added ability to specify the vertical B field in order to improve magnetomter calibration.
+Made light sensor "zeroable".
+Other small improvements to options modal. 
+
 
 ====================== WORK ========================================
 Known Bugs:

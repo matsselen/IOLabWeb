@@ -28,7 +28,7 @@ function endOpt() {
   iolabOptions.showD5 = dispD5.checked;
   iolabOptions.showD6 = dispD6.checked;
   iolabOptions.toIndex = timeoutPicker.selectedIndex;
-  iolabOptions.byLocal = bzLocal.value;
+  iolabOptions.byLocal = parseInt(bzLocal.value);
   setOptionCookie();
 
 }
