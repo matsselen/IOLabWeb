@@ -7,7 +7,8 @@
 //===================================================================
 
 function openOptModal() {
-  //may need this some day
+  local_Bvert = iolabOptions.byLocal;
+  bzLocal.value = local_Bvert;
 }
 
 function initializeOptions() {
@@ -17,6 +18,7 @@ function initializeOptions() {
   dispD4.checked = iolabOptions.showD4;
   dispD5.checked = iolabOptions.showD5;
   dispD6.checked = iolabOptions.showD6;
+  dispD6.byLocal = iolabOptions.byLocal;
   
 }
 
@@ -28,7 +30,8 @@ function endOpt() {
   iolabOptions.showD5 = dispD5.checked;
   iolabOptions.showD6 = dispD6.checked;
   iolabOptions.toIndex = timeoutPicker.selectedIndex;
-  iolabOptions.byLocal = parseInt(bzLocal.value);
+  iolabOptions.byLocal = parseFloat(bzLocal.value);
+  local_Bvert = iolabOptions.byLocal;
   setOptionCookie();
 
 }
@@ -125,6 +128,7 @@ function getValidOptions(optRead) {
   if (optRead.showD6 != undefined) {iolabOptions.showD6 = optRead.showD6;}
   if (optRead.toIndex != undefined) {iolabOptions.toIndex = optRead.toIndex;}
   if (optRead.byLocal != undefined) {iolabOptions.byLocal = optRead.byLocal;}
+  console.log("In getValidOptions():")
   console.log(iolabOptions);
 }
 
@@ -471,6 +475,7 @@ async function buildD6control() {
 // The local vertical B-field used in magnetometer calibration  
 async function buildBvertControl() {
 
+  local_Bvert = iolabOptions.byLocal;
   bzLocal.value = local_Bvert;
 
 
