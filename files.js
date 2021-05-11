@@ -138,9 +138,6 @@ function restoreAcquisition() {
         // restore the total run time (ms)
         totalRunTime = appMetaData.runSeconds * 1000;
 
-        extractRecords();
-        buildAndCalibrate();
-
         // restore the cal data write pointers
         // for (let i = 0; i < maxSensorCode; i++) {
         //     calWritePtr[i] = calData[i].length;
@@ -156,6 +153,9 @@ function restoreAcquisition() {
         // if enough info is present create new plotSet and display the restored data
         if (currentFCobject != null) {
 
+            sensorIDlist = currentFCobject.sensList;
+            sensorRateList = currentFCobject.rateList;
+
             plotSet = new PlotSet(currentFCobject, "plotContainer", "controlContainer");
 
             // each new plot object in the set we just created has a default viewport (0-10sec) 
@@ -164,6 +164,10 @@ function restoreAcquisition() {
                 let plot = plotSet.plotObjectList[ind];
                 plot.viewStack.shift();
             }
+
+            writePointer = rxdata.length;
+            extractRecords();
+            buildAndCalibrate();
 
             // reprocess plot data (smoothing etc)
             plotSet.reprocessPlotData();
