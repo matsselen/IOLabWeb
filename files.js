@@ -22,16 +22,28 @@ function saveToFile() {
     appMetaData.calForceConst = calForceConst;
     appMetaData.calForceTime = calForceTime;
 
-    // push any metadata plus current fixed config object onto the bottom of the dalData array
+    // push any metadata plus current fixed config object onto the bottom of the calData array
     // then stringify this
 
-    calData.unshift(currentFCobject);
-    calData.unshift(appMetaData);
-    let jdata = JSON.stringify(calData);
+    // calData.unshift(currentFCobject);
+    // calData.unshift(appMetaData);
+    // let jdata = JSON.stringify(calData);
+
+    // rawData.unshift(currentFCobject);
+    // rawData.unshift(appMetaData);
+    // let jdata = JSON.stringify(rawData);
+
+    rxdata.unshift(currentFCobject);
+    rxdata.unshift(appMetaData);
+    let jdata = JSON.stringify(rxdata);
 
     // put calData back the way it was
-    calData.shift();
-    calData.shift();
+    // calData.shift();
+    // calData.shift();
+    // rawData.shift();
+    // rawData.shift();
+    rxdata.shift();
+    rxdata.shift();
 
     // figure out the filename for the save file
     let configDesc = "noconfig";
@@ -47,7 +59,9 @@ function saveToFile() {
         date.toTimeString().substr(3, 2) + "." +
         date.toTimeString().substr(6, 2) + "_" +
         configDesc + "_" +
-        runSeconds.toFixed(0) + "s.iozip";
+        //runSeconds.toFixed(0) + "s.iozip";
+        //runSeconds.toFixed(0) + "s.riozip";
+        runSeconds.toFixed(0) + "s.rxiozip";
 
     let zip = new JSZip();
     zip.file("data.json", jdata);
@@ -77,9 +91,11 @@ async function readInputFile() {
     JSZip.loadAsync(this.files[0]).then(function (zip) {
 
         zip.file("data.json").async("text").then(function success(content) {
-            calData = JSON.parse(content);
+            // calData = JSON.parse(content);
+            rxdata = JSON.parse(content);
             if (dbgInfo) {
-                console.log(calData);
+                // console.log(calData);
+                console.log(rxdata);
             }
             restoreAcquisition();
 
@@ -95,11 +111,14 @@ function restoreAcquisition() {
     console.log("In restoreAcquisition()");
 
     // exctact the fixed config object and restore the calibrated data
-    currentFCobject = calData[1];
-    appMetaData = calData[0];
-    calData.shift();
-    calData.shift();
-
+    // currentFCobject = calData[1];
+    // appMetaData = calData[0];
+    // calData.shift();
+    // calData.shift();
+    currentFCobject = rxdata[1];
+    appMetaData = rxdata[0];
+    rxdata.shift();
+    rxdata.shift();
 
     // first see if the save data can be retored by this version of the software 
     // do this with a try/catch in case someone is trying to restore old data that has no version info
@@ -119,10 +138,13 @@ function restoreAcquisition() {
         // restore the total run time (ms)
         totalRunTime = appMetaData.runSeconds * 1000;
 
+        extractRecords();
+        buildAndCalibrate();
+
         // restore the cal data write pointers
-        for (let i = 0; i < maxSensorCode; i++) {
-            calWritePtr[i] = calData[i].length;
-        }
+        // for (let i = 0; i < maxSensorCode; i++) {
+        //     calWritePtr[i] = calData[i].length;
+        // }
 
         // remove any existing plots
         if (plotSet != null) {
