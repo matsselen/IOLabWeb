@@ -64,12 +64,15 @@ Added ability to specify the vertical B field in order to improve magnetomter ca
 Made light sensor "zeroable".
 Other small improvements to options modal. 
 
+v0.9.08 x/x/2021
+
 
 ====================== WORK ========================================
 Known Bugs:
 - Sometimes plots empty if not viewed before csv export of another plot (only Mac ?)
 
 Front Burner Tasks:
+- save/restore raw data
 - Clean up console.log
 - Clean up comments & code
 
