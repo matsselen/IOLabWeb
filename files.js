@@ -97,6 +97,9 @@ async function readInputFile() {
                 // console.log(calData);
                 console.log(rxdata);
             }
+            // setTimeout(async function () {
+            //     restoreAcquisition();
+            // }, 500);
             restoreAcquisition();
 
         }, function error(e) {
@@ -108,8 +111,6 @@ async function readInputFile() {
 
 function restoreAcquisition() {
 
-    console.log("In restoreAcquisition()");
-
     // exctact the fixed config object and restore the calibrated data
     // currentFCobject = calData[1];
     // appMetaData = calData[0];
@@ -119,6 +120,14 @@ function restoreAcquisition() {
     appMetaData = rxdata[0];
     rxdata.shift();
     rxdata.shift();
+
+    // set the calibration constants to the values used in the saved data
+    calAccelConst = appMetaData.calAccelConst;
+    calMagConst = appMetaData.calMagConst;
+    calGyroConst = appMetaData.calGyroConst;
+    calForceConst = appMetaData.calForceConst;
+    console.log("In restoreAcquisition(): Use saved calibration" );
+
 
     // first see if the save data can be retored by this version of the software 
     // do this with a try/catch in case someone is trying to restore old data that has no version info
@@ -174,6 +183,9 @@ function restoreAcquisition() {
 
             // display the data we just loaded
             plotSet.displayPlots();
+
+            // signal to restore the calibration constants to their original values
+            notFetchedCal[0] = true;
 
         }
     }

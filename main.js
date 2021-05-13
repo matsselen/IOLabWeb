@@ -316,6 +316,7 @@ function updateSystemState() {
     if (notFetchedCal[0]) {
       notFetchedCal[0] = false;
       setCalValues(0, remote1ID);
+      console.log("In updateSystemState(): Set initial calibration" );
     }
     configSelect.style.display = "block";    
     idleIncrement = 1;
