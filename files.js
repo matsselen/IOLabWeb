@@ -23,25 +23,11 @@ function saveToFile() {
     appMetaData.calForceTime = calForceTime;
 
     // push any metadata plus current fixed config object onto the bottom of the calData array
-    // then stringify this
-
-    // calData.unshift(currentFCobject);
-    // calData.unshift(appMetaData);
-    // let jdata = JSON.stringify(calData);
-
-    // rawData.unshift(currentFCobject);
-    // rawData.unshift(appMetaData);
-    // let jdata = JSON.stringify(rawData);
-
     rxdata.unshift(currentFCobject);
     rxdata.unshift(appMetaData);
     let jdata = JSON.stringify(rxdata);
 
     // put calData back the way it was
-    // calData.shift();
-    // calData.shift();
-    // rawData.shift();
-    // rawData.shift();
     rxdata.shift();
     rxdata.shift();
 
@@ -59,9 +45,7 @@ function saveToFile() {
         date.toTimeString().substr(3, 2) + "." +
         date.toTimeString().substr(6, 2) + "_" +
         configDesc + "_" +
-        //runSeconds.toFixed(0) + "s.iozip";
-        //runSeconds.toFixed(0) + "s.riozip";
-        runSeconds.toFixed(0) + "s.rxiozip";
+        runSeconds.toFixed(0) + "s.iozip";
 
     let zip = new JSZip();
     zip.file("data.json", jdata);
@@ -97,9 +81,7 @@ async function readInputFile() {
                 // console.log(calData);
                 console.log(rxdata);
             }
-            // setTimeout(async function () {
-            //     restoreAcquisition();
-            // }, 500);
+
             restoreAcquisition();
 
         }, function error(e) {
@@ -112,10 +94,6 @@ async function readInputFile() {
 function restoreAcquisition() {
 
     // exctact the fixed config object and restore the calibrated data
-    // currentFCobject = calData[1];
-    // appMetaData = calData[0];
-    // calData.shift();
-    // calData.shift();
     currentFCobject = rxdata[1];
     appMetaData = rxdata[0];
     rxdata.shift();
@@ -147,16 +125,10 @@ function restoreAcquisition() {
         // restore the total run time (ms)
         totalRunTime = appMetaData.runSeconds * 1000;
 
-        // restore the cal data write pointers
-        // for (let i = 0; i < maxSensorCode; i++) {
-        //     calWritePtr[i] = calData[i].length;
-        // }
-
         // remove any existing plots
         if (plotSet != null) {
             plotSet.reset();
             plotSet = null;
-            //resetAcquisition();
         }
 
         // if enough info is present create new plotSet and display the restored data

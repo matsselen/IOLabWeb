@@ -19,7 +19,7 @@ var calForceTime = 0;
 
 // calibration constant defaults (better than notning): 
 var calAccelConstDefault = [-190, 833, -93, 830, 0, 832];
-var calMagConstDefault = [-1382, 9.0, 1180, 9.9, 1019, 9.1];
+var calMagConstDefault = [-1382, 9.0, 1180, 9.9, 1019, 9.1, -48.5];
 var calGyroConstDefault = [0, 807, 20, 833, 13, 825];
 var calForceConstDefault = [2147, -58.2];
 
@@ -274,8 +274,9 @@ function calcAMGconstants() {
 
     // save these values in calibration arrays
     calAccelConst[0] = [axOffset, axScale, ayOffset, ayScale, azOffset, azScale];
-    calMagConst[0] = [mxOffset, mxScale, myOffset, myScale, mzOffset, mzScale];
+    calMagConst[0] = [mxOffset, mxScale, myOffset, myScale, mzOffset, mzScale, local_Bvert];
     calGyroConst[0] = [gxOffset, gxScale, gyOffset, gyScale, gzOffset, gzScale];
+
     console.log("New AMG calibration constants:")
     console.log(calAccelConst[0]);
     console.log(calMagConst[0]);
@@ -405,6 +406,9 @@ function setCalValues(remoteNumber, remoteID) {  // remoteNumber = 0,1 and remot
                 console.log("magnetometer calibrations set for remote " +
                     remoteNumber.toString() + " remoteID " + remoteID.toString(), calMagConst);
                 calMagTime = entry[0];
+                if ((entry.length > 10) && (entry[10] != undefined)) {
+                    calMagConst[remoteNumber][6] = entry[10];
+                }
             }
 
             if (entry[2] == 3) { // gyroscope
