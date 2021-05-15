@@ -67,7 +67,7 @@ Other small improvements to options modal.
 v0.9.08 5/14/2021
 Save/restore raw data (rxdata). Includes saving & restoring calibration info as well.
 Save local_Bvert value with magnetometer calibration constants. 
-Add link to changelog on appication (click on "beta)"
+Add link to changelog on appication (click on "notes)"
 
 
 ====================== WORK ========================================
