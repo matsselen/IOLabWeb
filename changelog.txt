@@ -1,79 +1,7 @@
-changelog.txt
-
-This file is used to track changes to IOLabWeb and to show what is currently being worked on. 
+This file is used to track ongoing work and releases of IOLabWeb. 
 (Questions or suggestions to mats@illinois.edu)
 
-====================== RELEASES ====================================
-v0.8.40 4/1/21
-Innitial alpha release. No known bugs but I'm sure that will change as soon as someone else uses it. 
-
-v0.8.41 4/1/21
-Moved calibration button to the left. Changed "Start" "Record" and "Stop" to "Stop/Pause"  
-
-v0.8.45 4/6/21
-Some small improvements to UX (button placements etc)  
-
-v0.8.48 4/9/21
-Added CSV export button for each chart 
-
-v0.8.50 4/10/21
-Added sample rate to chart title
-Store more config info with saved data & check version when restoring 
-Moved software version to globalVariables.js and added compatibility check for retored data
-Several small housekeeping items (fingers crossed nothing broke)
-
-v0.8.52 4/16/2021
-Speed up panning by implementing sparse plotting when Ndata >> Npixels
-Added unit "n/a" for light and sound since these are not calibrated
-
-v0.8.55 4/18/2021
-Added zip compression to files used for saving & restoring acquisitions.
-The files now have names like "IOLab_Apr-18-2021_19.48.59_Pendulum_29s.iozip".
-Files saved with previous versions will not be readable. 
-
-v0.8.56 4/21/2021
-Added DAC output control.
-Added A1/A2/A3 readout.
-Fixed error when checking/unchecking empty plot  
-Better rezero icon.
-
-v0.8.58 4/22/2021
-Added up/down DAC controls
-Some housekeeping
-
-v0.8.60 4/22/2021
-Add controls for other outputs (D5, D6, buzzer).
-Hide D5 control until option menu is available.
-
-v0.9.00 4/23/2021
-Added an options modal to select which output controls are shown 
-Store options in a cookie
-Changed cookie persistence to 2 years for both calibrations and options
-Tweak CSV download icon
-Elevate application to Beta
-
-v0.9.02 4/26/2021
-Bugfix - removed outdated reference to chartlist causing calibration to fail
-
-v0.9.04 4/30/2021
-Added inactivity timeout to save battery life. Made timeout setting an option controllable
-on option modal & saved in option cookie.  If not set the fault timeout is 10 minutes. 
-
-v0.9.06 5/8/2021
-Added ability to specify the vertical B field in order to improve magnetomter calibration.
-Made light sensor "zeroable".
-Other small improvements to options modal. 
-
-v0.9.08 5/14/2021
-Save/restore raw data (rxdata). Includes saving & restoring calibration info as well.
-Save local_Bvert value with magnetometer calibration constants. 
-Add link to changelog on appication (click on "notes)"
-
-
-====================== WORK ========================================
-Known Bugs:
-- Sometimes plots empty if not viewed before csv export of another plot (only Mac ?)
-
+====================== Ongoing Work ========================================
 Front Burner Tasks:
 - Make sure correct calibration is used for restored datasets
 - Device-pairing modal
@@ -87,3 +15,71 @@ Back Burner Tasks:
 - display rezero icon on all zeroable plots when linked
 - save/restore dataShift (?)
 - improved gyroscope calibration
+- Plots sometimes empty after CSV export if not viewed before export (only Mac ?)
+
+================ Release Notes ================================================
+v0.9.08 5/14/2021
+Save/restore raw data (rxdata). Includes saving & restoring calibration info as well.
+Save local_Bvert value with magnetometer calibration constants. 
+Add link to changelog on application (click on "notes)"
+
+v0.9.06 5/8/2021
+Added ability to specify the vertical B field in order to improve magnetomter calibration.
+Made light sensor "zeroable".
+Other small improvements to options modal. 
+
+v0.9.04 4/30/2021
+Added inactivity timeout to save battery life. Made timeout setting an option controllable
+on option modal & saved in option cookie.  If not set the fault timeout is 10 minutes. 
+
+v0.9.02 4/26/2021
+Bugfix - removed outdated reference to chartlist causing calibration to fail
+
+v0.9.00 4/23/2021
+Added an options modal to select which output controls are shown 
+Store options in a cookie
+Changed cookie persistence to 2 years for both calibrations and options
+Tweak CSV download icon
+Elevate application to Beta
+
+v0.8.60 4/22/2021
+Add controls for other outputs (D5, D6, buzzer).
+Hide D5 control until option menu is available.
+
+v0.8.58 4/22/2021
+Added up/down DAC controls
+Some housekeeping
+
+v0.8.56 4/21/2021
+Added DAC output control.
+Added A1/A2/A3 readout.
+Fixed error when checking/unchecking empty plot  
+Better rezero icon.
+
+v0.8.55 4/18/2021
+Added zip compression to files used for saving & restoring acquisitions.
+The files now have names like "IOLab_Apr-18-2021_19.48.59_Pendulum_29s.iozip".
+Files saved with previous versions will not be readable. 
+
+v0.8.52 4/16/2021
+Speed up panning by implementing sparse plotting when Ndata >> Npixels
+Added unit "n/a" for light and sound since these are not calibrated
+
+v0.8.50 4/10/21
+Added sample rate to chart title
+Store more config info with saved data & check version when restoring 
+Moved software version to globalVariables.js and added compatibility check for retored data
+Several small housekeeping items (fingers crossed nothing broke)
+
+v0.8.48 4/9/21
+Added CSV export button for each chart 
+
+v0.8.45 4/6/21
+Some small improvements to UX (button placements etc)  
+
+v0.8.41 4/1/21
+Moved calibration button to the left. Changed "Start" "Record" and "Stop" to "Stop/Pause"  
+
+v0.8.40 4/1/21
+Innitial alpha release. No known bugs but I'm sure that will change as soon as someone else uses it. 
+
