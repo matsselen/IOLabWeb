@@ -75,6 +75,7 @@ Known Bugs:
 - Sometimes plots empty if not viewed before csv export of another plot (only Mac ?)
 
 Front Burner Tasks:
+- Make sure correct calibration is used for restored datasets
 - Device-pairing modal
 - Time-aligned CSV export for (one file for all sensors)
 - Clean up console.log
