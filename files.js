@@ -22,16 +22,14 @@ function saveToFile() {
     appMetaData.calForceConst = calForceConst;
     appMetaData.calForceTime = calForceTime;
 
-    // push any metadata plus current fixed config object onto the bottom of the dalData array
-    // then stringify this
-
-    calData.unshift(currentFCobject);
-    calData.unshift(appMetaData);
-    let jdata = JSON.stringify(calData);
+    // push any metadata plus current fixed config object onto the bottom of the calData array
+    rxdata.unshift(currentFCobject);
+    rxdata.unshift(appMetaData);
+    let jdata = JSON.stringify(rxdata);
 
     // put calData back the way it was
-    calData.shift();
-    calData.shift();
+    rxdata.shift();
+    rxdata.shift();
 
     // figure out the filename for the save file
     let configDesc = "noconfig";
@@ -77,10 +75,13 @@ async function readInputFile() {
     JSZip.loadAsync(this.files[0]).then(function (zip) {
 
         zip.file("data.json").async("text").then(function success(content) {
-            calData = JSON.parse(content);
+            // calData = JSON.parse(content);
+            rxdata = JSON.parse(content);
             if (dbgInfo) {
-                console.log(calData);
+                // console.log(calData);
+                console.log(rxdata);
             }
+
             restoreAcquisition();
 
         }, function error(e) {
@@ -92,13 +93,18 @@ async function readInputFile() {
 
 function restoreAcquisition() {
 
-    console.log("In restoreAcquisition()");
-
     // exctact the fixed config object and restore the calibrated data
-    currentFCobject = calData[1];
-    appMetaData = calData[0];
-    calData.shift();
-    calData.shift();
+    currentFCobject = rxdata[1];
+    appMetaData = rxdata[0];
+    rxdata.shift();
+    rxdata.shift();
+
+    // set the calibration constants to the values used in the saved data
+    calAccelConst = appMetaData.calAccelConst;
+    calMagConst = appMetaData.calMagConst;
+    calGyroConst = appMetaData.calGyroConst;
+    calForceConst = appMetaData.calForceConst;
+    console.log("In restoreAcquisition(): Use saved calibration" );
 
 
     // first see if the save data can be retored by this version of the software 
@@ -119,20 +125,17 @@ function restoreAcquisition() {
         // restore the total run time (ms)
         totalRunTime = appMetaData.runSeconds * 1000;
 
-        // restore the cal data write pointers
-        for (let i = 0; i < maxSensorCode; i++) {
-            calWritePtr[i] = calData[i].length;
-        }
-
         // remove any existing plots
         if (plotSet != null) {
             plotSet.reset();
             plotSet = null;
-            //resetAcquisition();
         }
 
         // if enough info is present create new plotSet and display the restored data
         if (currentFCobject != null) {
+
+            sensorIDlist = currentFCobject.sensList;
+            sensorRateList = currentFCobject.rateList;
 
             plotSet = new PlotSet(currentFCobject, "plotContainer", "controlContainer");
 
@@ -143,11 +146,18 @@ function restoreAcquisition() {
                 plot.viewStack.shift();
             }
 
+            writePointer = rxdata.length;
+            extractRecords();
+            buildAndCalibrate();
+
             // reprocess plot data (smoothing etc)
             plotSet.reprocessPlotData();
 
             // display the data we just loaded
             plotSet.displayPlots();
+
+            // signal to restore the calibration constants to their original values
+            notFetchedCal[0] = true;
 
         }
     }

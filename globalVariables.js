@@ -6,10 +6,10 @@
 'use strict';
 
 // current version
-var currentVersion = [0,9,6];
+var currentVersion = [0,9,8];
 
 // oldest app version whose saved data is compatible with this app
-var bcompatVersion = [0,8,54];
+var bcompatVersion = [0,9,8];
 
 // application metadata (included with saved data)
 var appMetaData = {
