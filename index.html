@@ -15,6 +15,7 @@
   <script src="debug.js"></script>
   <script src="process_data.js"></script>
   <script src="iolab_options.js"></script>
+  <script src="iolab_pairing.js"></script>
   <script src="config.js"></script>
   <script src="files.js"></script>
   <script src="PlotClass.js"></script>
@@ -59,8 +60,11 @@
             &nbsp;
             <a id="optBtn" title="Manage Options" style="cursor: pointer; ">
               <img src="images/gear.PNG" height="30" valign="top"></a>
+              &nbsp;
+            <a id="pairBtn" title="Manage Pairing" style="cursor: pointer; ">
+              <img src="images/pair.PNG" height="30" valign="top"></a>
 
-          &nbsp;&nbsp;
+          &nbsp;
           <a id="butConnect" title="Make or Break Serial Connection to Dongle" style="cursor: pointer;">
             <img id="connectImg" src="images/connect.PNG" valign="middle"></a>
           &nbsp;
@@ -238,6 +242,32 @@
       </div>
     </div>
   </div>
+
+  <!-- The Pairing Modal -->
+  <div id="pairModal" class="pairmodal">
+
+    <!-- pairmodal content -->
+    <div class="pairmodal-content">
+      <div class="pairmodal-header">
+        <span>Pairing</span>
+        <span class="closePair">&times;</span>
+      </div>
+      <div class="pairmodal-body">
+        <table>
+          <div><br/><b>Pairing Controls:</b></div>
+          <tr>
+            <td><button id="pairUnpair" type="checkbox" onclick="sendUnpair()" checked>Unpair &nbsp;&nbsp;</button></td>
+            <td><button id="pairFind" type="checkbox" onclick="sendFind()" checked>Find &nbsp;&nbsp;</button></td>
+            <td><button id="pairPair" type="checkbox" onclick="sendPair()" checked>Pair &nbsp;&nbsp;</button></td>
+          </tr>
+        </table>
+
+        <br/><br/>
+      </div>
+    </div>
+  </div>
+
+
 </body>
 
 </html>

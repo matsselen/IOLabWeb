@@ -78,6 +78,11 @@ const optButton = document.getElementById("optBtn");
 const cospan = document.getElementsByClassName("closeOpt")[0];
 const bzLocal = document.getElementById("bzLocal");
 
+// pairing modal stuff
+const pairModal = document.getElementById("pairModal");
+const pairButton = document.getElementById("pairBtn");
+const cpspan = document.getElementsByClassName("closePair")[0];
+
 // ticks
 const tickCounter = document.getElementById("tickCounter");
 const timeoutPicker = document.getElementById("timeoutPicker");
@@ -114,12 +119,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // fetch option from cookie if possible
   initializeOptions();
 
-  // when the options modal is invoked
-  optButton.onclick = function () {
-    openOptModal();
-    optModal.style.display = "block";
-  }
-
   // when the calibration modal is invoked
   calButton.onclick = function () {
     calibrationSetup();
@@ -131,10 +130,28 @@ document.addEventListener('DOMContentLoaded', () => {
     endCal();
   }
 
+  // when the options modal is invoked
+  optButton.onclick = function () {
+    openOptModal();
+    optModal.style.display = "block";
+  }
+
   // when the option modal is closed
   cospan.onclick = function () {
     endOpt();
+
+  }  // when the pairing modal is invoked
+  pairButton.onclick = function () {
+    openPairModal();
+    pairModal.style.display = "block";
   }
+
+  // when the pairing modal is closed
+  cpspan.onclick = function () {
+    pairModal.style.display = "none";
+    endPair();
+  }
+
 
   // get things ready
   getIOLabConfigInfo();
