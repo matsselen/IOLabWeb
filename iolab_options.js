@@ -194,6 +194,16 @@ function getCommandRecord(command, remoteID, payload) {
   } else if (command == "getPairing") {
     byteArray = new Uint8Array([0x02, 0x12, 0x00, 0x0A]);
 
+  } else if (command == "findRemote") {
+    byteArray = new Uint8Array([0x02, 0x13, 0x00, 0x0A]);
+
+  } else if (command == "startPairing") {
+    remoteID = 1; //payload = [status, ID2, ID1, ID0]
+    byteArray = new Uint8Array([0x02, 0x10, 0x05, remoteID, payload, 0x0A]);
+
+  } else if (command == "stopPairing") {
+    byteArray = new Uint8Array([0x02, 0x11, 0x00, 0x0A]);
+
   } else if (command == "getRemoteStatus") {
     remoteID = 1;
     byteArray = new Uint8Array([0x02, 0x2A, 0x01, remoteID, 0x0A]);
@@ -266,6 +276,18 @@ function buildCmdPicker() {
   cmdOption.value = cmdOption.innerText = "getPacketConfig";
   cmdPicker.appendChild(cmdOption);
 
+  cmdOption = document.createElement('option');
+  cmdOption.value = cmdOption.innerText = "startPairing";
+  cmdPicker.appendChild(cmdOption);
+
+  cmdOption = document.createElement('option');
+  cmdOption.value = cmdOption.innerText = "stopPairing";
+  cmdPicker.appendChild(cmdOption);
+
+  cmdOption = document.createElement('option');
+  cmdOption.value = cmdOption.innerText = "findRemote";
+  cmdPicker.appendChild(cmdOption);
+  
   cmdOption = document.createElement('option');
   cmdOption.value = cmdOption.innerText = "getPairing";
   cmdPicker.appendChild(cmdOption);

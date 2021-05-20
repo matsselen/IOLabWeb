@@ -33,12 +33,12 @@
   <header class="header">
     <h1>
       <label class="iolab"> <span id="iolabWeb" title="Expect Frequent Updates. Enable Cookies."> 
-        <i><b>iOLabWeb (</b><a href="changelog.txt" title="Display the changelog.txt file" target="_blank" style="color:rgb(255, 242, 182); text-decoration: none; ">notes</a><b>)</b></i></span> </label> &nbsp;&nbsp; |
+        <i><b>iOLabWeb (</b><a href="changelog.txt" title="Display the changelog file" target="_blank" style="color:rgb(255, 242, 182); text-decoration: none; ">notes</a><b>)</b></i></span> </label> &nbsp;&nbsp; |
       &nbsp;&nbsp;
-      <label title="Displays Dongle Information"> 
+      <label title="Displays Information about the Dongle"> 
         Dongle: <span id="dongleStatusDisplay" title="Displays Dongle Information">not connected
         </span> </label> &nbsp;&nbsp; | &nbsp;&nbsp;
-      <label title="Displays Information about Remote"> 
+      <label title="Displays Information about the Remote"> 
         Remote: <span id="remoteStatusDisplay" title="Displays Information about Remote">off</span> </label>
     </h1>
   </header>
@@ -55,13 +55,13 @@
     <table>
       <tr>
         <td>
-          <a href="" id="resetApp" onclick="resetApp()" title="Reloads and restarts IOLabWeb (data is cleared). "
+          <a href="" id="resetApp" onclick="resetApp()" title="Restart (data is cleared)"
             style="cursor: pointer;"><img src="images/reset2.PNG" valign="middle" height="30"></a>
             &nbsp;
-            <a id="optBtn" title="Manage Options" style="cursor: pointer; ">
+            <a id="optBtn" title="Options" style="cursor: pointer; ">
               <img src="images/gear.PNG" height="30" valign="top"></a>
               &nbsp;
-            <a id="pairBtn" title="Manage Pairing" style="cursor: pointer; ">
+            <a id="pairBtn" title="Pairing" style="cursor: pointer; ">
               <img src="images/pair2.PNG" height="30" valign="top"></a>
 
           &nbsp;
@@ -81,7 +81,7 @@
 
         <td>
           <span id="restore" title="Load previously saved data from an iozip file">
-            Restore: <input type="file" accept=".iozip,.rxiozip" size="20" name="inputfile" id="inputfile">
+            Restore: <input type="file" accept=".iozip" size="20" name="inputfile" id="inputfile">
           </span>
         </td>
         <td>
