@@ -454,7 +454,7 @@ var iolabConfig =
       "legends": ["Fᵧ"],
       "csvLabels": ["Fy (N)"],
       "pathColors": ["#0000BB"],
-      "scales": [-5, 5],
+      "scales": [-10, 10],
       "zeroable": true,
       "autoScaleY": false
     },
