@@ -199,7 +199,7 @@ function getCommandRecord(command, remoteID, payload) {
 
   } else if (command == "startPairing") {
     remoteID = 1; //payload = [status, ID2, ID1, ID0]
-    byteArray = new Uint8Array([0x02, 0x10, 0x05, remoteID, payload, 0x0A]);
+    byteArray = new Uint8Array([0x02, 0x10, 0x05, remoteID, ...payload, 0x0A]);
 
   } else if (command == "stopPairing") {
     byteArray = new Uint8Array([0x02, 0x11, 0x00, 0x0A]);
