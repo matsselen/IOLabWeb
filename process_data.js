@@ -87,6 +87,10 @@ function extractRecords() {
             nGetPairing++;
             processGetPairing(readPointer + 3, payloadBytes);
           }
+          if (recType == 0x13) { // Find Remote
+            nFindRemote++;
+            processFindRemote(readPointer + 3, payloadBytes);
+          }
           if (recType == 0x14) { // Get Dongle Status
             nGetDongleStatus++;
             processGetDongleStatus(readPointer + 3, payloadBytes);
@@ -152,6 +156,13 @@ function processGetPairing(recStart, recLength) {
   console.log("In processGetPairing: " + "remote1Status:0x" + remote1Status.toString(16) +
     " remote1ID:0x" + remote1ID.toString(16) + " remote2Status:0x" + remote2Status.toString(16) +
     " remote2ID:0x" + remote2ID.toString(16));
+  updateSystemState();
+}
+
+// Process responses to the Find Remote command
+function processFindRemote(recStart, recLength) {
+  foundRemote = (rxdata[recStart] << 16) + (rxdata[recStart + 1] << 8) + rxdata[recStart + 2];
+  console.log("In processFindRemote: " + "foundRemote:0x" + foundRemote.toString(16));
   updateSystemState();
 }
 

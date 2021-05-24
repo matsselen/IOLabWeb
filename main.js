@@ -142,8 +142,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   }  // when the pairing modal is invoked
   pairButton.onclick = function () {
+    if (serialConnected) {
     openPairModal();
     pairModal.style.display = "block";
+    } else {
+      window.alert("You need to CONNECT your dongle before you can do this");
+    }
   }
 
   // when the pairing modal is closed
@@ -224,13 +228,11 @@ async function clickSend() {
   if ((current_cmd == "setFixedConfig") && (current_config_code == -1)) return;
 
   let byteArray = getCommandRecord(current_cmd);
-  // console.log(byteArray);
   await sendRecord(byteArray);
 
   if (current_cmd == "setFixedConfig") {
     setTimeout(async function () {
       byteArray = getCommandRecord("getPacketConfig");
-      console.log(byteArray);
       await sendRecord(byteArray);
     }, 100);
 

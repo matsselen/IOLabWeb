@@ -303,12 +303,10 @@ async function configCalDAQ() {
     configPicker.title = fixedConfigList[current_config_code].longDesc2;
 
     let byteArray = getCommandRecord(current_cmd);
-    console.log(byteArray);
     await sendRecord(byteArray);
 
     setTimeout(async function () {
         byteArray = getCommandRecord("getPacketConfig");
-        console.log(byteArray);
         await sendRecord(byteArray);
     }, 100);
 
@@ -503,7 +501,6 @@ async function getBarometerThermometerCalibration() {
     console.log("Requesting barometer calibration constants");
     let byteArray1 = getCommandRecord("getBarometerCalibration");
     setTimeout(async function () {
-        console.log(byteArray1);
         await sendRecord(byteArray1);
     }, delay);
     delay += delayIncrement;
@@ -513,7 +510,6 @@ async function getBarometerThermometerCalibration() {
     let byteArray2 = getCommandRecord("getThermometerCalibration");
     for (let n = 0; n < 3; n++) {
         setTimeout(async function () {
-            console.log(byteArray2);
             await sendRecord(byteArray2);
         }, delay);
         delay += delayIncrement;
