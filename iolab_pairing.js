@@ -8,6 +8,14 @@
 
 function openPairModal() {
   console.log("In openPairModal()");
+
+
+  // if (remote1Status==1 && remoteStatus[0]==1) {
+  // pairInfo.innerHTML = "Dongle and Remote are paired"
+  // } else {
+  //   pairInfo.innerHTML = "Dongle and Remote are paired"
+  // }
+
 }
 
 async function endPair() {

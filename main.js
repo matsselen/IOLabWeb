@@ -82,6 +82,7 @@ const bzLocal = document.getElementById("bzLocal");
 const pairModal = document.getElementById("pairModal");
 const pairButton = document.getElementById("pairBtn");
 const cpspan = document.getElementsByClassName("closePair")[0];
+const pairInfo = document.getElementById("pairInfo");
 
 // ticks
 const tickCounter = document.getElementById("tickCounter");
@@ -322,14 +323,17 @@ function updateSystemState() {
   // display dongle info if we have it
   if (dongleID > 0) {
     dongleStatusDisplay.innerHTML = "0x" + dongleID.toString(16);
+    pairInfo.innerHTML = "Dongle 0x" + dongleID.toString(16);
   } else {
     dongleStatusDisplay.innerHTML = "not connected";
+    pairInfo.innerHTML = "Dongle not connected";
   }
 
   // display remote info if we have it
   if ((remote1ID > 0) && (remoteStatus[0])) {
     remoteStatusDisplay.innerHTML = "0x" + remote1ID.toString(16) +
       " (" + remoteVoltage[0].toFixed(2) + " V)";
+    pairInfo.innerHTML += " Remote 0x" + remote1ID.toString(16);
     remoteConnected = true;
     // get the cal values needed by this remote, if they exist (just remote 1 [0] for now)
     if (notFetchedCal[0]) {
@@ -342,6 +346,7 @@ function updateSystemState() {
 
 
   } else {
+    pairInfo.innerHTML += " (Remote not connected)";
     remoteConnected = false;
     configSelect.style.display = "none";
     remoteStatusDisplay.innerHTML = "off";
