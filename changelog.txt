@@ -21,6 +21,7 @@ Back Burner Tasks:
 
 v0.9.10 5/xx/2021
 Adding pairing modal...
+Removed some redundant calls to console.log
 
 v0.9.08 5/14/2021
 Save/restore raw data (rxdata). Includes saving & restoring calibration info as well.

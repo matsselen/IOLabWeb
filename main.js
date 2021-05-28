@@ -146,7 +146,7 @@ document.addEventListener('DOMContentLoaded', () => {
     openPairModal();
     pairModal.style.display = "block";
     } else {
-      window.alert("You need to CONNECT your dongle before you can do this");
+      window.alert("You need to CONNECT with your dongle before you can do this");
     }
   }
 
