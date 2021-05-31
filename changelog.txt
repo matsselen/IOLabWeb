@@ -19,8 +19,8 @@ Back Burner Tasks:
 
 ================ Release Notes ================================================
 
-v0.9.10 5/xx/2021
-Adding pairing modal...
+v0.9.10 5/31/2021
+Adding new modal for unpairing and pairing dongles with remotes (with embedded documentation) 
 Removed some redundant calls to console.log
 
 v0.9.08 5/14/2021

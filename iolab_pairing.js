@@ -8,6 +8,7 @@
 
 var showingPairingModal = false;
 
+// called when the pairing modal is opened
 function openPairModal() {
   console.log("In openPairModal()");
   showingPairingModal = true;
@@ -16,7 +17,7 @@ function openPairModal() {
   updatePairmodalInfo();
 }
 
-
+// displays the status of the dongle and remote on the pairing modal
 function updatePairmodalInfo() {
 
   // display dongle info 
@@ -44,16 +45,14 @@ function updatePairmodalInfo() {
 
 }
 
+// called when the pairing modal is closed
 async function closePairModal() {
   showingPairingModal = false;
   console.log("In closePairModal()");
 
 }
 
-function pairingSequence() {
-
-}
-
+// sends a command to the system to pair a remote with a dongle
 async function sendPair() {
   let status = 1; // 0=unpair, 1=pair 
   let id0 = foundRemote & 0xFF;
@@ -71,6 +70,7 @@ async function sendPair() {
 
 }
 
+// unpair the current remote
 async function sendUnpair() {
   let status = 0; // 0=unpair, 1=pair 
   let id0 = remote1ID & 0xFF;
@@ -88,6 +88,7 @@ async function sendUnpair() {
 
 }
 
+// finds any nearby remote in discovery mode and pairs with it
 async function sendFind() {
   console.log("In sendFind()");
 
@@ -103,8 +104,5 @@ async function sendFind() {
       console.log("Remote not found");
     }
   }, 200);
-
-
-
 
 }
