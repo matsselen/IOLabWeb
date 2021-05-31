@@ -114,7 +114,6 @@ async function connectAndStart() {
     // (the 100 ms delay will do this after read-loop starts)
     setTimeout(async function () {
         let byteArray = getCommandRecord("getDongleStatus");
-        console.log(byteArray);
         await sendRecord(byteArray);
     }, 100);
 
@@ -122,7 +121,6 @@ async function connectAndStart() {
     // (the 100 ms delay will do this after read-loop starts)
     setTimeout(async function () {
         let byteArray = getCommandRecord("getPairing");
-        console.log(byteArray);
         await sendRecord(byteArray);
     }, 100);
 
@@ -130,7 +128,6 @@ async function connectAndStart() {
     // (the 100 ms delay will do this after read-loop starts)
     setTimeout(async function () {
         let byteArray = getCommandRecord("getRemoteStatus");
-        console.log(byteArray);
         await sendRecord(byteArray);
     }, 100);
 

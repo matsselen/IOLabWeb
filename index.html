@@ -15,6 +15,7 @@
   <script src="debug.js"></script>
   <script src="process_data.js"></script>
   <script src="iolab_options.js"></script>
+  <script src="iolab_pairing.js"></script>
   <script src="config.js"></script>
   <script src="files.js"></script>
   <script src="PlotClass.js"></script>
@@ -32,12 +33,12 @@
   <header class="header">
     <h1>
       <label class="iolab"> <span id="iolabWeb" title="Expect Frequent Updates. Enable Cookies."> 
-        <i><b>iOLabWeb (</b><a href="changelog.txt" title="Display the changelog.txt file" target="_blank" style="color:rgb(255, 242, 182); text-decoration: none; ">notes</a><b>)</b></i></span> </label> &nbsp;&nbsp; |
+        <i><b>iOLabWeb (</b><a href="changelog.txt" title="Display the changelog file" target="_blank" style="color:rgb(255, 242, 182); text-decoration: none; ">notes</a><b>)</b></i></span> </label> &nbsp;&nbsp; |
       &nbsp;&nbsp;
-      <label title="Displays Dongle Information"> 
+      <label title="Displays Information about the Dongle"> 
         Dongle: <span id="dongleStatusDisplay" title="Displays Dongle Information">not connected
         </span> </label> &nbsp;&nbsp; | &nbsp;&nbsp;
-      <label title="Displays Information about Remote"> 
+      <label title="Displays Information about the Remote"> 
         Remote: <span id="remoteStatusDisplay" title="Displays Information about Remote">off</span> </label>
     </h1>
   </header>
@@ -54,13 +55,16 @@
     <table>
       <tr>
         <td>
-          <a href="" id="resetApp" onclick="resetApp()" title="Reloads and restarts IOLabWeb (data is cleared). "
+          <a href="" id="resetApp" onclick="resetApp()" title="Restart (data is cleared)"
             style="cursor: pointer;"><img src="images/reset2.PNG" valign="middle" height="30"></a>
             &nbsp;
-            <a id="optBtn" title="Manage Options" style="cursor: pointer; ">
+            <a id="optBtn" title="Options and Preferences" style="cursor: pointer; ">
               <img src="images/gear.PNG" height="30" valign="top"></a>
+              &nbsp;
+            <a id="pairBtn" title="Pairing Dialog" style="cursor: pointer; ">
+              <img src="images/pair2.PNG" height="30" valign="top"></a>
 
-          &nbsp;&nbsp;
+          &nbsp;
           <a id="butConnect" title="Make or Break Serial Connection to Dongle" style="cursor: pointer;">
             <img id="connectImg" src="images/connect.PNG" valign="middle"></a>
           &nbsp;
@@ -77,7 +81,7 @@
 
         <td>
           <span id="restore" title="Load previously saved data from an iozip file">
-            Restore: <input type="file" accept=".iozip,.rxiozip" size="20" name="inputfile" id="inputfile">
+            Restore: <input type="file" accept=".iozip" size="20" name="inputfile" id="inputfile">
           </span>
         </td>
         <td>
@@ -238,6 +242,39 @@
       </div>
     </div>
   </div>
+
+  <!-- The Pairing Modal -->
+  <div id="pairModal" class="pairmodal">
+
+    <!-- pairmodal content -->
+    <div class="pairmodal-content">
+      <div class="pairmodal-header">
+        <span>Pairing Dialog</span>
+        <span class="closePair">&times;</span>
+      </div>
+      <div class="pairmodal-body">
+        <table>
+          <div> <p id="pairInfo" class="pairinst"> </p> </div>
+          <button id="pairUnpair" type="checkbox" onclick="sendUnpair()" checked>UNPAIR</button>
+
+          <div> <p id="pairInst" class="inst"> <b>To pair the Dongle with a Remote, put the remote into Discovery Mode 
+            <br/>and click the PAIR button at the bottom of this dialog.</b>
+            <br/><br/>To put your remote into Discovery Mode: <br/>
+            1. Make sure it is turned off.<br/>
+            2. Hold down the <b>+</b> button while you turn the device back on.<br/>
+            3. Keep holding the <b>+</b> button for about 3 seconds until the lights flash as shown below:<br/>
+            <img src="images/pair_mode_blink.gif" width="300">
+            <br/>(If you are unsure, <a href="https://mediaspace.illinois.edu/media/t/1_muheaqex" title="Discovery Mode Instructions" 
+            target="_blank"> this video</a> shows you how to do it).</p> 
+          </div>
+          <button id="pairFind" type="checkbox" onclick="sendFind()" checked>PAIR</button>&nbsp;&nbsp;
+
+        <br/><br/>
+      </div>
+    </div>
+  </div>
+
+
 </body>
 
 </html>

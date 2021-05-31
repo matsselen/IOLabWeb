@@ -78,6 +78,13 @@ const optButton = document.getElementById("optBtn");
 const cospan = document.getElementsByClassName("closeOpt")[0];
 const bzLocal = document.getElementById("bzLocal");
 
+// pairing modal stuff
+const pairModal = document.getElementById("pairModal");
+const pairButton = document.getElementById("pairBtn");
+const cpspan = document.getElementsByClassName("closePair")[0];
+const pairInfo = document.getElementById("pairInfo");
+const pairInst = document.getElementById("pairInst");
+
 // ticks
 const tickCounter = document.getElementById("tickCounter");
 const timeoutPicker = document.getElementById("timeoutPicker");
@@ -114,12 +121,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // fetch option from cookie if possible
   initializeOptions();
 
-  // when the options modal is invoked
-  optButton.onclick = function () {
-    openOptModal();
-    optModal.style.display = "block";
-  }
-
   // when the calibration modal is invoked
   calButton.onclick = function () {
     calibrationSetup();
@@ -131,10 +132,33 @@ document.addEventListener('DOMContentLoaded', () => {
     endCal();
   }
 
+  // when the options modal is invoked
+  optButton.onclick = function () {
+    openOptModal();
+    optModal.style.display = "block";
+  }
+
   // when the option modal is closed
   cospan.onclick = function () {
     endOpt();
+  }  
+  
+  // when the pairing modal is invoked
+  pairButton.onclick = function () {
+    //if (serialConnected) {
+    openPairModal();
+    pairModal.style.display = "block";
+    //} else {
+    //  window.alert("You need to CONNECT with your dongle before you can do this");
+    //}
   }
+
+  // when the pairing modal is closed
+  cpspan.onclick = function () {
+    pairModal.style.display = "none";
+    closePairModal();
+  }
+
 
   // get things ready
   getIOLabConfigInfo();
@@ -207,13 +231,11 @@ async function clickSend() {
   if ((current_cmd == "setFixedConfig") && (current_config_code == -1)) return;
 
   let byteArray = getCommandRecord(current_cmd);
-  // console.log(byteArray);
   await sendRecord(byteArray);
 
   if (current_cmd == "setFixedConfig") {
     setTimeout(async function () {
       byteArray = getCommandRecord("getPacketConfig");
-      console.log(byteArray);
       await sendRecord(byteArray);
     }, 100);
 
@@ -312,6 +334,7 @@ function updateSystemState() {
     remoteStatusDisplay.innerHTML = "0x" + remote1ID.toString(16) +
       " (" + remoteVoltage[0].toFixed(2) + " V)";
     remoteConnected = true;
+
     // get the cal values needed by this remote, if they exist (just remote 1 [0] for now)
     if (notFetchedCal[0]) {
       notFetchedCal[0] = false;
@@ -329,6 +352,8 @@ function updateSystemState() {
     idleIncrement = 0;
     idleTicks = idleTimeoutCount; 
   }
+
+  if (showingPairingModal) { updatePairmodalInfo(); }
 
   // display the start button if the daq is configured
   if (daqConfigured) {

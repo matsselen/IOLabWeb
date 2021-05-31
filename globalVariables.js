@@ -6,7 +6,7 @@
 'use strict';
 
 // current version
-var currentVersion = [0,9,8];
+var currentVersion = [0,9,10];
 
 // oldest app version whose saved data is compatible with this app
 var bcompatVersion = [0,9,8];
@@ -129,6 +129,10 @@ var remote1Status = 0, remote2Status = 0;
 var remote1ID = 0, remote2ID = 0;
 var nGetPairing = 0;
 
+// these hold the findRemote info
+var foundRemote = 0;
+var nFindRemote = 0;
+
 // these hold the data packet configuration info
 var nSensor = [0,0];
 var sensorArray = [[],[]];
@@ -148,7 +152,6 @@ var baromConstCalculated = false;
 // thermometer calibration
 var rawThermometerC85 = 0;
 var rawThermometerC30 = 0;
-
 
 // these hold the fixed configuration info
 var fixedConfig = [0,0];
