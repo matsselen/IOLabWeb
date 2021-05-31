@@ -4,7 +4,6 @@ This file is used to track ongoing work and releases of IOLabWeb.
 ====================== Ongoing Work ========================================
 Front Burner Tasks:
 - Optimize which calibration is used for restored datasets
-- Device-pairing modal
 - Time-aligned CSV export for (one file for all sensors)
 - Clean up console.log
 - Clean up comments & code
