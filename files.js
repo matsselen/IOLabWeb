@@ -159,6 +159,15 @@ function restoreAcquisition() {
             // signal to restore the calibration constants to their original values
             notFetchedCal[0] = true;
 
+            // data is only restored when the dongle is not commected, so we need to ignore the 
+            // restored data records that look like the data was just acquired.
+            dongleID = 0;
+            remote1ID = 0;
+            remoteStatus[0] = 0;
+            remoteConnected = false;
+            serialConnected = false;
+            updateSystemState();
+                        
         }
     }
 

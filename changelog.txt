@@ -4,6 +4,7 @@ This file is used to track ongoing work and releases of IOLabWeb.
 ====================== Ongoing Work ========================================
 Front Burner Tasks:
 - Optimize which calibration is used for restored datasets
+- Time-aligned CSV export for (one file for all sensors)
 - Clean up console.log
 - Clean up comments & code
 
@@ -16,10 +17,6 @@ Back Burner Tasks:
 - Plots sometimes empty after CSV export if not viewed before export (only Mac ?)
 
 ================ Release Notes ================================================
-
-v0.9.12 6/xx/2021
-Time-aligned CSV export for (one file for all sensors)
-
 
 v0.9.10 5/31/2021
 Adding new modal for unpairing and pairing dongles with remotes (with embedded documentation) 
