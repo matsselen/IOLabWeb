@@ -323,18 +323,16 @@ function updateSystemState() {
   // display dongle info if we have it
   if (dongleID > 0) {
     dongleStatusDisplay.innerHTML = "0x" + dongleID.toString(16);
-    pairInfo.innerHTML = "Dongle 0x" + dongleID.toString(16);
   } else {
     dongleStatusDisplay.innerHTML = "not connected";
-    pairInfo.innerHTML = "Dongle not connected";
   }
 
   // display remote info if we have it
   if ((remote1ID > 0) && (remoteStatus[0])) {
     remoteStatusDisplay.innerHTML = "0x" + remote1ID.toString(16) +
       " (" + remoteVoltage[0].toFixed(2) + " V)";
-    pairInfo.innerHTML += " Remote 0x" + remote1ID.toString(16);
     remoteConnected = true;
+
     // get the cal values needed by this remote, if they exist (just remote 1 [0] for now)
     if (notFetchedCal[0]) {
       notFetchedCal[0] = false;
@@ -346,13 +344,14 @@ function updateSystemState() {
 
 
   } else {
-    pairInfo.innerHTML += " (Remote not connected)";
     remoteConnected = false;
     configSelect.style.display = "none";
     remoteStatusDisplay.innerHTML = "off";
     idleIncrement = 0;
     idleTicks = idleTimeoutCount; 
   }
+
+  if (showingPairingModal) { updatePairmodalInfo(); }
 
   // display the start button if the daq is configured
   if (daqConfigured) {
