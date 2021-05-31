@@ -140,21 +140,22 @@ document.addEventListener('DOMContentLoaded', () => {
   // when the option modal is closed
   cospan.onclick = function () {
     endOpt();
-
-  }  // when the pairing modal is invoked
+  }  
+  
+  // when the pairing modal is invoked
   pairButton.onclick = function () {
-    if (serialConnected) {
+    //if (serialConnected) {
     openPairModal();
     pairModal.style.display = "block";
-    } else {
-      window.alert("You need to CONNECT with your dongle before you can do this");
-    }
+    //} else {
+    //  window.alert("You need to CONNECT with your dongle before you can do this");
+    //}
   }
 
   // when the pairing modal is closed
   cpspan.onclick = function () {
     pairModal.style.display = "none";
-    endPair();
+    closePairModal();
   }
 
 

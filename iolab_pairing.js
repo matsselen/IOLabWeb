@@ -9,18 +9,11 @@
 var showingPairingModal = false;
 
 function openPairModal() {
-  showingPairingModal = true;
   console.log("In openPairModal()");
-  // await sendRecord(getCommandRecord("getPairing"));
-  // await sendRecord(getCommandRecord("getRemoteStatus"));
+  showingPairingModal = true;
+
+  pairUnpair.hidden = true; pairPair.hidden = true; pairFind.hidden = true;
   updatePairmodalInfo();
-
-  // if (remote1Status==1 && remoteStatus[0]==1) {
-  // pairInfo.innerHTML = "Dongle and Remote are paired"
-  // } else {
-  //   pairInfo.innerHTML = "Dongle and Remote are paired"
-  // }
-
 }
 
 
@@ -28,31 +21,33 @@ function updatePairmodalInfo() {
 
   // display dongle info 
   if (dongleID > 0) {
-    pairInfo.innerHTML = "Dongle 0x" + dongleID.toString(16) + " is connected.";
+    pairInfo.innerHTML = "Dongle " + dongleID.toString(16) + " is detected";
   } else {
-    pairInfo.innerHTML = "No dongle connected.";
+    pairInfo.innerHTML = "No dongle detected. Close this dialog, plug in dongle if needed, and click CONNECT.";
+    return;
   }
 
   // display remote info if we have it
   if (remote1Status > 0) {
+    pairUnpair.hidden = false; pairPair.hidden = true; pairFind.hidden = true;
 
     if (remoteStatus[0]) {
-      pairInfo.innerHTML += "  Remote 0x" + remote1ID.toString(16) + " is paired and detected";
+      pairInfo.innerHTML += " and paired to Remote " + remote1ID.toString(16) + ", which is also detected";
     } else {
-      pairInfo.innerHTML += "  Remote 0x" + remote1ID.toString(16) + " is paired but is not detected";
+      pairInfo.innerHTML += " and paired to Remote " + remote1ID.toString(16) + ", which is not detected (perhaps it is off ?)";
     }
 
   } else {
-    pairInfo.innerHTML += "  No remote is paired.";
+    pairInfo.innerHTML += " and is not paired to a Remote.";
+    pairUnpair.hidden = true; pairPair.hidden = false; pairFind.hidden = false;
   }
 
 }
 
-async function endPair() {
+async function closePairModal() {
   showingPairingModal = false;
-  console.log("In endPair()");
-  await sendRecord(getCommandRecord("getPairing"));
-  //await sendRecord(getCommandRecord("getRemoteStatus"));
+  console.log("In closePairModal()");
+
 }
 
 async function sendPair() {
