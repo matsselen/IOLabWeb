@@ -83,6 +83,7 @@ const pairModal = document.getElementById("pairModal");
 const pairButton = document.getElementById("pairBtn");
 const cpspan = document.getElementsByClassName("closePair")[0];
 const pairInfo = document.getElementById("pairInfo");
+const pairInst = document.getElementById("pairInst");
 
 // ticks
 const tickCounter = document.getElementById("tickCounter");

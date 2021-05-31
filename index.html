@@ -254,14 +254,20 @@
       </div>
       <div class="pairmodal-body">
         <table>
-          <!-- <div><br/><b>Pairing Dialog:</b></div> -->
-          <div> <p id="pairInfo" class="inst"> </p> </div>
-          <tr>
-            <td><button id="pairUnpair" type="checkbox" onclick="sendUnpair()" checked>Unpair &nbsp;&nbsp;</button></td>
-            <td><button id="pairFind" type="checkbox" onclick="sendFind()" checked>Find &nbsp;&nbsp;</button></td>
-            <td><button id="pairPair" type="checkbox" onclick="sendPair()" checked>Pair &nbsp;&nbsp;</button></td>
-          </tr>
-        </table>
+          <div> <p id="pairInfo" class="pairinst"> </p> </div>
+          <button id="pairUnpair" type="checkbox" onclick="sendUnpair()" checked>UNPAIR</button>
+
+          <div> <p id="pairInst" class="inst"> <b>To pair the Dongle with a Remote, put the remote into Discovery Mode 
+            <br/>and click the PAIR button at the bottom of this dialog.</b>
+            <br/><br/>To put your remote into Discovery Mode: <br/>
+            1. Make sure it is turned off.<br/>
+            2. Hold down the <b>+</b> button while you turn the device back on.<br/>
+            3. Keep holding the <b>+</b> button for about 3 seconds until the lights flash as shown below:<br/>
+            <img src="images/pair_mode_blink.gif" width="300">
+            <br/>(If you are unsure, <a href="https://mediaspace.illinois.edu/media/t/1_muheaqex" title="Discovery Mode Instructions" 
+            target="_blank"> this video</a> shows you how to do it).</p> 
+          </div>
+          <button id="pairFind" type="checkbox" onclick="sendFind()" checked>PAIR</button>&nbsp;&nbsp;
 
         <br/><br/>
       </div>

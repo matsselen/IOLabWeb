@@ -12,7 +12,7 @@ function openPairModal() {
   console.log("In openPairModal()");
   showingPairingModal = true;
 
-  pairUnpair.hidden = true; pairPair.hidden = true; pairFind.hidden = true;
+  pairUnpair.hidden = true; pairFind.hidden = true; pairInst.hidden = true;
   updatePairmodalInfo();
 }
 
@@ -21,7 +21,7 @@ function updatePairmodalInfo() {
 
   // display dongle info 
   if (dongleID > 0) {
-    pairInfo.innerHTML = "Dongle " + dongleID.toString(16) + " is detected";
+    pairInfo.innerHTML = "Dongle " + dongleID.toString(16) + " is detected.";
   } else {
     pairInfo.innerHTML = "No dongle detected. Close this dialog, plug in dongle if needed, and click CONNECT.";
     return;
@@ -29,17 +29,17 @@ function updatePairmodalInfo() {
 
   // display remote info if we have it
   if (remote1Status > 0) {
-    pairUnpair.hidden = false; pairPair.hidden = true; pairFind.hidden = true;
+    pairUnpair.hidden = false; pairFind.hidden = true;  pairInst.hidden = true;
 
     if (remoteStatus[0]) {
-      pairInfo.innerHTML += " and paired to Remote " + remote1ID.toString(16) + ", which is also detected";
+      pairInfo.innerHTML += " It is paired to Remote " + remote1ID.toString(16) + " which is also detected";
     } else {
-      pairInfo.innerHTML += " and paired to Remote " + remote1ID.toString(16) + ", which is not detected (perhaps it is off ?)";
+      pairInfo.innerHTML += " It is paired to Remote " + remote1ID.toString(16) + " which is not detected (perhaps it is not turmed on ?)";
     }
 
   } else {
-    pairInfo.innerHTML += " and is not paired to a Remote.";
-    pairUnpair.hidden = true; pairPair.hidden = false; pairFind.hidden = false;
+    pairInfo.innerHTML += " It is not paired to a Remote.";
+    pairUnpair.hidden = true; pairFind.hidden = false;  pairInst.hidden = false;
   }
 
 }
@@ -47,6 +47,10 @@ function updatePairmodalInfo() {
 async function closePairModal() {
   showingPairingModal = false;
   console.log("In closePairModal()");
+
+}
+
+function pairingSequence() {
 
 }
 
@@ -62,7 +66,7 @@ async function sendPair() {
 
   setTimeout(async function () {
     await sendRecord(getCommandRecord("getPairing"));
-    updatePairmodalInfo();  
+    updatePairmodalInfo();
   }, 100);
 
 }
@@ -79,16 +83,28 @@ async function sendUnpair() {
 
   setTimeout(async function () {
     await sendRecord(getCommandRecord("getPairing"));
-    updatePairmodalInfo();  
+    updatePairmodalInfo();
   }, 100);
 
 }
 
 async function sendFind() {
-  
   console.log("In sendFind()");
-  // let byteArray = getCommandRecord("findRemote");
-  // await sendRecord(byteArray);
-  await sendRecord(getCommandRecord("findRemote"));
+
+  foundRemote = 0;
+  setTimeout(async function () {
+    await sendRecord(getCommandRecord("findRemote"));
+  }, 100);
+
+  setTimeout(async function () {
+    if (foundRemote > 0) {
+      await sendPair();
+    } else {
+      console.log("Remote not found");
+    }
+  }, 200);
+
+
+
 
 }

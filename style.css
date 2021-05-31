@@ -115,6 +115,11 @@ p.inst {
   font-size: 20px;
 }
 
+p.pairinst {
+  font-size: 24px;
+  color:blue;
+}
+
 p.tiny {
   font-size: 10px;
   color: #888888;
