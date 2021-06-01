@@ -225,9 +225,18 @@ class PlotSet {
         }
 
         function csvAllClick() {
-
+            plotSetThis.exportAllCsv();
         }        
     }
+
+    //===================================================================
+    // class methods
+
+    // export time-aligned data to csv file
+    exportAllCsv() {
+        console.log("exporting all...");
+    }    
+
     // clean up the DOM
     reset() {
 
