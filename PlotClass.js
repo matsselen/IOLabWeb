@@ -98,7 +98,7 @@ class PlotSet {
         this.linkCSVall.style = "cursor:pointer";
         this.linkCSVall.style.padding = "2px 5px 5px 25px";
         this.aCSVall.appendChild(this.linkCSVall);
-        this.aCSVall.title = "CSV Download (all plots combined)";
+        this.aCSVall.title = "Export all data from all charts to a single CSV file";
         this.aCSVall.addEventListener("click", csvAllClick);
         analysis.appendChild(this.aCSVall);
 
@@ -234,7 +234,21 @@ class PlotSet {
 
     // export time-aligned data to csv file
     exportAllCsv() {
-        console.log("exporting all...");
+        console.log("In exportAllCsv()");
+
+        // The charts are ordered so that the first one should be used to supply the 
+        // common timebase for all. The data in the other charts is interpolated/averaged to
+        // provide numbers at the same time coordinates. 
+
+        // Only active for configurations with more than one sensor (others can just export using the chard menu)
+
+        if (plotSet.plotObjectList.length == 1) {
+            console.log("This configuration only has a single sensor. Please use the CSV export feature on the chart itself. ");            
+            return;
+        }
+
+
+
     }    
 
     // clean up the DOM

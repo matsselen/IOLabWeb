@@ -81,7 +81,7 @@ const bzLocal = document.getElementById("bzLocal");
 // pairing modal stuff
 const pairModal = document.getElementById("pairModal");
 const pairButton = document.getElementById("pairBtn");
-const cpspan = document.getElementsByClassName("closePair")[0];
+const closePair = document.getElementsByClassName("closePair")[0];
 const pairInfo = document.getElementById("pairInfo");
 const pairInst = document.getElementById("pairInst");
 
@@ -141,8 +141,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // when the option modal is closed
   cospan.onclick = function () {
     endOpt();
-  }  
-  
+  }
+
   // when the pairing modal is invoked
   pairButton.onclick = function () {
     //if (serialConnected) {
@@ -154,11 +154,10 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // when the pairing modal is closed
-  cpspan.onclick = function () {
+  closePair.onclick = function () {
     pairModal.style.display = "none";
     closePairModal();
   }
-
 
   // get things ready
   getIOLabConfigInfo();
@@ -190,14 +189,14 @@ document.addEventListener('DOMContentLoaded', () => {
 //============================================
 // event handler for connect/disconnect button  
 async function handleTick() {
-  totalTicks ++;
-  if(!runningDAQ) { idleTicks -= idleIncrement };
-  tickCounter.innerHTML = "Inactivity Timeout "+idleTicks.toString();
+  totalTicks++;
+  if (!runningDAQ) { idleTicks -= idleIncrement };
+  tickCounter.innerHTML = "Inactivity Timeout " + idleTicks.toString();
 
   if (idleTicks <= 0) {
     sendRecord(getCommandRecord("powerDown"));
     console.log("Inactivity timeout");
-    idleTicks = idleTimeoutCount; 
+    idleTicks = idleTimeoutCount;
     idleIncrement = 0;
   }
 
@@ -339,9 +338,9 @@ function updateSystemState() {
     if (notFetchedCal[0]) {
       notFetchedCal[0] = false;
       setCalValues(0, remote1ID);
-      console.log("In updateSystemState(): Set initial calibration" );
+      console.log("In updateSystemState(): Set initial calibration");
     }
-    configSelect.style.display = "block";    
+    configSelect.style.display = "block";
     idleIncrement = 1;
 
 
@@ -350,7 +349,7 @@ function updateSystemState() {
     configSelect.style.display = "none";
     remoteStatusDisplay.innerHTML = "off";
     idleIncrement = 0;
-    idleTicks = idleTimeoutCount; 
+    idleTicks = idleTimeoutCount;
   }
 
   if (showingPairingModal) { updatePairmodalInfo(); }

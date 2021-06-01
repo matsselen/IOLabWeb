@@ -75,13 +75,13 @@ var iolabConfig =
       "highSpeed": false,
       "frequencies": [50, 100, 200, 400],
       "sensors": [
-        { "sensorKey": 4, "sampleRate": 100 },
         { "sensorKey": 7, "sampleRate": 400 },
+        { "sensorKey": 4, "sampleRate": 100 },
         { "sensorKey": 11, "sampleRate": 50 },
         { "sensorKey": 26, "sampleRate": 50 }
       ],
-      "chartRateList": [100, 400, 50, 50],
-      "chartList": [4, 7, 11, 26]
+      "chartRateList": [400, 100, 50, 50],
+      "chartList": [7, 4, 11, 26]
     },
     // {
     //   "code": 7,
@@ -121,11 +121,11 @@ var iolabConfig =
       "highSpeed": false,
       "frequencies": [100, 200, 400],
       "sensors": [
-        { "sensorKey": 2, "sampleRate": 80 },
-        { "sensorKey": 12, "sampleRate": 400 }
+        { "sensorKey": 12, "sampleRate": 400 },
+        { "sensorKey": 2, "sampleRate": 80 }
       ],
-      "chartRateList": [80, 400],
-      "chartList": [2, 12]
+      "chartRateList": [400, 80],
+      "chartList": [12, 2]
     },
     {
       "code": 12,
