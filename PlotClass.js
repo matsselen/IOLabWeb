@@ -90,6 +90,18 @@ class PlotSet {
         this.aLink.addEventListener("click", linkClick);
         analysis.appendChild(this.aLink);
 
+        // place and control the CSV time-aligned download icon
+        this.aCSVall = document.createElement("a");
+        this.linkCSVall = document.createElement("img");
+        this.linkCSVall.src = "images/csv.png";
+        this.linkCSVall.height = "30";
+        this.linkCSVall.style = "cursor:pointer";
+        this.linkCSVall.style.padding = "2px 5px 5px 25px";
+        this.aCSVall.appendChild(this.linkCSVall);
+        this.aCSVall.title = "CSV Download (all plots combined)";
+        this.aCSVall.addEventListener("click", csvAllClick);
+        analysis.appendChild(this.aCSVall);
+
         // add the analysis region to the page and put some vertical space below it
         this.controlElement.appendChild(analysis);
         this.controlElement.appendChild(document.createElement("p"));
@@ -97,7 +109,7 @@ class PlotSet {
 
         // create the control elements that appear above the canvas
         let controls = document.createElement("div");
-        let controlTitle = document.createTextNode("Sensors: \xA0\xA0");
+        let controlTitle = document.createTextNode("Sensors:\xA0");
         controls.appendChild(controlTitle);
 
         // add the control region to the page and put some vertical space below it
@@ -211,6 +223,10 @@ class PlotSet {
                 plotSetThis.linkMode = true;
             }
         }
+
+        function csvAllClick() {
+
+        }        
     }
     // clean up the DOM
     reset() {
@@ -1431,13 +1447,15 @@ class PlotIOLab {
     displayStaticData() {
 
         // get the time of the last acquired data
-        let datLength = calData[this.sensorNum].length;
+        //let datLength = calData[this.sensorNum].length;
+        let datLength = this.plotData.length;
 
         if (datLength < 1) {
             if (dbgInfo) console.log("In displayStaticData(): no data to display for sensor " + this.sensorNum.toString());
 
         } else {
-            let tLastFloat = calData[this.sensorNum][datLength - 1][0];
+            //let tLastFloat = calData[this.sensorNum][datLength - 1][0];
+            let tLastFloat = this.plotData[datLength - 1][0];
             let tLast = parseInt(tLastFloat + 1);
 
             // if we are restoring an acquisition then timePerSample wont be set
@@ -1502,7 +1520,8 @@ class PlotIOLab {
         //for (let ind = ind1; ind < ind2; ind++) {
         for (let ind = ind1; ind < ind2; ind += nSkip) {
 
-            let tplot = calData[sensorID][ind][0]; // the current time coordinate
+            //let tplot = calData[sensorID][ind][0]; // the current time coordinate
+            let tplot = this.plotData[ind][0]; // the current time coordinate
 
             // find the first dataploint at the leftmost edge of the viewport 
             // and start the line these
