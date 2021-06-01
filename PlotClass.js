@@ -242,12 +242,25 @@ class PlotSet {
 
         // Only active for configurations with more than one sensor (others can just export using the chard menu)
 
-        if (plotSet.plotObjectList.length == 1) {
+        if (this.plotObjectList.length == 1) {
             console.log("This configuration only has a single sensor. Please use the CSV export feature on the chart itself. ");            
             return;
         }
 
+        // Make sure we have some data to export
 
+        // the sample spacing of the first plot
+        let dt = this.plotObjectList[0].timePerSample;
+
+        // get the time values from the first plot
+        for (let ind = 0; ind < this.plotObjectList[0].plotData.length; ind++ ) {
+            let t = this.plotObjectList[0].plotData[ind][0];
+        
+
+            // Loop over the charts and find the data at this 
+            for (let p = 0; p < this.plotObjectList.length; p++ )
+
+        }
 
     }    
 
