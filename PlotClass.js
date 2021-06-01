@@ -256,9 +256,10 @@ class PlotSet {
         for (let ind = 0; ind < this.plotObjectList[0].plotData.length; ind++ ) {
             let t = this.plotObjectList[0].plotData[ind][0];
         
-
             // Loop over the charts and find the data at this 
-            for (let p = 0; p < this.plotObjectList.length; p++ )
+            for (let p = 0; p < this.plotObjectList.length; p++ ) {
+                let d = this.plotObjectList[p].getDataAtTime(t,dt);
+            }
 
         }
 
@@ -1104,6 +1105,18 @@ class PlotIOLab {
     } // IOLabPlot constructor
 
     //===============================IOLabPlot Methods========================================
+
+    // returns the interpolated data valuse at a specific time t and range dt
+    getDataAtTime(t, dt) {
+
+        // see how close we are to an actual time value
+        let indMax = this.plotData.length - 1;
+        let tIndex = Math.min(parseInt(0.5 + t/this.timePerSample),indMax);
+        let tClosest = this.plotData[tIndex][0];
+        let d = this.plotData[tIndex];
+        return d;
+        
+    }
 
     // hide the smoothing control
     smoothHide() {
