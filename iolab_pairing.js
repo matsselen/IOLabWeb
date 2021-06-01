@@ -24,7 +24,7 @@ function updatePairmodalInfo() {
   if (dongleID > 0) {
     pairInfo.innerHTML = "Dongle " + dongleID.toString(16) + " is detected.";
   } else {
-    pairInfo.innerHTML = "No dongle detected. Close this dialog, plug in dongle if needed, and click CONNECT.";
+    pairInfo.innerHTML = "No dongle detected. Close this dialog, make sure a dongle is plugged in, and click CONNECT.";
     return;
   }
 
