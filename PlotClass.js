@@ -21,7 +21,7 @@ class PlotSet {
         this.chartContainer = chartContainer;       // the name of the existing chart container
         this.controlContainer = controlContainer;   // the name of the existing control container
 
-        this.chartList     = fixedConfig.chartList;       // list of charts to be created 
+        this.chartList = fixedConfig.chartList;       // list of charts to be created 
         this.chartRateList = fixedConfig.chartRateList;   // list of sample rates for each chart
 
 
@@ -226,7 +226,7 @@ class PlotSet {
 
         function csvAllClick() {
             plotSetThis.exportAllCsv();
-        }        
+        }
     }
 
     //===================================================================
@@ -240,30 +240,72 @@ class PlotSet {
         // common timebase for all. The data in the other charts is interpolated/averaged to
         // provide numbers at the same time coordinates. 
 
-        // Only active for configurations with more than one sensor (others can just export using the chard menu)
+        // the first row contains the columns labels
+        let csvdata = "t (s)";
+        for (let p = 0; p < this.plotObjectList.length; p++) {
 
-        if (this.plotObjectList.length == 1) {
-            console.log("This configuration only has a single sensor. Please use the CSV export feature on the chart itself. ");            
-            return;
+            for (let ind = 0; ind < this.plotObjectList[p].axisTitles.length; ind++) {
+                csvdata += ", ";
+                csvdata += this.plotObjectList[p].csvLabels[ind];
+            }
         }
-
-        // Make sure we have some data to export
+        csvdata += "\r\n";
 
         // the sample spacing of the first plot
         let dt = this.plotObjectList[0].timePerSample;
 
         // get the time values from the first plot
-        for (let ind = 0; ind < this.plotObjectList[0].plotData.length; ind++ ) {
+        for (let ind = 0; ind < this.plotObjectList[0].plotData.length; ind++) {
             let t = this.plotObjectList[0].plotData[ind][0];
-        
+
             // Loop over the charts and find the data at this 
-            for (let p = 0; p < this.plotObjectList.length; p++ ) {
-                let d = this.plotObjectList[p].getDataAtTime(t,dt);
+            for (let p = 0; p < this.plotObjectList.length; p++) {
+                let d = this.plotObjectList[p].getDataAtTime(t, dt);
             }
 
         }
 
-    }    
+
+        //============
+
+
+
+
+        // loop over data
+        for (let ind = 0; ind < ind2; ind++) {
+
+            // each line starts with the time coordinate
+            let tplot = plotThis.plotData[ind][0]; // the current time coordinate
+            csvdata += tplot.toString();
+
+            // then a y coordinate for each axis
+            for (let tr = 1; tr < plotThis.nTraces + 1; tr++) {
+                let yplot = plotThis.plotData[ind][tr] - plotThis.datShift[tr];
+                csvdata += ", ";
+                csvdata += yplot.toString();
+            }
+            csvdata += "\r\n";
+        }
+
+        // create a blob of the csv data
+        let dataBlob = new Blob([csvdata]);
+
+        // figure out filename
+        let date = new Date();
+        let fName = "IOLabCSVall_" +
+            date.toDateString().substr(4, 3) + "-" +
+            date.toDateString().substr(8, 2) + "-" +
+            date.toDateString().substr(11, 4) + "_" +
+            date.toTimeString().substr(0, 2) + "." +
+            date.toTimeString().substr(3, 2) + "." +
+            date.toTimeString().substr(6, 2) + "_" +
+            "all_" + plotThis.sensorNum.toString() + ".csv";
+
+        // save the data as a local download
+        plotThis.aCSVall.href = window.URL.createObjectURL(dataBlob), { type: "text/csv;charset=utf-8" };
+        plotThis.aCSVall.download = fName;
+        //=================================
+    }
 
     // clean up the DOM
     reset() {
@@ -600,8 +642,8 @@ class PlotIOLab {
         this.layerColorList.push("#000000");
         this.layerColorList.unshift("#000000");
 
-        if(dbgInfo) {
-            console.log("PlotIOLab() sensor:"+sensorNum.toString()+" rate:"+sensorRate.toString());
+        if (dbgInfo) {
+            console.log("PlotIOLab() sensor:" + sensorNum.toString() + " rate:" + sensorRate.toString());
         }
 
         // add a 0 to the datLast array for each chart trace since this is
@@ -812,7 +854,7 @@ class PlotIOLab {
                 // then a y coordinate for each axis
                 for (let tr = 1; tr < plotThis.nTraces + 1; tr++) {
                     let yplot = plotThis.plotData[ind][tr] - plotThis.datShift[tr];
-                    csvdata += ", "; 
+                    csvdata += ", ";
                     csvdata += yplot.toString();
                 }
                 csvdata += "\r\n";
@@ -1111,11 +1153,11 @@ class PlotIOLab {
 
         // see how close we are to an actual time value
         let indMax = this.plotData.length - 1;
-        let tIndex = Math.min(parseInt(0.5 + t/this.timePerSample),indMax);
+        let tIndex = Math.min(parseInt(0.5 + t / this.timePerSample), indMax);
         let tClosest = this.plotData[tIndex][0];
         let d = this.plotData[tIndex];
         return d;
-        
+
     }
 
     // hide the smoothing control
@@ -1247,7 +1289,7 @@ class PlotIOLab {
 
                     // pick the number to advance the index by for each point plotted so that we dont waste time plotting 
                     // several points for a single pixel column on the chart
-                    let nSkip = Math.max(1,parseInt((indRight-indLeft)/cWidth/2));
+                    let nSkip = Math.max(1, parseInt((indRight - indLeft) / cWidth / 2));
 
                     //for (let ind = indLeft; ind <= indRight; ind++) {
                     for (let ind = indLeft; ind <= indRight; ind += nSkip) {
@@ -1563,7 +1605,7 @@ class PlotIOLab {
 
         // pick the number to advance the index by for each point plotted so that we dont waste time plotting 
         // several points for a single pixel column on the chart
-        let nSkip = Math.max(1,parseInt((ind2-ind1)/cWidth/2));
+        let nSkip = Math.max(1, parseInt((ind2 - ind1) / cWidth / 2));
 
         // loop over data
         //for (let ind = ind1; ind < ind2; ind++) {
