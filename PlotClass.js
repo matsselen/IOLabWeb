@@ -257,10 +257,19 @@ class PlotSet {
         // get the time values from the first plot
         for (let ind = 0; ind < this.plotObjectList[0].plotData.length; ind++) {
             let t = this.plotObjectList[0].plotData[ind][0];
+            csvdata += t.toString();
 
             // Loop over the charts and find the data at this 
             for (let p = 0; p < this.plotObjectList.length; p++) {
                 let d = this.plotObjectList[p].getDataAtTime(t, dt);
+
+            // then a y coordinate for each axis
+            for (let tr = 1; tr < this.plotObjectList[p].nTraces + 1; tr++) {
+                let yplot = this.plotObjectList[p][ind][tr] - this.plotObjectList[p].datShift[tr];
+                csvdata += ", ";
+                csvdata += yplot.toString();
+            }
+            csvdata += "\r\n";                
             }
 
         }
@@ -274,17 +283,8 @@ class PlotSet {
         // loop over data
         for (let ind = 0; ind < ind2; ind++) {
 
-            // each line starts with the time coordinate
-            let tplot = plotThis.plotData[ind][0]; // the current time coordinate
-            csvdata += tplot.toString();
 
-            // then a y coordinate for each axis
-            for (let tr = 1; tr < plotThis.nTraces + 1; tr++) {
-                let yplot = plotThis.plotData[ind][tr] - plotThis.datShift[tr];
-                csvdata += ", ";
-                csvdata += yplot.toString();
-            }
-            csvdata += "\r\n";
+;
         }
 
         // create a blob of the csv data
