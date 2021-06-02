@@ -263,28 +263,14 @@ class PlotSet {
             for (let p = 0; p < this.plotObjectList.length; p++) {
                 let d = this.plotObjectList[p].getDataAtTime(t, dt);
 
-            // then a y coordinate for each axis
-            for (let tr = 1; tr < this.plotObjectList[p].nTraces + 1; tr++) {
-                let yplot = this.plotObjectList[p][ind][tr] - this.plotObjectList[p].datShift[tr];
-                csvdata += ", ";
-                csvdata += yplot.toString();
+                // then a y coordinate for each axis
+                for (let tr = 1; tr < d.length; tr++) {
+                    let yplot = d[tr] - this.plotObjectList[p].datShift[tr];
+                    csvdata += ", ";
+                    csvdata += yplot.toString();
+                }
             }
-            csvdata += "\r\n";                
-            }
-
-        }
-
-
-        //============
-
-
-
-
-        // loop over data
-        for (let ind = 0; ind < ind2; ind++) {
-
-
-;
+            csvdata += "\r\n";
         }
 
         // create a blob of the csv data
@@ -299,13 +285,14 @@ class PlotSet {
             date.toTimeString().substr(0, 2) + "." +
             date.toTimeString().substr(3, 2) + "." +
             date.toTimeString().substr(6, 2) + "_" +
-            "all_" + plotThis.sensorNum.toString() + ".csv";
+            "all.csv";
 
         // save the data as a local download
-        plotThis.aCSVall.href = window.URL.createObjectURL(dataBlob), { type: "text/csv;charset=utf-8" };
-        plotThis.aCSVall.download = fName;
-        //=================================
+        this.aCSVall.href = window.URL.createObjectURL(dataBlob), { type: "text/csv;charset=utf-8" };
+        this.aCSVall.download = fName;
+
     }
+
 
     // clean up the DOM
     reset() {
