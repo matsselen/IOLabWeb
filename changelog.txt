@@ -3,7 +3,7 @@ This file is used to track ongoing work and releases of IOLabWeb.
 
 ====================== Ongoing Work ========================================
 Front Burner Tasks:
-- fix wheel calculation to better align with accelerometer
+- fix wheel calculation - it is shifted right by 4 ticks for restored datasets
 
 Back Burner Tasks:
 - Optimize which calibration is used for restored datasets
