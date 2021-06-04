@@ -250,6 +250,7 @@ class PlotSet {
             }
         }
         csvdata += "\r\n";
+        
 
         // get the time values from the first plot
         for (let ind = 0; ind < this.plotObjectList[0].plotData.length; ind++) {
@@ -1135,14 +1136,7 @@ class PlotIOLab {
     // returns the interpolated data valuse at a specific time t and range dt
     getDataAtTime(t) {
 
-        // // see how close we are to an actual time value
-        // let indMax = this.plotData.length - 1;
-        // let tIndex = Math.min(parseInt(0.5 + t / this.timePerSample), indMax);
-        // let tClosest = this.plotData[tIndex][0];
-        // let d = this.plotData[tIndex];
-        // return d;
-
-        // see how close we are to an actual time value
+        // interpolate to find the data values at the requested time
         let indMax = this.plotData.length - 1;
         let ind0 = Math.min(parseInt(t / this.timePerSample), indMax);
         let ind1 = ind0 + 1;
@@ -1152,12 +1146,10 @@ class PlotIOLab {
 
         let dAtTime = [t];
         for (let i = 1; i < d0.length; i++) {
-            let yt = (t-d0[0])*(d1[i]-d0[i])/(d1[0]-d0[0]);
+            let yt = d0[i] + (t-d0[0])*(d1[i]-d0[i])/this.timePerSample;
+            dAtTime.push(yt);
         } 
-
-        let tClosest = this.plotData[tIndex][0];
-        let d = this.plotData[tIndex];
-        return d;        
+        return dAtTime;        
     }
 
     // hide the smoothing control
