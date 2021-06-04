@@ -21,7 +21,7 @@ class PlotSet {
         this.chartContainer = chartContainer;       // the name of the existing chart container
         this.controlContainer = controlContainer;   // the name of the existing control container
 
-        this.chartList     = fixedConfig.chartList;       // list of charts to be created 
+        this.chartList = fixedConfig.chartList;       // list of charts to be created 
         this.chartRateList = fixedConfig.chartRateList;   // list of sample rates for each chart
 
 
@@ -90,6 +90,18 @@ class PlotSet {
         this.aLink.addEventListener("click", linkClick);
         analysis.appendChild(this.aLink);
 
+        // place and control the CSV time-aligned download icon
+        this.aCSVall = document.createElement("a");
+        this.linkCSVall = document.createElement("img");
+        this.linkCSVall.src = "images/csv.png";
+        this.linkCSVall.height = "30";
+        this.linkCSVall.style = "cursor:pointer";
+        this.linkCSVall.style.padding = "2px 5px 5px 25px";
+        this.aCSVall.appendChild(this.linkCSVall);
+        this.aCSVall.title = "Export data from all charts to a single CSV file. Time range defined by top plot.";
+        this.aCSVall.addEventListener("click", csvAllClick);
+        analysis.appendChild(this.aCSVall);
+
         // add the analysis region to the page and put some vertical space below it
         this.controlElement.appendChild(analysis);
         this.controlElement.appendChild(document.createElement("p"));
@@ -97,7 +109,7 @@ class PlotSet {
 
         // create the control elements that appear above the canvas
         let controls = document.createElement("div");
-        let controlTitle = document.createTextNode("Sensors: \xA0\xA0");
+        let controlTitle = document.createTextNode("Sensors:\xA0");
         controls.appendChild(controlTitle);
 
         // add the control region to the page and put some vertical space below it
@@ -211,7 +223,83 @@ class PlotSet {
                 plotSetThis.linkMode = true;
             }
         }
+
+        function csvAllClick() {
+            plotSetThis.exportAllCsv();
+        }
     }
+
+    //===================================================================
+    // class methods
+
+    // export time-aligned data to csv file
+    exportAllCsv() {
+        console.log("In exportAllCsv()");
+
+        // The charts are ordered so that the first one should be used to supply the 
+        // common timebase for all. The data in the other charts is interpolated/averaged to
+        // provide numbers at the same time coordinates. 
+
+        // the first row contains the columns labels
+        let csvdata = "t (s)";
+        for (let p = 0; p < this.plotObjectList.length; p++) {
+
+            for (let ind = 0; ind < this.plotObjectList[p].axisTitles.length; ind++) {
+                csvdata += ", ";
+                csvdata += this.plotObjectList[p].csvLabels[ind];
+            }
+        }
+        csvdata += "\r\n";
+
+        // The time range is defined by the visible part of the topmost plot
+        let ind1 = Math.floor(this.plotObjectList[0].viewStack[0].xMin / this.plotObjectList[0].timePerSample) - 2;
+        if (ind1 < 0) ind1 = 0;
+        let ind2 = Math.floor(this.plotObjectList[0].viewStack[0].xMax / this.plotObjectList[0].timePerSample) + 2;
+        if (ind2 > this.plotObjectList[0].plotData.length) ind2 = this.plotObjectList[0].plotData.length;
+
+        // loop over data
+        for (let ind = ind1; ind < ind2; ind++) {
+
+            // get the time values from the first plot
+            //for (let ind = 0; ind < this.plotObjectList[0].plotData.length; ind++) {
+            let t = this.plotObjectList[0].plotData[ind][0];
+            csvdata += t.toString();
+
+            // Loop over the charts and find the data at this 
+            for (let p = 0; p < this.plotObjectList.length; p++) {
+                let d = this.plotObjectList[p].getDataAtTime(t);
+
+                // then a y coordinate for each axis
+                for (let tr = 1; tr < d.length; tr++) {
+                    let yplot = d[tr] - this.plotObjectList[p].datShift[tr];
+                    csvdata += ", ";
+                    csvdata += yplot.toString();
+                }
+            }
+            csvdata += "\r\n";
+        }
+
+        // create a blob of the csv data
+        let dataBlob = new Blob([csvdata]);
+
+        // figure out filename
+        let date = new Date();
+        let fName = "IOLabCSVall_" +
+            date.toDateString().substr(4, 3) + "-" +
+            date.toDateString().substr(8, 2) + "-" +
+            date.toDateString().substr(11, 4) + "_" +
+            date.toTimeString().substr(0, 2) + "." +
+            date.toTimeString().substr(3, 2) + "." +
+            date.toTimeString().substr(6, 2) + "_" +
+            "all.csv";
+
+        // save the data as a local download
+        this.aCSVall.href = window.URL.createObjectURL(dataBlob), { type: "text/csv;charset=utf-8" };
+        this.aCSVall.download = fName;
+
+    }
+
+
     // clean up the DOM
     reset() {
 
@@ -547,8 +635,8 @@ class PlotIOLab {
         this.layerColorList.push("#000000");
         this.layerColorList.unshift("#000000");
 
-        if(dbgInfo) {
-            console.log("PlotIOLab() sensor:"+sensorNum.toString()+" rate:"+sensorRate.toString());
+        if (dbgInfo) {
+            console.log("PlotIOLab() sensor:" + sensorNum.toString() + " rate:" + sensorRate.toString());
         }
 
         // add a 0 to the datLast array for each chart trace since this is
@@ -759,7 +847,7 @@ class PlotIOLab {
                 // then a y coordinate for each axis
                 for (let tr = 1; tr < plotThis.nTraces + 1; tr++) {
                     let yplot = plotThis.plotData[ind][tr] - plotThis.datShift[tr];
-                    csvdata += ", "; 
+                    csvdata += ", ";
                     csvdata += yplot.toString();
                 }
                 csvdata += "\r\n";
@@ -1053,6 +1141,25 @@ class PlotIOLab {
 
     //===============================IOLabPlot Methods========================================
 
+    // returns the interpolated data valuse at a specific time t and range dt
+    getDataAtTime(t) {
+
+        // interpolate to find the data values at the requested time
+        let indMax = this.plotData.length - 1;
+        let ind0 = Math.min(parseInt(t / this.timePerSample), indMax);
+        let ind1 = ind0 + 1;
+        if (ind0 == indMax) { ind1 = ind0; }
+        let d0 = this.plotData[ind0];
+        let d1 = this.plotData[ind1];
+
+        let dAtTime = [t];
+        for (let i = 1; i < d0.length; i++) {
+            let yt = d0[i] + (t - d0[0]) * (d1[i] - d0[i]) / this.timePerSample;
+            dAtTime.push(yt);
+        }
+        return dAtTime;
+    }
+
     // hide the smoothing control
     smoothHide() {
         this.smoothTxt.hidden = true;
@@ -1182,7 +1289,7 @@ class PlotIOLab {
 
                     // pick the number to advance the index by for each point plotted so that we dont waste time plotting 
                     // several points for a single pixel column on the chart
-                    let nSkip = Math.max(1,parseInt((indRight-indLeft)/cWidth/2));
+                    let nSkip = Math.max(1, parseInt((indRight - indLeft) / cWidth / 2));
 
                     //for (let ind = indLeft; ind <= indRight; ind++) {
                     for (let ind = indLeft; ind <= indRight; ind += nSkip) {
@@ -1431,13 +1538,15 @@ class PlotIOLab {
     displayStaticData() {
 
         // get the time of the last acquired data
-        let datLength = calData[this.sensorNum].length;
+        //let datLength = calData[this.sensorNum].length;
+        let datLength = this.plotData.length;
 
         if (datLength < 1) {
             if (dbgInfo) console.log("In displayStaticData(): no data to display for sensor " + this.sensorNum.toString());
 
         } else {
-            let tLastFloat = calData[this.sensorNum][datLength - 1][0];
+            //let tLastFloat = calData[this.sensorNum][datLength - 1][0];
+            let tLastFloat = this.plotData[datLength - 1][0];
             let tLast = parseInt(tLastFloat + 1);
 
             // if we are restoring an acquisition then timePerSample wont be set
@@ -1496,13 +1605,14 @@ class PlotIOLab {
 
         // pick the number to advance the index by for each point plotted so that we dont waste time plotting 
         // several points for a single pixel column on the chart
-        let nSkip = Math.max(1,parseInt((ind2-ind1)/cWidth/2));
+        let nSkip = Math.max(1, parseInt((ind2 - ind1) / cWidth / 2));
 
         // loop over data
         //for (let ind = ind1; ind < ind2; ind++) {
         for (let ind = ind1; ind < ind2; ind += nSkip) {
 
-            let tplot = calData[sensorID][ind][0]; // the current time coordinate
+            //let tplot = calData[sensorID][ind][0]; // the current time coordinate
+            let tplot = this.plotData[ind][0]; // the current time coordinate
 
             // find the first dataploint at the leftmost edge of the viewport 
             // and start the line these

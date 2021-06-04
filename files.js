@@ -149,6 +149,7 @@ function restoreAcquisition() {
             writePointer = rxdata.length;
             extractRecords();
             buildAndCalibrate();
+            reProcessWheel();
 
             // reprocess plot data (smoothing etc)
             plotSet.reprocessPlotData();
