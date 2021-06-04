@@ -3,6 +3,7 @@ This file is used to track ongoing work and releases of IOLabWeb.
 
 ====================== Ongoing Work ========================================
 Front Burner Tasks:
+- Tweaking of time alignment (especially the wheel). 
 - Testing & fixing as needed for summer teacher workshop. 
 
 Back Burner Tasks:
@@ -18,8 +19,8 @@ Back Burner Tasks:
 
 ================ Release Notes ================================================
 
-v0.9.12 6/xx/2021
-Added time-aligned CSV export for (one file for all sensors)
+v0.9.12 6/4/2021
+Added time-aligned CSV export. All sensors are time-aligned and exported to a single fine. The time range for the export is defined by the top plot.
 Fixed restored wheel data was shifted right by 4 ticks due to missing call to reProcessWheel()). 
 
 v0.9.10 5/31/2021

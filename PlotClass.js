@@ -98,7 +98,7 @@ class PlotSet {
         this.linkCSVall.style = "cursor:pointer";
         this.linkCSVall.style.padding = "2px 5px 5px 25px";
         this.aCSVall.appendChild(this.linkCSVall);
-        this.aCSVall.title = "Export all data from all charts to a single CSV file";
+        this.aCSVall.title = "Export data from all charts to a single CSV file. Time range defined by top plot.";
         this.aCSVall.addEventListener("click", csvAllClick);
         analysis.appendChild(this.aCSVall);
 
@@ -250,10 +250,18 @@ class PlotSet {
             }
         }
         csvdata += "\r\n";
-        
 
-        // get the time values from the first plot
-        for (let ind = 0; ind < this.plotObjectList[0].plotData.length; ind++) {
+        // The time range is defined by the visible part of the topmost plot
+        let ind1 = Math.floor(this.plotObjectList[0].viewStack[0].xMin / this.plotObjectList[0].timePerSample) - 2;
+        if (ind1 < 0) ind1 = 0;
+        let ind2 = Math.floor(this.plotObjectList[0].viewStack[0].xMax / this.plotObjectList[0].timePerSample) + 2;
+        if (ind2 > this.plotObjectList[0].plotData.length) ind2 = this.plotObjectList[0].plotData.length;
+
+        // loop over data
+        for (let ind = ind1; ind < ind2; ind++) {
+
+            // get the time values from the first plot
+            //for (let ind = 0; ind < this.plotObjectList[0].plotData.length; ind++) {
             let t = this.plotObjectList[0].plotData[ind][0];
             csvdata += t.toString();
 
@@ -1140,16 +1148,16 @@ class PlotIOLab {
         let indMax = this.plotData.length - 1;
         let ind0 = Math.min(parseInt(t / this.timePerSample), indMax);
         let ind1 = ind0 + 1;
-        if (ind0 == indMax) {ind1 = ind0;}
+        if (ind0 == indMax) { ind1 = ind0; }
         let d0 = this.plotData[ind0];
         let d1 = this.plotData[ind1];
 
         let dAtTime = [t];
         for (let i = 1; i < d0.length; i++) {
-            let yt = d0[i] + (t-d0[0])*(d1[i]-d0[i])/this.timePerSample;
+            let yt = d0[i] + (t - d0[0]) * (d1[i] - d0[i]) / this.timePerSample;
             dAtTime.push(yt);
-        } 
-        return dAtTime;        
+        }
+        return dAtTime;
     }
 
     // hide the smoothing control
