@@ -3,7 +3,7 @@ This file is used to track ongoing work and releases of IOLabWeb.
 
 ====================== Ongoing Work ========================================
 Front Burner Tasks:
-
+- Testing & fixing as needed for summer teacher workshop. 
 
 Back Burner Tasks:
 - Optimize which calibration is used for restored datasets

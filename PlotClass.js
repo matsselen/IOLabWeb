@@ -251,9 +251,6 @@ class PlotSet {
         }
         csvdata += "\r\n";
 
-        // the sample spacing of the first plot
-        let dt = this.plotObjectList[0].timePerSample;
-
         // get the time values from the first plot
         for (let ind = 0; ind < this.plotObjectList[0].plotData.length; ind++) {
             let t = this.plotObjectList[0].plotData[ind][0];
@@ -261,7 +258,7 @@ class PlotSet {
 
             // Loop over the charts and find the data at this 
             for (let p = 0; p < this.plotObjectList.length; p++) {
-                let d = this.plotObjectList[p].getDataAtTime(t, dt);
+                let d = this.plotObjectList[p].getDataAtTime(t);
 
                 // then a y coordinate for each axis
                 for (let tr = 1; tr < d.length; tr++) {
@@ -1136,15 +1133,31 @@ class PlotIOLab {
     //===============================IOLabPlot Methods========================================
 
     // returns the interpolated data valuse at a specific time t and range dt
-    getDataAtTime(t, dt) {
+    getDataAtTime(t) {
+
+        // // see how close we are to an actual time value
+        // let indMax = this.plotData.length - 1;
+        // let tIndex = Math.min(parseInt(0.5 + t / this.timePerSample), indMax);
+        // let tClosest = this.plotData[tIndex][0];
+        // let d = this.plotData[tIndex];
+        // return d;
 
         // see how close we are to an actual time value
         let indMax = this.plotData.length - 1;
-        let tIndex = Math.min(parseInt(0.5 + t / this.timePerSample), indMax);
+        let ind0 = Math.min(parseInt(t / this.timePerSample), indMax);
+        let ind1 = ind0 + 1;
+        if (ind0 == indMax) {ind1 = ind0;}
+        let d0 = this.plotData[ind0];
+        let d1 = this.plotData[ind1];
+
+        let dAtTime = [t];
+        for (let i = 1; i < d0.length; i++) {
+            let yt = (t-d0[0])*(d1[i]-d0[i])/(d1[0]-d0[0]);
+        } 
+
         let tClosest = this.plotData[tIndex][0];
         let d = this.plotData[tIndex];
-        return d;
-
+        return d;        
     }
 
     // hide the smoothing control
