@@ -1203,7 +1203,8 @@ class PlotIOLab {
     drawSelectionAnalysisMethod() {
 
         // if there is no data for this sensor then go home
-        if (calData[this.sensorNum].length == 0) return;
+        //if (calData[this.sensorNum].length == 0) return;
+        if (this.plotData.length == 0) return;
 
         // analysis info layer
         let analysisLayer = this.layerElementList[this.layerElementList.length - 2];
@@ -1219,11 +1220,14 @@ class PlotIOLab {
 
         // make sure these correspond to existing array elements
         if (indStart < 0) indStart = 0;
-        if (indStop > calData[this.sensorNum].length - 1) indStop = calData[this.sensorNum].length - 1;
+        //if (indStop > calData[this.sensorNum].length - 1) indStop = calData[this.sensorNum].length - 1;
+        if (indStop > this.plotData.length - 1) indStop = this.plotData.length - 1;
 
         // redo the start & stop times so that they correspond to actual samples
-        let tStartLocal = calData[this.sensorNum][indStart][0];
-        let tStopLocal = calData[this.sensorNum][indStop][0];
+        // let tStartLocal = calData[this.sensorNum][indStart][0];
+        // let tStopLocal = calData[this.sensorNum][indStop][0];
+        let tStartLocal = this.plotData[indStart][0];
+        let tStopLocal = this.plotData[indStop][0];
 
         // find the theoretical indeces for the left and right side of the viewport
         let indLeftVP = Math.round(this.viewStack[0].xMin / this.timePerSample) - 1;
@@ -1235,8 +1239,10 @@ class PlotIOLab {
         let indRight = Math.min(indRightVP, indStop);
 
         // find the actual times for the left and tight edges of the highlighting
-        let tLeft = calData[this.sensorNum][indLeft][0];
-        let tRight = calData[this.sensorNum][indRight][0];
+        // let tLeft = calData[this.sensorNum][indLeft][0];
+        // let tRight = calData[this.sensorNum][indRight][0];
+        let tLeft = this.plotData[indLeft][0];
+        let tRight = this.plotData[indRight][0];
 
         // clear old stuff
         analysisDrawContext.clearRect(0, 0, this.baseElement.width + 2, this.baseElement.height + 2);
