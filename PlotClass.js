@@ -1342,12 +1342,16 @@ class PlotIOLab {
         }
 
         // if we are past the last data-point then use the last one
-        if (ind >= calData[this.sensorNum].length) {
-            ind = calData[this.sensorNum].length - 1;
-        }
+        // if (ind >= calData[this.sensorNum].length) {
+        //     ind = calData[this.sensorNum].length - 1;
+        // }
+        if (ind >= this.plotData.length) {
+            ind = this.plotData.length - 1;
+        }        
 
         // find the time of the current index (i.e. the actual sample time)
-        let plotCursorTime = calData[this.sensorNum][ind][0];
+        //let plotCursorTime = calData[this.sensorNum][ind][0];
+        let plotCursorTime = this.plotData[ind][0];
 
         // draw a vertical line at the sample time
         this.drawVline(infoDrawContext, this.viewStack[0], plotCursorTime, 1, '#000000');
@@ -1607,7 +1611,8 @@ class PlotIOLab {
         let ind1 = Math.floor(this.viewStack[0].xMin / this.timePerSample) - 2;
         if (ind1 < 0) ind1 = 0;
         let ind2 = Math.floor(this.viewStack[0].xMax / this.timePerSample) + 2;
-        if (ind2 > calData[sensorID].length) ind2 = calData[sensorID].length;
+        //if (ind2 > calData[sensorID].length) ind2 = calData[sensorID].length;
+        if (ind2 > this.plotData.length) ind2 = this.plotData.length;
 
         // pick the number to advance the index by for each point plotted so that we dont waste time plotting 
         // several points for a single pixel column on the chart
