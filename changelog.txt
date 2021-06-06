@@ -7,6 +7,7 @@ Front Burner Tasks:
 - Testing & fixing as needed for summer teacher workshop. 
 
 Back Burner Tasks:
+- Clean up commented out code snippets
 - Optimize which calibration is used for restored datasets
 - Revisit time shift
 - display rezero icon on all zeroable plots when linked
