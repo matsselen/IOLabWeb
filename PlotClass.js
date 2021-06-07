@@ -291,7 +291,7 @@ class PlotSet {
             date.toTimeString().substr(0, 2) + "." +
             date.toTimeString().substr(3, 2) + "." +
             date.toTimeString().substr(6, 2) + "_" +
-            "all.csv";
+            "sens_all.csv";
 
         // save the data as a local download
         this.aCSVall.href = window.URL.createObjectURL(dataBlob), { type: "text/csv;charset=utf-8" };
