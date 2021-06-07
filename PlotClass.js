@@ -291,7 +291,7 @@ class PlotSet {
             date.toTimeString().substr(0, 2) + "." +
             date.toTimeString().substr(3, 2) + "." +
             date.toTimeString().substr(6, 2) + "_" +
-            "all.csv";
+            "sens_all.csv";
 
         // save the data as a local download
         this.aCSVall.href = window.URL.createObjectURL(dataBlob), { type: "text/csv;charset=utf-8" };
@@ -1203,7 +1203,8 @@ class PlotIOLab {
     drawSelectionAnalysisMethod() {
 
         // if there is no data for this sensor then go home
-        if (calData[this.sensorNum].length == 0) return;
+        //if (calData[this.sensorNum].length == 0) return;
+        if (this.plotData.length == 0) return;
 
         // analysis info layer
         let analysisLayer = this.layerElementList[this.layerElementList.length - 2];
@@ -1219,11 +1220,14 @@ class PlotIOLab {
 
         // make sure these correspond to existing array elements
         if (indStart < 0) indStart = 0;
-        if (indStop > calData[this.sensorNum].length - 1) indStop = calData[this.sensorNum].length - 1;
+        //if (indStop > calData[this.sensorNum].length - 1) indStop = calData[this.sensorNum].length - 1;
+        if (indStop > this.plotData.length - 1) indStop = this.plotData.length - 1;
 
         // redo the start & stop times so that they correspond to actual samples
-        let tStartLocal = calData[this.sensorNum][indStart][0];
-        let tStopLocal = calData[this.sensorNum][indStop][0];
+        // let tStartLocal = calData[this.sensorNum][indStart][0];
+        // let tStopLocal = calData[this.sensorNum][indStop][0];
+        let tStartLocal = this.plotData[indStart][0];
+        let tStopLocal = this.plotData[indStop][0];
 
         // find the theoretical indeces for the left and right side of the viewport
         let indLeftVP = Math.round(this.viewStack[0].xMin / this.timePerSample) - 1;
@@ -1235,8 +1239,10 @@ class PlotIOLab {
         let indRight = Math.min(indRightVP, indStop);
 
         // find the actual times for the left and tight edges of the highlighting
-        let tLeft = calData[this.sensorNum][indLeft][0];
-        let tRight = calData[this.sensorNum][indRight][0];
+        // let tLeft = calData[this.sensorNum][indLeft][0];
+        // let tRight = calData[this.sensorNum][indRight][0];
+        let tLeft = this.plotData[indLeft][0];
+        let tRight = this.plotData[indRight][0];
 
         // clear old stuff
         analysisDrawContext.clearRect(0, 0, this.baseElement.width + 2, this.baseElement.height + 2);
@@ -1336,12 +1342,16 @@ class PlotIOLab {
         }
 
         // if we are past the last data-point then use the last one
-        if (ind >= calData[this.sensorNum].length) {
-            ind = calData[this.sensorNum].length - 1;
-        }
+        // if (ind >= calData[this.sensorNum].length) {
+        //     ind = calData[this.sensorNum].length - 1;
+        // }
+        if (ind >= this.plotData.length) {
+            ind = this.plotData.length - 1;
+        }        
 
         // find the time of the current index (i.e. the actual sample time)
-        let plotCursorTime = calData[this.sensorNum][ind][0];
+        //let plotCursorTime = calData[this.sensorNum][ind][0];
+        let plotCursorTime = this.plotData[ind][0];
 
         // draw a vertical line at the sample time
         this.drawVline(infoDrawContext, this.viewStack[0], plotCursorTime, 1, '#000000');
@@ -1601,7 +1611,8 @@ class PlotIOLab {
         let ind1 = Math.floor(this.viewStack[0].xMin / this.timePerSample) - 2;
         if (ind1 < 0) ind1 = 0;
         let ind2 = Math.floor(this.viewStack[0].xMax / this.timePerSample) + 2;
-        if (ind2 > calData[sensorID].length) ind2 = calData[sensorID].length;
+        //if (ind2 > calData[sensorID].length) ind2 = calData[sensorID].length;
+        if (ind2 > this.plotData.length) ind2 = this.plotData.length;
 
         // pick the number to advance the index by for each point plotted so that we dont waste time plotting 
         // several points for a single pixel column on the chart

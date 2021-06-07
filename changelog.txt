@@ -7,9 +7,9 @@ Front Burner Tasks:
 - Testing & fixing as needed for summer teacher workshop. 
 
 Back Burner Tasks:
+- Clean up commented out code snippets
 - Optimize which calibration is used for restored datasets
 - Revisit time shift
-- Rationalize usage of calData vs plotData in plotting code
 - display rezero icon on all zeroable plots when linked
 - save/restore dataShift (?)
 - improved gyroscope calibration
@@ -18,6 +18,10 @@ Back Burner Tasks:
 - Clean up comments & code (ongoing)
 
 ================ Release Notes ================================================
+
+v0.9.14 6/7/2021
+Rationalized usage of calData vs plotData in plotting code.
+Changed name of csv file when exporting all sensors.
 
 v0.9.12 6/4/2021
 Added time-aligned CSV export. All sensors are time-aligned and exported to a single fine. The time range for the export is defined by the top plot.
