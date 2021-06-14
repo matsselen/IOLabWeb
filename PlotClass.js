@@ -98,7 +98,7 @@ class PlotSet {
         this.linkCSVall.style = "cursor:pointer";
         this.linkCSVall.style.padding = "2px 5px 5px 25px";
         this.aCSVall.appendChild(this.linkCSVall);
-        this.aCSVall.title = "Export data from all charts to a single CSV file. Time range defined by top plot.";
+        this.aCSVall.title = "Export data from all charts to a single .csv file. Time range defined by top plot.";
         this.aCSVall.addEventListener("click", csvAllClick);
         analysis.appendChild(this.aCSVall);
 
