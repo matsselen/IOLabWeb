@@ -77,7 +77,6 @@ class StatsIOLab {
             this.intercept = aveY - this.slope*aveX;
             this.rxy = covXY/(sigX*sigY);
 
-            //this.timeRange = calData[this.sensor][indLast][0] - calData[this.sensor][indFirst][0];
             this.timeRange = this.parent.plotData[indLast][0] - this.parent.plotData[indFirst][0];
             this.area = this.mean*this.timeRange;
 
