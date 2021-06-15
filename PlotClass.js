@@ -1299,7 +1299,7 @@ class PlotIOLab {
 
                     //for (let ind = indLeft; ind <= indRight; ind++) {
                     for (let ind = indLeft; ind <= indRight; ind += nSkip) {
-                        let t = this.plotData[ind][0] - this.datShift[0];
+                        let t = this.plotData[ind][0];
                         let y = this.plotData[ind][tr] - this.datShift[tr];
                         let p = this.viewStack[0].dataToPixel(t, y);
                         analysisDrawContext.lineTo(p[0], p[1]);

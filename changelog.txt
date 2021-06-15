@@ -13,11 +13,11 @@ IOLabWeb is not supported by Macmillan Publishing so please do not contact IOLab
 
 ====================== Ongoing Work ========================================
 Front Burner Tasks:
-- Tweaking of time alignment (especially the wheel). 
+- Clean up commented out code snippets
 - Testing & fixing as needed for summer teacher workshop. 
 
 Back Burner Tasks:
-- Clean up commented out code snippets
+- Tweaking of time alignment (especially the wheel). 
 - Optimize which calibration is used for restored datasets
 - Revisit time shift
 - display rezero icon on all zeroable plots when linked

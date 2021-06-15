@@ -50,7 +50,7 @@ class StatsIOLab {
             }
 
             for (let ind = indFirst; ind <= indLast; ind++) {
-                let x = this.parent.plotData[ind][0] - this.parent.datShift[0]; 
+                let x = this.parent.plotData[ind][0]; 
                 let y = this.parent.plotData[ind][this.trace] - this.parent.datShift[this.trace]; 
                 this.Sx  += x;
                 this.Sxx += x*x;
