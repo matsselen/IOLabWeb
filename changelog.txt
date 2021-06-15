@@ -19,10 +19,9 @@ Front Burner Tasks:
 Back Burner Tasks:
 - Tweaking of time alignment (especially the wheel). 
 - Optimize which calibration is used for restored datasets
-- Revisit time shift
-- display rezero icon on all zeroable plots when linked
-- save/restore dataShift (?)
-- improved gyroscope calibration
+- Display rezero icon on all zeroable plots when linked
+- Save/restore dataShift (?)
+- Improved gyroscope calibration
 - Plots sometimes empty after CSV export if not viewed before export (only Mac ?)
 - Clean up console.log
 - Clean up comments & code (ongoing)
