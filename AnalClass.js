@@ -50,7 +50,7 @@ class StatsIOLab {
             }
 
             for (let ind = indFirst; ind <= indLast; ind++) {
-                let x = this.parent.plotData[ind][0] - this.parent.datShift[0]; 
+                let x = this.parent.plotData[ind][0]; 
                 let y = this.parent.plotData[ind][this.trace] - this.parent.datShift[this.trace]; 
                 this.Sx  += x;
                 this.Sxx += x*x;
@@ -77,7 +77,6 @@ class StatsIOLab {
             this.intercept = aveY - this.slope*aveX;
             this.rxy = covXY/(sigX*sigY);
 
-            //this.timeRange = calData[this.sensor][indLast][0] - calData[this.sensor][indFirst][0];
             this.timeRange = this.parent.plotData[indLast][0] - this.parent.plotData[indFirst][0];
             this.area = this.mean*this.timeRange;
 

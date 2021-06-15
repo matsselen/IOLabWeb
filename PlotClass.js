@@ -466,8 +466,6 @@ class ViewPort {
                     let start = parseInt(this.yMin / interval + 1) * interval;
                     if (this.yMin < -interval) start -= interval;
                     let precision = Math.max(exp - 2, 0);
-                    //console.log("start=",start," interval=",interval)
-                    //if (dbgInfo) console.log("In pickDataAxis() base, exp, start, interval, precision ", base[b], exp, start, interval, precision);
                     return ([start, interval, precision]);
                 }
             }
@@ -498,7 +496,6 @@ class ViewPort {
                     // this is a good interval so find lowest tick label
                     let start = parseInt(this.xMin / interval + 1) * interval;
                     let precision = Math.max(exp - 2, 0);
-                    //if (dbgInfo) console.log("In pickTimeAxis() base, exp, start, interval, precision ", base[b], exp, start, interval, precision);
                     return ([start, interval, precision]);
                 }
             }
@@ -716,7 +713,6 @@ class PlotIOLab {
             controls.appendChild(cb);
 
             // create a data analysis object for each trace
-            //let stat = new StatsIOLab(this.sensorNum, ind + 1);
             let stat = new StatsIOLab(this, ind + 1);
             this.analObjectList.push(stat);
 
@@ -1203,7 +1199,6 @@ class PlotIOLab {
     drawSelectionAnalysisMethod() {
 
         // if there is no data for this sensor then go home
-        //if (calData[this.sensorNum].length == 0) return;
         if (this.plotData.length == 0) return;
 
         // analysis info layer
@@ -1220,12 +1215,9 @@ class PlotIOLab {
 
         // make sure these correspond to existing array elements
         if (indStart < 0) indStart = 0;
-        //if (indStop > calData[this.sensorNum].length - 1) indStop = calData[this.sensorNum].length - 1;
         if (indStop > this.plotData.length - 1) indStop = this.plotData.length - 1;
 
         // redo the start & stop times so that they correspond to actual samples
-        // let tStartLocal = calData[this.sensorNum][indStart][0];
-        // let tStopLocal = calData[this.sensorNum][indStop][0];
         let tStartLocal = this.plotData[indStart][0];
         let tStopLocal = this.plotData[indStop][0];
 
@@ -1239,8 +1231,6 @@ class PlotIOLab {
         let indRight = Math.min(indRightVP, indStop);
 
         // find the actual times for the left and tight edges of the highlighting
-        // let tLeft = calData[this.sensorNum][indLeft][0];
-        // let tRight = calData[this.sensorNum][indRight][0];
         let tLeft = this.plotData[indLeft][0];
         let tRight = this.plotData[indRight][0];
 
@@ -1299,7 +1289,7 @@ class PlotIOLab {
 
                     //for (let ind = indLeft; ind <= indRight; ind++) {
                     for (let ind = indLeft; ind <= indRight; ind += nSkip) {
-                        let t = this.plotData[ind][0] - this.datShift[0];
+                        let t = this.plotData[ind][0];
                         let y = this.plotData[ind][tr] - this.datShift[tr];
                         let p = this.viewStack[0].dataToPixel(t, y);
                         analysisDrawContext.lineTo(p[0], p[1]);
@@ -1342,15 +1332,11 @@ class PlotIOLab {
         }
 
         // if we are past the last data-point then use the last one
-        // if (ind >= calData[this.sensorNum].length) {
-        //     ind = calData[this.sensorNum].length - 1;
-        // }
         if (ind >= this.plotData.length) {
             ind = this.plotData.length - 1;
         }        
 
         // find the time of the current index (i.e. the actual sample time)
-        //let plotCursorTime = calData[this.sensorNum][ind][0];
         let plotCursorTime = this.plotData[ind][0];
 
         // draw a vertical line at the sample time
@@ -1548,14 +1534,12 @@ class PlotIOLab {
     displayStaticData() {
 
         // get the time of the last acquired data
-        //let datLength = calData[this.sensorNum].length;
         let datLength = this.plotData.length;
 
         if (datLength < 1) {
             if (dbgInfo) console.log("In displayStaticData(): no data to display for sensor " + this.sensorNum.toString());
 
         } else {
-            //let tLastFloat = calData[this.sensorNum][datLength - 1][0];
             let tLastFloat = this.plotData[datLength - 1][0];
             let tLast = parseInt(tLastFloat + 1);
 
@@ -1611,7 +1595,6 @@ class PlotIOLab {
         let ind1 = Math.floor(this.viewStack[0].xMin / this.timePerSample) - 2;
         if (ind1 < 0) ind1 = 0;
         let ind2 = Math.floor(this.viewStack[0].xMax / this.timePerSample) + 2;
-        //if (ind2 > calData[sensorID].length) ind2 = calData[sensorID].length;
         if (ind2 > this.plotData.length) ind2 = this.plotData.length;
 
         // pick the number to advance the index by for each point plotted so that we dont waste time plotting 
@@ -1622,7 +1605,6 @@ class PlotIOLab {
         //for (let ind = ind1; ind < ind2; ind++) {
         for (let ind = ind1; ind < ind2; ind += nSkip) {
 
-            //let tplot = calData[sensorID][ind][0]; // the current time coordinate
             let tplot = this.plotData[ind][0]; // the current time coordinate
 
             // find the first dataploint at the leftmost edge of the viewport 
