@@ -5,7 +5,9 @@
 ====================== IOLabWeb Information ================================
 
 IOLabWeb is a browser based IOLab application whose main purpose is to allow students with Chromebooks and Linux machines (almost any plaform in fact) to perform experiments using IOLab without installing any software. 
-    
+
+You need to use version 89 or higher of either the Chrome or Edge web browser. Make sure cookies are enabled since these are used to store your options and calibration constants. The code is updated frequently so always do a "hard reload" to avoid problems due to browser caching of old code and images.
+
 IOLabWeb is currently under development and is not guaranteed to be stable or bug-free.  If you are running a recent Windows or Mac OS you are probably better off using the Official IOLab Application which can be downloaded at www.iolab.science. 
 
 IOLabWeb is not supported by Macmillan Publishing so please do not contact IOLab Tech Support if you have questions since they are not familiar with it. If you find a bug or have an idea for improvement please email Mats Selen at mats@illinois.edu.
