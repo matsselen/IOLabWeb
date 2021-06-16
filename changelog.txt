@@ -30,6 +30,9 @@ Back Burner Tasks:
 
 ================ Release Notes ================================================
 
+v0.9.15 6/715/2021
+Minor tweaks and documentation updates.
+
 v0.9.14 6/7/2021
 Rationalized usage of calData vs plotData in plotting code.
 Changed name of csv file when exporting all sensors.
