@@ -30,6 +30,9 @@ Back Burner Tasks:
 
 ================ Release Notes ================================================
 
+v0.9.16 6/xx/2021
+Added option to swap sign of y-axis.
+
 v0.9.15 6/15/2021
 Minor tweaks and documentation updates.
 
