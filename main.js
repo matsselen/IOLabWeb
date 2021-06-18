@@ -52,6 +52,12 @@ const d6Ctl = document.getElementById('d6Ctl');
 const d6CK = document.getElementById('d6CK');
 const dispD6 = document.getElementById('dispD6');
 
+const negYwheel = document.getElementById('negYwheel');
+const negYaccel = document.getElementById('negYaccel');
+const negYforce = document.getElementById('negYforce');
+const negYgyro = document.getElementById('negYgyro');
+const negYmag = document.getElementById('negYmag');
+
 const dataBoxTx = document.getElementById("dataBoxTx");
 const dataBoxRx = document.getElementById("dataBoxRx");
 const debugStuff = document.getElementById("debugStuff");

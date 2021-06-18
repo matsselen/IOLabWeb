@@ -19,6 +19,8 @@ function initializeOptions() {
   dispD5.checked = iolabOptions.showD5;
   dispD6.checked = iolabOptions.showD6;
   dispD6.byLocal = iolabOptions.byLocal;
+
+
   
 }
 
@@ -44,6 +46,30 @@ function selectOutput() {
   d6Ctl.hidden = !dispD6.checked;
 }
 
+function swapYaxis() { 
+
+  if(negYwheel.checked){
+    iolabOptions.signYwheel = -1;
+  }
+  
+  if(negYaccel.checked){
+    iolabOptions.signYaccel = -1;
+  }
+  
+  if(negYforce.checked){
+    iolabOptions.signYforce = -1;
+  }
+  
+  if(negYgyro.checked){
+    iolabOptions.signYgyro = -1;
+  }
+  
+  if(negYmag.checked){
+    iolabOptions.signYmag = -1;
+  }
+
+}
+
 // placeholder option values
 var iolabOptions = {
   "time": 0,
@@ -53,7 +79,12 @@ var iolabOptions = {
   "showD5": false,
   "showD6": true,
   "toIndex": 1,
-  "byLocal": -48.5
+  "byLocal": -48.5,
+  "signYwheel": 1,
+  "signYaccel": 1,
+  "signYforce": 1,
+  "signYgyro": 1,
+  "signYmag": 1
 }
 
 // this creates a cookie on the client browser to hold the calibration values in "calArray" for 
