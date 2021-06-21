@@ -625,6 +625,9 @@ class PlotIOLab {
         this.smoothVal = 0;
         this.datShift = new Array(1 + this.nTraces).fill(0);
 
+        // this allows us to swap the sign of any trace
+        this.datSign = new Array(1 + this.nTraces).fill(1);
+
         // copy the trace colors so we can add to it w/o messing up the original.
         this.layerColorList = Array.from(this.sensor.pathColors);
 
