@@ -1140,6 +1140,11 @@ class PlotIOLab {
 
     //===============================IOLabPlot Methods========================================
 
+    // multiply the sign of y-axis data by ySign if this is the sensor with number sensNumber   
+    setTraceSign(ySign) {
+
+    }
+
     // returns the interpolated data valuse at a specific time t and range dt
     getDataAtTime(t) {
 
@@ -1376,7 +1381,6 @@ class PlotIOLab {
 
             }
         }
-
     }
 
     // clean up the DOM
