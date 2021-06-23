@@ -18,7 +18,7 @@ function initializeOptions() {
   dispD4.checked = iolabOptions.showD4;
   dispD5.checked = iolabOptions.showD5;
   dispD6.checked = iolabOptions.showD6;
-  dispD6.byLocal = iolabOptions.byLocal;  
+  dispD6.byLocal = iolabOptions.byLocal;
 }
 
 function endOpt() {
@@ -43,27 +43,72 @@ function selectOutput() {
   d6Ctl.hidden = !dispD6.checked;
 }
 
-function swapYaxis() { 
+function swapYaxis() {
 
-  if(negYwheel.checked){
+  // start by seeing what is checked and adjust the option variables accordingly
+  iolabOptions.signYwheel = 1;
+  if (negYwheel.checked) {
     iolabOptions.signYwheel = -1;
   }
 
-  if(negYaccel.checked){
+  iolabOptions.signYaccel = 1;
+  if (negYaccel.checked) {
     iolabOptions.signYaccel = -1;
   }
 
-  if(negYforce.checked){
+  iolabOptions.signYforce = 1;
+  if (negYforce.checked) {
     iolabOptions.signYforce = -1;
   }
 
-  if(negYgyro.checked){
+  iolabOptions.signYgyro = 1;
+  if (negYgyro.checked) {
     iolabOptions.signYgyro = -1;
   }
 
-  if(negYmag.checked){
+  iolabOptions.signYmag = 1;
+  if (negYmag.checked) {
     iolabOptions.signYmag = -1;
   }
+
+  // set when traceSign parameter as needed 
+  let ind;
+
+  // the wheel has 3 separate sensor charts
+  for (let sens of [15, 16, 17]) {
+    ind = plotSet.chartList.lastIndexOf(sens);
+    if (ind > -1) {
+      plotSet.plotObjectList[ind].traceSign[1] = iolabOptions.signYwheel;
+    }
+  }
+
+  // accelerometer
+  ind = plotSet.chartList.lastIndexOf(1);
+  if (ind > -1) {
+    plotSet.plotObjectList[ind].traceSign[2] = iolabOptions.signYaccel;
+  }
+
+  // force
+  ind = plotSet.chartList.lastIndexOf(8);
+  if (ind > -1) {
+    plotSet.plotObjectList[ind].traceSign[1] = iolabOptions.signYforce;
+  }
+
+  // gyroscope
+  ind = plotSet.chartList.lastIndexOf(3);
+  if (ind > -1) {
+    plotSet.plotObjectList[ind].traceSign[1] = iolabOptions.signYgyro;
+  }
+
+  // magnetometer
+  ind = plotSet.chartList.lastIndexOf(2);
+  if (ind > -1) {
+    plotSet.plotObjectList[ind].traceSign[1] = iolabOptions.signYmag;
+  }
+
+  // reprocess and redraw the plots
+  plotSet.reprocessPlotData();
+  plotSet.displayPlots();
 
 }
 
@@ -149,13 +194,13 @@ function getOptionCookies() {
 // get whatever valid options are in the cookie we found
 function getValidOptions(optRead) {
 
-  if (optRead.showDac != undefined) {iolabOptions.showDac = optRead.showDac;}
-  if (optRead.showBzz != undefined) {iolabOptions.showBzz = optRead.showBzz;}
-  if (optRead.showD4 != undefined) {iolabOptions.showD4 = optRead.showD4;}
-  if (optRead.showD5 != undefined) {iolabOptions.showD5 = optRead.showD5;}
-  if (optRead.showD6 != undefined) {iolabOptions.showD6 = optRead.showD6;}
-  if (optRead.toIndex != undefined) {iolabOptions.toIndex = optRead.toIndex;}
-  if (optRead.byLocal != undefined) {iolabOptions.byLocal = optRead.byLocal;}
+  if (optRead.showDac != undefined) { iolabOptions.showDac = optRead.showDac; }
+  if (optRead.showBzz != undefined) { iolabOptions.showBzz = optRead.showBzz; }
+  if (optRead.showD4 != undefined) { iolabOptions.showD4 = optRead.showD4; }
+  if (optRead.showD5 != undefined) { iolabOptions.showD5 = optRead.showD5; }
+  if (optRead.showD6 != undefined) { iolabOptions.showD6 = optRead.showD6; }
+  if (optRead.toIndex != undefined) { iolabOptions.toIndex = optRead.toIndex; }
+  if (optRead.byLocal != undefined) { iolabOptions.byLocal = optRead.byLocal; }
   console.log("In getValidOptions():")
   console.log(iolabOptions);
 }
@@ -315,7 +360,7 @@ function buildCmdPicker() {
   cmdOption = document.createElement('option');
   cmdOption.value = cmdOption.innerText = "findRemote";
   cmdPicker.appendChild(cmdOption);
-  
+
   cmdOption = document.createElement('option');
   cmdOption.value = cmdOption.innerText = "getPairing";
   cmdPicker.appendChild(cmdOption);
