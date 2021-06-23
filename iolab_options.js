@@ -110,6 +110,12 @@ function swapYaxis() {
   plotSet.reprocessPlotData();
   plotSet.displayPlots();
 
+  // for (ind = 0; ind < plotSet.plotObjectList.length; ind++) {
+  //   if (plotSet.sensorCBlist[ind].checked) {
+  //     plotSet.plotObjectList[ind].drawSelectionAnalysisMethod();
+  //   }
+  // }
+
 }
 
 // placeholder option values
