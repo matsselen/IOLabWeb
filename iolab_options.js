@@ -106,15 +106,24 @@ function swapYaxis() {
     plotSet.plotObjectList[ind].traceSign[1] = iolabOptions.signYmag;
   }
 
-  // reprocess and redraw the plots
-  plotSet.reprocessPlotData();
-  plotSet.displayPlots();
+  // // reprocess and redraw the plots
+  // plotSet.reprocessPlotData();
+  // plotSet.displayPlots();
+
+  // for (ind = 0; ind < plotSet.plotObjectList.length; ind++) {
+  //   if (plotSet.sensorCBlist[ind].checked) {
+  //     plotSet.plotObjectList[ind].drawSelectionAnalysisMethod();
+  //   }
+  // }
 
   for (ind = 0; ind < plotSet.plotObjectList.length; ind++) {
-    if (plotSet.sensorCBlist[ind].checked) {
-      plotSet.plotObjectList[ind].drawSelectionAnalysisMethod();
-    }
+    let plot = plotSet.plotObjectList[ind];
+    plot.processPlotData();
+    plot.smoothShow();
+    plot.displayStaticData();
+    plot.drawSelectionAnalysisMethod();
   }
+
 
 }
 
