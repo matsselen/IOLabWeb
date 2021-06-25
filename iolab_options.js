@@ -53,6 +53,7 @@ function swapWheel () {
     let ind = plotSet.chartList.lastIndexOf(sens);
     if (ind > -1) {
       plotSet.plotObjectList[ind].traceSign[1] = iolabOptions.signYwheel;
+      plotSet.plotObjectList[ind].datShift[1] *= -1; // swap the sign of any existing shift
     }
   }
   redrawAfterSwapping();
@@ -67,6 +68,7 @@ function swapAccel () {
   let ind = plotSet.chartList.lastIndexOf(1);
   if (ind > -1) {
     plotSet.plotObjectList[ind].traceSign[2] = iolabOptions.signYaccel;
+    plotSet.plotObjectList[ind].datShift[2] *= -1; // swap the sign of any existing shift
   }
   redrawAfterSwapping();
 }
@@ -79,6 +81,7 @@ function swapForce () {
   let ind = plotSet.chartList.lastIndexOf(8);
   if (ind > -1) {
     plotSet.plotObjectList[ind].traceSign[1] = iolabOptions.signYforce;
+    plotSet.plotObjectList[ind].datShift[1] *= -1; // swap the sign of any existing shift
   }
   redrawAfterSwapping();
 }
@@ -90,7 +93,8 @@ function swapGyro () {
 
   let ind = plotSet.chartList.lastIndexOf(3);
   if (ind > -1) {
-    plotSet.plotObjectList[ind].traceSign[1] = iolabOptions.signYgyro;
+    plotSet.plotObjectList[ind].traceSign[2] = iolabOptions.signYgyro;
+    plotSet.plotObjectList[ind].datShift[2] *= -1; // swap the sign of any existing shift
   }
   redrawAfterSwapping();
 }
@@ -101,7 +105,8 @@ function swapMag () {
 
   let ind = plotSet.chartList.lastIndexOf(2);
   if (ind > -1) {
-    plotSet.plotObjectList[ind].traceSign[1] = iolabOptions.signYmag;
+    plotSet.plotObjectList[ind].traceSign[2] = iolabOptions.signYmag;
+    plotSet.plotObjectList[ind].datShift[2] *= -1; // swap the sign of any existing shift
   }
   redrawAfterSwapping();
 }
