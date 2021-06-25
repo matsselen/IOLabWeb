@@ -43,80 +43,73 @@ function selectOutput() {
   d6Ctl.hidden = !dispD6.checked;
 }
 
-function swapYaxis() {
+// wheel
+function swapWheel () {
 
-  // start by seeing what is checked and adjust the option variables accordingly
   iolabOptions.signYwheel = 1;
-  if (negYwheel.checked) {
-    iolabOptions.signYwheel = -1;
-  }
-
-  iolabOptions.signYaccel = 1;
-  if (negYaccel.checked) {
-    iolabOptions.signYaccel = -1;
-  }
-
-  iolabOptions.signYforce = 1;
-  if (negYforce.checked) {
-    iolabOptions.signYforce = -1;
-  }
-
-  iolabOptions.signYgyro = 1;
-  if (negYgyro.checked) {
-    iolabOptions.signYgyro = -1;
-  }
-
-  iolabOptions.signYmag = 1;
-  if (negYmag.checked) {
-    iolabOptions.signYmag = -1;
-  }
-
-  // set when traceSign parameter as needed 
-  let ind;
-
-  // the wheel has 3 separate sensor charts
+  if (negYwheel.checked) { iolabOptions.signYwheel = -1; } 
+  
   for (let sens of [15, 16, 17]) {
-    ind = plotSet.chartList.lastIndexOf(sens);
+    let ind = plotSet.chartList.lastIndexOf(sens);
     if (ind > -1) {
       plotSet.plotObjectList[ind].traceSign[1] = iolabOptions.signYwheel;
     }
   }
+  redrawAfterSwapping();
+}
 
-  // accelerometer
-  ind = plotSet.chartList.lastIndexOf(1);
+// accelerometer
+function swapAccel () {
+
+  iolabOptions.signYaccel = 1;
+  if (negYaccel.checked) { iolabOptions.signYaccel = -1; }
+
+  let ind = plotSet.chartList.lastIndexOf(1);
   if (ind > -1) {
     plotSet.plotObjectList[ind].traceSign[2] = iolabOptions.signYaccel;
   }
+  redrawAfterSwapping();
+}
 
-  // force
-  ind = plotSet.chartList.lastIndexOf(8);
+function swapForce () {
+
+  iolabOptions.signYforce = 1;
+  if (negYforce.checked) { iolabOptions.signYforce = -1; }
+
+  let ind = plotSet.chartList.lastIndexOf(8);
   if (ind > -1) {
     plotSet.plotObjectList[ind].traceSign[1] = iolabOptions.signYforce;
   }
+  redrawAfterSwapping();
+}
 
-  // gyroscope
-  ind = plotSet.chartList.lastIndexOf(3);
+function swapGyro () {
+
+  iolabOptions.signYgyro = 1;
+  if (negYgyro.checked) { iolabOptions.signYgyro = -1; }
+
+  let ind = plotSet.chartList.lastIndexOf(3);
   if (ind > -1) {
     plotSet.plotObjectList[ind].traceSign[1] = iolabOptions.signYgyro;
   }
+  redrawAfterSwapping();
+}
 
-  // magnetometer
-  ind = plotSet.chartList.lastIndexOf(2);
+function swapMag () {
+  iolabOptions.signYmag = 1;
+  if (negYmag.checked) { iolabOptions.signYmag = -1; }
+
+  let ind = plotSet.chartList.lastIndexOf(2);
   if (ind > -1) {
     plotSet.plotObjectList[ind].traceSign[1] = iolabOptions.signYmag;
   }
+  redrawAfterSwapping();
+}
 
-  // // reprocess and redraw the plots
-  // plotSet.reprocessPlotData();
-  // plotSet.displayPlots();
+function redrawAfterSwapping() {
 
-  // for (ind = 0; ind < plotSet.plotObjectList.length; ind++) {
-  //   if (plotSet.sensorCBlist[ind].checked) {
-  //     plotSet.plotObjectList[ind].drawSelectionAnalysisMethod();
-  //   }
-  // }
-
-  for (ind = 0; ind < plotSet.plotObjectList.length; ind++) {
+  // reprocess data and redraw the plots & analysis info
+  for (let ind = 0; ind < plotSet.plotObjectList.length; ind++) {
     let plot = plotSet.plotObjectList[ind];
     plot.processPlotData();
     plot.smoothShow();
@@ -124,8 +117,8 @@ function swapYaxis() {
     plot.drawSelectionAnalysisMethod();
   }
 
-
 }
+
 
 // placeholder option values
 var iolabOptions = {

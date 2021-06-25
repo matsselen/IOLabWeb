@@ -845,7 +845,8 @@ class PlotIOLab {
 
                 // then a y coordinate for each axis
                 for (let tr = 1; tr < plotThis.nTraces + 1; tr++) {
-                    let yplot = plotThis.plotData[ind][tr] - plotThis.datShift[tr]*plotThis.traceSign[tr];
+                    //mas let yplot = plotThis.plotData[ind][tr] - plotThis.datShift[tr]*plotThis.traceSign[tr];
+                    let yplot = plotThis.plotData[ind][tr] - plotThis.datShift[tr];
                     csvdata += ", ";
                     csvdata += yplot.toString();
                 }
@@ -1293,7 +1294,8 @@ class PlotIOLab {
                     //for (let ind = indLeft; ind <= indRight; ind++) {
                     for (let ind = indLeft; ind <= indRight; ind += nSkip) {
                         let t = this.plotData[ind][0];
-                        let y = this.plotData[ind][tr] - this.datShift[tr]*this.traceSign[tr];
+                        //mas let y = this.plotData[ind][tr] - this.datShift[tr]*this.traceSign[tr];
+                        let y = this.plotData[ind][tr] - this.datShift[tr];
                         let p = this.viewStack[0].dataToPixel(t, y);
                         analysisDrawContext.lineTo(p[0], p[1]);
                     }
@@ -1358,7 +1360,8 @@ class PlotIOLab {
         for (let tr = 1; tr < this.nTraces + 1; tr++) {
             if (this.traceEnabledList[tr - 1]) {
 
-                let currentCursorData = this.plotData[ind][tr] - this.datShift[tr]*this.traceSign[tr];//calData[this.sensorNum][ind][tr];
+                let currentCursorData = this.plotData[ind][tr] - this.datShift[tr];//calData[this.sensorNum][ind][tr];
+                //mas let currentCursorData = this.plotData[ind][tr] - this.datShift[tr]*this.traceSign[tr];//calData[this.sensorNum][ind][tr];
                 let dataPix = this.viewStack[0].dataToPixel(plotCursorTime, currentCursorData);
                 infoDrawContext.strokeStyle = 'rgba(0,0,0,0)'; // transparent circle outline (cluge)
                 infoDrawContext.lineWidth = 0;
@@ -1615,14 +1618,16 @@ class PlotIOLab {
                 first = false;
                 for (let tr = 1; tr < this.nTraces + 1; tr++) {
                     contextList[tr].clearRect(0, 0, cWidth, cHeight);
-                    pix = this.viewStack[0].dataToPixel(tplot, this.plotData[ind][tr] - this.datShift[tr]*this.traceSign[tr]);
+                    //mas pix = this.viewStack[0].dataToPixel(tplot, this.plotData[ind][tr] - this.datShift[tr]*this.traceSign[tr]);
+                    pix = this.viewStack[0].dataToPixel(tplot, this.plotData[ind][tr] - this.datShift[tr]);
                     contextList[tr].beginPath();
                     contextList[tr].moveTo(pix[0], pix[1]);
                 }
 
             } else { // once we have the first point start drawing the rest
                 for (let tr = 1; tr < this.nTraces + 1; tr++) {
-                    pix = this.viewStack[0].dataToPixel(tplot, this.plotData[ind][tr] - this.datShift[tr]*this.traceSign[tr]);
+                    //mas pix = this.viewStack[0].dataToPixel(tplot, this.plotData[ind][tr] - this.datShift[tr]*this.traceSign[tr]);
+                    pix = this.viewStack[0].dataToPixel(tplot, this.plotData[ind][tr] - this.datShift[tr]);
                     contextList[tr].lineTo(pix[0], pix[1]);
                 }
             }
@@ -1673,13 +1678,15 @@ class PlotIOLab {
                 // start with the data at calReadPtr (presumably 0)
                 if (this.datLast[0] < 0) {
 
-                    let xd = this.traceSign[tr]*(calData[sensorID][calReadPtr[sensorID]][tr] - this.datShift[tr]);
+                    //mas let xd = this.traceSign[tr]*(calData[sensorID][calReadPtr[sensorID]][tr] - this.datShift[tr]);
+                    let xd = this.traceSign[tr]*calData[sensorID][calReadPtr[sensorID]][tr] - this.datShift[tr];
                     pix = this.viewStack[0].dataToPixel(td, xd);
 
                 } else { // if this is not the first call start with the last datapoint we plotted
 
                     let tstart = this.datLast[0];
-                    pix = this.viewStack[0].dataToPixel(tstart, this.traceSign[tr]*(this.datLast[tr] - this.datShift[tr]));
+                    //mas pix = this.viewStack[0].dataToPixel(tstart, this.traceSign[tr]*(this.datLast[tr] - this.datShift[tr]));
+                    pix = this.viewStack[0].dataToPixel(tstart, this.traceSign[tr]*this.datLast[tr] - this.datShift[tr]);
                 }
                 contextList[tr].moveTo(pix[0], pix[1]);
             }
@@ -1709,12 +1716,14 @@ class PlotIOLab {
 
                         // clear canvas before wrapping
                         contextList[tr].clearRect(0, 0, cWidth, cHeight);
-                        pix = this.viewStack[0].dataToPixel(tplot, this.traceSign[tr]*(calData[sensorID][ind][tr] - this.datShift[tr]));
+                        //mas pix = this.viewStack[0].dataToPixel(tplot, this.traceSign[tr]*(calData[sensorID][ind][tr] - this.datShift[tr]));
+                        pix = this.viewStack[0].dataToPixel(tplot, this.traceSign[tr]*calData[sensorID][ind][tr] - this.datShift[tr]);
                         contextList[tr].beginPath();
                         contextList[tr].moveTo(pix[0], pix[1]);
 
                     } else {
-                        pix = this.viewStack[0].dataToPixel(tplot, this.traceSign[tr]*(calData[sensorID][ind][tr] - this.datShift[tr]));
+                        //mas pix = this.viewStack[0].dataToPixel(tplot, this.traceSign[tr]*(calData[sensorID][ind][tr] - this.datShift[tr]));
+                        pix = this.viewStack[0].dataToPixel(tplot, this.traceSign[tr]*calData[sensorID][ind][tr] - this.datShift[tr]);
                         contextList[tr].lineTo(pix[0], pix[1]);
                     }
                 }
