@@ -83,6 +83,12 @@ const optModal = document.getElementById("optModal");
 const optButton = document.getElementById("optBtn");
 const cospan = document.getElementsByClassName("closeOpt")[0];
 const bzLocal = document.getElementById("bzLocal");
+const negTxt = document.getElementById("negTxt");
+const negW = document.getElementById("negW");
+const negA = document.getElementById("negA");
+const negF = document.getElementById("negF");
+const negG = document.getElementById("negG");
+const negM = document.getElementById("negM");
 
 // pairing modal stuff
 const pairModal = document.getElementById("pairModal");
