@@ -44,11 +44,11 @@ function selectOutput() {
 }
 
 // wheel
-function swapWheel () {
+function swapWheel() {
 
   iolabOptions.signYwheel = 1;
-  if (negYwheel.checked) { iolabOptions.signYwheel = -1; } 
-  
+  if (negYwheel.checked) { iolabOptions.signYwheel = -1; }
+
   for (let sens of [15, 16, 17]) {
     let ind = plotSet.chartList.lastIndexOf(sens);
     if (ind > -1) {
@@ -60,7 +60,7 @@ function swapWheel () {
 }
 
 // accelerometer
-function swapAccel () {
+function swapAccel() {
 
   iolabOptions.signYaccel = 1;
   if (negYaccel.checked) { iolabOptions.signYaccel = -1; }
@@ -73,7 +73,7 @@ function swapAccel () {
   redrawAfterSwapping();
 }
 
-function swapForce () {
+function swapForce() {
 
   iolabOptions.signYforce = 1;
   if (negYforce.checked) { iolabOptions.signYforce = -1; }
@@ -86,7 +86,7 @@ function swapForce () {
   redrawAfterSwapping();
 }
 
-function swapGyro () {
+function swapGyro() {
 
   iolabOptions.signYgyro = 1;
   if (negYgyro.checked) { iolabOptions.signYgyro = -1; }
@@ -99,7 +99,7 @@ function swapGyro () {
   redrawAfterSwapping();
 }
 
-function swapMag () {
+function swapMag() {
   iolabOptions.signYmag = 1;
   if (negYmag.checked) { iolabOptions.signYmag = -1; }
 
@@ -113,6 +113,17 @@ function swapMag () {
 
 function redrawAfterSwapping() {
 
+  analTime1 = 0;
+  analTime2 = 0;
+  tStart = 0;
+  tStop = 0;
+
+  plotSet.zoomLink.src = "images/zoom1.png";
+  plotSet.panLink.src = "images/pan0.png";
+  plotSet.anaLink.src = "images/ana0.png";
+  plotSet.mouseMode = "zoom";
+  plotSet.linkMode = false;
+
   // reprocess data and redraw the plots & analysis info
   for (let ind = 0; ind < plotSet.plotObjectList.length; ind++) {
     let plot = plotSet.plotObjectList[ind];
@@ -122,6 +133,7 @@ function redrawAfterSwapping() {
     plot.drawSelectionAnalysisMethod();
   }
 
+  updateSystemState();
 }
 
 
