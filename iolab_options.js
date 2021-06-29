@@ -6,17 +6,22 @@
 
 //===================================================================
 
+// this executes when the options modal is opened
 function openOptModal() {
+
+  // set initial local vertical B-field value
   local_Bvert = iolabOptions.byLocal;
   bzLocal.value = local_Bvert;
 
+  // dont show y-swap controls until a configuration is loaded
+  negW.hidden = true; negA.hidden = true; negF.hidden = true; negG.hidden = true; negM.hidden = true;
+
   if (plotSet == null) {
     negTxt.innerHTML = "<b>Options to reverse y-axis data will appear here after a configuration is chosen or a run is restored</b>"
-    negW.hidden = true; negA.hidden = true; negF.hidden = true; negG.hidden = true; negM.hidden = true;
-  } else {
-    negTxt.innerHTML = "<b>Select which sensors to reverse the y-axis for:</b>"
 
-    // see which y-swap option boxes to show
+  // if a configuration is loaded figure out which checkboxes to show
+  } else {
+    negTxt.innerHTML = "<b>Select which sensors should have a reverse y-axis (for this session only):</b>"
     if (plotSet.chartList.lastIndexOf(15) > -1) { negW.hidden = false; }
     if (plotSet.chartList.lastIndexOf(1) > -1) { negA.hidden = false; }
     if (plotSet.chartList.lastIndexOf(2) > -1) { negM.hidden = false; }
