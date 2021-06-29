@@ -6,9 +6,29 @@
 
 //===================================================================
 
+// this executes when the options modal is opened
 function openOptModal() {
+
+  // set initial local vertical B-field value
   local_Bvert = iolabOptions.byLocal;
   bzLocal.value = local_Bvert;
+
+  // dont show y-swap controls until a configuration is loaded
+  negW.hidden = true; negA.hidden = true; negF.hidden = true; negG.hidden = true; negM.hidden = true;
+
+  if (plotSet == null) {
+    negTxt.innerHTML = "<b>Options to reverse y-axis data will appear here after a configuration is chosen or a run is restored</b>"
+
+  // if a configuration is loaded figure out which checkboxes to show
+  } else {
+    negTxt.innerHTML = "<b>Select which sensors should have a reverse y-axis (for this session only):</b>"
+    if (plotSet.chartList.lastIndexOf(15) > -1) { negW.hidden = false; }
+    if (plotSet.chartList.lastIndexOf(1) > -1) { negA.hidden = false; }
+    if (plotSet.chartList.lastIndexOf(2) > -1) { negM.hidden = false; }
+    if (plotSet.chartList.lastIndexOf(3) > -1) { negG.hidden = false; }
+    if (plotSet.chartList.lastIndexOf(8) > -1) { negF.hidden = false; }
+
+  }
 }
 
 function initializeOptions() {
@@ -19,7 +39,6 @@ function initializeOptions() {
   dispD5.checked = iolabOptions.showD5;
   dispD6.checked = iolabOptions.showD6;
   dispD6.byLocal = iolabOptions.byLocal;
-  
 }
 
 function endOpt() {
@@ -44,6 +63,100 @@ function selectOutput() {
   d6Ctl.hidden = !dispD6.checked;
 }
 
+// wheel
+function swapWheel() {
+
+  iolabOptions.signYwheel = 1;
+  if (negYwheel.checked) { iolabOptions.signYwheel = -1; }
+
+  for (let sens of [15, 16, 17]) {
+    let ind = plotSet.chartList.lastIndexOf(sens);
+    if (ind > -1) {
+      plotSet.plotObjectList[ind].traceSign[1] = iolabOptions.signYwheel;
+      plotSet.plotObjectList[ind].datShift[1] *= -1; // swap the sign of any existing shift
+    }
+  }
+  redrawAfterSwapping();
+}
+
+// accelerometer
+function swapAccel() {
+
+  iolabOptions.signYaccel = 1;
+  if (negYaccel.checked) { iolabOptions.signYaccel = -1; }
+
+  let ind = plotSet.chartList.lastIndexOf(1);
+  if (ind > -1) {
+    plotSet.plotObjectList[ind].traceSign[2] = iolabOptions.signYaccel;
+    plotSet.plotObjectList[ind].datShift[2] *= -1; // swap the sign of any existing shift
+  }
+  redrawAfterSwapping();
+}
+
+function swapForce() {
+
+  iolabOptions.signYforce = 1;
+  if (negYforce.checked) { iolabOptions.signYforce = -1; }
+
+  let ind = plotSet.chartList.lastIndexOf(8);
+  if (ind > -1) {
+    plotSet.plotObjectList[ind].traceSign[1] = iolabOptions.signYforce;
+    plotSet.plotObjectList[ind].datShift[1] *= -1; // swap the sign of any existing shift
+  }
+  redrawAfterSwapping();
+}
+
+function swapGyro() {
+
+  iolabOptions.signYgyro = 1;
+  if (negYgyro.checked) { iolabOptions.signYgyro = -1; }
+
+  let ind = plotSet.chartList.lastIndexOf(3);
+  if (ind > -1) {
+    plotSet.plotObjectList[ind].traceSign[2] = iolabOptions.signYgyro;
+    plotSet.plotObjectList[ind].datShift[2] *= -1; // swap the sign of any existing shift
+  }
+  redrawAfterSwapping();
+}
+
+function swapMag() {
+  iolabOptions.signYmag = 1;
+  if (negYmag.checked) { iolabOptions.signYmag = -1; }
+
+  let ind = plotSet.chartList.lastIndexOf(2);
+  if (ind > -1) {
+    plotSet.plotObjectList[ind].traceSign[2] = iolabOptions.signYmag;
+    plotSet.plotObjectList[ind].datShift[2] *= -1; // swap the sign of any existing shift
+  }
+  redrawAfterSwapping();
+}
+
+function redrawAfterSwapping() {
+
+  analTime1 = 0;
+  analTime2 = 0;
+  tStart = 0;
+  tStop = 0;
+
+  plotSet.zoomLink.src = "images/zoom1.png";
+  plotSet.panLink.src = "images/pan0.png";
+  plotSet.anaLink.src = "images/ana0.png";
+  plotSet.mouseMode = "zoom";
+  plotSet.linkMode = false;
+
+  // reprocess data and redraw the plots & analysis info
+  for (let ind = 0; ind < plotSet.plotObjectList.length; ind++) {
+    let plot = plotSet.plotObjectList[ind];
+    plot.processPlotData();
+    plot.smoothShow();
+    plot.displayStaticData();
+    plot.drawSelectionAnalysisMethod();
+  }
+
+  updateSystemState();
+}
+
+
 // placeholder option values
 var iolabOptions = {
   "time": 0,
@@ -53,7 +166,12 @@ var iolabOptions = {
   "showD5": false,
   "showD6": true,
   "toIndex": 1,
-  "byLocal": -48.5
+  "byLocal": -48.5,
+  "signYwheel": 1,
+  "signYaccel": 1,
+  "signYforce": 1,
+  "signYgyro": 1,
+  "signYmag": 1
 }
 
 // this creates a cookie on the client browser to hold the calibration values in "calArray" for 
@@ -121,13 +239,13 @@ function getOptionCookies() {
 // get whatever valid options are in the cookie we found
 function getValidOptions(optRead) {
 
-  if (optRead.showDac != undefined) {iolabOptions.showDac = optRead.showDac;}
-  if (optRead.showBzz != undefined) {iolabOptions.showBzz = optRead.showBzz;}
-  if (optRead.showD4 != undefined) {iolabOptions.showD4 = optRead.showD4;}
-  if (optRead.showD5 != undefined) {iolabOptions.showD5 = optRead.showD5;}
-  if (optRead.showD6 != undefined) {iolabOptions.showD6 = optRead.showD6;}
-  if (optRead.toIndex != undefined) {iolabOptions.toIndex = optRead.toIndex;}
-  if (optRead.byLocal != undefined) {iolabOptions.byLocal = optRead.byLocal;}
+  if (optRead.showDac != undefined) { iolabOptions.showDac = optRead.showDac; }
+  if (optRead.showBzz != undefined) { iolabOptions.showBzz = optRead.showBzz; }
+  if (optRead.showD4 != undefined) { iolabOptions.showD4 = optRead.showD4; }
+  if (optRead.showD5 != undefined) { iolabOptions.showD5 = optRead.showD5; }
+  if (optRead.showD6 != undefined) { iolabOptions.showD6 = optRead.showD6; }
+  if (optRead.toIndex != undefined) { iolabOptions.toIndex = optRead.toIndex; }
+  if (optRead.byLocal != undefined) { iolabOptions.byLocal = optRead.byLocal; }
   console.log("In getValidOptions():")
   console.log(iolabOptions);
 }
@@ -287,7 +405,7 @@ function buildCmdPicker() {
   cmdOption = document.createElement('option');
   cmdOption.value = cmdOption.innerText = "findRemote";
   cmdPicker.appendChild(cmdOption);
-  
+
   cmdOption = document.createElement('option');
   cmdOption.value = cmdOption.innerText = "getPairing";
   cmdPicker.appendChild(cmdOption);

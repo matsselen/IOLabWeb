@@ -30,6 +30,10 @@ Back Burner Tasks:
 
 ================ Release Notes ================================================
 
+v0.9.16 6/29/2021
+Added option to swap sign of y-axis for accel, force, gyro, mag, wheel
+Cleaned up some issues with rezeroing force, displacement, light, and HG sensors
+
 v0.9.15 6/15/2021
 Minor tweaks and documentation updates.
 

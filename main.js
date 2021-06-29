@@ -52,6 +52,12 @@ const d6Ctl = document.getElementById('d6Ctl');
 const d6CK = document.getElementById('d6CK');
 const dispD6 = document.getElementById('dispD6');
 
+const negYwheel = document.getElementById('negYwheel');
+const negYaccel = document.getElementById('negYaccel');
+const negYforce = document.getElementById('negYforce');
+const negYgyro = document.getElementById('negYgyro');
+const negYmag = document.getElementById('negYmag');
+
 const dataBoxTx = document.getElementById("dataBoxTx");
 const dataBoxRx = document.getElementById("dataBoxRx");
 const debugStuff = document.getElementById("debugStuff");
@@ -77,6 +83,12 @@ const optModal = document.getElementById("optModal");
 const optButton = document.getElementById("optBtn");
 const cospan = document.getElementsByClassName("closeOpt")[0];
 const bzLocal = document.getElementById("bzLocal");
+const negTxt = document.getElementById("negTxt");
+const negW = document.getElementById("negW");
+const negA = document.getElementById("negA");
+const negF = document.getElementById("negF");
+const negG = document.getElementById("negG");
+const negM = document.getElementById("negM");
 
 // pairing modal stuff
 const pairModal = document.getElementById("pairModal");
