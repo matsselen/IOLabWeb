@@ -33,7 +33,9 @@ Back Burner Tasks:
 ================ Release Notes ================================================
 
 v0.9.17 6/29/2021
-zoom all sensors when one is zoomed
+zoom x-axis of all sensors when one is zoomed
+pan x-axis all sensors when one is panned
+fixed bug in file save/restore code
 
 v0.9.16 6/29/2021
 Added option to swap sign of y-axis for accel, force, gyro, mag, wheel

@@ -7,7 +7,6 @@
 // save to a file
 function saveToFile() {
 
-
     let runSeconds = totalRunTime / 1000;
     let date = new Date();
 
@@ -65,7 +64,7 @@ function saveToFile() {
     );
 }
 
-// code for reading back rxdata from a file
+// reads back rxdata from a file and 
 async function readInputFile() {
 
     resetAcquisition();
