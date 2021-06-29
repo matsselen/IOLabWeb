@@ -706,7 +706,7 @@ class PlotIOLab {
             cb.canvaslayer = this.layerIDlist[ind + 1];
 
             // create the axis labels before each checkbox
-            let axis = document.createTextNode("\xA0\xA0" + this.axisTitles[ind] + " (" + this.unit + "):");
+            let axis = document.createTextNode("\xA0\xA0" + this.axisTitles[ind] + " (" + this.unit[0] + "):");
 
             // put the axis label in a <span> element so we can set the color of the text
             let axisContainer = document.createElement("span");
@@ -1319,7 +1319,7 @@ class PlotIOLab {
         analysisDrawContext.fillStyle = '#000000';
         analysisDrawContext.font = "12px Arial";
         let text = "∆t = " + Math.abs(tStopLocal - tStartLocal).toFixed(3) + "s";
-        analysisDrawContext.fillText(text, 200, 15);
+        analysisDrawContext.fillText(text, 170, 15);
 
         // find the starting and ending pixels on the x axis
         let zeroLeft = this.viewStack[0].dataToPixel(tLeft, 0);
@@ -1336,11 +1336,9 @@ class PlotIOLab {
 
                 // put data analysis results on the plot for each selected trace
                 analysisDrawContext.fillStyle = this.layerColorList[tr];
-                let text = "n=" + st.n.toFixed(0) + " μ=" + st.mean.toFixed(4) + "±" + st.stderr.toFixed(4) + " σ=" + st.sigma.toFixed(4) +
-                    " a=" + st.area.toFixed(2) + " m=" + st.slope.toFixed(2) + " b=" + st.intercept.toFixed(2) +
-                    " r=" + st.rxy.toFixed(3);
+                let text = "n=" + st.n.toFixed(0) + "  μ=" + st.mean.toFixed(4) + "±" + st.stderr.toFixed(4) + this.unit[1] + "  σ=" + st.sigma.toFixed(4) + this.unit[1] + "  a=" + st.area.toFixed(2) + this.unit[2] + "  m=" + st.slope.toFixed(2) + this.unit[3] + "  b=" + st.intercept.toFixed(2) + this.unit[1] + "  r=" + st.rxy.toFixed(3);
                 traceVoffset += 12;
-                analysisDrawContext.fillText(text, 200, traceVoffset);
+                analysisDrawContext.fillText(text, 170, traceVoffset);
 
                 // fill the area of the selected region (i.e. display the area)
                 if (indRight > indLeft) {
@@ -1431,7 +1429,7 @@ class PlotIOLab {
 
                 // put data numbers at top left corner of plot
                 infoDrawContext.fillStyle = this.layerColorList[tr]; //fill-alpha = 1.0
-                let text = this.axisTitles[tr - 1] + " = " + currentCursorData.toFixed(3) + " " + this.unit;
+                let text = this.axisTitles[tr - 1] + " = " + currentCursorData.toFixed(3) + " " + this.unit[0];
                 traceVoffset += 12;
                 infoDrawContext.fillText(text, 50, traceVoffset);
 

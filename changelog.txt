@@ -35,6 +35,7 @@ Back Burner Tasks:
 v0.9.17 6/29/2021
 zoom x-axis of all sensors when one is zoomed
 pan x-axis all sensors when one is panned
+added units to analysis results & spaced these out a bit more
 fixed bug in file save/restore code
 
 v0.9.16 6/29/2021
