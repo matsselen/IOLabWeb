@@ -19,6 +19,8 @@ Front Burner Tasks:
 - Testing & fixing as needed for summer teacher workshop. 
 
 Back Burner Tasks:
+- Investigate console message "In pickDataAxis(): Should never get to this place" which can 
+  happen when carelessly selecting a zoom region or leaving canvas (not an actual problem)
 - Tweaking of time alignment (especially the wheel). 
 - Optimize which calibration is used for restored datasets
 - Display rezero icon on all zeroable plots when linked
@@ -30,8 +32,10 @@ Back Burner Tasks:
 
 ================ Release Notes ================================================
 
-v0.9.17 6/xx/2021
-zoom all sensors when one is zoomed
+v0.9.17 6/29/2021
+zoom x-axis of all sensors when one is zoomed
+pan x-axis all sensors when one is panned
+fixed bug in file save/restore code
 
 v0.9.16 6/29/2021
 Added option to swap sign of y-axis for accel, force, gyro, mag, wheel

@@ -7,7 +7,6 @@
 // save to a file
 function saveToFile() {
 
-
     let runSeconds = totalRunTime / 1000;
     let date = new Date();
 
@@ -21,6 +20,7 @@ function saveToFile() {
     appMetaData.calGyroTime = calGyroTime;
     appMetaData.calForceConst = calForceConst;
     appMetaData.calForceTime = calForceTime;
+    appMetaData.appVersion = currentVersion;
 
     // push any metadata plus current fixed config object onto the bottom of the calData array
     rxdata.unshift(currentFCobject);
@@ -64,8 +64,10 @@ function saveToFile() {
     );
 }
 
-// code for reading back rxdata from a file
+// reads back rxdata from a file and 
 async function readInputFile() {
+
+    resetAcquisition();
 
     if (dbgInfo) {
         console.log("Will unzip the first file in this list:");
