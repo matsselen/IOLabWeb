@@ -19,6 +19,8 @@ Front Burner Tasks:
 - Testing & fixing as needed for summer teacher workshop. 
 
 Back Burner Tasks:
+- Investigate console message "In pickDataAxis(): Should never get to this place" which can 
+  happen when carelessly selecting a zoom region or leaving canvas (not an actual problem)
 - Tweaking of time alignment (especially the wheel). 
 - Optimize which calibration is used for restored datasets
 - Display rezero icon on all zeroable plots when linked

@@ -921,15 +921,23 @@ class PlotIOLab {
 
         // when the left mouse button is double-clicked
         function dblclick(e) {
+
             if ((plotThis.thisParent.mouseMode == "zoom") || (plotThis.thisParent.mouseMode == "pan")) {
-                // remove any static viewports from the stack
-                while (plotThis.viewStack.length > 1) {
-                    plotThis.viewStack.shift();
+
+                // remove any static viewports from the stack plot all data
+                // do this for all charts
+                for (let ind = 0; ind < thisParent.plotObjectList.length; ind++) {
+                    let pThis = thisParent.plotObjectList[ind];
+
+                    while (pThis.viewStack.length > 1) {
+                        pThis.viewStack.shift();
+                    }
+                    // scale x-axis and plot all data
+                    pThis.displayStaticData();
+                    pThis.drawSelectionAnalysis();
                 }
-                // scale x-axis and plot all data
-                plotThis.displayStaticData();
-                plotThis.drawSelectionAnalysis();
             }
+
             if (plotThis.thisParent.mouseMode == "anal") {
                 analTime1 = 0;
                 analTime2 = 0;
@@ -954,12 +962,15 @@ class PlotIOLab {
                 mousePtrXlast = e.offsetX;
                 mousePtrYlast = e.offsetY;
 
-                // make a copy of the current viewport and put it in the stack       
-                let copyView = new ViewPort(plotThis.viewStack[0].xMin, plotThis.viewStack[0].xMax,
-                    plotThis.viewStack[0].yMin, plotThis.viewStack[0].yMax, plotThis.viewStack[0].canvasElement);
+                // make a copy of the current viewport and put it in the stack 
+                // do this for all charts
+                for (let ind = 0; ind < thisParent.plotObjectList.length; ind++) {
+                    let pThis = thisParent.plotObjectList[ind];
 
-                // push the new viweport onto the bottom of the stack. 
-                plotThis.viewStack.unshift(copyView);
+                    let copyView = new ViewPort(pThis.viewStack[0].xMin, pThis.viewStack[0].xMax, pThis.viewStack[0].yMin, pThis.viewStack[0].yMax, pThis.viewStack[0].canvasElement);
+
+                    pThis.viewStack.unshift(copyView);
+                }
             }
 
             if (plotThis.thisParent.mouseMode == "anal") {
@@ -1020,15 +1031,12 @@ class PlotIOLab {
                     // now do the same for the other charts, though only zoom these in x-direction 
                     // (i.e. keep the time axes the same for all charts)
                     for (let ind = 0; ind < thisParent.plotObjectList.length; ind++) {
-                        if (thisParent.plotObjectList[ind] != plotThis) {
-
-                            let newView = new ViewPort(xMin, xMax, thisParent.plotObjectList[ind].viewStack[0].yMin, thisParent.plotObjectList[ind].viewStack[0].yMax, thisParent.plotObjectList[ind].viewStack[0].canvasElement);
-
-                            thisParent.plotObjectList[ind].viewStack.unshift(newView);
+                        let pThis = thisParent.plotObjectList[ind];
+                        if (pThis != plotThis) {
+                            let newView = new ViewPort(xMin, xMax, pThis.viewStack[0].yMin, pThis.viewStack[0].yMax, pThis.viewStack[0].canvasElement);
+                            pThis.viewStack.unshift(newView);
                         }
-
                     }
-
 
                 } else {
                     // remove the current viweport from bottom of the stack and go back to the previous one. 
@@ -1036,8 +1044,9 @@ class PlotIOLab {
 
                     // do this for all charts
                     for (let ind = 0; ind < thisParent.plotObjectList.length; ind++) {
-                        if (thisParent.plotObjectList[ind].viewStack.length > 1) {
-                            thisParent.plotObjectList[ind].viewStack.shift();
+                        let pThis = thisParent.plotObjectList[ind];
+                        if (pThis.viewStack.length > 1) {
+                            pThis.viewStack.shift();
                         }
                     }
                 }
@@ -1045,9 +1054,10 @@ class PlotIOLab {
                 // draw the zoomed axes
                 // do this for all charts
                 for (let ind = 0; ind < thisParent.plotObjectList.length; ind++) {
-                    thisParent.plotObjectList[ind].drawPlotAxes(thisParent.plotObjectList[ind].viewStack[0]);
-                    thisParent.plotObjectList[ind].plotStaticData();
-                    thisParent.plotObjectList[ind].drawSelectionAnalysis();
+                    let pThis = thisParent.plotObjectList[ind];
+                    pThis.drawPlotAxes(pThis.viewStack[0]);
+                    pThis.plotStaticData();
+                    pThis.drawSelectionAnalysis();
                 }
             }
 
@@ -1085,19 +1095,36 @@ class PlotIOLab {
                 drawSelectionRect(mousePtrX, mousePtrY, e.offsetX, e.offsetY);
             }
 
-            // shift the viewport if we are panning
+            // shift the viewport and draw if we are panning
+            // do this to all charts
             if (panning) {
-                plotThis.viewStack[0].shiftView(mousePtrXlast - e.offsetX, mousePtrYlast - e.offsetY);
-                mousePtrXlast = e.offsetX;
-                mousePtrYlast = e.offsetY;
 
-                // draw the panned chart
+                // shift and redraw this chart
+                plotThis.viewStack[0].shiftView(mousePtrXlast - e.offsetX, mousePtrYlast - e.offsetY);
                 plotThis.drawPlotAxes(plotThis.viewStack[0]);
                 plotThis.plotStaticData();
                 plotThis.drawSelectionAnalysis();
+
+
+                // now do the same for the other charts, though only pan these in x-direction 
+                // (i.e. keep the time axes the same for all charts)
+                for (let ind = 0; ind < thisParent.plotObjectList.length; ind++) {
+                    let pThis = thisParent.plotObjectList[ind];
+                    if (pThis != plotThis) {
+                        pThis.viewStack[0].shiftView(mousePtrXlast - e.offsetX, 0);
+                        pThis.drawPlotAxes(pThis.viewStack[0]);
+                        pThis.plotStaticData();
+                        pThis.drawSelectionAnalysis();
+                    }
+                }
+
+                mousePtrXlast = e.offsetX;
+                mousePtrYlast = e.offsetY;
+
+
             }
 
-            // draw displacement vector if we are panning
+            // display analysis of selected region
             if (analyzing) {
                 analTime2 = commonCursorTime;
                 // make sure tStart <= tStop
