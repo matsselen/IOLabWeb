@@ -845,7 +845,6 @@ class PlotIOLab {
 
                 // then a y coordinate for each axis
                 for (let tr = 1; tr < plotThis.nTraces + 1; tr++) {
-                    //mas let yplot = plotThis.plotData[ind][tr] - plotThis.datShift[tr]*plotThis.traceSign[tr];
                     let yplot = plotThis.plotData[ind][tr] - plotThis.datShift[tr];
                     csvdata += ", ";
                     csvdata += yplot.toString();
@@ -955,7 +954,7 @@ class PlotIOLab {
                 mousePtrXlast = e.offsetX;
                 mousePtrYlast = e.offsetY;
 
-                // make a copy of the current viewport and put it n the stack       
+                // make a copy of the current viewport and put it in the stack       
                 let copyView = new ViewPort(plotThis.viewStack[0].xMin, plotThis.viewStack[0].xMax,
                     plotThis.viewStack[0].yMin, plotThis.viewStack[0].yMax, plotThis.viewStack[0].canvasElement);
 
@@ -1020,10 +1019,9 @@ class PlotIOLab {
 
                     // now do the same for the other charts, though only zoom these in x-direction 
                     // (i.e. keep the time axes the same for all charts)
-                    console.log("----- Zooming All Others -----");
                     for (let ind = 0; ind < thisParent.plotObjectList.length; ind++) {
                         if (thisParent.plotObjectList[ind] != plotThis) {
-                            console.log(thisParent.plotObjectList[ind].plotName);
+
                             let newView = new ViewPort(xMin, xMax, thisParent.plotObjectList[ind].viewStack[0].yMin, thisParent.plotObjectList[ind].viewStack[0].yMax, thisParent.plotObjectList[ind].viewStack[0].canvasElement);
 
                             thisParent.plotObjectList[ind].viewStack.unshift(newView);
@@ -1035,32 +1033,21 @@ class PlotIOLab {
                 } else {
                     // remove the current viweport from bottom of the stack and go back to the previous one. 
                     // (though dont remove the last one - thats the DAQ view)
-                    if (plotThis.viewStack.length > 1) {
-                        plotThis.viewStack.shift();
-                    }
 
-                    // do the same for other charts
+                    // do this for all charts
                     for (let ind = 0; ind < thisParent.plotObjectList.length; ind++) {
-                        if (thisParent.plotObjectList[ind] != plotThis) {
-                            if (thisParent.plotObjectList[ind].viewStack.length > 1) {
-                                thisParent.plotObjectList[ind].viewStack.shift();
-                            }
+                        if (thisParent.plotObjectList[ind].viewStack.length > 1) {
+                            thisParent.plotObjectList[ind].viewStack.shift();
                         }
                     }
                 }
 
                 // draw the zoomed axes
-                plotThis.drawPlotAxes(plotThis.viewStack[0]);
-                plotThis.plotStaticData();
-                plotThis.drawSelectionAnalysis();
-
-                // do the same for other charts
+                // do this for all charts
                 for (let ind = 0; ind < thisParent.plotObjectList.length; ind++) {
-                    if (thisParent.plotObjectList[ind] != plotThis) {
-                        thisParent.plotObjectList[ind].drawPlotAxes(thisParent.plotObjectList[ind].viewStack[0]);
-                        thisParent.plotObjectList[ind].plotStaticData();
-                        thisParent.plotObjectList[ind].drawSelectionAnalysis();
-                    }
+                    thisParent.plotObjectList[ind].drawPlotAxes(thisParent.plotObjectList[ind].viewStack[0]);
+                    thisParent.plotObjectList[ind].plotStaticData();
+                    thisParent.plotObjectList[ind].drawSelectionAnalysis();
                 }
             }
 
@@ -1326,7 +1313,6 @@ class PlotIOLab {
                     //for (let ind = indLeft; ind <= indRight; ind++) {
                     for (let ind = indLeft; ind <= indRight; ind += nSkip) {
                         let t = this.plotData[ind][0];
-                        //mas let y = this.plotData[ind][tr] - this.datShift[tr]*this.traceSign[tr];
                         let y = this.plotData[ind][tr] - this.datShift[tr];
                         let p = this.viewStack[0].dataToPixel(t, y);
                         analysisDrawContext.lineTo(p[0], p[1]);
@@ -1393,7 +1379,6 @@ class PlotIOLab {
             if (this.traceEnabledList[tr - 1]) {
 
                 let currentCursorData = this.plotData[ind][tr] - this.datShift[tr];//calData[this.sensorNum][ind][tr];
-                //mas let currentCursorData = this.plotData[ind][tr] - this.datShift[tr]*this.traceSign[tr];//calData[this.sensorNum][ind][tr];
                 let dataPix = this.viewStack[0].dataToPixel(plotCursorTime, currentCursorData);
                 infoDrawContext.strokeStyle = 'rgba(0,0,0,0)'; // transparent circle outline (cluge)
                 infoDrawContext.lineWidth = 0;
@@ -1650,7 +1635,6 @@ class PlotIOLab {
                 first = false;
                 for (let tr = 1; tr < this.nTraces + 1; tr++) {
                     contextList[tr].clearRect(0, 0, cWidth, cHeight);
-                    //mas pix = this.viewStack[0].dataToPixel(tplot, this.plotData[ind][tr] - this.datShift[tr]*this.traceSign[tr]);
                     pix = this.viewStack[0].dataToPixel(tplot, this.plotData[ind][tr] - this.datShift[tr]);
                     contextList[tr].beginPath();
                     contextList[tr].moveTo(pix[0], pix[1]);
@@ -1658,7 +1642,6 @@ class PlotIOLab {
 
             } else { // once we have the first point start drawing the rest
                 for (let tr = 1; tr < this.nTraces + 1; tr++) {
-                    //mas pix = this.viewStack[0].dataToPixel(tplot, this.plotData[ind][tr] - this.datShift[tr]*this.traceSign[tr]);
                     pix = this.viewStack[0].dataToPixel(tplot, this.plotData[ind][tr] - this.datShift[tr]);
                     contextList[tr].lineTo(pix[0], pix[1]);
                 }
@@ -1710,14 +1693,12 @@ class PlotIOLab {
                 // start with the data at calReadPtr (presumably 0)
                 if (this.datLast[0] < 0) {
 
-                    //mas let xd = this.traceSign[tr]*(calData[sensorID][calReadPtr[sensorID]][tr] - this.datShift[tr]);
                     let xd = this.traceSign[tr] * calData[sensorID][calReadPtr[sensorID]][tr] - this.datShift[tr];
                     pix = this.viewStack[0].dataToPixel(td, xd);
 
                 } else { // if this is not the first call start with the last datapoint we plotted
 
                     let tstart = this.datLast[0];
-                    //mas pix = this.viewStack[0].dataToPixel(tstart, this.traceSign[tr]*(this.datLast[tr] - this.datShift[tr]));
                     pix = this.viewStack[0].dataToPixel(tstart, this.traceSign[tr] * this.datLast[tr] - this.datShift[tr]);
                 }
                 contextList[tr].moveTo(pix[0], pix[1]);
@@ -1748,13 +1729,11 @@ class PlotIOLab {
 
                         // clear canvas before wrapping
                         contextList[tr].clearRect(0, 0, cWidth, cHeight);
-                        //mas pix = this.viewStack[0].dataToPixel(tplot, this.traceSign[tr]*(calData[sensorID][ind][tr] - this.datShift[tr]));
                         pix = this.viewStack[0].dataToPixel(tplot, this.traceSign[tr] * calData[sensorID][ind][tr] - this.datShift[tr]);
                         contextList[tr].beginPath();
                         contextList[tr].moveTo(pix[0], pix[1]);
 
                     } else {
-                        //mas pix = this.viewStack[0].dataToPixel(tplot, this.traceSign[tr]*(calData[sensorID][ind][tr] - this.datShift[tr]));
                         pix = this.viewStack[0].dataToPixel(tplot, this.traceSign[tr] * calData[sensorID][ind][tr] - this.datShift[tr]);
                         contextList[tr].lineTo(pix[0], pix[1]);
                     }
