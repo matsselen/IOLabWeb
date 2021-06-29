@@ -654,7 +654,9 @@ class PlotIOLab {
 
         // create the control elements that appear above the canvas
         let controls = document.createElement("div");
+        let hr = document.createElement("hr");
         let chartName = document.createTextNode(this.plotName + " (" + this.sensorRate.toString() + " Hz)\xA0\xA0");
+        controls.appendChild(hr);
         controls.appendChild(chartName);
 
         // get the existing parent element and add the controls and base canvas that we just created
@@ -987,22 +989,30 @@ class PlotIOLab {
             if (panning) {
                 panning = false;
 
-                if (mousePtrX == e.offsetX && mousePtrY == e.offsetY) {
-                    // remove the current viweport from bottom of the stack and go back to the previous one. 
-                    // we do this twice if we are in pan mode since the mouse-down event created a copy of the previos view
-                    // (though dont remove the last one - thats the DAQ view)
-                    if (plotThis.viewStack.length > 1) {
-                        plotThis.viewStack.shift();
+                // do this for all charts
+                for (let ind = 0; ind < thisParent.plotObjectList.length; ind++) {
+                    let pThis = thisParent.plotObjectList[ind];
+
+                    if (mousePtrX == e.offsetX && mousePtrY == e.offsetY) {
+                        // remove the current viweport from bottom of the stack and go back to the previous one. 
+                        // we do this twice if we are in pan mode since the mouse-down event created a copy of the previos view
+                        // (though dont remove the last one - thats the DAQ view)
+
+                        if (pThis.viewStack.length > 1) {
+                            pThis.viewStack.shift();
+                        }
+                        if (pThis.viewStack.length > 1) {
+                            pThis.viewStack.shift();
+                        }
                     }
-                    if (plotThis.viewStack.length > 1) {
-                        plotThis.viewStack.shift();
-                    }
+
+                    // draw with the panned axes
+                    pThis.drawPlotAxes(pThis.viewStack[0]);
+                    pThis.plotStaticData();
+                    pThis.drawSelectionAnalysis();
                 }
-                // draw with the panned axes
-                plotThis.drawPlotAxes(plotThis.viewStack[0]);
-                plotThis.plotStaticData();
-                plotThis.drawSelectionAnalysis();
             }
+
 
             if (zooming) {
                 zooming = false;
@@ -1112,15 +1122,19 @@ class PlotIOLab {
                     let pThis = thisParent.plotObjectList[ind];
                     if (pThis != plotThis) {
                         pThis.viewStack[0].shiftView(mousePtrXlast - e.offsetX, 0);
-                        pThis.drawPlotAxes(pThis.viewStack[0]);
-                        pThis.plotStaticData();
-                        pThis.drawSelectionAnalysis();
+
+                        // smoothy panning all of the plots at the same time can be a bit slow
+                        // so only do this if there maxSmoothPan or less sensors (counting the wheel as 3)
+                        if (thisParent.plotObjectList.length <= maxSmoothPan) {
+                            pThis.drawPlotAxes(pThis.viewStack[0]);
+                            pThis.plotStaticData();
+                            pThis.drawSelectionAnalysis();
+                        }
                     }
                 }
 
                 mousePtrXlast = e.offsetX;
                 mousePtrYlast = e.offsetY;
-
 
             }
 

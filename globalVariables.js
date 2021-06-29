@@ -23,7 +23,7 @@ var appMetaData = {
     calGyroTime: 0,
     calForceConst: null,
     calForceTime: 0,
-    appVersion: currentVersion
+    appVersion: null
 };
 
 // plots
@@ -34,6 +34,7 @@ var analTime1 = 0;
 var analTime2 = 0;
 var tStart = 0;
 var tStop = 0;
+var maxSmoothPan = 6; // if there are mode that this number of sensors then don't try to pan them smoothly
 
 // serial port
 var port = null;
@@ -189,8 +190,6 @@ var adcData = null;
 var calData = null;
 var calWritePtr = null;
 var calReadPtr = null;
-
-
 
 // wheel data
 var rWheel = 0;
