@@ -271,7 +271,6 @@ class PlotSet {
 
                 // then a y coordinate for each axis
                 for (let tr = 1; tr < d.length; tr++) {
-                    //let yplot = d[tr] - this.plotObjectList[p].datShift[tr] * this.traceSign[tr];
                     let yplot = d[tr] - this.plotObjectList[p].datShift[tr];
                     csvdata += ", ";
                     csvdata += yplot.toString();
