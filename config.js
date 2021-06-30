@@ -458,45 +458,46 @@ var iolabConfig =
       "zeroable": true,
       "autoScaleY": false
     },
-    // {
-    //   "code": 9,
-    //   "desc": "Wheel",
-    //   "shortDesc": "Wheel",
-    //   "legends": ["displacement", "velocity", "acceleration"],
-    //   "pathColors": ["#BB0000", "#0000BB", "#008800"],
-    //   "scales": [-2, 2],
-    //   "subCharts": [
-    //     {
-    //       "desc": "Position",
-    //       "label": "rᵧ",
-    //       "unit": ["m"],
-    //       "legends": ["rᵧ"],
-    //       "autoScaleY": false,
-    //       "pathColors": ["#BB0000"],
-    //       "scales": [-2, 2]
-    //     },
-    //     {
-    //       "desc": "Velocity",
-    //       "label": "vᵧ",
-    //       "unit": ["m/s"],
-    //       "legends": ["vᵧ"],
-    //       "autoScaleY": false,
-    //       "pathColors": ["#008800"],
-    //       "scales": [-3, 3]
-    //     },
-    //     {
-    //       "desc": "Acceleration",
-    //       "label": "aᵧ",
-    //       "unit": ["m/s²"],
-    //       "legends": ["aᵧ"],
-    //       "autoScaleY": false,
-    //       "pathColors": ["#0000BB"],
-    //       "scales": [-30, 30]
-    //     }
-    //   ],
-    //   "timeAverageIdx": 2,
-    //   "reverseAxis": false
-    // },
+    {
+      "code": 9,
+      "desc": "Wheel",
+      "shortDesc": "Wheel"
+      // ,
+      // "legends": ["displacement", "velocity", "acceleration"],
+      // "pathColors": ["#BB0000", "#0000BB", "#008800"],
+      // "scales": [-2, 2],
+      // "subCharts": [
+      //   {
+      //     "desc": "Position",
+      //     "label": "rᵧ",
+      //     "unit": ["m"],
+      //     "legends": ["rᵧ"],
+      //     "autoScaleY": false,
+      //     "pathColors": ["#BB0000"],
+      //     "scales": [-2, 2]
+      //   },
+      //   {
+      //     "desc": "Velocity",
+      //     "label": "vᵧ",
+      //     "unit": ["m/s"],
+      //     "legends": ["vᵧ"],
+      //     "autoScaleY": false,
+      //     "pathColors": ["#008800"],
+      //     "scales": [-3, 3]
+      //   },
+      //   {
+      //     "desc": "Acceleration",
+      //     "label": "aᵧ",
+      //     "unit": ["m/s²"],
+      //     "legends": ["aᵧ"],
+      //     "autoScaleY": false,
+      //     "pathColors": ["#0000BB"],
+      //     "scales": [-30, 30]
+      //   }
+      // ],
+      // "timeAverageIdx": 2,
+      // "reverseAxis": false
+    },
     {
       "code": 10,
       "desc": "Analog 1/2/3",
