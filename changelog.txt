@@ -15,6 +15,7 @@ IOLabWeb is not supported by Macmillan Publishing so please do not contact IOLab
 
 ====================== Ongoing Work ========================================
 Front Burner Tasks:
+- Add axis labels
 - Clean up commented out code snippets
 - Testing & fixing as needed for summer teacher workshop. 
 
@@ -31,6 +32,9 @@ Back Burner Tasks:
 - Clean up comments & code (ongoing)
 
 ================ Release Notes ================================================
+
+v0.9.20 7/xx/2021
+Added axis labels on the charts. 
 
 v0.9.19 6/30/2021
 fixed bug in config.js causing the wheel label to be "unidentified"
