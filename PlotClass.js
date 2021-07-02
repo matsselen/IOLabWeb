@@ -1533,8 +1533,8 @@ class PlotIOLab {
         ctx.font = "14px Arial";
         let xLabel = "t (s)";
         let xLabelWidth = ctx.measureText(xLabel).width;
-        ctx.fillText(xLabel, this.baseElement.width - xLabelWidth - 5, this.baseElement.height );
-        //ctx.fillText(xLabel, (this.baseElement.width - xLabelWidth)/2, this.baseElement.height );
+        //ctx.fillText(xLabel, this.baseElement.width - xLabelWidth - 5, this.baseElement.height );
+        ctx.fillText(xLabel, (this.baseElement.width - xLabelWidth)/2, this.baseElement.height );
         ctx.font = "12px Arial";
 
         // y-axis: pick the starting data value, interval, and precision based on viewport
