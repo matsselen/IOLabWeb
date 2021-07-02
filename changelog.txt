@@ -22,6 +22,7 @@ Front Burner Tasks:
 Back Burner Tasks:
 - Investigate console message "In pickDataAxis(): Should never get to this place" which can 
   happen when carelessly selecting a zoom region or leaving canvas (not an actual problem)
+- Add a configuration that includes RSSI. 
 - Tweaking of time alignment (especially the wheel). 
 - Optimize which calibration is used for restored datasets
 - Display rezero icon on all zeroable plots when linked

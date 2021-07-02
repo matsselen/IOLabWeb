@@ -418,8 +418,8 @@ class ViewPort {
         this.yMax = yMax;                       // maximum data y value
         this.canvasElement = canvasElement;     // the base canvas of the plot
 
-        this.xAxisOffset = 40;                  // space (px) at the left used to draw y-axis labels
-        this.yAxisOffset = 20;                  // space (px) at the bottom used to draw x-axis labels
+        this.xAxisOffset = 45;                  // space (px) at the left used to draw y-axis labels
+        this.yAxisOffset = 28;                  // space (px) at the bottom used to draw x-axis labels
 
         // derived values
         this.xSpan = xMax - xMin;               // x range
@@ -611,7 +611,8 @@ class PlotIOLab {
 
         // extract some useful info from the sensor object
         this.plotName = this.sensor.desc;      // the name of the chart
-        this.unit = this.sensor.unit;      // the units of the measurement
+        this.label = this.sensor.label;     // the y-axis chart label
+        this.unit = this.sensor.unit;      // the units of the measurements 
         this.axisTitles = this.sensor.legends;   // the trace labels
         this.csvLabels = this.sensor.csvLabels;  // axis labels used for csv export
         this.scales = this.sensor.scales;    // the initial y-axis scale range
@@ -1510,7 +1511,7 @@ class PlotIOLab {
         // get the bottom drawing layer context and set up the default text style
         let ctx = this.layerElementList[0].getContext("2d");
         ctx.strokeStyle = 'black';
-        ctx.font = "11px Arial";
+        ctx.font = "12px Arial";
 
         // clear the axis canvas
         ctx.clearRect(0, 0, this.baseElement.width + 2, this.baseElement.height + 2);
@@ -1528,6 +1529,13 @@ class PlotIOLab {
             this.drawVline(ctx, vp, t, 1, '#000000', "-");
         }
 
+        // label x-axis
+        ctx.font = "14px Arial";
+        let xLabel = "t (s)";
+        let xLabelWidth = ctx.measureText(xLabel).width;
+        ctx.fillText(xLabel, this.baseElement.width - xLabelWidth - 5, this.baseElement.height );
+        ctx.font = "12px Arial";
+
         // y-axis: pick the starting data value, interval, and precision based on viewport
         let dataAxis = vp.pickDataAxis();
 
@@ -1540,6 +1548,17 @@ class PlotIOLab {
             this.drawHline(ctx, vp, y, 1, '#cccccc', "");
             this.drawHline(ctx, vp, y, 1, '#000000', "-");
         }
+
+        // label y-axis
+        ctx.font = "14px Arial";
+        let yLabel = this.label + " (" + this.unit[0] + ")";
+        let yLabelWidth = ctx.measureText(yLabel).width;
+        ctx.save();
+        ctx.translate(0, this.baseElement.height);
+        ctx.rotate(-Math.PI/2);
+        ctx.fillText(yLabel, (this.baseElement.height - yLabelWidth)/2, 10 );
+        ctx.restore();
+        ctx.font = "12px Arial";
 
         // redraw axes lines and line at y=0
         this.drawHline(ctx, vp, vp.yMin, 1, '#000000', "<");
