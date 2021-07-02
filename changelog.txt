@@ -15,11 +15,11 @@ IOLabWeb is not supported by Macmillan Publishing so please do not contact IOLab
 
 ====================== Ongoing Work ========================================
 Front Burner Tasks:
-- Add axis labels
 - Clean up commented out code snippets
 - Testing & fixing as needed for summer teacher workshop. 
 
 Back Burner Tasks:
+- Remove ability to drag cursor past left edge of a chart
 - Investigate console message "In pickDataAxis(): Should never get to this place" which can 
   happen when carelessly selecting a zoom region or leaving canvas (not an actual problem)
 - Add a configuration that includes RSSI. 
