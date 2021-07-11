@@ -6,7 +6,7 @@
 'use strict';
 
 // current version
-var currentVersion = [0,9,20];
+var currentVersion = [0,9,21];
 
 // oldest app version whose saved data is compatible with this app
 var bcompatVersion = [0,9,8];
@@ -91,8 +91,6 @@ var current_config_code;
 var currentFCobject = null;
 var sensorIDlist = [];
 var sensorRateList = [];
-//var chartIDlist = [];
-
 
 // keep track of raw data records
 var ncalls = 0;

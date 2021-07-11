@@ -25,9 +25,12 @@ var iolabConfig =
       "desc": "Accelerometer",
       "highSpeed": false,
       "frequencies": [100, 200, 400],
-      "sensors": [{ "sensorKey": 1, "sampleRate": 400 }],
-      "chartRateList": [400],
-      "chartList": [1]
+      "sensors": [
+        { "sensorKey": 1, "sampleRate": 400 },
+        { "sensorKey": 0, "sampleRate": 100 }
+      ],
+      "chartRateList": [400, 100],
+      "chartList": [1, 0]
     },
     {
       "code": 3,
@@ -83,13 +86,6 @@ var iolabConfig =
       "chartRateList": [400, 100, 50, 50],
       "chartList": [7, 4, 11, 26]
     },
-    // {
-    //   "code": 7,
-    //   "desc": "ECG (requires plugin)",
-    //   "highSpeed": false,
-    //   "frequencies": [100, 200, 400],
-    //   "sensors": [{ "sensorKey": 10, "sampleRate": 400 }]
-    // },
     {
       "code": 8,
       "desc": "Header 3V",
@@ -232,12 +228,11 @@ var iolabConfig =
         { "sensorKey": 9, "sampleRate": 100 },
         { "sensorKey": 11, "sampleRate": 100 },
         { "sensorKey": 12, "sampleRate": 100 },
-        //{ "sensorKey": 13, "sampleRate": 100 },
-        { "sensorKey": 21, "sampleRate": 100 }
+        { "sensorKey": 21, "sampleRate": 100 },
+        { "sensorKey": 0, "sampleRate": 100 } // rssi
       ],
-      //"chartList": [1,2,3,4,7,8,15,16,17,11,12,13,21]
-      "chartRateList": [100, 80, 95, 100, 100, 100, 100, 100, 100, 100, 100, 100],
-      "chartList": [1, 2, 3, 4, 7, 8, 15, 16, 17, 11, 12, 21]
+      "chartRateList": [100, 80, 95, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100],
+      "chartList": [1, 2, 3, 4, 7, 8, 15, 16, 17, 11, 12, 21, 0]
     },
     {
       "code": 39,
@@ -356,6 +351,7 @@ var iolabConfig =
       "desc": 'RSSI',
       "shortDesc": 'RSSI',
       "label": 'Sig Str',
+      "unit": ["arb", " ", " ", " "],
       "csvLabels": ["Signal (arb)"],
       "legends": ['Signal strength'],
       "pathColors": ["#0000BB"],
@@ -462,41 +458,6 @@ var iolabConfig =
       "code": 9,
       "desc": "Wheel",
       "shortDesc": "Wheel"
-      // ,
-      // "legends": ["displacement", "velocity", "acceleration"],
-      // "pathColors": ["#BB0000", "#0000BB", "#008800"],
-      // "scales": [-2, 2],
-      // "subCharts": [
-      //   {
-      //     "desc": "Position",
-      //     "label": "rᵧ",
-      //     "unit": ["m"],
-      //     "legends": ["rᵧ"],
-      //     "autoScaleY": false,
-      //     "pathColors": ["#BB0000"],
-      //     "scales": [-2, 2]
-      //   },
-      //   {
-      //     "desc": "Velocity",
-      //     "label": "vᵧ",
-      //     "unit": ["m/s"],
-      //     "legends": ["vᵧ"],
-      //     "autoScaleY": false,
-      //     "pathColors": ["#008800"],
-      //     "scales": [-3, 3]
-      //   },
-      //   {
-      //     "desc": "Acceleration",
-      //     "label": "aᵧ",
-      //     "unit": ["m/s²"],
-      //     "legends": ["aᵧ"],
-      //     "autoScaleY": false,
-      //     "pathColors": ["#0000BB"],
-      //     "scales": [-30, 30]
-      //   }
-      // ],
-      // "timeAverageIdx": 2,
-      // "reverseAxis": false
     },
     {
       "code": 10,

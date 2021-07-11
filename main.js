@@ -265,9 +265,6 @@ async function clickSend() {
     sensorIDlist = fixedConfigObject.sensList;
     sensorRateList = fixedConfigObject.rateList;
 
-    // create a list of charts (by sensor ID) to be plotted
-    //chartIDlist = fixedConfigObject.chartList;
-
     // create the required plot objects
     plotSet = new PlotSet(fixedConfigObject, "plotContainer", "controlContainer");
   }
