@@ -317,7 +317,7 @@ function processDataRecord(recStart, recLength) {
     let rfstat = rxdata[recStart + 2];
     let rssi = rxdata[recStart + recLength - 1];
 
-    // save header info as sensor 0.
+    // save header info as sensor 40.
     rawData[0].push([frame, rfstat, rssi]);
 
 
@@ -402,9 +402,31 @@ function buildAndCalibrate() {
       tLast = calData[sensorID][calWritePtr[sensorID] - 1][0];
     }
 
+
+    // for signal strength "sensor"   
+    if (sensorID == 0) {
+
+      // loop over data packets that arrived since the last time
+      for (let ind = rawReadPtr[sensorID]; ind < rawData[sensorID].length; ind++) {
+
+        let rssi = rawData[sensorID][ind][2];
+
+        let tDat = tLast + samplePeriod;
+        tLast = tDat;
+
+        // save rssi data
+        calData[sensorID][calWritePtr[sensorID]++] = [tDat, rssi];
+
+        
+      }
+      // advance raw data read pointer
+      rawReadPtr[sensorID] = rawData[sensorID].length;
+
+    } // rssi    
+
     // the accelerometer, magnetometer, and gyroscope have the same data formats
     // six bytes per sample: [x_hi, x_lo, y_hi, y_lo, z_hi, z_lo]
-    if (sensorID == 1 || sensorID == 2 || sensorID == 3) {
+    else if (sensorID == 1 || sensorID == 2 || sensorID == 3) {
 
       // loop over data packets that arrived since the last time
       for (let ind = rawReadPtr[sensorID]; ind < rawData[sensorID].length; ind++) {

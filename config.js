@@ -223,6 +223,7 @@ var iolabConfig =
       "highSpeed": true,
       "frequencies": [100],
       "sensors": [
+        { "sensorKey": 0, "sampleRate": 100 }, // mas
         { "sensorKey": 1, "sampleRate": 100 },
         { "sensorKey": 2, "sampleRate": 80 },
         { "sensorKey": 3, "sampleRate": 95 },
@@ -236,8 +237,10 @@ var iolabConfig =
         { "sensorKey": 21, "sampleRate": 100 }
       ],
       //"chartList": [1,2,3,4,7,8,15,16,17,11,12,13,21]
-      "chartRateList": [100, 80, 95, 100, 100, 100, 100, 100, 100, 100, 100, 100],
-      "chartList": [1, 2, 3, 4, 7, 8, 15, 16, 17, 11, 12, 21]
+      // mas "chartRateList": [100, 80, 95, 100, 100, 100, 100, 100, 100, 100, 100, 100],
+      "chartRateList": [100, 100, 80, 95, 100, 100, 100, 100, 100, 100, 100, 100, 100],
+      // mas "chartList": [1, 2, 3, 4, 7, 8, 15, 16, 17, 11, 12, 21]
+      "chartList": [0, 1, 2, 3, 4, 7, 8, 15, 16, 17, 11, 12, 21]
     },
     {
       "code": 39,
@@ -356,6 +359,7 @@ var iolabConfig =
       "desc": 'RSSI',
       "shortDesc": 'RSSI',
       "label": 'Sig Str',
+      "unit": ["arb", " ", " ", " "],
       "csvLabels": ["Signal (arb)"],
       "legends": ['Signal strength'],
       "pathColors": ["#0000BB"],
