@@ -33,8 +33,9 @@ Back Burner Tasks:
 
 ================ Release Notes ================================================
 
-v0.9.21 7/xx/2021
-Added configuration with RSSI. 
+v0.9.21 7/11/2021
+Added RSSI chart to the end of config 2 (accelerometer) and config 38 (kitchen sink) 
+It is easy to add it to other configurations as well - just ask.
 
 v0.9.20 7/2/2021
 Added axis labels to the charts. 

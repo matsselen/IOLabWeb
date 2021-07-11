@@ -403,22 +403,20 @@ function buildAndCalibrate() {
     }
 
 
-    // for signal strength "sensor"   
+    // for rssi (signal strength) sensor   
     if (sensorID == 0) {
 
       // loop over data packets that arrived since the last time
       for (let ind = rawReadPtr[sensorID]; ind < rawData[sensorID].length; ind++) {
 
         let rssi = rawData[sensorID][ind][2];
-
         let tDat = tLast + samplePeriod;
         tLast = tDat;
 
         // save rssi data
         calData[sensorID][calWritePtr[sensorID]++] = [tDat, rssi];
-
-        
       }
+
       // advance raw data read pointer
       rawReadPtr[sensorID] = rawData[sensorID].length;
 

@@ -91,8 +91,6 @@ var current_config_code;
 var currentFCobject = null;
 var sensorIDlist = [];
 var sensorRateList = [];
-//var chartIDlist = [];
-
 
 // keep track of raw data records
 var ncalls = 0;
