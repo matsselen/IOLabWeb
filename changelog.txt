@@ -22,7 +22,6 @@ Back Burner Tasks:
 - Remove ability to drag cursor past left edge of a chart
 - Investigate console message "In pickDataAxis(): Should never get to this place" which can 
   happen when carelessly selecting a zoom region or leaving canvas (not an actual problem)
-- Add a configuration that includes RSSI. 
 - Tweaking of time alignment (especially the wheel). 
 - Optimize which calibration is used for restored datasets
 - Display rezero icon on all zeroable plots when linked
@@ -33,6 +32,9 @@ Back Burner Tasks:
 - Clean up comments & code (ongoing)
 
 ================ Release Notes ================================================
+
+v0.9.21 7/xx/2021
+Added configuration with RSSI. 
 
 v0.9.20 7/2/2021
 Added axis labels to the charts. 
