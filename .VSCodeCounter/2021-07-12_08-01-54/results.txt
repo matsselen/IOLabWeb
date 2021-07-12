@@ -1,0 +1,48 @@
+Date : 2021-07-12 08:01:54
+Directory : c:\Users\mats\Documents\GitHub\IOLabWeb
+Total : 20 files,  5271 codes, 1034 comments, 1245 blanks, all 7550 lines
+
+Languages
++--------------------+------------+------------+------------+------------+------------+
+| language           | files      | code       | comment    | blank      | total      |
++--------------------+------------+------------+------------+------------+------------+
+| JavaScript         |         16 |      4,740 |      1,004 |      1,153 |      6,897 |
+| CSS                |          1 |        270 |         23 |         44 |        337 |
+| HTML               |          1 |        243 |          7 |         41 |        291 |
+| Markdown           |          1 |         10 |          0 |          7 |         17 |
+| JSON with Comments |          1 |          8 |          0 |          0 |          8 |
++--------------------+------------+------------+------------+------------+------------+
+
+Directories
++-----------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                            | files      | code       | comment    | blank      | total      |
++-----------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                               |         20 |      5,271 |      1,034 |      1,245 |      7,550 |
++-----------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++-----------------------------------------------------------------+--------------------+------------+------------+------------+------------+
+| filename                                                        | language           | code       | comment    | blank      | total      |
++-----------------------------------------------------------------+--------------------+------------+------------+------------+------------+
+| c:\Users\mats\Documents\GitHub\IOLabWeb\AnalClass.js            | JavaScript         |         68 |         10 |         19 |         97 |
+| c:\Users\mats\Documents\GitHub\IOLabWeb\CanvasStack-2v01.js     | JavaScript         |        149 |         41 |         18 |        208 |
+| c:\Users\mats\Documents\GitHub\IOLabWeb\FileSaver.js            | JavaScript         |         97 |         76 |         16 |        189 |
+| c:\Users\mats\Documents\GitHub\IOLabWeb\PlotClass.js            | JavaScript         |      1,136 |        305 |        374 |      1,815 |
+| c:\Users\mats\Documents\GitHub\IOLabWeb\README.md               | Markdown           |         10 |          0 |          7 |         17 |
+| c:\Users\mats\Documents\GitHub\IOLabWeb\calSteps.js             | JavaScript         |         38 |          0 |          1 |         39 |
+| c:\Users\mats\Documents\GitHub\IOLabWeb\calibration.js          | JavaScript         |        411 |         70 |        127 |        608 |
+| c:\Users\mats\Documents\GitHub\IOLabWeb\config.js               | JavaScript         |        900 |         41 |          2 |        943 |
+| c:\Users\mats\Documents\GitHub\IOLabWeb\debug.js                | JavaScript         |         35 |          6 |         10 |         51 |
+| c:\Users\mats\Documents\GitHub\IOLabWeb\files.js                | JavaScript         |        115 |         25 |         37 |        177 |
+| c:\Users\mats\Documents\GitHub\IOLabWeb\globalVariables.js      | JavaScript         |        121 |         43 |         31 |        195 |
+| c:\Users\mats\Documents\GitHub\IOLabWeb\index.html              | HTML               |        243 |          7 |         41 |        291 |
+| c:\Users\mats\Documents\GitHub\IOLabWeb\iolab_options.js        | JavaScript         |        511 |         70 |        162 |        743 |
+| c:\Users\mats\Documents\GitHub\IOLabWeb\iolab_pairing.js        | JavaScript         |         71 |         12 |         26 |        109 |
+| c:\Users\mats\Documents\GitHub\IOLabWeb\iolabweb.code-workspace | JSON with Comments |          8 |          0 |          0 |          8 |
+| c:\Users\mats\Documents\GitHub\IOLabWeb\jszip.js                | JavaScript         |          6 |         22 |          2 |         30 |
+| c:\Users\mats\Documents\GitHub\IOLabWeb\main.js                 | JavaScript         |        259 |         66 |         74 |        399 |
+| c:\Users\mats\Documents\GitHub\IOLabWeb\process_data.js         | JavaScript         |        677 |        157 |        195 |      1,029 |
+| c:\Users\mats\Documents\GitHub\IOLabWeb\run_control.js          | JavaScript         |        146 |         60 |         59 |        265 |
+| c:\Users\mats\Documents\GitHub\IOLabWeb\style.css               | CSS                |        270 |         23 |         44 |        337 |
+| Total                                                           |                    |      5,271 |      1,034 |      1,245 |      7,550 |
++-----------------------------------------------------------------+--------------------+------------+------------+------------+------------+
