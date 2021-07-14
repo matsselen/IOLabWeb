@@ -17,6 +17,7 @@ IOLabWeb is not supported by Macmillan Publishing so please do not contact IOLab
 Front Burner Tasks:
 - Clean up commented out code snippets
 - Testing & fixing as needed for summer teacher workshop. 
+- Work on help page. 
 
 Back Burner Tasks:
 - Remove ability to drag cursor past left edge of a chart
@@ -32,6 +33,9 @@ Back Burner Tasks:
 - Clean up comments & code (ongoing)
 
 ================ Release Notes ================================================
+
+v0.9.22 7/14/2021
+Added a help page with some preliminary remarks.
 
 v0.9.21 7/11/2021
 Added RSSI chart to the end of config 2 (accelerometer) and config 38 (kitchen sink) 
