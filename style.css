@@ -67,6 +67,12 @@ label.iolab {
   color:rgb(255, 242, 182);
 }
 
+label.help {
+  color:rgb(255, 242, 182);
+  justify-content: right;
+
+}
+
 .topcontrol {
   padding: 0px 0px 0px 10px;
 }
