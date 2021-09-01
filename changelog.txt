@@ -15,6 +15,7 @@ IOLabWeb is not supported by Macmillan Publishing so please do not contact IOLab
 
 ====================== Ongoing Work ========================================
 Front Burner Tasks:
+- Add mechanism to zoom out beyond chart defaults
 - Clean up commented out code snippets
 - Testing & fixing as needed for summer teacher workshop. 
 - Work on help page. 
