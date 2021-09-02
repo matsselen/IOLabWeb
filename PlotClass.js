@@ -431,6 +431,14 @@ class ViewPort {
     //=========================================================================================
     //======================ViewPort Methods===================================================
 
+    // zoom out vertically by factor of 2
+    zoomOutYx2() {
+        this.yMax += this.ySpan / 2;
+        this.yMin -= this.ySpan / 2;
+        this.ySpan = this.yMax - this.yMin;
+
+    }
+
     // shift the current viewport by (dX, dY) pixels
     shiftView(dxPix, dyPix) {
 
@@ -924,6 +932,8 @@ class PlotIOLab {
 
         // when the left mouse button is double-clicked
         function dblclick(e) {
+            console.log("-double-");
+            if (e.shiftKey) console.log("Shift, yay!");
 
             if ((plotThis.thisParent.mouseMode == "zoom") || (plotThis.thisParent.mouseMode == "pan")) {
 
@@ -935,11 +945,23 @@ class PlotIOLab {
                     while (pThis.viewStack.length > 1) {
                         pThis.viewStack.shift();
                     }
-                    // scale x-axis and plot all data
-                    pThis.displayStaticData();
-                    pThis.drawSelectionAnalysis();
+
+                    if (plotThis == pThis) {
+
+                    }
+
                 }
+
+                plotThis.displayStaticData();
+                plotThis.drawSelectionAnalysis();
+
             }
+
+            // draw axes and re-plot 
+            // plotThis.viewStack[0].zoomOutYx2();
+            // plotThis.drawPlotAxes(plotThis.viewStack[0]);
+            // plotThis.displayStaticData();
+            // plotThis.drawSelectionAnalysis();
 
             if (plotThis.thisParent.mouseMode == "anal") {
                 analTime1 = 0;
@@ -952,6 +974,8 @@ class PlotIOLab {
 
         // when the left mouse button is pressed
         function mouseDown(e) {
+            console.log("-down-");
+
             if (plotThis.thisParent.mouseMode == "zoom") {
                 zooming = true;
                 mousePtrX = e.offsetX;
@@ -986,6 +1010,7 @@ class PlotIOLab {
 
         // when the left mouse button is released
         function mouseUp(e) {
+            console.log("-up-");
 
             if (panning) {
                 panning = false;
@@ -1533,7 +1558,7 @@ class PlotIOLab {
         ctx.font = "14px Arial";
         let xLabel = "time (s)";
         let xLabelWidth = ctx.measureText(xLabel).width;
-        ctx.fillText(xLabel, this.baseElement.width - xLabelWidth - 25, this.baseElement.height );
+        ctx.fillText(xLabel, this.baseElement.width - xLabelWidth - 25, this.baseElement.height);
         //ctx.fillText(xLabel, (this.baseElement.width - xLabelWidth)/2, this.baseElement.height );
         ctx.font = "12px Arial";
 
@@ -1556,8 +1581,8 @@ class PlotIOLab {
         let yLabelWidth = ctx.measureText(yLabel).width;
         ctx.save();
         ctx.translate(0, this.baseElement.height);
-        ctx.rotate(-Math.PI/2);
-        ctx.fillText(yLabel, (this.baseElement.height - yLabelWidth)/2, 10 );
+        ctx.rotate(-Math.PI / 2);
+        ctx.fillText(yLabel, (this.baseElement.height - yLabelWidth) / 2, 10);
         ctx.restore();
         ctx.font = "12px Arial";
 
