@@ -35,6 +35,9 @@ Back Burner Tasks:
 
 ================ Release Notes ================================================
 
+v0.9.23 9/3/2021
+Under construction. Adding mechanism to zoom out beyond chart defaults. 
+
 v0.9.22 7/14/2021
 Added a help page with some preliminary remarks.
 
