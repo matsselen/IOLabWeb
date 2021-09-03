@@ -933,29 +933,28 @@ class PlotIOLab {
         // when the left mouse button is double-clicked
         function dblclick(e) {
             console.log("-double-");
-            if (e.shiftKey) console.log("Shift, yay!");
 
-            if ((plotThis.thisParent.mouseMode == "zoom") || (plotThis.thisParent.mouseMode == "pan")) {
+            // if ((plotThis.thisParent.mouseMode == "zoom") || (plotThis.thisParent.mouseMode == "pan")) {
 
-                // remove any static viewports from the stack plot all data
-                // do this for all charts
-                for (let ind = 0; ind < thisParent.plotObjectList.length; ind++) {
-                    let pThis = thisParent.plotObjectList[ind];
+            //     // remove any static viewports from the stack plot all data
+            //     // do this for all charts
+            //     for (let ind = 0; ind < thisParent.plotObjectList.length; ind++) {
+            //         let pThis = thisParent.plotObjectList[ind];
 
-                    while (pThis.viewStack.length > 1) {
-                        pThis.viewStack.shift();
-                    }
+            //         while (pThis.viewStack.length > 1) {
+            //             pThis.viewStack.shift();
+            //         }
 
-                    if (plotThis == pThis) {
+            //         if (plotThis == pThis) {
 
-                    }
+            //         }
 
-                }
+            //     }
 
-                plotThis.displayStaticData();
-                plotThis.drawSelectionAnalysis();
+            //     plotThis.displayStaticData();
+            //     plotThis.drawSelectionAnalysis();
 
-            }
+            // }
 
             // draw axes and re-plot 
             // plotThis.viewStack[0].zoomOutYx2();
@@ -975,6 +974,12 @@ class PlotIOLab {
         // when the left mouse button is pressed
         function mouseDown(e) {
             console.log("-down-");
+
+            if (e.shiftKey) {
+                console.log("-shift-");
+                
+                return
+            }
 
             if (plotThis.thisParent.mouseMode == "zoom") {
                 zooming = true;
