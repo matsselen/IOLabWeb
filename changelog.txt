@@ -36,7 +36,8 @@ Back Burner Tasks:
 ================ Release Notes ================================================
 
 v0.9.23 9/3/2021
-Under construction. Adding mechanism to zoom out beyond chart defaults. 
+Adding mechanism to zoom out beyond chart defaults: Shift + left-click on a chart 
+zooms out by a factor of 2 and pushes the new view on the view stack. 
 
 v0.9.22 7/14/2021
 Added a help page with some preliminary remarks.

@@ -50,7 +50,7 @@ class PlotSet {
         this.zoomLink.style = "cursor:pointer";
         this.zoomLink.style.paddingRight = "5px";
         this.aZoom.appendChild(this.zoomLink);
-        this.aZoom.title = "Click & drag to zoom, click to undo, double-click to reset";
+        this.aZoom.title = "Click & drag to zoom, click to undo, double-click to reset, shift-click to zoom out x2";
         this.aZoom.addEventListener("click", zoomClick);
         analysis.appendChild(this.aZoom);
 
