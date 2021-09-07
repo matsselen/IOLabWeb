@@ -50,7 +50,7 @@ class PlotSet {
         this.zoomLink.style = "cursor:pointer";
         this.zoomLink.style.paddingRight = "5px";
         this.aZoom.appendChild(this.zoomLink);
-        this.aZoom.title = "Click & drag to zoom, click to undo, double-click to reset";
+        this.aZoom.title = "Click & drag to zoom, click to undo, double-click to reset, shift-click to zoom out x2";
         this.aZoom.addEventListener("click", zoomClick);
         analysis.appendChild(this.aZoom);
 
@@ -924,22 +924,26 @@ class PlotIOLab {
 
         // when the left mouse button is double-clicked
         function dblclick(e) {
+            console.log("-double-");
 
-            if ((plotThis.thisParent.mouseMode == "zoom") || (plotThis.thisParent.mouseMode == "pan")) {
+            // if ((plotThis.thisParent.mouseMode == "zoom") || (plotThis.thisParent.mouseMode == "pan")) {
+            //     // remove any static viewports from the stack plot all data
+            //     // do this for all charts
+            //     for (let ind = 0; ind < thisParent.plotObjectList.length; ind++) {
+            //         let pThis = thisParent.plotObjectList[ind];
+            //         while (pThis.viewStack.length > 1) {
+            //             pThis.viewStack.shift();
+            //         }
+            //     }
+            //     plotThis.displayStaticData();
+            //     plotThis.drawSelectionAnalysis();
+            // }
 
-                // remove any static viewports from the stack plot all data
-                // do this for all charts
-                for (let ind = 0; ind < thisParent.plotObjectList.length; ind++) {
-                    let pThis = thisParent.plotObjectList[ind];
-
-                    while (pThis.viewStack.length > 1) {
-                        pThis.viewStack.shift();
-                    }
-                    // scale x-axis and plot all data
-                    pThis.displayStaticData();
-                    pThis.drawSelectionAnalysis();
-                }
-            }
+            // draw axes and re-plot 
+            // plotThis.viewStack[0].zoomOutYx2();
+            // plotThis.drawPlotAxes(plotThis.viewStack[0]);
+            // plotThis.displayStaticData();
+            // plotThis.drawSelectionAnalysis();
 
             if (plotThis.thisParent.mouseMode == "anal") {
                 analTime1 = 0;
@@ -952,6 +956,37 @@ class PlotIOLab {
 
         // when the left mouse button is pressed
         function mouseDown(e) {
+            console.log("-down-");
+
+            if (e.shiftKey) {
+                console.log("-shift-");
+
+                // clear the control layer 
+                ctlDrawContext.clearRect(0, 0, plotThis.baseElement.width + 2, plotThis.baseElement.height + 2);
+
+                // find out where we started and ended the selection
+                let p1 = plotThis.viewStack[0].pixelToData(e.offsetX, e.offsetY);
+                let p2 = plotThis.viewStack[0].pixelToData(mousePtrX, mousePtrY);
+
+                // calculte the new viewport boundaries
+                let xMin = plotThis.viewStack[0].xMin;
+                let xMax = plotThis.viewStack[0].xMax;
+                let yMin = plotThis.viewStack[0].yMin - plotThis.viewStack[0].ySpan;
+                let yMax = plotThis.viewStack[0].yMax + plotThis.viewStack[0].ySpan;
+
+                // first create a viewport    
+                let selectedView = new ViewPort(xMin, xMax, yMin, yMax, plotThis.baseElement);
+
+                // push the new viweport onto the bottom of the stack. 
+                plotThis.viewStack.unshift(selectedView);
+
+                plotThis.drawPlotAxes(plotThis.viewStack[0]);
+                plotThis.plotStaticData();
+                plotThis.drawSelectionAnalysis();
+
+                return
+            }
+
             if (plotThis.thisParent.mouseMode == "zoom") {
                 zooming = true;
                 mousePtrX = e.offsetX;
@@ -986,6 +1021,8 @@ class PlotIOLab {
 
         // when the left mouse button is released
         function mouseUp(e) {
+            console.log("-up-");
+            if (e.shiftKey) return;
 
             if (panning) {
                 panning = false;
@@ -1010,8 +1047,9 @@ class PlotIOLab {
                     // draw with the panned axes
                     pThis.drawPlotAxes(pThis.viewStack[0]);
                     pThis.plotStaticData();
-                    pThis.drawSelectionAnalysis();
+                    //pThis.drawSelectionAnalysis();
                 }
+                plotThis.drawSelectionAnalysis();
             }
 
 
@@ -1054,12 +1092,16 @@ class PlotIOLab {
                     // (though dont remove the last one - thats the DAQ view)
 
                     // do this for all charts
-                    for (let ind = 0; ind < thisParent.plotObjectList.length; ind++) {
-                        let pThis = thisParent.plotObjectList[ind];
-                        if (pThis.viewStack.length > 1) {
-                            pThis.viewStack.shift();
-                        }
+                    // for (let ind = 0; ind < thisParent.plotObjectList.length; ind++) {
+                    //     let pThis = thisParent.plotObjectList[ind];
+                    //     if (pThis.viewStack.length > 1) {
+                    //         pThis.viewStack.shift();
+                    //     }
+                    // }
+                    if (plotThis.viewStack.length > 1) {
+                        plotThis.viewStack.shift();
                     }
+
                 }
 
                 // draw the zoomed axes
@@ -1068,8 +1110,9 @@ class PlotIOLab {
                     let pThis = thisParent.plotObjectList[ind];
                     pThis.drawPlotAxes(pThis.viewStack[0]);
                     pThis.plotStaticData();
-                    pThis.drawSelectionAnalysis();
+                    //pThis.drawSelectionAnalysis();
                 }
+                plotThis.drawSelectionAnalysis();
             }
 
             if (analyzing) {
@@ -1086,6 +1129,7 @@ class PlotIOLab {
 
         // when the mouse moves over the chart
         function mouseMove(e) {
+            if (e.shiftKey) return;
 
             // put crosshairs and cursor info on control layer if we are in 
             // zoom mode or pan mode
@@ -1114,7 +1158,7 @@ class PlotIOLab {
                 plotThis.viewStack[0].shiftView(mousePtrXlast - e.offsetX, mousePtrYlast - e.offsetY);
                 plotThis.drawPlotAxes(plotThis.viewStack[0]);
                 plotThis.plotStaticData();
-                plotThis.drawSelectionAnalysis();
+                //plotThis.drawSelectionAnalysis();
 
 
                 // now do the same for the other charts, though only pan these in x-direction 
@@ -1129,10 +1173,11 @@ class PlotIOLab {
                         if (thisParent.plotObjectList.length <= maxSmoothPan) {
                             pThis.drawPlotAxes(pThis.viewStack[0]);
                             pThis.plotStaticData();
-                            pThis.drawSelectionAnalysis();
+                            //pThis.drawSelectionAnalysis();
                         }
                     }
                 }
+                plotThis.drawSelectionAnalysis();
 
                 mousePtrXlast = e.offsetX;
                 mousePtrYlast = e.offsetY;
@@ -1533,7 +1578,7 @@ class PlotIOLab {
         ctx.font = "14px Arial";
         let xLabel = "time (s)";
         let xLabelWidth = ctx.measureText(xLabel).width;
-        ctx.fillText(xLabel, this.baseElement.width - xLabelWidth - 25, this.baseElement.height );
+        ctx.fillText(xLabel, this.baseElement.width - xLabelWidth - 25, this.baseElement.height);
         //ctx.fillText(xLabel, (this.baseElement.width - xLabelWidth)/2, this.baseElement.height );
         ctx.font = "12px Arial";
 
@@ -1556,8 +1601,8 @@ class PlotIOLab {
         let yLabelWidth = ctx.measureText(yLabel).width;
         ctx.save();
         ctx.translate(0, this.baseElement.height);
-        ctx.rotate(-Math.PI/2);
-        ctx.fillText(yLabel, (this.baseElement.height - yLabelWidth)/2, 10 );
+        ctx.rotate(-Math.PI / 2);
+        ctx.fillText(yLabel, (this.baseElement.height - yLabelWidth) / 2, 10);
         ctx.restore();
         ctx.font = "12px Arial";
 
