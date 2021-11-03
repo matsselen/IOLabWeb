@@ -1382,7 +1382,7 @@ class PlotIOLab {
 
                 // put data analysis results on the plot for each selected trace
                 analysisDrawContext.fillStyle = this.layerColorList[tr];
-                let text = "n=" + st.n.toFixed(0) + "  μ=" + st.mean.toFixed(4) + "±" + st.stderr.toFixed(4) + this.unit[1] + "  σ=" + st.sigma.toFixed(4) + this.unit[1] + "  a=" + st.area.toFixed(2) + this.unit[2] + "  m=" + st.slope.toFixed(2) + this.unit[3] + "  b=" + st.intercept.toFixed(2) + this.unit[1] + "  r=" + st.rxy.toFixed(3);
+                let text = "n=" + st.n.toFixed(0) + "  μ=" + st.mean.toFixed(4) + "±" + st.stderr.toFixed(4) + this.unit[1] + "  σ=" + st.sigma.toFixed(4) + this.unit[1] + "  a=" + st.area.toFixed(4) + this.unit[2] + "  m=" + st.slope.toFixed(2) + this.unit[3] + "  b=" + st.intercept.toFixed(2) + this.unit[1] + "  r=" + st.rxy.toFixed(3);
                 traceVoffset += 12;
                 analysisDrawContext.fillText(text, 170, traceVoffset);
 

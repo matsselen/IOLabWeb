@@ -35,6 +35,9 @@ Back Burner Tasks:
 
 ================ Release Notes ================================================
 
+v0.9.24 11/3/2021
+Added two more digits (total of 4) to the right of decimal place for "area" analysis. 
+
 v0.9.23 9/7/2021
 Adding mechanism to zoom out beyond chart defaults: Shift + left-click on a chart 
 zooms out by a factor of 2 and pushes the new view on the view stack. 
