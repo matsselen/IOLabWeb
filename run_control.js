@@ -91,8 +91,16 @@ async function connectAndStart() {
 
     // Open the serial port
     console.log("Opening port");
-    await port.open({ baudRate: 115200, baudrate: 115200 });
-    // yes - you need both if you want it to run on Chromebooks
+    try {
+        await port.open({ baudRate: 115200, baudrate: 115200 });
+        // yes - you need both if you want it to run on Chromebooks
+    } catch (e) {
+        alert(
+            "Failed to establish connection to the port: " +
+            "make sure that your computer user has access to the IOLab dongle."
+        );
+        return false;
+    }
 
     // Create a reader and a writer
     writer = port.writable.getWriter();
